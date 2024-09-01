@@ -19,7 +19,6 @@ export default function usePostCats() {
 
 //get single post category
 export function useSinglePostCategory(postCatId) {
-  // console.log('QueryID', postCatId);
   if(!postCatId || postCatId === 'new'){
     return {};
   }
@@ -39,14 +38,12 @@ export function useAddPostCategoryMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newPostCategory) => {
-      console.log('Run post category: ', newPostCategory);
       return createPostcat(newPostCategory);
     },
 
     {
       onSuccess: (data) => {
         if (data?.data) {
-          console.log('New post category Data', data);
           toast.success('post category added successfully!');
           queryClient.invalidateQueries(['postcategories']);
           queryClient.refetchQueries('postcategories', { force: true });
@@ -61,8 +58,6 @@ export function useAddPostCategoryMutation() {
             ? error.response.data.message
             : error.message
         );
-        console.log('MutationError', error.response.data);
-        console.log('MutationError', error.data);
         rollback();
       },
     }
@@ -77,7 +72,6 @@ export function usePostCategoryUpdateMutation() {
   return useMutation(updatePostcatById, {
     onSuccess: (data) => {
    if(data?.data){
-    console.log('Updated post Category Data', data);
     toast.success('post categoryt updated successfully!!');
     queryClient.invalidateQueries('postcategories');
     navigate('/postcategories/list');

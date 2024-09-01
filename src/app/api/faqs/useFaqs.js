@@ -12,7 +12,7 @@ import {
   createApiFaq,
   updateFaqById,
   getApiFaqById,
-} from '../../store-redux/api/apiRoutes';
+} from '../apiRoutes';
 
 export default function useAdminFaqs() {
   return useQuery(['__amindFaqs'], getFaqs);
@@ -31,14 +31,12 @@ export function useAddFaqMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newFaq) => {
-      console.log('Run faq : ', newFaq);
       return createApiFaq(newFaq);
     },
 
     {
       onSuccess: (data) => {
         if (data) {
-          console.log('New Faq  Data', data);
           toast.success('FAQ  added successfully!');
           queryClient.invalidateQueries(['__amindFaqs']);
           queryClient.refetchQueries('__amindFaqs', { force: true });
@@ -52,8 +50,6 @@ export function useAddFaqMutation() {
             ? error.response.data.message
             : error.message
         );
-        console.log('MutationError', error.response.data);
-        console.log('MutationError', error.data);
         rollback();
       },
     }
@@ -66,21 +62,15 @@ export function useFaqUpdateMutation() {
 
   return useMutation(updateFaqById, {
     onSuccess: (data) => {
-      console.log('Updated Faq  Data', data);
       toast.success('FAQ  updated successfully!!');
       queryClient.invalidateQueries('__amindFaqs');
-      // queryClient.refetchQueries('__amindFaqs', { force: true });
-
-      // navigate('/transaction-list');
     },
     onError: (err) => {
-      // toast.error('Oops!, an error occured', err);
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }

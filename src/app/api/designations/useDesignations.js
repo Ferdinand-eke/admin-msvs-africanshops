@@ -31,7 +31,6 @@ export function useDesigtMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newDesignation) => {
-      console.log('Run: ', newDesignation);
       return createDesignation(newDesignation);
     },
 
@@ -46,8 +45,12 @@ export function useDesigtMutation() {
       },
     },
     {
-      onError: (error, values, rollback) => {
-        console.log('MutationError', error.response.data);
+      onError: (err, values, rollback) => {
+        toast.error(
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message
+        );
         rollback();
       },
     }
@@ -74,8 +77,12 @@ export function useDesigUpdateMutation() {
       },
     },
     {
-      onError: (error, values, rollback) => {
-        console.log('MutationError', error.response.data);
+      onError: (err, values, rollback) => {
+        toast.error(
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message
+        );
         rollback();
       },
     }
@@ -96,12 +103,11 @@ export function useDeleteDesignation() {
       navigate("/designations/list");
      }
     },
-    onError: () => {
-      // toast.success('Oops!, an error occured');
-      toast.success(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
+    onError: (err) => {
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
       );
     },
   });

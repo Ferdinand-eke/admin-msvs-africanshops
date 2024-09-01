@@ -44,7 +44,6 @@ export function useAddShopPlanMutation() {
     {
       onSuccess: (data) => {
         if (data?.data) {
-          console.log('New plan  Data', data);
           toast.success('shop plan  added successfully!');
           queryClient.invalidateQueries(['shopplans']);
           queryClient.refetchQueries('shopplans', { force: true });
@@ -61,8 +60,6 @@ export function useAddShopPlanMutation() {
             ? error.response.data.message
             : error.message
         );
-        console.log('MutationError', error.response.data);
-        console.log('MutationError', error.data);
         rollback();
       },
     }

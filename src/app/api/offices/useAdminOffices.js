@@ -50,14 +50,9 @@ export function useAdminCreateOffice() {
 
   return useMutation(createApiOfficeOutlet, {
     onSuccess: (data) => {
-      // console.log('RegistrationResponse', data);
-
       if (data?.data?.savedOffice && data?.data?.success) {
         toast.success(data?.data?.message);
-        // queryClient.invalidateQueries('__myshop_details');
-
         queryClient.invalidateQueries('__offices');
-        // queryClient.refetchQueries('__myshop_products', { force: true });
         navigate('/administration/offices'); 
       }
 
@@ -70,7 +65,6 @@ export function useAdminCreateOffice() {
           ? error.response.data.message
           : error.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
@@ -87,13 +81,11 @@ export function useAdminUpdateOfficeOtlet() {
         toast.success(
           `${data?.data?.message ? data?.data?.message : data?.message}`
         );
-        // queryClient.invalidateQueries('__offices');
 
         queryClient.invalidateQueries('__offices');
         navigate('/administration/offices'); 
       }
 
-      // navigate('/transaction-list'); error.message
     },
     onError: (error, data) => {
       toast.error(
@@ -101,7 +93,6 @@ export function useAdminUpdateOfficeOtlet() {
           ? error.response.data.message
           : error.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
@@ -141,34 +132,18 @@ export function useAdminCreatePartnerVendorShop() {
 
   return useMutation(createApiPartnerVendorShop, {
     onSuccess: (data) => {
-      console.log('RegistrationResponse', data);
-      console.log('ResponseMessage', data?.data?.message);
 
       if (data) {
         toast.success(data?.data?.message);
-        // queryClient.invalidateQueries('__myshop_details');
-
         queryClient.invalidateQueries('__offices');
-        // queryClient.refetchQueries('__myshop_products', { force: true });
       }
-
-      // navigate('/transaction-list'); error.message
     },
     onError: (error, data) => {
-      console.log(
-        'MuTationError 11',
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-      console.log('MuTationError', error);
-      console.log('MuTationErrorMessage', error.message);
       toast.error(
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
@@ -179,37 +154,25 @@ export function useAdminUpdatePartnerVendorShop() {
 
   return useMutation(updateApiPartnerVendorShop, {
     onSuccess: (data) => {
-      console.log('PartnetUpdateResponse', data);
-      console.log('ResponseMessage', data?.data?.message);
 
       if (data) {
         toast.success('Partner Shop data updated successfully');
-        // queryClient.invalidateQueries('__myshop_details');
-
         queryClient.invalidateQueries('shops');
-        // queryClient.refetchQueries('__myshop_products', { force: true });
       }
 
-      // navigate('/transaction-list'); error.message
     },
     onError: (error, data) => {
-      console.log(
-        'PartnerMuTationError 11',
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-      console.log('PartnerMuTationError', error);
-      console.log('PartnerMuTationErrorMessage', error.message);
+      
       toast.error(
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
+
+
 /***
  * MANAGE PARTNERS SHOP  ENDS HERE
  */
@@ -224,34 +187,18 @@ export function useAdminCreateCompanyVendorShop() {
 
   return useMutation(createApiCompanyVendorShop, {
     onSuccess: (data) => {
-      console.log('Company_RegistrationResponse', data);
-      // console.log('ResponseMessage', data?.data?.message);
 
       if (data) {
         toast.success('Company Shop added successfully');
-        // queryClient.invalidateQueries('__myshop_details');
-
         queryClient.invalidateQueries('shops');
-        // queryClient.refetchQueries('__myshop_products', { force: true });
       }
-
-      // navigate('/transaction-list'); error.message
     },
     onError: (error) => {
-      console.log(
-        'MuTationError 11',
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-      console.log('MuTationError', error);
-      console.log('MuTationErrorMessage', error.message);
       toast.error(
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
@@ -262,33 +209,20 @@ export function useAdminUpdateCompanyVendorShop() {
 
   return useMutation(updateApiCompanyVendorShop, {
     onSuccess: (data) => {
-      console.log('Company_UpdateResponse', data);
 
       if (data) {
         toast.success('Company Shop data updated successfully');
-        // queryClient.invalidateQueries('__myshop_details');
 
         queryClient.invalidateQueries('shops');
-        // queryClient.refetchQueries('__myshop_products', { force: true });
       }
 
-      // navigate('/transaction-list'); error.message
     },
     onError: (error, data) => {
-      console.log(
-        'Company_MuTationError 11',
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-      console.log('Company_MuTationError', error);
-      console.log('Company_MuTationErrorMessage', error.message);
       toast.error(
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }

@@ -20,13 +20,10 @@ export default function useAdminPosts() {
 
 //get single post
 export function useSinglePost(postId) {
-  // console.log("QUERY-IN0SINGLEPOST", postId)
   if(!postId || postId === 'new'){
     return ''
   }
 
-  
-  // getSinglePostById
   return useQuery(['__amindPosts', postId], () => adminGetSinglePostById(postId), {
     enabled: Boolean(postId),
     // staleTime: 5000,
@@ -39,14 +36,12 @@ export function useAddPostMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newPost) => {
-      console.log('Run post : ', newPost);
       return createPost(newPost);
     },
 
     {
       onSuccess: (data) => {
         if (data?.data) {
-          console.log('New Post  Data', data);
           toast.success('Post  added successfully!');
           queryClient.invalidateQueries(['__amindPosts']);
           queryClient.refetchQueries('__amindPosts', { force: true });
@@ -61,8 +56,6 @@ export function useAddPostMutation() {
             ? error.response.data.message
             : error.message
         );
-        console.log('MutationError', error.response.data);
-        console.log('MutationError', error.data);
         rollback();
       },
     }
@@ -77,20 +70,17 @@ export function usePostUpdateMutation() {
   return useMutation(updatePostById, {
     onSuccess: (data) => {
      if(data?.data){
-      // console.log('Updated Post  Data', data);
       toast.success('Post  updated successfully!!');
       queryClient.invalidateQueries('__amindPosts');
       navigate('/posts/list');
      }
     },
     onError: (err) => {
-      // toast.error('Oops!, an error occured', err);
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }

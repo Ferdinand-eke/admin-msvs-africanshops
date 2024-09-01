@@ -1,14 +1,15 @@
-// import { date } from 'date-and-time';
-// import { marked } from 'marked';
+
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const assetBaseUrl = 'http://localhost:8000';
 
-const guestBaseDomain = 'http://localhost:8000';
+// const guestBaseDomain = 'http://localhost:8000';
+const guestBaseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/'; //deployed serve
+
 export const guestBaseUrl = `${guestBaseDomain}`;
 
-const baseDomain = 'http://localhost:8000/api';
+// const baseDomain = 'http://localhost:8000/api';
+const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/api'; //deployed serve
 export const baseUrl = `${baseDomain}`;
 
 export default function reqApi() {

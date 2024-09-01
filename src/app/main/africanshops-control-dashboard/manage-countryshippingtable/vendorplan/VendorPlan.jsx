@@ -56,8 +56,6 @@ function VendorPlan() {
 			numberofproducts: '',
 			dashboardandanalytics: '',
 			numberoffeaturedimages: '',
-			percetageCommissionCharge: '',
-			percetageCommissionChargeConversion: '',
 		},
 		resolver: zodResolver(schema)
 	});

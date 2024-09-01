@@ -10,51 +10,32 @@ import { toast } from "react-toastify";
 /**
  * MAIN APIs STARTS
  */
-const baseDomain = "http://localhost:8000";
+// const baseDomain = "http://localhost:8000";
 //====================================================
 /***Digital Ocean Server : Current main server*/
 // const baseDomain = 'https://clownfish-app-kb625.ondigitalocean.app';
 
-// const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/'; //deployed serve
+const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/'; //deployed serve
 
 //===================================================================================
 
 export const baseUrl = `${baseDomain}`;
 
 export default function Api() {
-  // const customHeaders = {
-  //   Accept: 'application/json',
-  // };
-
-  // const customHeaders = {
-  //   Accept: 'application/json',
-  //   withCredentials: true,
-  //   headers: {
-  //     'Access-Control-Allow-Origin': '*',
-  //     'Content-Type': 'application/json',
-  //   },
-  //   credentials: 'include',
-  // };
   const Api = axios.create({
     baseURL: baseUrl,
-    // headers: customHeaders,
   });
 
   return Api;
 }
 
 export function authApi() {
-  // const TOKEN = JSON.parse(Cookies.get('_authAdminInfo_Lead')).accessToken;
-
-  // const TOKEN = JSON.parse(Cookies.get('ADMIN_AFSP_Show_Hide_tmp_Lead'));
   const TOKEN = getAdminAccessToken();
   console.log("apiAppendeToken", TOKEN);
   const customHeaders = {
     Accept: "application/json",
     withCredentials: true,
     headers: {
-      // 'Access-Control-Allow-Origin': 'http://localhost:3000',
-      // 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
       "Content-Type": "application/json",
     },
     credentials: "include",
@@ -62,7 +43,6 @@ export function authApi() {
 
   const Api = axios.create({
     baseURL: baseUrl,
-    // headers: customHeaders,
 
     headers: { admincreed: `Bearer ${TOKEN}` },
   });

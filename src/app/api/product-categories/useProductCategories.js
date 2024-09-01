@@ -34,14 +34,12 @@ export function useAddProductCatMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newProdCat) => {
-      console.log('Run Product Category: ', newProdCat);
       return createProdCat(newProdCat);
     },
 
     {
       onSuccess: (data) => {
         if (data?.data) {
-          console.log('New product category Data', data);
           toast.success('product category added successfully!');
           queryClient.invalidateQueries(['__productcats']);
           queryClient.refetchQueries('__productcats', { force: true });
@@ -56,8 +54,6 @@ export function useAddProductCatMutation() {
             ? error.response.data.message
             : error.message
         );
-        console.log('MutationError', error.response.data);
-        console.log('MutationError', error.data);
         rollback();
       },
     }
@@ -71,7 +67,6 @@ export function useProductCatUpdateMutation() {
 
   return useMutation(updateProdCatById, {
     onSuccess: (data) => {
-      console.log('Update DATA', data);
       if (data?.data) {
       toast.success('product category updated successfully...!');
       queryClient.invalidateQueries('__productcats');
@@ -85,7 +80,6 @@ export function useProductCatUpdateMutation() {
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }

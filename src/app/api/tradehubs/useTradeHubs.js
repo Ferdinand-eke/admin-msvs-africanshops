@@ -30,14 +30,12 @@ export function useAddHubMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newTradehub) => {
-      // console.log('RunHub: ', newTradehub);
       return createTradehub(newTradehub);
     },
 
     {
       onSuccess: (data) => {
         if (data?.data) {
-          // console.log('New Hub Data', data);
           toast.success('trade hub added successfully!');
           queryClient.invalidateQueries(['tradeHubs']);
           queryClient.refetchQueries('tradeHubs', { force: true });
@@ -52,8 +50,6 @@ export function useAddHubMutation() {
             ? error.response.data.message
             : error.message
         );
-        // console.log('MutationError', error.response.data);
-        // console.log('MutationError', error.data);
         rollback();
       },
     }
@@ -67,7 +63,6 @@ export function useHubUpdateMutation() {
  
   return useMutation(updateTradehubById, {
     onSuccess: (data) => {
-      console.log('Updated Tradehub Data', data);
      if(data?.data){
       toast.success('traded hub updated successfully!!');
 
@@ -96,7 +91,6 @@ export function useDeleteHubMutation() {
 
   return useMutation(deleteTradehubById, {
     onSuccess: (data) => {
-      // console.log('Deleted Tradehub Data', data)
       if (data?.data) {
        
         toast.success('traded hub deleted successfully!!');

@@ -30,14 +30,12 @@ export function useAddMarketMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newMarket) => {
-      console.log('Run market : ', newMarket);
       return createMarket(newMarket);
     },
 
     {
       onSuccess: (data) => {
         if (data?.data) {
-          console.log('New market  Data', data);
           toast.success('market  added successfully!');
           queryClient.invalidateQueries(['__markets']);
           queryClient.refetchQueries('__markets', { force: true });
@@ -47,14 +45,11 @@ export function useAddMarketMutation() {
     },
     {
       onError: (error, values, rollback) => {
-        console.log('Run market Error : ', error);
         toast.error(
           error.response && error.response.data.message
             ? error.response.data.message
             : error.message
         );
-        console.log('MutationError', error.response.data);
-        console.log('MutationError', error.data);
         rollback();
       },
     }
@@ -68,7 +63,6 @@ export function useMarketUpdateMutation() {
 
   return useMutation(updateMarketById, {
     onSuccess: (data) => {
-      console.log('Update market  Data', data);
       if (data?.data) {
         toast.success('market  updated successfully!!');
         queryClient.invalidateQueries('__markets');
@@ -76,13 +70,11 @@ export function useMarketUpdateMutation() {
       }
     },
     onError: (err) => {
-      // toast.error('Oops!, an error occured', err);
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }

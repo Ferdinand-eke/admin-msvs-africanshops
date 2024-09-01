@@ -8,7 +8,7 @@ import {
   getApiLegalById,
   createLegal,
   updateLegalById,
-} from '../../store-redux/api/apiRoutes';
+} from '../apiRoutes';
 
 export default function useLegalDocs() {
   return useQuery(['__adminLegalDocs'], getLegals);
@@ -31,14 +31,12 @@ export function useAddLegalDocsMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newlegalDocs) => {
-      console.log('Run legaldoc : ', newlegalDocs);
       return createLegal(newlegalDocs);
     },
 
     {
       onSuccess: (data) => {
         if (data) {
-          console.log('New Legaldoc  Data', data);
           toast.success('Docs  added successfully!');
           queryClient.invalidateQueries(['__adminLegalDocs']);
           queryClient.refetchQueries('__adminLegalDocs', { force: true });
@@ -52,8 +50,6 @@ export function useAddLegalDocsMutation() {
             ? error.response.data.message
             : error.message
         );
-        console.log('MutationError', error.response.data);
-        console.log('MutationError', error.data);
         rollback();
       },
     }

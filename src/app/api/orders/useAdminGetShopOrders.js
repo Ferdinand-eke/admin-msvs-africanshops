@@ -35,16 +35,18 @@ export function useAdminFindShopOrder(orderId) {
 
 export function usePackOrder() {
   const queryClient = useQueryClient();
-  // const navigate = useNavigate();
   return useMutation(adminPackOrders, {
     onSuccess: () => {
       toast.success('Order Packed successfully!');
       queryClient.invalidateQueries('orders_adminrole');
-      // navigate('/transaction-list');
     },
-    onError: () => {
-      toast.success('Oops!, an error occured');
-      // queryClient.invalidateQueries('orders_adminrole');
+    onError: (err) => {
+      // toast.success('Oops!, an error occured');
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
     },
   });
 }
@@ -56,13 +58,18 @@ export function useShipOrder() {
       toast.success('Order Shipped successfully!');
       queryClient.invalidateQueries('orders_adminrole');
     },
-    onError: () => {
-      toast.success('Oops!, an error occured');
-      // queryClient.invalidateQueries('orders_adminrole');
-    },
+    onError: (err) => {
+      // toast.success('Oops!, an error occured');
+
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );    },
   });
 }
 
+/***Handle for order arrival */
 export function useHandleOrderArrival() {
   const queryClient = useQueryClient();
   return useMutation(adminConfirmOrderArrival, {
@@ -70,9 +77,13 @@ export function useHandleOrderArrival() {
       toast.success('Order Arrived Warehouse successfully!');
       queryClient.invalidateQueries('orders_adminrole');
     },
-    onError: () => {
-      toast.success('Oops!, an error occured');
-      // queryClient.invalidateQueries('orders_adminrole');
+    onError: (err) => {
+      // toast.success('Oops!, an error occured');
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
     },
   });
 }
@@ -84,30 +95,16 @@ export function useDeliverOrder() {
       toast.success('Order Delivered successfully!');
       queryClient.invalidateQueries('orders_adminrole');
     },
-    onError: (error) => {
-      console.log('Deliver Error', error);
-
-      toast.success('Oops!, an error occured while processing request');
-      // queryClient.invalidateQueries('orders_adminrole');
+    onError: (err) => {
+      // toast.success('Oops!, an error occured while processing request');
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
     },
   });
 }
-
-// export function useCashoutShopEarnings() {
-//   const queryClient = useQueryClient();
-//   const navigate = useNavigate();
-//   return useMutation(MyShopCashOutOrderByOrderIdShopId, {
-//     onSuccess: () => {
-//       toast.success('Order Sealed successfully!');
-//       queryClient.invalidateQueries('orders_adminrole');
-//       navigate('/transaction-list');
-//     },
-//     onError: () => {
-//       toast.success('Oops!, an error occured');
-//       // queryClient.invalidateQueries('orders_adminrole');
-//     },
-//   });
-// }
 
 
 /******
@@ -118,7 +115,6 @@ export function useDeliverOrder() {
 
 export function useAdminOrderItems(orderId) {
   return useQuery(['orders_items', orderId], () =>
-    // adminGetOrderById(orderId)
     adminGetOrderItemsOfOrderById(orderId)
   );
 }

@@ -37,7 +37,6 @@ export function useAddLgaMutation() {
 
     {
       onSuccess: (data) => {
-        console.log('New state Data', data);
         if (data?.data) {
           
           toast.success('L.G.A added successfully!');
@@ -68,7 +67,6 @@ export function useLgaUpdateMutation() {
   return useMutation(updateLgaById, {
     
     onSuccess: (data) => {
-      console.log('Updated state Data', data);
       if(data?.data){
         toast.success('L.G.A updated successfully!!');
         queryClient.invalidateQueries('lgas');
@@ -84,8 +82,6 @@ export function useLgaUpdateMutation() {
           : error.message
       );
       rollback();
-      // toast.success('Oops!, an error occured');
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }

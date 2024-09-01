@@ -42,14 +42,12 @@ export function useAddCountryMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newCountry) => {
-      console.log("Run: ", newCountry);
       return createCountry(newCountry);
     },
 
     {
       onSuccess: (data) => {
         if (data?.data) {
-          // console.log("New Country Data", data?.data);
           toast.success("Country added successfully!");
           queryClient.invalidateQueries(["__countries"]);
           queryClient.refetchQueries("__countries", { force: true });
@@ -64,8 +62,6 @@ export function useAddCountryMutation() {
             ? error.response.data.message
             : error.message
         );
-        console.log("MutationError", error.response.data);
-        console.log("MutationError", error.data);
         rollback();
       },
     }
@@ -78,7 +74,6 @@ export function useCountryUpdateMutation() {
 
   return useMutation(updateCountryById, {
     onSuccess: (data) => {
-      console.log("UPDATE_COUNTY:DATA", data);
       if (data?.data) {
         toast.success("country updated successfully!!");
         queryClient.invalidateQueries("__countries");
@@ -97,10 +92,6 @@ export function useCountryAddShippingTableMutation() {
   return useMutation(createCountryShippingTable, {
     onSuccess: (data) => {
       if (data) {
-        console.log("New CountryShippingTable Data", data);
-        // toast.success('Country added successfully!');
-        // queryClient.invalidateQueries(['__countries']);
-        // queryClient.refetchQueries('__countries', { force: true });
         toast.success("country shipping table aded successfully!!");
         toast.success(`${data?.message ? data?.message : data?.data?.message}`);
         queryClient.invalidateQueries("__countries");
@@ -127,7 +118,6 @@ export function useCountryUpdateShippingMutation() {
       queryClient.invalidateQueries("__countries");
     },
     onError: () => {
-      // toast.success('Oops!, an error occured');
       toast.success(
         error.response && error.response.data.message
           ? error.response.data.message
@@ -149,7 +139,6 @@ export function useDeleteSingleCountry() {
       navigate("/administrations/countries");
     },
     onError: () => {
-      // toast.success('Oops!, an error occured');
       toast.success(
         error.response && error.response.data.message
           ? error.response.data.message

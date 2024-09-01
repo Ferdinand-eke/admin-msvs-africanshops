@@ -11,20 +11,23 @@ const queryClient = useQueryClient();
 
 export const deptMutation = useMutation(
   (newDepartment) => {
-    console.log('Run: ', newDepartment);
     return createDepartment(newDepartment);
   },
 
   {
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('post created!');
       queryClient.invalidateQueries(['departments']);
       queryClient.refetchQueries('departments', { force: true });
     },
   },
   {
-    onError: (error, values, rollback) => {
-      console.log('MutationError', error.response.data);
+    onError: (err, values, rollback) => {
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
       rollback();
     },
   }
@@ -32,31 +35,23 @@ export const deptMutation = useMutation(
 
 export const deptUpdateMutation = useMutation(
   (id, newDepartment) => {
-    // console.log('Run Update: ', newDepartment);
     return updateDepartment(id, newDepartment);
   },
 
   {
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries(['departments']);
       queryClient.refetchQueries('departments', { force: true });
     },
   },
   {
-    onError: (error, values, rollback) => {
-      console.log('MutationError', error.response.data);
+    onError: (err, values, rollback) => {
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
       rollback();
     },
   }
 );
-
-// export const useGetSingleDepartment = (deptId) => {
-//   return useQuery(['department', deptId], () => getDepartment(deptId), {
-//     enabled: Boolean(deptId),
-//     staleTime: 5000,
-//   });
-// };
-
-// export const useGetNewsPosts = () => {
-//   return useQuery(['departments'], getNewsPosts);
-// };

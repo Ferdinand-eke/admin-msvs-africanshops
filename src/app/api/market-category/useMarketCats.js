@@ -70,7 +70,6 @@ export function useMarketCategoryUpdateMutation() {
   return useMutation(updateMarketCategoryById, {
     onSuccess: (data) => {
      if(data?.data){
-      console.log('Updated Product Category Data', data);
       toast.success('market category updated successfully!!');
       queryClient.invalidateQueries('__marketcats');
       navigate('/market-categories/list');
@@ -82,7 +81,6 @@ export function useMarketCategoryUpdateMutation() {
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }

@@ -16,7 +16,7 @@ import {
   adminUnSuspendDisciplineStaff,
   adminMakeLeader,
   adminUnMakeLeader,
-} from '../../store-redux/api/apiRoutes';
+} from '../apiRoutes';
 
 export default function useAdminUsers() {
   return useQuery(['__admins'], getApiAdminUsers);
@@ -27,14 +27,10 @@ export function useSingleAdminStaff(staffId) {
   return useQuery(
     ['__adminById', staffId],
     () => getApiAdminUserById(staffId),
-    // {
-    //   if (staffId) {
-    //     getApiAdminUserById(staffId);
-    //   }
-    // },
+  
     {
       enabled: Boolean(staffId),
-      staleTime: 2000,
+      // staleTime: 2000,
     }
   );
 }
@@ -44,14 +40,12 @@ export function useAddAdminStaffMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newAdminStaff) => {
-      console.log('Run Adminstaff : ', newAdminStaff);
       return createApiAdminUser(newAdminStaff);
     },
 
     {
       onSuccess: (data) => {
         if (data) {
-          console.log('New Adminstaff  Data', data);
           toast.success('Adminstaff  added successfully!');
           queryClient.invalidateQueries(['__admins']);
           queryClient.refetchQueries('__admins', { force: true });
@@ -65,8 +59,6 @@ export function useAddAdminStaffMutation() {
             ? error.response.data.message
             : error.message
         );
-        console.log('MutationError', error.response.data);
-        console.log('MutationError', error.data);
         rollback();
       },
     }
@@ -79,18 +71,15 @@ export function useAdminStaffUpdateMutation() {
 
   return useMutation(updateApiAdminUserById, {
     onSuccess: (data) => {
-      console.log('Updated Adminstaff  Data', data);
       toast.success('Admin staff  updated successfully!!');
       queryClient.invalidateQueries('__admins');
     },
     onError: (err) => {
-      // toast.error('Oops!, an error occured', err);
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
@@ -102,19 +91,16 @@ export function useAdminStaffBlockMutation() {
   return useMutation(adminBlockDisciplineStaff, {
     onSuccess: (data) => {
       if (data?.data) {
-        console.log('Block Adminstaff  Data', data);
         toast.success('Adminstaff  blocked successfully!!');
         queryClient.invalidateQueries('__admins');
       }
     },
     onError: (err) => {
-      // toast.error('Oops!, an error occured', err);
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
@@ -126,19 +112,16 @@ export function useAdminStaffUnBlockMutation() {
   return useMutation(adminUnBlockDisciplineStaff, {
     onSuccess: (data) => {
       if (data?.data) {
-        console.log('Un-Block Adminstaff  Data', data);
         toast.success('Adminstaff un-blocked successfully!!');
         queryClient.invalidateQueries('__admins');
       }
     },
     onError: (err) => {
-      // toast.error('Oops!, an error occured', err);
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
@@ -150,7 +133,6 @@ export function useAdminStaffSuspenMutation() {
   return useMutation(adminSuspendDisciplineStaff, {
     onSuccess: (data) => {
       if (data?.data) {
-        console.log('Un-Block Adminstaff  Data', data?.data);
         toast.success('Adminstaff suspended successfully!!');
         queryClient.invalidateQueries('__admins');
       }
@@ -171,21 +153,15 @@ export function useAdminStaffUnSuspednMutation() {
 
   return useMutation(adminUnSuspendDisciplineStaff, {
     onSuccess: (data) => {
-      console.log('Un-Suspend Adminstaff  Data', data);
       toast.success('Adminstaff un-suspended successfully!!');
       queryClient.invalidateQueries('__admins');
-      // queryClient.refetchQueries('__admins', { force: true });
-
-      // navigate('/transaction-list');
     },
     onError: (err) => {
-      // toast.error('Oops!, an error occured', err);
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
@@ -196,21 +172,15 @@ export function useAdminStaffMakeLeaderMutation() {
 
   return useMutation(adminMakeLeader, {
     onSuccess: (data) => {
-      console.log('Make leader Adminstaff  Data', data);
       toast.success('Adminstaff made leader successfully!!');
       queryClient.invalidateQueries('__admins');
-      // queryClient.refetchQueries('__admins', { force: true });
-
-      // navigate('/transaction-list');
     },
     onError: (err) => {
-      // toast.error('Oops!, an error occured', err);
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
@@ -221,21 +191,15 @@ export function useAdminStaffUnMakeLeaderMutation() {
 
   return useMutation(adminUnMakeLeader, {
     onSuccess: (data) => {
-      console.log('Un-Make leader Adminstaff  Data', data);
       toast.success('Adminstaff leader removed successfully!!');
       queryClient.invalidateQueries('__admins');
-      // queryClient.refetchQueries('__admins', { force: true });
-
-      // navigate('/transaction-list');
     },
     onError: (err) => {
-      // toast.error('Oops!, an error occured', err);
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }

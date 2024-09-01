@@ -38,13 +38,17 @@ export function useAddDeptMutation() {
    
     },
     onError: (error, query) => {
-      if (error) {
+      if (err) {
         return toast.error('Oops!, an error occured');
       }
-      if (error && error.status === 401) {
-        console.log('Signing out');
+      if (err && err.status === 403) {
         // signOut();
       }
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
     },
   });
 }
@@ -55,7 +59,6 @@ export function useUpdateDepartmentMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (designation) => {
-      // console.log('Run Update: ', designation);
       return updateDeptById(designation);
     },
 
@@ -63,7 +66,6 @@ export function useUpdateDepartmentMutation() {
       onSuccess: (data) => {
         if (data) {
           if(data?.data){
-            console.log("UPDATED-DEPT", data?.data)
             toast.success('Departent updated successfully!');
           queryClient.invalidateQueries(['getDepartmentsQuery']);
           queryClient.refetchQueries('getDepartmentsQuery', { force: true });
@@ -73,8 +75,12 @@ export function useUpdateDepartmentMutation() {
       },
     },
     {
-      onError: (error, values, rollback) => {
-        console.log('MutationError', error.response.data);
+      onError: (err, values, rollback) => {
+        toast.error(
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message
+        );
         rollback();
       },
     }
@@ -94,8 +100,7 @@ export function useDeleteSingleDepartment() {
       navigate("/departments/list");
     }
     },
-    onError: () => {
-      // toast.success('Oops!, an error occured');
+    onError: (error) => {
       toast.success(
         error.response && error.response.data.message
           ? error.response.data.message

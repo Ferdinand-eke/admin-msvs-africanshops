@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createDepartment, updateDepartment } from './designtaions';
+import { toast } from 'react-toastify';
 
 const queryClient = useQueryClient();
 
 export const deptMutation = useMutation(
   (newDepartment) => {
-    console.log('Run: ', newDepartment);
     return createDepartment(newDepartment);
   },
 
@@ -16,28 +16,35 @@ export const deptMutation = useMutation(
     },
   },
   {
-    onError: (error, values, rollback) => {
-      console.log('MutationError', error.response.data);
+    onError: (err, values, rollback) => {
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
       rollback();
     },
   }
 );
 
 export const deptUpdateMutation = useMutation(
-  (id, newDepartment) => {
-    // console.log('Run Update: ', newDepartment);
+  (id, newDepartment) => {r
     return updateDepartment(id, newDepartment);
   },
 
   {
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries(['departments']);
       queryClient.refetchQueries('departments', { force: true });
     },
   },
   {
-    onError: (error, values, rollback) => {
-      console.log('MutationError', error.response.data);
+    onError: (err, values, rollback) => {
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
       rollback();
     },
   }

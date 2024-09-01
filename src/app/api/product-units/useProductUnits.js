@@ -40,7 +40,6 @@ export function useAddProductUnitMutation() {
 
     {
       onSuccess: (data) => {
-        console.log('add Product Category Data', data);
         if (data?.data) {
           toast.success('product unit added successfully!');
           queryClient.invalidateQueries(['__productunits']);
@@ -69,7 +68,6 @@ export function useProductUnitUpdateMutation() {
 
   return useMutation(updateProdUnitById, {
     onSuccess: (data) => {
-      console.log('Updated Product Category Data', data);
    if(data?.data){
     toast.success('product unit updated successfully!!');
     queryClient.invalidateQueries('__productunits');
@@ -77,13 +75,11 @@ export function useProductUnitUpdateMutation() {
    }
     },
     onError: (err) => {
-      // toast.error('Oops!, an error occured', err);
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message
       );
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }

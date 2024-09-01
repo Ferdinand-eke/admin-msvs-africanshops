@@ -20,7 +20,6 @@ export function useSingleState(stateId) {
   }
   return useQuery(['states', stateId], () => getStateById(stateId), {
     enabled: Boolean(stateId),
-    // staleTime: 5000,
   });
 }
 
@@ -30,15 +29,12 @@ export function useAddStateMutation() {
   const queryClient = useQueryClient();
   return useMutation(
     (newState) => {
-      // console.log('Run: ', newState);
       return createBState(newState);
     },
 
     {
       onSuccess: (data) => {
-        console.log('New state Data', data);
         if (data?.data) {
-          // console.log('New state Data', data);
           toast.success('State added successfully!');
           queryClient.invalidateQueries(['states']);
           queryClient.refetchQueries('states', { force: true });
@@ -53,8 +49,6 @@ export function useAddStateMutation() {
             ? error.response.data.message
             : error.message
         );
-        // console.log('MutationError', error.response.data);
-        // console.log('MutationError', error.data);
         rollback();
       },
     }
@@ -68,9 +62,7 @@ export function useStateUpdateMutation() {
 
   return useMutation(updateStateById, {
     onSuccess: (data) => {
-      // console.log('Updated State Data', data);
       if (data?.data) {
-        // console.log('Updated State Data-2', data);
         toast.success('state updated successfully!!');
         queryClient.invalidateQueries('states');
         queryClient.refetchQueries('states', { force: true });
@@ -84,8 +76,6 @@ export function useStateUpdateMutation() {
           ? error.response.data.message
           : error.message
       );
-      // toast.error('Oops!, an error occured');
-      // queryClient.invalidateQueries('__myshop_orders');
     },
   });
 }
