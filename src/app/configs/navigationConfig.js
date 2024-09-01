@@ -14,6 +14,8 @@ i18next.addResourceBundle('ar', 'navigation', ar);
 
 
 const navigationConfig = [
+
+	/***Dashboard pane */
 	{
 		id: 'dashboards',
 		title: 'Dashboards',
@@ -23,161 +25,375 @@ const navigationConfig = [
 		translate: 'DASHBOARDS',
 		children: [
 			{
-				id: 'dashboards.project',
-				title: 'Project',
+				id: 'shop.dashboards',
+				title: 'Dashboard',
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-check',
-				url: '/dashboards/project'
-			},
-			// {
-			// 	id: 'dashboards.analytics',
-			// 	title: 'Analytics',
-			// 	type: 'item',
-			// 	icon: 'heroicons-outline:chart-pie',
-			// 	url: '/dashboards/analytics'
-			// },
-			// {
-			// 	id: 'dashboards.finance',
-			// 	title: 'Finance',
-			// 	type: 'item',
-			// 	icon: 'heroicons-outline:cash',
-			// 	url: '/dashboards/finance'
-			// },
-			// {
-			// 	id: 'dashboards.crypto',
-			// 	title: 'Crypto',
-			// 	type: 'item',
-			// 	icon: 'heroicons-outline:currency-dollar',
-			// 	url: '/dashboards/crypto'
-			// }
-		]
-	},
-
-	{
-		id: 'users',
-		title: 'Manage users',
-		subtitle: 'Users management helpers',
-		type: 'group',
-		icon: 'heroicons-outline:home',
-		translate: 'USERS',
-		children: [
-			{
-				id: 'users.admin',
-				title: 'Admin staff',
-				type: 'item',
-				icon: 'heroicons-outline:clipboard-check',
-				url: '/users/admin'
-			},
-			{
-				id: 'users.user',
-				title: 'Uers',
-				type: 'item',
-				icon: 'heroicons-outline:clipboard-check',
-				url: '/users/user'
+				url: '/shop-dashboard'
 			},
 			
 		]
 	},
 
+	/***Manage users and roles */
+	// {
+	// 	id: 'users',
+	// 	title: 'Users Management',
+	// 	subtitle: 'Users management helpers',
+	// 	type: 'group',
+	// 	icon: 'heroicons-outline:home',
+	// 	// translate: 'SHOP-STAFF-USERS',
+	// 	children: [
+	// 		{
+	// 			id: 'users.admin',
+	// 			title: 'Admin staff',
+	// 			type: 'item',
+	// 			icon: 'heroicons-outline:user-group',
+	// 			url: '/users/admin'
+	// 		},
+	// 		{
+	// 			id: 'users.user',
+	// 			title: 'Uers',
+	// 			type: 'item',
+	// 			icon: 'heroicons-outline:user-group',
+	// 			url: '/users/user'
+	// 		},
+	// 		{
+	// 			id: 'users.shopstaff',
+	// 			title: 'Shop Staff',
+	// 			type: 'item',
+	// 			icon: 'heroicons-outline:user-group',
+	// 			url: '/users/shopstaff'
+	// 		},
+			
+	// 	]
+	// },
+
+	/***Admistrative activities & management pane */
 	{
-		id: 'properties',
-		title: 'Manage prperties',
-		subtitle: 'Properties management helpers',
+		id: 'administrations',
+		title: 'Administrative Tasks',
+		subtitle: 'Manage africanshops operations',
 		type: 'group',
-		icon: 'heroicons-outline:home',
-		translate: 'PROPERTIES',
+		icon: 'heroicons-outline:shopping-cart',
+		// translate: 'VENDORS-&-VENDOR-PLANS',
 		children: [
 			{
-				id: 'properties.list',
-				title: 'Properties',
+				id: 'administrations.coutries',
+				title: 'Countries of Operations',
 				type: 'item',
-				icon: 'heroicons-outline:clipboard-check',
-				url: '/properties/listings'
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/administrations/countries'
 			},
 
 			{
-				id: 'properties.managedlist',
-				title: 'Managed Properties',
+				id: 'administrations.states',
+				title: 'States of Operations',
 				type: 'item',
-				icon: 'heroicons-outline:clipboard-check',
-				url: '/property/managed-listings'
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/administrations/states'
+			},
+
+			{
+				id: 'administrations.lgas',
+				title: 'LGAs/Counties of Operations',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/administrations/lgas'
+			},
+
+			{
+				id: 'administrations.offices',
+				title: 'Our offices of Operations',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/administrations/offices'
 			},
 			{
-				id: 'properties.users.managedlist',
-				title: 'Manage Users & Properties',
+				id: 'departments.list',
+				title: 'Departmrnts in our organisation',
 				type: 'item',
-				icon: 'heroicons-outline:clipboard-check',
-				url: '/userlistings/managed-user-listings'
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/departments/list'
 			},
+			{
+				id: 'designations.list',
+				title: 'Our departmental designations',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/designations/list'
+			},
+
 			// {
-			// 	id: 'users.user',
-			// 	title: 'Uers',
+			// 	id: 'vendors.listvendors',
+			// 	title: 'Vendors',
 			// 	type: 'item',
-			// 	icon: 'heroicons-outline:clipboard-check',
-			// 	url: '/users/user'
-			// },
-			// {
-			// 	id: 'users.vendors',
-			// 	title: 'Property Managers',
-			// 	type: 'item',
-			// 	icon: 'heroicons-outline:clipboard-check',
-			// 	url: '/users/vendors'
+			// 	icon: 'heroicons-outline:shopping-cart',
+			// 	url: '/vendors/listvendors'
 			// },
 			
 		]
 	},
 
+	/***Market management pane */
 	{
-		id: 'Add-Ons',
-		title: 'Manage Add-Ons',
-		subtitle: 'Properties Add-Ons management helpers',
+		id: 'markets',
+		title: 'Markets',
+		subtitle: 'Markets we operate',
 		type: 'group',
-		icon: 'heroicons-outline:home',
-		translate: 'ADD-ONS',
+		icon: 'heroicons-outline:shopping-cart',
+		// translate: 'VENDORS-&-VENDOR-PLANS',
 		children: [
 			{
-				id: 'packages.servicetypes',
-				title: 'Service Types',
+				id: 'market.categories',
+				title: 'Market Categories',
 				type: 'item',
-				icon: 'heroicons-outline:clipboard-check',
-				url: '/packages/servicetypes'
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/market-categories/list'
 			},
 			{
-				id: 'packages.propertytypes',
-				title: 'Property Types',
+				id: 'markets.list',
+				title: 'Markets',
 				type: 'item',
-				icon: 'heroicons-outline:clipboard-check',
-				url: '/types/propertytypes'
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/markets/list'
 			},
+
+
+
 			// {
-			// 	id: 'users.user',
-			// 	title: 'Uers',
+			// 	id: 'market.orders',
+			// 	title: 'Vendors',
 			// 	type: 'item',
-			// 	icon: 'heroicons-outline:clipboard-check',
-			// 	url: '/users/user'
-			// },
-			// {
-			// 	id: 'users.vendors',
-			// 	title: 'Property Managers',
-			// 	type: 'item',
-			// 	icon: 'heroicons-outline:clipboard-check',
-			// 	url: '/users/vendors'
+			// 	icon: 'heroicons-outline:shopping-cart',
+			// 	url: '/vendors/listvendors'
 			// },
 			
 		]
 	},
 
+	/***Vendor-Plan management pane */
+	{
+		id: 'vendorplans',
+		title: 'Vendor Plans & Vendors',
+		subtitle: 'Manage vendor plan packages',
+		type: 'group',
+		icon: 'heroicons-outline:shopping-cart',
+		// translate: 'VENDORS-&-VENDOR-PLANS',
+		children: [
+			{
+				id: 'vendorplans.packages',
+				title: 'Vendor Plans',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/vendorplans/packages'
+			},
 
+			{
+				id: 'vendors.listvendors',
+				title: 'Vendors',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/vendors/listvendors'
+			},
 
+			{
+				id: 'partnervendors.listpartners',
+				title: 'Partner Vendors',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/partnervendors/listpartners'
+			},
+			
+		]
+	},
 
+	/***Products management pane */
+	{
+		id: 'shopproducts',
+		title: 'Products',
+		subtitle: 'Manage your shop products',
+		type: 'group',
+		icon: 'heroicons-outline:shopping-cart',
+		translate: 'PRODUCTS',
+		children: [
+			{
+				id: 'tradehubs.list',
+				title: 'Trade Hubs',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/tradehubs/list'
+			},
+			
+			{
+				id: 'productcategories.list',
+				title: 'Product Categories',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/productcategories/list'
+			},
+			{
+				id: 'productpackagings.list',
+				title: 'Product Packaging',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/productpackagings/list'
+			},
+			{
+				id: 'productunits.list',
+				title: 'Product Units',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/productunits/list'
+			},
 
+			{
+				//NAVIGATION:SHOP PRODUCTS
+				id: 'shopproducts.list',
+				title: 'Products',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/shopproducts-list/products'
+			},
+			{
+				id: 'shopproducts.inventory',
+				title: 'Inventory',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/shopproducts-list/inventory'
+			},
+			
+		]
+	},
 
+	/***Admin ManageShop-orders  pane */
+	{
+		id: 'adminmanageorders',
+		title: 'Orders-&-Pos',
+		subtitle: 'Admin Manage orders',
+		type: 'group',
+		icon: 'heroicons-outline:home',
+		translate: 'ORDERS-&-POS',
+		children: [
+			{
+				id: 'admin-manage.orders',
+				title: 'Manage Orders',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/admin-manage/orders'
+			},
+			{
+				id: 'shoporders.pos',
+				title: 'Manage Poin Of Sale (POS)',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/admin-manage/pos'
+			},
+		
+		]
+	},
 
+/***shop-orders orders pane */
+	{
+		id: 'shoporders',
+		title: 'Orders-&-Pos',
+		subtitle: 'Manage your shop orders',
+		type: 'group',
+		icon: 'heroicons-outline:home',
+		translate: 'ORDERS-&-POS',
+		children: [
+			{
+				id: 'shoporders.list',
+				title: 'Orders',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/shoporders-list/orders'
+			},
+			{
+				id: 'shoporders.pos',
+				title: 'Poin Of Sale (POS)',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/shoporders-list/pos'
+			},
+		
+		]
+	},
 
+		/***Editorial management pane */
+		{
+			id: 'Editorials',
+			title: 'Manage Editorials',
+			subtitle: 'Editorials on africanshops',
+			type: 'group',
+			icon: 'heroicons-outline:home',
+			translate: 'Editorials',
+			children: [
+				
+				{
+					id: 'postcategories.list',
+					title: 'post categories',
+					type: 'item',
+					icon: 'heroicons-outline:clipboard-check',
+					url: '/postcategories/list'
+				},
+
+				{
+					id: 'posts.list',
+					title: 'posts',
+					type: 'item',
+					icon: 'heroicons-outline:clipboard-check',
+					url: '/posts/list'
+				},
+	
+				// {
+				// 	id: 'withdrawals.list',
+				// 	title: 'Property Withdrawals',
+				// 	type: 'item',
+				// 	icon: 'heroicons-outline:clipboard-check',
+				// 	url: '/finance/withdrawals'
+				// },
+			
+				
+			]
+		},
+
+		/***Country Shipping Tables management pane */
+		{
+			id: 'CountryShipping',
+			title: 'Country-Shipping-Table',
+			subtitle: 'Our Country shipping table on africanshops',
+			type: 'group',
+			icon: 'heroicons-outline:home',
+			translate: 'CountryShipping',
+			children: [
+				
+				{
+					id: 'countryshipping.list',
+					title: 'Shipping Tabel(Countries)',
+					type: 'item',
+					icon: 'heroicons-outline:clipboard-check',
+					url: '/countryshipping/list'
+				},
+
+				// {
+				// 	id: 'posts.list',
+				// 	title: 'posts',
+				// 	type: 'item',
+				// 	icon: 'heroicons-outline:clipboard-check',
+				// 	url: '/posts/list'
+				// },
+	
+			
+				
+			]
+		},
+
+	/***Finance management pane */
 	{
 		id: 'FInance',
 		title: 'Manage Finance',
-		subtitle: 'Properties Finance management helpers',
+		subtitle: 'Earnings from businesses you run',
 		type: 'group',
 		icon: 'heroicons-outline:home',
 		translate: 'FINANCE',
@@ -185,225 +401,134 @@ const navigationConfig = [
 			
 			{
 				id: 'property.earnings',
-				title: 'Property Earnings',
+				title: 'Wallet',
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-check',
-				url: '/finance/property-earnings'
+				url: '/africanshops/finance'
 			},
 
-			{
-				id: 'withdrawals.list',
-				title: 'Property Withdrawals',
-				type: 'item',
-				icon: 'heroicons-outline:clipboard-check',
-				url: '/finance/withdrawals'
-			},
 			// {
-			// 	id: 'users.user',
-			// 	title: 'Uers',
+			// 	id: 'withdrawals.list',
+			// 	title: 'Property Withdrawals',
 			// 	type: 'item',
 			// 	icon: 'heroicons-outline:clipboard-check',
-			// 	url: '/users/user'
+			// 	url: '/finance/withdrawals'
 			// },
-			// {
-			// 	id: 'users.vendors',
-			// 	title: 'Property Managers',
-			// 	type: 'item',
-			// 	icon: 'heroicons-outline:clipboard-check',
-			// 	url: '/users/vendors'
-			// },
+		
 			
 		]
 	},
 
 
 
+	/***Support management pane */
+	{
+		id: 'Support.Helpcenter',
+		title: 'Get Support',
+		subtitle: 'Get Clarity And Support From Admin',
+		type: 'group',
+		icon: 'heroicons-outline:home',
+		translate: 'SUPPORT',
+		children: [
+			
+			{
+				id: 'support.earnings',
+				title: 'Suppport',
+				type: 'item',
+				icon: 'heroicons-outline:support',
+				url: '/support'
+			},
 
+			
+		
+			
+		]
+	},
 
-	// Pages Below not applacable
+	/***Messanger pane */
+	{
+		id: 'Africanshops.Messanger',
+		title: 'Messanger',
+		subtitle: 'Chat with potential customres and admin',
+		type: 'group',
+		icon: 'heroicons-outline:chat-alt',
+		translate: 'MESSANGER',
+		children: [
+			
+			{
+				id: 'apps.messenger',
+				title: 'Messenger',
+				type: 'item',
+				icon: 'heroicons-outline:chat-alt',
+				url: '/africanshops/messenger',
+				translate: 'MESSENGER'
+			},
+
+			
+		
+			
+		]
+	},
+
+	
 
 	// {
-	// 	id: 'apps',
-	// 	title: 'Applications',
-	// 	subtitle: 'Custom made application designs',
+	// 	id: 'properties',
+	// 	title: 'Manage prperties',
+	// 	subtitle: 'Properties management helpers',
 	// 	type: 'group',
-	// 	icon: 'heroicons-outline:cube',
-	// 	translate: 'APPLICATIONS',
+	// 	icon: 'heroicons-outline:home',
+	// 	translate: 'PROPERTIES',
 	// 	children: [
 	// 		{
-	// 			id: 'apps.academy',
-	// 			title: 'Academy',
+	// 			id: 'properties.list',
+	// 			title: 'Properties',
 	// 			type: 'item',
-	// 			icon: 'heroicons-outline:academic-cap',
-	// 			url: '/apps/academy',
-	// 			translate: 'ACADEMY'
+	// 			icon: 'heroicons-outline:clipboard-check',
+	// 			url: '/properties/listings'
 	// 		},
+
 	// 		{
-	// 			id: 'apps.calendar',
-	// 			title: 'Calendar',
-	// 			subtitle: '3 upcoming events',
+	// 			id: 'properties.managedlist',
+	// 			title: 'Managed Properties',
 	// 			type: 'item',
-	// 			icon: 'heroicons-outline:calendar',
-	// 			url: '/apps/calendar',
-	// 			translate: 'CALENDAR'
+	// 			icon: 'heroicons-outline:clipboard-check',
+	// 			url: '/property/managed-listings'
 	// 		},
 	// 		{
-	// 			id: 'apps.messenger',
-	// 			title: 'Messenger',
+	// 			id: 'properties.users.managedlist',
+	// 			title: 'Manage Users & Properties',
 	// 			type: 'item',
-	// 			icon: 'heroicons-outline:chat-alt',
-	// 			url: '/apps/messenger',
-	// 			translate: 'MESSENGER'
+	// 			icon: 'heroicons-outline:clipboard-check',
+	// 			url: '/userlistings/managed-user-listings'
 	// 		},
-	// 		{
-	// 			id: 'apps.contacts',
-	// 			title: 'Contacts',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:user-group',
-	// 			url: '/apps/contacts',
-	// 			translate: 'CONTACTS'
-	// 		},
-	// 		{
-	// 			id: 'apps.ecommerce',
-	// 			title: 'ECommerce',
-	// 			type: 'collapse',
-	// 			icon: 'heroicons-outline:shopping-cart',
-	// 			translate: 'ECOMMERCE',
-	// 			children: [
-	// 				{
-	// 					id: 'e-commerce-products',
-	// 					title: 'Products',
-	// 					type: 'item',
-	// 					url: 'apps/e-commerce/products',
-	// 					end: true
-	// 				},
-	// 				{
-	// 					id: 'e-commerce-product-detail',
-	// 					title: 'Product Detail',
-	// 					type: 'item',
-	// 					url: 'apps/e-commerce/products/1/a-walk-amongst-friends-canvas-print'
-	// 				},
-	// 				{
-	// 					id: 'e-commerce-new-product',
-	// 					title: 'New Product',
-	// 					type: 'item',
-	// 					url: 'apps/e-commerce/products/new'
-	// 				},
-	// 				{
-	// 					id: 'e-commerce-orders',
-	// 					title: 'Orders',
-	// 					type: 'item',
-	// 					url: 'apps/e-commerce/orders',
-	// 					end: true
-	// 				},
-	// 				{
-	// 					id: 'e-commerce-order-detail',
-	// 					title: 'Order Detail',
-	// 					type: 'item',
-	// 					url: 'apps/e-commerce/orders/1'
-	// 				}
-	// 			]
-	// 		},
-	// 		{
-	// 			id: 'apps.file-manager',
-	// 			title: 'File Manager',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:cloud',
-	// 			url: '/apps/file-manager',
-	// 			end: true,
-	// 			translate: 'FILE_MANAGER'
-	// 		},
-	// 		{
-	// 			id: 'apps.help-center',
-	// 			title: 'Help Center',
-	// 			type: 'collapse',
-	// 			icon: 'heroicons-outline:support',
-	// 			url: '/apps/help-center',
-	// 			children: [
-	// 				{
-	// 					id: 'apps.help-center.home',
-	// 					title: 'Home',
-	// 					type: 'item',
-	// 					url: '/apps/help-center',
-	// 					end: true
-	// 				},
-	// 				{
-	// 					id: 'apps.help-center.faqs',
-	// 					title: 'FAQs',
-	// 					type: 'item',
-	// 					url: '/apps/help-center/faqs'
-	// 				},
-	// 				{
-	// 					id: 'apps.help-center.guides',
-	// 					title: 'Guides',
-	// 					type: 'item',
-	// 					url: '/apps/help-center/guides'
-	// 				},
-	// 				{
-	// 					id: 'apps.help-center.support',
-	// 					title: 'Support',
-	// 					type: 'item',
-	// 					url: '/apps/help-center/support'
-	// 				}
-	// 			]
-	// 		},
-	// 		{
-	// 			id: 'apps.mailbox',
-	// 			title: 'Mailbox',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:mail',
-	// 			url: '/apps/mailbox',
-	// 			translate: 'MAIL',
-	// 			badge: {
-	// 				title: '27',
-	// 				classes: 'px-8 bg-pink-600 text-white rounded-full'
-	// 			}
-	// 		},
-	// 		{
-	// 			id: 'apps.notes',
-	// 			title: 'Notes',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:pencil-alt',
-	// 			url: '/apps/notes',
-	// 			translate: 'NOTES'
-	// 		},
-	// 		{
-	// 			id: 'apps.scrumboard',
-	// 			title: 'Scrumboard',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:view-boards',
-	// 			url: '/apps/scrumboard',
-	// 			translate: 'SCRUMBOARD'
-	// 		},
-	// 		{
-	// 			id: 'apps.tasks',
-	// 			title: 'Tasks',
-	// 			subtitle: '12 remaining tasks',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:check-circle',
-	// 			url: '/apps/tasks',
-	// 			translate: 'TASKS'
-	// 		},
-	// 		{
-	// 			id: 'apps.profile',
-	// 			title: 'Profile',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:user-circle',
-	// 			url: '/apps/profile'
-	// 		},
-	// 		{
-	// 			id: 'apps.notifications',
-	// 			title: 'Notifications',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:bell',
-	// 			url: '/apps/notifications'
-	// 		}
 	// 	]
 	// },
 
-	//Comment from here downnwards
+	// {
+	// 	id: 'Add-Ons',
+	// 	title: 'Manage Add-Ons',
+	// 	subtitle: 'Properties Add-Ons management helpers',
+	// 	type: 'group',
+	// 	icon: 'heroicons-outline:home',
+	// 	translate: 'ADD-ONS',
+	// 	children: [
+	// 		{
+	// 			id: 'packages.servicetypes',
+	// 			title: 'Service Types',
+	// 			type: 'item',
+	// 			icon: 'heroicons-outline:clipboard-check',
+	// 			url: '/packages/servicetypes'
+	// 		},
+	// 		{
+	// 			id: 'packages.propertytypes',
+	// 			title: 'Property Types',
+	// 			type: 'item',
+	// 			icon: 'heroicons-outline:clipboard-check',
+	// 			url: '/types/propertytypes'
+	// 		},
+	// 	]
+	// },
 
-
-	
 ];
 export default navigationConfig;

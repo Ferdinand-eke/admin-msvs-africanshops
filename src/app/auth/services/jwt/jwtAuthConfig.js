@@ -1,5 +1,6 @@
 // const baseUrl = 'http://localhost:8007'
-const baseUrl = 'https://sea-turtle-app-c6p3o.ondigitalocean.app'
+// const baseUrl = 'https://sea-turtle-app-c6p3o.ondigitalocean.app'
+const baseUrl = 'http://localhost:8000';
 
 
 const jwtAuthConfig = {
@@ -13,8 +14,8 @@ const jwtAuthConfig = {
 
 
 	/******Bravort Admin Dashboard Controls API */
-	signInBravortAdminUrl: `${baseUrl}/admin/login`,
-	getAuthAdminInBravortAdminUrl: `${baseUrl}/admin/get-auth-admin`,
+	signInBravortAdminUrl: `${baseUrl}/authadmin/adminlogin`,
+	getAuthAdminInBravortAdminUrl: `${baseUrl}/authadmin/get-auth-admin`,
 	isAuthenticatedStatus: 'jwt_is_authenticated_status',
 	authStatus: 'jwt_is_authStatus',
 	adminCredentials: 'jwt_auth_credentials',

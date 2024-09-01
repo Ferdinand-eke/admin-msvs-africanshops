@@ -12,10 +12,12 @@ import { selectUser } from 'src/app/auth/user/store/userSlice';
 import useAuth from 'src/app/auth/useAuth';
 import { darken } from '@mui/material/styles';
 import { useAppSelector } from 'app/store/hooks';
+import Divider from '@mui/material/Divider';
 
 /**
  * The user menu.
  */
+
 function UserMenu() {
 	const user = useAppSelector(selectUser);
 	
@@ -141,6 +143,19 @@ function UserMenu() {
 							</ListItemIcon>
 							<ListItemText primary="Inbox" />
 						</MenuItem>
+						<MenuItem
+							component={Link}
+							to="/apps/mailbox"
+							onClick={userMenuClose}
+							role="button"
+						>
+							<ListItemIcon className="min-w-40">
+								<FuseSvgIcon>heroicons-outline:mail-open</FuseSvgIcon>
+							</ListItemIcon>
+							<ListItemText primary="Settings" />
+						</MenuItem>
+
+						<Divider variant="middle" component="li" />
 						<MenuItem
 							onClick={() => {
 								signOut();

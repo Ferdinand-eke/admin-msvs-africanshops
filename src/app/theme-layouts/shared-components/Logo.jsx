@@ -16,14 +16,17 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 /**
- * The logo component.
+ * The logo component. aflogo
  */
 function Logo() {
 	return (
 		<Root className="flex items-center">
 			<img
-				className="logo-icon h-32 w-32"
-				src="assets/images/logo/logo.svg"
+				className="mt-14 logo-icon h-43 w-43"
+				// src="assets/images/logo/logo.svg"
+				src="assets/images/afslogo/afLogo.svg"
+				// width={100}
+				// height={100}
 				alt="logo"
 			/>
 			{/* <div className="flex space-x-6 px-8 items-center">

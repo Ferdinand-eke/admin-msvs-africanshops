@@ -117,14 +117,6 @@ function JwtAuthProvider(props) {
 	const { children } = props;
 
 
-	// console.log("isAuthenticated-RENDERING", isAuthenticated)
-	// console.log("AUTH-STATUS", authStatus)
-	// console.log("AUTH-USER", user)
-	// console.log("userFromStorage", getUserCredentialsStorage())
-	// console.log("setting-user-from-storage", Cookie.get('jwt_auth_credentials'))
-
-
-
 
 	/**
 	 * Handle sign-in success
@@ -215,45 +207,30 @@ function JwtAuthProvider(props) {
 
 			const accessToken = getAccessToken();
 
-			// if (isTokenValid(accessToken)) {
-			// 	try {
-			// 		setIsLoading(true);
-			// 		const response = await axios.get(config.getUserUrl, {
-			// 			headers: { Authorization: `Bearer ${accessToken}` }
-			// 		});
-			// 		const userData = response?.data;
-			// 		handleSignInSuccess(userData, accessToken);
-			// 		return true;
-			// 	} catch (error) {
-			// 		const axiosError = error;
-			// 		handleSignInFailure(axiosError);
-			// 		return false;
-			// 	}
-			// } else {
-			// 	resetSession();
-			// 	return false;
-			// }
-
 			if (isTokenValid(accessToken)) {
 				try {
 					setIsLoading(true);
 					const response = await axios.get(config.getAuthAdminInBravortAdminUrl, {
 						headers: { accessToken: `${accessToken}` }
 					});
+
+					console.log("RETURN-ATTEMPTCHECKUSER", response?.data)
 					const transFormedUser = {
 						id:response?.data?.user?.id,
 						name:response?.data?.user?.name,
 						email:response?.data?.user?.email,
-						role:response?.data?.user?.role.toLowerCase(),
-						// name:response?.data?.user?.name,
-						// name:response?.data?.user?.name,
+						role:'admin',
+
+						isAdmin:response?.data?.isAdmin,
+					avatar:response?.data?.avatar,
 					}
-					// const userData = transFormedUser;
-					// console.log("GETING-AUTHENTICATED-USER", userData)
 					handleSignInSuccess(transFormedUser, accessToken);
 					return true;
 				} catch (error) {
 					const axiosError = error;
+					toast.error(error?.response && error?.response?.data?.message
+						? error?.response?.data?.message
+						: error?.message)
 					handleSignInFailure(axiosError);
 					return false;
 				}
@@ -287,53 +264,45 @@ function JwtAuthProvider(props) {
 		//  handleFailure,
 		handleSignInFailure
 		 ) => {
-			// const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 		try {
-
-			
 			const response = await axios.post(url, data);
 
-			console.log("Request-SUCESS User", response)
-			console.log("Request-SUCESS TOKEN", response.data)
-			if(response?.data?.user && response?.data?.accessToken){
+			console.log("Request-SUCESS Token", response?.data?.accessToken)
+			console.log("Request-SUCESS USER", response.data)
+			if(response?.data && response?.data?.accessToken){
 				const transFormedUser = {
-					id:response?.data?.user?.id,
-					name:response?.data?.user?.name,
-					email:response?.data?.user?.email,
-					role:response?.data?.user?.role.toLowerCase(),
-					// name:response?.data?.user?.name,
-					// name:response?.data?.user?.name,
+					id:response?.data?._id,
+					name:response?.data?.name,
+					email:response?.data?.email,
+					// role:response?.data?.user?.role.toLowerCase(),
+					role:'admin',
+
+					isAdmin:response?.data?.isAdmin,
+					avatar:response?.data?.avatar,
+					// isAdmin:response?.data?.isAdmin,
+					// isAdmin:response?.data?.isAdmin,
+					
 				}
 
-				// const userData = transFormedUser;
+			// return
+			console.log("User Tor store", transFormedUser)
+			// return
+
 				const accessToken = response?.data?.accessToken;
 				handleSignInSuccess(transFormedUser, accessToken);
 			return transFormedUser;
 			}
-
 			if(response.data.error){
-				// enqueueSnackbar(`${response?.data?.error?.message}`)
-				// window.alert(`${response?.data?.error?.message}`)
 				toast.error(`${response?.data?.error?.message}`)
 				return
 			}
-
-			// return
-			
-
-			// console.log("Request-SUCESS", response.data) accessToken
-			// console.log("Request-SUCESS User", userData)
-			// console.log("Request-SUCESS TOKEN", accessToken)
-			//handleSignInSuccess
-			// handleSuccess(userData, accessToken);
 			
 		} catch (error) {
 			const axiosError = error;
 			console.log("Request-Error", error)
-
-			// return
-			//handleSignInFailure
-			// handleFailure(axiosError);
+			toast.error(error?.response && error?.response?.data?.message
+                ? error?.response?.data?.message
+                : error?.message)
 			handleSignInFailure(axiosError);
 			return axiosError;
 		}

@@ -20,6 +20,33 @@ import ManagedListingsAppConfig from '../main/homes/managedproperties/ManagedLis
 import PropertyTypesAppConfig from '../main/homes/propertytypes/PropertyTypesAppConfig';
 import SignAcceptInviteConfig from '../main/sign-accept-invite/SignAcceptInviteConfig';
 import ManagedUserListingsAppConfig from '../main/homes/managedusersandproperties/ManagedUserListingsAppConfig';
+import ShopDashboardAppConfig from '../main/vendors-shop/dasboard/ShopDashboardAppConfig';
+import ShopProductsAppConfig from '../main/vendors-shop/products/ShopProductsAppConfig';
+import ShopOrdersAppConfig from '../main/vendors-shop/orders/ShopOrdersAppConfig';
+import SupportHelpCenterAppConfig from '../main/vendors-shop/support-center/SupportHelpCenterAppConfig';
+import AfricanshopsFinanceDashboardAppConfig from '../main/africanshops-finance/AfricanshopsFinanceDashboardAppConfig';
+import AfricanshopsMessengerAppConfig from '../main/africanshops-messenger/AfricanshopsMessengerAppConfig';
+import VendorPlansAppConfig from '../main/africanshops-control-dashboard/manage-vendorplans/VendorPlansAppConfig';
+import VendorsAppConfig from '../main/africanshops-control-dashboard/manage-allvendors/VendorsAppConfig';
+import CountriesAppConfig from '../main/africanshops-control-dashboard/manage-countries/CountriesAppConfig';
+import StatesAppConfig from '../main/africanshops-control-dashboard/manage-states/StatesAppConfig';
+import LgasCountiesAppConfig from '../main/africanshops-control-dashboard/manage-lgasorcounties/LgasCountiesAppConfig';
+import OfficesAppConfig from '../main/africanshops-control-dashboard/manage-offices/OfficesAppConfig';
+import DepartmentsAppConfig from '../main/africanshops-control-dashboard/manage-departments/DepartmentsAppConfig';
+import DesignationsAppConfig from '../main/africanshops-control-dashboard/manage-designations/DesignationsAppConfig';
+import MarketDashboardAppConfig from '../main/africanshops-control-dashboard/manage-markets-shops-products/dasboard/MarketDashboardAppConfig';
+import MarketsAppConfig from '../main/africanshops-control-dashboard/manage-markets-shops-products/markets/MarketsAppConfig';
+import MarketCategoryAppConfig from '../main/africanshops-control-dashboard/manage-markets-shops-products/marketcategories/MarketCategoryAppConfig';
+import PartnerVendorsAppConfig from '../main/africanshops-control-dashboard/manage-partnervendors/PartnerVendorsAppConfig';
+import ProductCategoriesAppConfig from '../main/africanshops-control-dashboard/manage-markets-shops-products/product-categories/ProductCategoriesAppConfig';
+import ProductPackagingsAppConfig from '../main/africanshops-control-dashboard/manage-markets-shops-products/product-packagings/ProductPackagingsAppConfig';
+import ProductUnitsAppConfig from '../main/africanshops-control-dashboard/manage-markets-shops-products/product-units/ProductUnitsAppConfig';
+import TradehubsAppConfig from '../main/africanshops-control-dashboard/manage-markets-shops-products/tradhubs/TradehubsAppConfig';
+import PostCategoriesAppConfig from '../main/africanshops-control-dashboard/manage-editorials/post-categories/PostCategoriesAppConfig';
+import PostsAppConfig from '../main/africanshops-control-dashboard/manage-editorials/posts/PostsAppConfig';
+import AdminManageOrdersAppConfig from '../main/africanshops-control-dashboard/manage-markets-shops-products/orders/AdminManageOrdersAppConfig';
+import CountryShippingTableAppConfig from '../main/africanshops-control-dashboard/manage-countryshippingtable/CountryShippingTableAppConfig';
+// import AfricanshopsMessengerAppConfig from '../main/africanshops-messenger/AfricanshopsMessengerAppConfig';
 
 const routeConfigs = [
 	SignOutConfig,
@@ -35,6 +62,54 @@ const routeConfigs = [
 	PropertyTypesAppConfig,
 	ManagedUserListingsAppConfig,
 
+	/****Africanshops Merhcant's Dashboard Configs Starts Here */
+	ShopDashboardAppConfig,
+	ShopProductsAppConfig,
+	ShopOrdersAppConfig,
+	SupportHelpCenterAppConfig,
+	AfricanshopsFinanceDashboardAppConfig,
+	AfricanshopsMessengerAppConfig,
+	/****Africanshops Merhcant's Dashboard Configs Ends Here */
+
+	/****Africanshops Admin & Administrative Dashboard Configs Starts Here */
+	VendorPlansAppConfig,
+	VendorsAppConfig,
+	CountriesAppConfig,
+	StatesAppConfig,
+	LgasCountiesAppConfig,
+	OfficesAppConfig,
+	DepartmentsAppConfig,
+	DesignationsAppConfig,
+	/****Africanshops Admin & Administrative Dashboard Configs Ends Here */
+
+
+	/****Africanshops Admin Market Management  Configs Starts Here */
+	MarketDashboardAppConfig,
+	MarketsAppConfig,
+	MarketCategoryAppConfig,
+	PartnerVendorsAppConfig,
+	/****Africanshops Admin Market Management  Configs Ends Here */
+
+	/****Africanshops Admin Product Management  Configs Starts Here */
+	TradehubsAppConfig,
+	ProductCategoriesAppConfig,
+	ProductPackagingsAppConfig,
+	ProductUnitsAppConfig,
+	/****Africanshops Admin Product Management  Configs Ends Here */
+
+/****Africanshops Admin orders Management  Configs Starts Here */
+	AdminManageOrdersAppConfig,
+	/****Africanshops Admin orders Management  Configs Ends Here */
+
+	/****Africanshops Admin Editorial Management  Configs Starts CountryShippingTableAppConfig Here */
+	PostCategoriesAppConfig,
+	PostsAppConfig,
+	/****Africanshops Admin Editorial Management  Configs Ends Here */
+
+		/****Africanshops Countries Shipping Table Management  Configs Starts  Here */
+		CountryShippingTableAppConfig,
+		/****Africanshops Countries Shipping Table Management  Configs Ends Here */
+
 	
 	/**Routes Below to be disabled */
 	...PagesConfigs,
@@ -43,6 +118,7 @@ const routeConfigs = [
 	...AppsConfigs,
 	...authRoleExamplesConfigs
 ];
+
 /**
  * The routes of the application.
  */

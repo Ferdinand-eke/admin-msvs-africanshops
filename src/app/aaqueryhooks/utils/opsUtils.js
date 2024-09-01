@@ -19,9 +19,7 @@ export const resetForgotPassToken = () => {
 
 
 
-export const getAdminAccessToken = () => {
-    return localStorage.getItem(jwtAuthConfig.tokenStorageKey);
-};
+
 
 
 /****LOGGING OUT AN ADMIN USER */
@@ -49,3 +47,29 @@ export const getNewUserAccountToken = () => {
 
     
 };
+
+
+/*****
+ * AFRICANSHOPS ADMIN CONFIG USTIS
+ * 
+ */
+
+/****Fuse AFS-admin For Users Starts */
+export const getAdminAccessToken = () => {
+    // return localStorage.getItem(jwtAuthConfig.tokenStorageKey);
+    return localStorage.getItem('jwt_access_token');
+    
+};
+
+export const resetSessionForAdminUsers = () => {
+    
+  
+    localStorage.removeItem('jwt_auth_credentials');
+    // delete axios.defaults.headers.common.Authorization;
+    // delete axios.defaults.headers.common.accessToken;
+    localStorage.removeItem('jwt_is_authenticated_status');
+    localStorage.removeItem('jwt_is_authStatus');
+    // localStorage.removeItem('jwt_auth_credentials');
+};
+
+/****Fuse AFS-admin For Users ends */

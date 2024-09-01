@@ -73,6 +73,7 @@ function ToolbarLayout1(props) {
 						{/* <QuickPanelToggleButton /> */}
 						{/* <NotificationPanelToggleButton /> */}
 						<UserMenu />
+						
 					</div>
 
 					{config.navbar.display && config.navbar.position === 'right' && (
