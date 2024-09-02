@@ -57,7 +57,8 @@ function NavbarStyle1() {
 					open={navbar.open}
 					position={config.navbar.position}
 				>
-					{user?.role === "Admin" && <NavbarStyle1Content />}
+					{/* {user?.role === "Admin" && <NavbarStyle1Content />} */}
+					{user?.role.toString() === 'Admin' && <NavbarStyle1Content />}
 					
 				</StyledNavBar>
 			</Hidden>
@@ -79,7 +80,7 @@ function NavbarStyle1() {
 				>
 					
 				{/* <NavbarStyle1Content /> */}
-				{user?.role === "Admin" && <NavbarStyle1Content />}
+				{user?.role.toString() === 'Admin' && <NavbarStyle1Content />}
 
 				</StyledNavBarMobile>
 			</Hidden>

@@ -108,16 +108,7 @@ function UserMenu() {
 							</ListItemIcon>
 							<ListItemText primary="Sign In" />
 						</MenuItem>
-						<MenuItem
-							component={Link}
-							to="/sign-up"
-							role="button"
-						>
-							<ListItemIcon className="min-w-40">
-								<FuseSvgIcon>heroicons-outline:user-add </FuseSvgIcon>
-							</ListItemIcon>
-							<ListItemText primary="Sign up" />
-						</MenuItem>
+						
 					</>
 				) : (
 					<>
