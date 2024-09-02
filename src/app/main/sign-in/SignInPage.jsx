@@ -73,8 +73,8 @@ function SignInPage() {
 						severity="info"
 						className="mt-24 px-16 text-13 leading-relaxed"
 					>
-						You are browsing <b>Fuse React Demo</b>. Click on the "Sign in" button to access the Demo and
-						Documentation.
+						You are on  <b>africanshops admin platform</b>. Click on the "Sign in" button to access statutory tasks related
+						portal. By clicking this you agree to our <b>terms and conditions</b>
 					</Alert>
 
 					
