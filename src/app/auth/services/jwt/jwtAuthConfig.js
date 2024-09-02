@@ -1,5 +1,5 @@
 // const baseUrl = 'http://localhost:8007'
-const baseUrl = 'https://coral-app-n8ox9.ondigitalocean.app/'; //deployed serve
+const baseUrl = 'https://coral-app-n8ox9.ondigitalocean.app'; //deployed serve
 // const baseUrl = 'http://localhost:8000';
 
 
