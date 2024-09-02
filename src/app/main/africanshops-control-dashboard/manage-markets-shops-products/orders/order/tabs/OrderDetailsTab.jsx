@@ -54,10 +54,7 @@ function Marker(props) {
 function OrderDetailsTab({order, isError}) {
 	const routeParams = useParams();
 	const { orderId } = routeParams;
-	// const { data: order, isError } = useGetECommerceOrderQuery(orderId, {
-	// 	skip: !orderId
-	// });
-	console.log("SINGLE-ORDER", order)
+
 	const [map, setMap] = useState('shipping');
 	const packOrder = usePackOrder();
   const shipOrder = useShipOrder();
@@ -79,7 +76,7 @@ function OrderDetailsTab({order, isError}) {
   };
 
   const handleShip = async () => {
-    // e.preventDefault();
+    
     if (window.confirm('Ship Order?')) {
       try {
         shipOrder.mutate(order?._id);
@@ -90,7 +87,7 @@ function OrderDetailsTab({order, isError}) {
   };
 
   const handleArrival = async () => {
-    // e.preventDefault();
+    
     if (window.confirm('Comfirm Order Arrival to warehouse?')) {
       try {
         handleOrderArrival.mutate(order?._id);
@@ -101,7 +98,7 @@ function OrderDetailsTab({order, isError}) {
   };
 
   const handleDelivery = async () => {
-    // e.preventDefault();
+    
 
     if (window.confirm('Deliver Order?')) {
       try {
@@ -149,9 +146,7 @@ function OrderDetailsTab({order, isError}) {
 									<th>
 										<Typography className="font-semibold">Phone</Typography>
 									</th>
-									{/* <th>
-										<Typography className="font-semibold">Company</Typography>
-									</th> */}
+								
 								</tr>
 							</thead>
 							<tbody>
@@ -175,9 +170,7 @@ function OrderDetailsTab({order, isError}) {
 									<td>
 										<Typography className="truncate">{order?.shippingAddress?.phone}</Typography>
 									</td>
-									{/* <td>
-										<span className="truncate">{order?.customer?.company}</span>
-									</td> */}
+								
 								</tr>
 							</tbody>
 						</table>
@@ -229,7 +222,7 @@ function OrderDetailsTab({order, isError}) {
 							</AccordionSummary>
 							<AccordionDetails className="flex flex-col md:flex-row -mx-8">
 								<Typography className="w-full md:max-w-256 mb-16 md:mb-0 mx-8 text-16">
-									{/* {order?.customer?.invoiceAddress?.address} */}
+								
 									{order?.shippingAddress?.address}
 								</Typography>
 								<div className="w-full h-320 rounded-16 overflow-hidden mx-8">
@@ -305,48 +298,12 @@ function OrderDetailsTab({order, isError}) {
                     <span className="truncate">{order?.shippedAt}</span>
                   </td>
                 </tr>
-              {/* ))} */}
+             
             </tbody>
           </table>
         </div>
       </div>
 
-			{/* <div className="pb-48">
-				<div className="pb-16 flex items-center">
-					<FuseSvgIcon color="action">heroicons-outline:clock</FuseSvgIcon>
-					<Typography
-						className="h2 mx-12 font-medium"
-						color="text.secondary"
-					>
-						Order Status
-					</Typography>
-				</div>
-
-				<div className="table-responsive">
-					<Table className="simple">
-						<TableHead>
-							<TableRow>
-								<TableCell>
-									<Typography className="font-semibold">Status</Typography>
-								</TableCell>
-								<TableCell>
-									<Typography className="font-semibold">Updated On</Typography>
-								</TableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{order?.status?.map((status) => (
-								<TableRow key={status?.id}>
-									<TableCell>
-										<OrdersStatus name={status?.name} />
-									</TableCell>
-									<TableCell>{status?.date}</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</div>
-			</div> */}
 
 <div className="pb-48">
         <div className="pb-16 flex items-center">
@@ -379,14 +336,7 @@ function OrderDetailsTab({order, isError}) {
                 </TableCell>
                 <TableCell>{order?.createdAt}</TableCell>
               </TableRow>
-              {/* {order?.status?.map((status) => (
-								<TableRow key={status?.id}>
-									<TableCell>
-										<OrdersStatus name={status?.name} />
-									</TableCell>
-									<TableCell>{status?.date}</TableCell>
-								</TableRow>
-							))} */}
+            
 
               {order?.isPaid && (
                 <>
@@ -424,7 +374,6 @@ function OrderDetailsTab({order, isError}) {
                       />
                     </TableCell>
                     <TableCell>
-						{/* {order?.shippedAt} */}
 					{
 							order?.isShipped ?  <div
 							className={clsx(
@@ -464,8 +413,6 @@ function OrderDetailsTab({order, isError}) {
                       />
                     </TableCell>
                     <TableCell>
-						{/* {order?.arrivedWarehouseAt} */}
-					
 					{
 							order?.hasArrivedWarehouse ?  <div
 							className={clsx(
@@ -503,14 +450,13 @@ function OrderDetailsTab({order, isError}) {
                       />
                     </TableCell>
                     <TableCell>
-						{/* {order?.deliveredAt} */}
 
 						{
 							order?.isPacked &&
 							order?.isShipped &&
 							order?.hasArrivedWarehouse && <>
 
-{
+						{
 							order?.isDelivered ?  <div
 							className={clsx(
 								'inline text-12 font-semibold py-4 px-12 rounded-full truncate',
@@ -624,111 +570,7 @@ function OrderDetailsTab({order, isError}) {
         </div>
       </div>
 
-			{/* <div className="pb-48">
-				<div className="pb-16 flex items-center">
-					<FuseSvgIcon color="action">heroicons-outline:currency-dollar</FuseSvgIcon>
-					<Typography
-						className="h2 mx-12 font-medium"
-						color="text.secondary"
-					>
-						Payment
-					</Typography>
-				</div>
-
-				<div className="table-responsive">
-					<table className="simple">
-						<thead>
-							<tr>
-								<th>
-									<Typography className="font-semibold">TransactionID</Typography>
-								</th>
-								<th>
-									<Typography className="font-semibold">Payment Method</Typography>
-								</th>
-								<th>
-									<Typography className="font-semibold">Amount</Typography>
-								</th>
-								<th>
-									<Typography className="font-semibold">Date</Typography>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<span className="truncate">{order?.payment?.transactionId}</span>
-								</td>
-								<td>
-									<span className="truncate">{order?.payment?.method}</span>
-								</td>
-								<td>
-									<span className="truncate">{order?.payment?.amount}</span>
-								</td>
-								<td>
-									<span className="truncate">{order?.payment?.date}</span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div> */}
-
-			{/* <div className="pb-48">
-				<div className="pb-16 flex items-center">
-					<FuseSvgIcon color="action">heroicons-outline:truck</FuseSvgIcon>
-					<Typography
-						className="h2 mx-12 font-medium"
-						color="text.secondary"
-					>
-						Shipping
-					</Typography>
-				</div>
-
-				<div className="table-responsive">
-					<table className="simple">
-						<thead>
-							<tr>
-								<th>
-									<Typography className="font-semibold">Tracking Code</Typography>
-								</th>
-								<th>
-									<Typography className="font-semibold">Carrier</Typography>
-								</th>
-								<th>
-									<Typography className="font-semibold">Weight</Typography>
-								</th>
-								<th>
-									<Typography className="font-semibold">Fee</Typography>
-								</th>
-								<th>
-									<Typography className="font-semibold">Date</Typography>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{order?.shippingDetails?.map((shipping) => (
-								<tr key={shipping?.date}>
-									<td>
-										<span className="truncate">{shipping?.tracking}</span>
-									</td>
-									<td>
-										<span className="truncate">{shipping?.carrier}</span>
-									</td>
-									<td>
-										<span className="truncate">{shipping?.weight}</span>
-									</td>
-									<td>
-										<span className="truncate">{shipping?.fee}</span>
-									</td>
-									<td>
-										<span className="truncate">{shipping?.date}</span>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-			</div> */}
+			
 		</div>
 	);
 }

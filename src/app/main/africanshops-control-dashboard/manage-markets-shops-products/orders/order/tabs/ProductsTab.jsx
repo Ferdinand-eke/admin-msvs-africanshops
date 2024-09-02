@@ -50,8 +50,6 @@ function ProductsTab() {
 							</td>
 							<td>
 								<Typography
-									// component={Link}
-									// to={`/apps/e-commerce/products/${product.id}`}
 									className="truncate"
 									style={{
 										color: 'inherit',

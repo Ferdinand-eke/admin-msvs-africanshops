@@ -5,7 +5,6 @@ import {
   resetSessionForAdminUsers,
 } from "../aaqueryhooks/utils/opsUtils";
 import { toast } from "react-toastify";
-// import { useSignOut } from 'react-auth-kit';
 
 /**
  * MAIN APIs STARTS
@@ -31,7 +30,6 @@ export default function Api() {
 
 export function authApi() {
   const TOKEN = getAdminAccessToken();
-  console.log("apiAppendeToken", TOKEN);
   const customHeaders = {
     Accept: "application/json",
     withCredentials: true,

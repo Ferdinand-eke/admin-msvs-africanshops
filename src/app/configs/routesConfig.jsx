@@ -71,6 +71,12 @@ const routeConfigs = [
 	AfricanshopsMessengerAppConfig,
 	/****Africanshops Merhcant's Dashboard Configs Ends Here */
 
+
+	/*****
+	 * 
+	 * ADMIN CONCERNS AND FUNCTIONALITIES STARTS JUST BELOW
+	 */
+
 	/****Africanshops Admin & Administrative Dashboard Configs Starts Here */
 	VendorPlansAppConfig,
 	VendorsAppConfig,
