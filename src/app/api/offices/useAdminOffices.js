@@ -21,6 +21,7 @@ import {
   updateApiOfficeOutlet,
   getOffices,
   getOfficeById,
+  deleteOfficeById,
 } from '../apiRoutes';
 import { useNavigate } from 'react-router';
 
@@ -77,13 +78,13 @@ export function useAdminUpdateOfficeOtlet() {
   return useMutation(updateApiOfficeOutlet, {
     onSuccess: (data) => {
       if (data?.data) {
-        toast.success('Shop data updated successfully');
-        toast.success(
-          `${data?.data?.message ? data?.data?.message : data?.message}`
-        );
+        toast.success('Office data updated successfully');
+        // toast.success(
+        //   `${data?.data?.message ? data?.data?.message : data?.message}`
+        // );
 
         queryClient.invalidateQueries('__offices');
-        navigate('/administration/offices'); 
+        navigate('/administrations/offices'); 
       }
 
     },
@@ -97,15 +98,16 @@ export function useAdminUpdateOfficeOtlet() {
   });
 }
 
+
 /***Delete Office outlet */
 export function useDeleteSingleOfficeOutlet() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  return useMutation(deleteLgaById, {
+  return useMutation(deleteOfficeById, {
     onSuccess: (data) => {
       if(data?.data){
-        toast.success("L.G.A deleted successfully!!");
+        toast.success("Office deleted successfully!!");
         queryClient.invalidateQueries("__offices");
         navigate('/administrations/offices');
       }

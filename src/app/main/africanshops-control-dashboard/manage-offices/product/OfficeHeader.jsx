@@ -197,6 +197,7 @@ function OfficeHeader() {
 							color="secondary"
 							onClick={handleRemoveProduct}
 							startIcon={<FuseSvgIcon className="hidden sm:flex">heroicons-outline:trash</FuseSvgIcon>}
+							disabled={deleteOffice?.isLoading}
 						>
 							Remove Office
 						</Button>
@@ -204,7 +205,7 @@ function OfficeHeader() {
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid}
+							disabled={_.isEmpty(dirtyFields) || !isValid || updateOfficeReg?.isLoading}
 							onClick={handleSaveProduct}
 						>
 							Save Office
@@ -215,7 +216,7 @@ function OfficeHeader() {
 						className="whitespace-nowrap mx-4"
 						variant="contained"
 						color="secondary"
-						disabled={_.isEmpty(dirtyFields) || !isValid}
+						disabled={_.isEmpty(dirtyFields) || !isValid || newOfficeReg?.isLoading}
 						onClick={handleCreateProduct}
 					>
 						Add New Office

@@ -124,6 +124,7 @@ function SingleDesignationHeader() {
 							color="secondary"
 							onClick={handleRemoveProduct}
 							startIcon={<FuseSvgIcon className="hidden sm:flex">heroicons-outline:trash</FuseSvgIcon>}
+							disabled={deleteDesig?.isLoading}
 						>
 							Remove
 						</Button>
@@ -131,7 +132,7 @@ function SingleDesignationHeader() {
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid}
+							disabled={_.isEmpty(dirtyFields) || !isValid || updateDesignation?.isLoading}
 							onClick={handleSaveProduct}
 						>
 							Save
@@ -142,7 +143,7 @@ function SingleDesignationHeader() {
 						className="whitespace-nowrap mx-4"
 						variant="contained"
 						color="secondary"
-						disabled={_.isEmpty(dirtyFields) || !isValid}
+						disabled={_.isEmpty(dirtyFields) || !isValid || addNewDesignations?.isLoading}
 						onClick={handleCreateProduct}
 					>
 						Add Designation

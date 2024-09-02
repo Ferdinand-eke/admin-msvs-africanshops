@@ -69,45 +69,6 @@ function PostsTable() {
 					</Typography>
 				)
 			},
-			// {
-			// 	accessorKey: 'categories',
-			// 	header: 'Category',
-			// 	accessorFn: (row) => (
-			// 		<div className="flex flex-wrap space-x-2">
-			// 			{row?.categories?.map((item) => (
-			// 				<Chip
-			// 					key={item}
-			// 					className="text-11"
-			// 					size="small"
-			// 					color="default"
-			// 					label={item}
-			// 				/>
-			// 			))}
-			// 		</div>
-			// 	)
-			// },
-			// {
-			// 	accessorKey: 'priceTaxIncl',
-			// 	header: 'Price',
-			// 	accessorFn: (row) => `$${row?.priceTaxIncl}`
-			// },
-			// {
-			// 	accessorKey: 'quantity',
-			// 	header: 'Quantity',
-			// 	accessorFn: (row) => (
-			// 		<div className="flex items-center space-x-8">
-			// 			<span>{row?.quantity}</span>
-			// 			<i
-			// 				className={clsx(
-			// 					'inline-block w-8 h-8 rounded',
-			// 					row?.quantity <= 5 && 'bg-red',
-			// 					row?.quantity > 5 && row?.quantity <= 25 && 'bg-orange',
-			// 					row?.quantity > 25 && 'bg-green'
-			// 				)}
-			// 			/>
-			// 		</div>
-			// 	)
-			// },
 			{
 				accessorKey: 'isPublished',
 				header: 'Published Status',
@@ -154,20 +115,11 @@ function PostsTable() {
 				>
 				Error retrieving posts!
 				</Typography>
-				{/* <Button
-					className="mt-24"
-					component={Link}
-					variant="outlined"
-					to="/administrations/states"
-					color="inherit"
-				>
-					Go to Products Page
-				</Button> */}
+				
 			</motion.div>
 		);
 	}
 
-console.log("Product-Categories", posts?.data?.data)
 if (!posts?.data?.data) {
 	return (
 		<motion.div

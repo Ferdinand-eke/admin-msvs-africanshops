@@ -12,7 +12,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import CountryHeader from './CountryHeader';
+import DepartmentHeader from './DepartmentHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
 import InventoryTab from './tabs/InventoryTab';
 import PricingTab from './tabs/PricingTab';
@@ -130,7 +130,7 @@ function Department() {
 	return (
 		<FormProvider {...methods}>
 			<FusePageCarded
-				header={<CountryHeader />}
+				header={<DepartmentHeader />}
 				content={
 					<>
 						<Tabs

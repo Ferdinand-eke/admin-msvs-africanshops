@@ -19,7 +19,7 @@ function AllVendorsTable() {
 	const [removeProducts] = useDeleteECommerceProductsMutation();
 
 	const { data:vendors, isLoading, isError } = useAdmiManageShop();
-	console.log("All-VENDORS", vendors?.data?.data)
+
 	const columns = useMemo(
 		() => [
 			{
@@ -97,28 +97,7 @@ function AllVendorsTable() {
 					</div>
 				)
 			},
-			// {
-			// 	accessorKey: 'priceTaxIncl',
-			// 	header: 'Price',
-			// 	accessorFn: (row) => `$${row.priceTaxIncl}`
-			// },
-			// {
-			// 	accessorKey: 'quantity',
-			// 	header: 'Quantity',
-			// 	accessorFn: (row) => (
-			// 		<div className="flex items-center space-x-8">
-			// 			<span>{row.quantity}</span>
-			// 			<i
-			// 				className={clsx(
-			// 					'inline-block w-8 h-8 rounded',
-			// 					row.quantity <= 5 && 'bg-red',
-			// 					row.quantity > 5 && row.quantity <= 25 && 'bg-orange',
-			// 					row.quantity > 25 && 'bg-green'
-			// 				)}
-			// 			/>
-			// 		</div>
-			// 	)
-			// },
+		
 			{
 				accessorKey: 'active',
 				header: 'Verification Status',

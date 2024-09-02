@@ -111,14 +111,14 @@ const navigationConfig = [
 			},
 			{
 				id: 'departments.list',
-				title: 'Departmrnts in our organisation',
+				title: 'Our Departments',
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/departments/list'
 			},
 			{
 				id: 'designations.list',
-				title: 'Our departmental designations',
+				title: 'Departmental designations',
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/designations/list'

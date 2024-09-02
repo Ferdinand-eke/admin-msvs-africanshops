@@ -16,7 +16,7 @@ import { useAddDeptMutation, useDeleteSingleDepartment, useUpdateDepartmentMutat
 /**
  * The product header.
  */
-function CountryHeader() {
+function DepartmentHeader() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
 	// const [createProduct] = useCreateECommerceProductMutation();
@@ -124,17 +124,18 @@ function CountryHeader() {
 							color="secondary"
 							onClick={handleRemoveProduct}
 							startIcon={<FuseSvgIcon className="hidden sm:flex">heroicons-outline:trash</FuseSvgIcon>}
+							disabled={deleteDepartment?.isLoading}
 						>
-							Remove
+							Remove Department
 						</Button>
 						<Button
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid}
+							disabled={_.isEmpty(dirtyFields) || !isValid|| updateDepartments?.isLoading}
 							onClick={handleSaveProduct}
 						>
-							Save
+							Save Department
 						</Button>
 					</>
 				) : (
@@ -142,10 +143,10 @@ function CountryHeader() {
 						className="whitespace-nowrap mx-4"
 						variant="contained"
 						color="secondary"
-						disabled={_.isEmpty(dirtyFields) || !isValid}
+						disabled={_.isEmpty(dirtyFields) || !isValid || addNewDepts?.isLoading}
 						onClick={handleCreateProduct}
 					>
-						Add
+						Add Department
 					</Button>
 				)}
 			</motion.div>
@@ -153,4 +154,4 @@ function CountryHeader() {
 	);
 }
 
-export default CountryHeader;
+export default DepartmentHeader;

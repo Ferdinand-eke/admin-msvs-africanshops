@@ -19,7 +19,6 @@ function MarketsTable() {
 
 	const { data:markets, isLoading, refetch, isError } = useMarkets();
 
-	console.log("markets", markets?.data?.data)
 
 	const [removeProducts] = useDeleteECommerceProductsMutation();
 	const columns = useMemo(

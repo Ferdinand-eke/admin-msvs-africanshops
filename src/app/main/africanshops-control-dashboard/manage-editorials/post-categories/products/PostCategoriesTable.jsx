@@ -27,32 +27,7 @@ function PostCategoriesTable() {
 
 	const columns = useMemo(
 		() => [
-			// {
-			// 	accessorFn: (row) => row?.featuredImageId,
-			// 	id: 'featuredImageId',
-			// 	header: '',
-			// 	enableColumnFilter: false,
-			// 	enableColumnDragging: false,
-			// 	size: 64,
-			// 	enableSorting: false,
-			// 	Cell: ({ row }) => (
-			// 		<div className="flex items-center justify-center">
-			// 			{row?.original?.images?.length > 0 && row?.original?.featuredImageId ? (
-			// 				<img
-			// 					className="w-full max-h-40 max-w-40 block rounded"
-			// 					src={_.find(row?.original?.images, { id: row?.original?.featuredImageId })?.url}
-			// 					alt={row?.original?.name}
-			// 				/>
-			// 			) : (
-			// 				<img
-			// 					className="w-full max-h-40 max-w-40 block rounded"
-			// 					src="assets/images/apps/ecommerce/product-image-placeholder.png"
-			// 					alt={row?.original?.name}
-			// 				/>
-			// 			)}
-			// 		</div>
-			// 	)
-			// },
+			
 			{
 				accessorKey: 'name',
 				header: 'Name',
@@ -68,45 +43,7 @@ function PostCategoriesTable() {
 					</Typography>
 				)
 			},
-			// {
-			// 	accessorKey: 'categories',
-			// 	header: 'Category',
-			// 	accessorFn: (row) => (
-			// 		<div className="flex flex-wrap space-x-2">
-			// 			{row?.categories?.map((item) => (
-			// 				<Chip
-			// 					key={item}
-			// 					className="text-11"
-			// 					size="small"
-			// 					color="default"
-			// 					label={item}
-			// 				/>
-			// 			))}
-			// 		</div>
-			// 	)
-			// },
-			// {
-			// 	accessorKey: 'priceTaxIncl',
-			// 	header: 'Price',
-			// 	accessorFn: (row) => `$${row?.priceTaxIncl}`
-			// },
-			// {
-			// 	accessorKey: 'quantity',
-			// 	header: 'Quantity',
-			// 	accessorFn: (row) => (
-			// 		<div className="flex items-center space-x-8">
-			// 			<span>{row?.quantity}</span>
-			// 			<i
-			// 				className={clsx(
-			// 					'inline-block w-8 h-8 rounded',
-			// 					row?.quantity <= 5 && 'bg-red',
-			// 					row?.quantity > 5 && row?.quantity <= 25 && 'bg-orange',
-			// 					row?.quantity > 25 && 'bg-green'
-			// 				)}
-			// 			/>
-			// 		</div>
-			// 	)
-			// },
+			
 			{
 				accessorKey: 'isPublished',
 				header: 'Published Status',
@@ -138,7 +75,6 @@ function PostCategoriesTable() {
 		return <FuseLoading />;
 	}
 
-	// console.log("Getting State error", isError)
 
 	if (isError ) {
 		return (
@@ -153,20 +89,11 @@ function PostCategoriesTable() {
 				>
 				Error retrieving designations!
 				</Typography>
-				{/* <Button
-					className="mt-24"
-					component={Link}
-					variant="outlined"
-					to="/administrations/states"
-					color="inherit"
-				>
-					Go to Products Page
-				</Button> */}
+			
 			</motion.div>
 		);
 	}
 
-console.log("Product-Categories", postcats?.data?.data)
 if (!postcats?.data?.data) {
 	return (
 		<motion.div

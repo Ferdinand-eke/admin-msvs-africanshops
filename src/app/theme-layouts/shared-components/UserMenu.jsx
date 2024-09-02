@@ -150,12 +150,12 @@ function UserMenu() {
 							role="button"
 						>
 							<ListItemIcon className="min-w-40">
-								<FuseSvgIcon>heroicons-outline:mail-open</FuseSvgIcon>
+								<FuseSvgIcon>heroicons-outline:pencil-alt</FuseSvgIcon>
 							</ListItemIcon>
 							<ListItemText primary="Settings" />
 						</MenuItem>
 
-						<Divider variant="middle" component="li" />
+						<Divider variant="middle"  />
 						<MenuItem
 							onClick={() => {
 								signOut();

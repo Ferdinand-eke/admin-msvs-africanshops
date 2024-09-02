@@ -17,11 +17,8 @@ function OrdersTable() {
 	const { data: adminOrders, isLoading, isError } = useAdminGetOrders();
 	const [removeOrders] = useDeleteECommerceOrdersMutation();
 
-	// const { data:adminOrders,
-	// 	//  isLoading
-	// 	 } = useAdminGetOrders();
 
-		 console.log("Admin Get Orders", adminOrders?.data?.MOrders)
+
 	const columns = useMemo(
 		() => [
 			// {
@@ -114,7 +111,6 @@ function OrdersTable() {
 		);
 	}
 
-// console.log("STATES=DATA", states?.data?.data)
 if (!adminOrders?.data?.MOrders) {
 	return (
 		<motion.div

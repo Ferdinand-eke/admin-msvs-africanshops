@@ -84,7 +84,7 @@ function Office() {
 		}
 	}, [office, reset]);
 
-	console.log("Offices", office?.data)
+	// console.log("Offices", office?.data)
 
 	/**
 	 * Tab Change

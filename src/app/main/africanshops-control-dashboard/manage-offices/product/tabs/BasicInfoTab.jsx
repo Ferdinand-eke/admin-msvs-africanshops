@@ -5,11 +5,14 @@ import { getLgaByStateId, getStateByCountryId } from "src/app/api/apiRoutes";
 import useCountries from "src/app/api/countries/useCountries";
 import { useEffect, useState } from "react";
 import { MenuItem, Select, Typography } from "@mui/material";
+import { useParams } from "react-router";
 
 /**
  * The basic info tab.
  */
 function BasicInfoTab() {
+  const routeParams = useParams();
+	const { productId } = routeParams;
   const methods = useFormContext();
   const { control, formState, getValues } = methods;
   const { errors } = formState;
@@ -244,7 +247,7 @@ function BasicInfoTab() {
       />
 
 {
-	!getValues?._id?.length > 0 &&  <Controller
+	 productId === 'new' &&  <Controller
 	name="password"
 	control={control}
 	render={({ field }) => (
