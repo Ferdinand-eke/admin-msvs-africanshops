@@ -3,16 +3,16 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import { Navigate } from 'react-router-dom';
 import settingsConfig from 'app/configs/settingsConfig';
 import SignInConfig from '../main/sign-in/SignInConfig';
-import SignUpConfig from '../main/sign-up/SignUpConfig';
-import SignOutConfig from '../main/sign-out/SignOutConfig';
+// import SignUpConfig from '../main/sign-up/SignUpConfig';
+// import SignOutConfig from '../main/sign-out/SignOutConfig';
 import Error404Page from '../main/404/Error404Page';
 import PagesConfigs from '../main/pages/pagesConfigs';
 import DashboardsConfigs from '../main/dashboards/dashboardsConfigs';
 import AppsConfigs from '../main/apps/appsConfigs';
 import UserInterfaceConfigs from '../main/user-interface/UserInterfaceConfigs';
-import DocumentationConfig from '../main/documentation/DocumentationConfig';
+// import DocumentationConfig from '../main/documentation/DocumentationConfig';
 import authRoleExamplesConfigs from '../main/auth/authRoleExamplesConfigs';
-import UsersAppConfig from '../main/users/user/UsersAppConfig';
+// import UsersAppConfig from '../main/users/user/UsersAppConfig';
 import StaffAppConfig from '../main/users/admin/StaffAppConfig';
 import PropertiesAppConfig from '../main/properties/listings/PropertiesAppConfig';
 import ServiceTypesAppConfig from '../main/homes/servicetypes/ServiceTypesAppConfig';
@@ -49,18 +49,18 @@ import CountryShippingTableAppConfig from '../main/africanshops-control-dashboar
 // import AfricanshopsMessengerAppConfig from '../main/africanshops-messenger/AfricanshopsMessengerAppConfig';
 
 const routeConfigs = [
-	SignOutConfig,
+	// SignOutConfig,
 	SignInConfig,
-	SignUpConfig,
+	// SignUpConfig,
 	SignAcceptInviteConfig,
 	// DocumentationConfig,
-	UsersAppConfig,
-	StaffAppConfig,
-	PropertiesAppConfig,
-	ServiceTypesAppConfig,
-	ManagedListingsAppConfig,
-	PropertyTypesAppConfig,
-	ManagedUserListingsAppConfig,
+	// UsersAppConfig,
+	// StaffAppConfig,
+	// PropertiesAppConfig,
+	// ServiceTypesAppConfig,
+	// ManagedListingsAppConfig,
+	// PropertyTypesAppConfig,
+	// ManagedUserListingsAppConfig,
 
 	/****Africanshops Merhcant's Dashboard Configs Starts Here */
 	ShopDashboardAppConfig,

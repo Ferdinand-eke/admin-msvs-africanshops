@@ -124,14 +124,7 @@ const navigationConfig = [
 				url: '/designations/list'
 			},
 
-			// {
-			// 	id: 'vendors.listvendors',
-			// 	title: 'Vendors',
-			// 	type: 'item',
-			// 	icon: 'heroicons-outline:shopping-cart',
-			// 	url: '/vendors/listvendors'
-			// },
-			
+						
 		]
 	},
 
@@ -161,13 +154,6 @@ const navigationConfig = [
 
 
 
-			// {
-			// 	id: 'market.orders',
-			// 	title: 'Vendors',
-			// 	type: 'item',
-			// 	icon: 'heroicons-outline:shopping-cart',
-			// 	url: '/vendors/listvendors'
-			// },
 			
 		]
 	},
@@ -247,21 +233,21 @@ const navigationConfig = [
 				url: '/productunits/list'
 			},
 
-			{
-				//NAVIGATION:SHOP PRODUCTS
-				id: 'shopproducts.list',
-				title: 'Products',
-				type: 'item',
-				icon: 'heroicons-outline:shopping-cart',
-				url: '/shopproducts-list/products'
-			},
-			{
-				id: 'shopproducts.inventory',
-				title: 'Inventory',
-				type: 'item',
-				icon: 'heroicons-outline:shopping-cart',
-				url: '/shopproducts-list/inventory'
-			},
+			// {
+			// 	//NAVIGATION:SHOP PRODUCTS
+			// 	id: 'shopproducts.list',
+			// 	title: 'Products',
+			// 	type: 'item',
+			// 	icon: 'heroicons-outline:shopping-cart',
+			// 	url: '/shopproducts-list/products'
+			// },
+			// {
+			// 	id: 'shopproducts.inventory',
+			// 	title: 'Inventory',
+			// 	type: 'item',
+			// 	icon: 'heroicons-outline:shopping-cart',
+			// 	url: '/shopproducts-list/inventory'
+			// },
 			
 		]
 	},
@@ -294,31 +280,31 @@ const navigationConfig = [
 	},
 
 /***shop-orders orders pane */
-	{
-		id: 'shoporders',
-		title: 'Orders-&-Pos',
-		subtitle: 'Manage your shop orders',
-		type: 'group',
-		icon: 'heroicons-outline:home',
-		translate: 'ORDERS-&-POS',
-		children: [
-			{
-				id: 'shoporders.list',
-				title: 'Orders',
-				type: 'item',
-				icon: 'heroicons-outline:shopping-cart',
-				url: '/shoporders-list/orders'
-			},
-			{
-				id: 'shoporders.pos',
-				title: 'Poin Of Sale (POS)',
-				type: 'item',
-				icon: 'heroicons-outline:shopping-cart',
-				url: '/shoporders-list/pos'
-			},
+	// {
+	// 	id: 'shoporders',
+	// 	title: 'Orders-&-Pos',
+	// 	subtitle: 'Manage your shop orders',
+	// 	type: 'group',
+	// 	icon: 'heroicons-outline:home',
+	// 	translate: 'ORDERS-&-POS',
+	// 	children: [
+	// 		{
+	// 			id: 'shoporders.list',
+	// 			title: 'Orders',
+	// 			type: 'item',
+	// 			icon: 'heroicons-outline:shopping-cart',
+	// 			url: '/shoporders-list/orders'
+	// 		},
+	// 		{
+	// 			id: 'shoporders.pos',
+	// 			title: 'Poin Of Sale (POS)',
+	// 			type: 'item',
+	// 			icon: 'heroicons-outline:shopping-cart',
+	// 			url: '/shoporders-list/pos'
+	// 		},
 		
-		]
-	},
+	// 	]
+	// },
 
 		/***Editorial management pane */
 		{
@@ -375,16 +361,6 @@ const navigationConfig = [
 					icon: 'heroicons-outline:clipboard-check',
 					url: '/countryshipping/list'
 				},
-
-				// {
-				// 	id: 'posts.list',
-				// 	title: 'posts',
-				// 	type: 'item',
-				// 	icon: 'heroicons-outline:clipboard-check',
-				// 	url: '/posts/list'
-				// },
-	
-			
 				
 			]
 		},
@@ -407,14 +383,6 @@ const navigationConfig = [
 				url: '/africanshops/finance'
 			},
 
-			// {
-			// 	id: 'withdrawals.list',
-			// 	title: 'Property Withdrawals',
-			// 	type: 'item',
-			// 	icon: 'heroicons-outline:clipboard-check',
-			// 	url: '/finance/withdrawals'
-			// },
-		
 			
 		]
 	},
@@ -472,63 +440,6 @@ const navigationConfig = [
 
 	
 
-	// {
-	// 	id: 'properties',
-	// 	title: 'Manage prperties',
-	// 	subtitle: 'Properties management helpers',
-	// 	type: 'group',
-	// 	icon: 'heroicons-outline:home',
-	// 	translate: 'PROPERTIES',
-	// 	children: [
-	// 		{
-	// 			id: 'properties.list',
-	// 			title: 'Properties',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:clipboard-check',
-	// 			url: '/properties/listings'
-	// 		},
-
-	// 		{
-	// 			id: 'properties.managedlist',
-	// 			title: 'Managed Properties',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:clipboard-check',
-	// 			url: '/property/managed-listings'
-	// 		},
-	// 		{
-	// 			id: 'properties.users.managedlist',
-	// 			title: 'Manage Users & Properties',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:clipboard-check',
-	// 			url: '/userlistings/managed-user-listings'
-	// 		},
-	// 	]
-	// },
-
-	// {
-	// 	id: 'Add-Ons',
-	// 	title: 'Manage Add-Ons',
-	// 	subtitle: 'Properties Add-Ons management helpers',
-	// 	type: 'group',
-	// 	icon: 'heroicons-outline:home',
-	// 	translate: 'ADD-ONS',
-	// 	children: [
-	// 		{
-	// 			id: 'packages.servicetypes',
-	// 			title: 'Service Types',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:clipboard-check',
-	// 			url: '/packages/servicetypes'
-	// 		},
-	// 		{
-	// 			id: 'packages.propertytypes',
-	// 			title: 'Property Types',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:clipboard-check',
-	// 			url: '/types/propertytypes'
-	// 		},
-	// 	]
-	// },
 
 ];
 export default navigationConfig;

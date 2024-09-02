@@ -77,32 +77,10 @@ function SignInPage() {
 						Documentation.
 					</Alert>
 
-					{/* <Tabs
-						value={_.findIndex(tabs, { id: selectedTabId })}
-						variant="fullWidth"
-						className="w-full mt-24 mb-32"
-						indicatorColor="secondary"
-					>
-						{tabs.map((item) => (
-							<Tab
-								onClick={() => handleSelectTab(item.id)}
-								key={item.id}
-								icon={
-									<img
-										className={item.logoClass}
-										src={item.logo}
-										alt={item.title}
-									/>
-								}
-								className="min-w-0"
-								label={item.title}
-							/>
-						))}
-					</Tabs> */}
+					
 
 					{selectedTabId === 'jwt' && <JwtLoginTab />}
-					{/* {selectedTabId === 'firebase' && <FirebaseSignInTab />} */}
-					{/* {selectedTabId === 'aws' && <AwsSignInTab />} */}
+				
 				</CardContent>
 			</Paper>
 			<Box
@@ -174,13 +152,13 @@ function SignInPage() {
 				<div className="relative z-10 w-full max-w-2xl">
 					<div className="text-7xl font-bold leading-none text-gray-100">
 						<div>Welcome to</div>
-						<div>our community</div>
+						<div>africanshops admin</div>
 					</div>
 					<div className="mt-24 text-lg leading-6 tracking-tight text-gray-400">
-						Fuse helps developers to build organized and well coded dashboards full of beautiful and rich
-						modules. Join us and start building your application today.
+						This platform helps africanshops administrative users to cordinate, monitor and execute operational
+						tasks that power the day to day runnings and activities in our organization. Welcome onboard!
 					</div>
-					<div className="mt-32 flex items-center">
+					{/* <div className="mt-32 flex items-center">
 						<AvatarGroup
 							sx={{
 								'& .MuiAvatar-root': {
@@ -197,7 +175,7 @@ function SignInPage() {
 						<div className="ml-16 font-medium tracking-tight text-gray-400">
 							More than 17k people joined us, it's your turn
 						</div>
-					</div>
+					</div> */}
 				</div>
 			</Box>
 		</div>
