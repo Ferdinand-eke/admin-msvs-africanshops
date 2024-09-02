@@ -58,7 +58,7 @@ function SignInPage() {
 					<Typography className="mt-32 text-4xl font-extrabold leading-tight tracking-tight">
 						Sign in
 					</Typography>
-					<div className="mt-2 flex items-baseline font-medium">
+					{/* <div className="mt-2 flex items-baseline font-medium">
 						<Typography>Don't have an account?</Typography>
 						<Link
 							className="ml-4"
@@ -66,7 +66,7 @@ function SignInPage() {
 						>
 							Sign up
 						</Link>
-					</div>
+					</div> */}
 
 					<Alert
 						icon={false}

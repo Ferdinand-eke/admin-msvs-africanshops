@@ -12,7 +12,7 @@ import AppsConfigs from '../main/apps/appsConfigs';
 import UserInterfaceConfigs from '../main/user-interface/UserInterfaceConfigs';
 // import DocumentationConfig from '../main/documentation/DocumentationConfig';
 import authRoleExamplesConfigs from '../main/auth/authRoleExamplesConfigs';
-// import UsersAppConfig from '../main/users/user/UsersAppConfig';
+import UsersAppConfig from '../main/users/user/UsersAppConfig';
 import StaffAppConfig from '../main/users/admin/StaffAppConfig';
 import PropertiesAppConfig from '../main/properties/listings/PropertiesAppConfig';
 import ServiceTypesAppConfig from '../main/homes/servicetypes/ServiceTypesAppConfig';

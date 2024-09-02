@@ -5,6 +5,7 @@ import { selectFuseCurrentLayoutConfig } from '@fuse/core/FuseSettings/fuseSetti
 import { useAppDispatch, useAppSelector } from 'app/store/hooks';
 import { navbarCloseMobile, selectFuseNavbar } from 'app/theme-layouts/shared-components/navbar/navbarSlice';
 import NavbarStyle1Content from './NavbarStyle1Content';
+import { selectUser } from 'src/app/auth/user/store/userSlice';
 
 const navbarWidth = 280;
 const StyledNavBar = styled('div')(({ theme, open, position }) => ({
@@ -42,9 +43,12 @@ const StyledNavBarMobile = styled(SwipeableDrawer)(() => ({
  * The navbar style 1.
  */
 function NavbarStyle1() {
+	const user = useAppSelector(selectUser);
 	const dispatch = useAppDispatch();
 	const config = useAppSelector(selectFuseCurrentLayoutConfig);
 	const navbar = useAppSelector(selectFuseNavbar);
+
+
 	return (
 		<>
 			<Hidden lgDown>
@@ -53,7 +57,8 @@ function NavbarStyle1() {
 					open={navbar.open}
 					position={config.navbar.position}
 				>
-					<NavbarStyle1Content />
+					{user?.role === "Admin" && <NavbarStyle1Content />}
+					
 				</StyledNavBar>
 			</Hidden>
 
@@ -73,12 +78,14 @@ function NavbarStyle1() {
 					}}
 				>
 					
-					<NavbarStyle1Content />
+				{/* <NavbarStyle1Content /> */}
+				{user?.role === "Admin" && <NavbarStyle1Content />}
 
 				</StyledNavBarMobile>
 			</Hidden>
 		</>
 	);
 }
+
 
 export default NavbarStyle1;
