@@ -54,19 +54,20 @@ function NavbarStyle1() {
 	return (
 		<>
 			<Hidden lgDown>
-				<StyledNavBar
+			{user?.role?.toString() === 'admin' &&  <StyledNavBar
 					className="sticky top-0 z-20 h-screen flex-auto shrink-0 flex-col overflow-hidden shadow"
 					open={navbar.open}
 					position={config.navbar.position}
 				>
-					{/* {user?.role === "Admin" && <NavbarStyle1Content />} */}
-					{user?.role?.toString() === 'admin' && <NavbarStyle1Content />}
+					 <NavbarStyle1Content />
+					{/* {user?.role?.toString() === 'admin' && <NavbarStyle1Content />} */}
 					
-				</StyledNavBar>
+				</StyledNavBar>}
+				
 			</Hidden>
 
 			<Hidden lgUp>
-				<StyledNavBarMobile
+			{user?.role?.toString() === 'admin' && <StyledNavBarMobile
 					classes={{
 						paper: 'flex-col flex-auto h-full'
 					}}
@@ -81,14 +82,16 @@ function NavbarStyle1() {
 					}}
 				>
 					
-				{/* <NavbarStyle1Content /> */}
-				{user?.role?.toString() === 'admin' && <NavbarStyle1Content />}
+				<NavbarStyle1Content />
+				{/* {user?.role?.toString() === 'admin' && <NavbarStyle1Content />} */}
 
-				</StyledNavBarMobile>
+				</StyledNavBarMobile>}
+				
 			</Hidden>
 		</>
 	);
 }
+
 
 
 export default NavbarStyle1;
