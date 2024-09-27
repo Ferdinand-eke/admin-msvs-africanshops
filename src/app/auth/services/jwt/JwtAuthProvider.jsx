@@ -173,7 +173,6 @@ function JwtAuthProvider(props) {
 	const setSession = useCallback((accessToken) => {
 		if (accessToken) {
 			localStorage.setItem(config.tokenStorageKey, accessToken);
-			// axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 			axios.defaults.headers.common.accessToken = `${accessToken}`;
 		}
 	}, []);
@@ -194,7 +193,6 @@ function JwtAuthProvider(props) {
 
 			try {
 				const decoded = jwtDecode(accessToken);
-				// console.log("DECODED Token-DATA", decoded)
 				const currentTime = Date.now() / 1000;
 				return decoded.exp > currentTime;
 			} catch (error) {
@@ -263,7 +261,7 @@ function JwtAuthProvider(props) {
 	]);
 
 	const adminLogIn = useAdminLogin()
-	
+
 	const handleRequest = async (url, data,
 		//  handleSuccess,
 		 handleSignInSuccess,
