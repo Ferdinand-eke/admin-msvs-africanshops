@@ -65,8 +65,6 @@ export function useAdminLogin() {
       } else if (data) {
         console.log("LoginError22_", data.data);
 
-        // toast.error(data?.data?.message);
-        // console.log(Array.isArray(data?.data?.message) ? data?.data?.message?.map((m) => toast.error(m.message)) : toast.error(data?.data?.message))
         Array.isArray(data?.data?.message)
           ? data?.data?.message?.map((m) => toast.error(m.message))
           : toast.error(data?.data?.message);
