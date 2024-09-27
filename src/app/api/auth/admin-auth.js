@@ -16,10 +16,8 @@ import Cookie from "js-cookie";
 //   setAuthTokens,
 //   setShopForgotPasswordPAYLOAD,
 // } from '../../utils/authUtils';
-// import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { adminSigin } from "../apiRoutes";
-// import { Navigate } from 'react-router-dom';
 
 export function useAdminLogin() {
   // const navigate = useNavigate();
@@ -58,9 +56,6 @@ export function useAdminLogin() {
 
         if(transFormedUser){
           setUserCredentialsStorage(transFormedUser);
-          // window.location.replace('/dashboards/project');
-          // <Navigate to="/dashboards/project" />
-          // navigate('/')
           window.location.reload();
         }
 
