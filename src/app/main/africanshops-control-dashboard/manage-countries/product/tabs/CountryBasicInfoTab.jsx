@@ -2,18 +2,52 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Controller, useFormContext } from "react-hook-form";
 import { MenuItem, Select, Typography } from "@mui/material";
+import CountrySelect from "src/app/apselects/countryselect";
+import { useEffect } from "react";
+import { 
+  // Country, 
+  State, 
+  // City 
+}  from 'country-state-city';
+// import CountrySelect from "src/app/main/documentation/material-ui-components/components/autocomplete/CountrySelect";
 
 /**
  * The basic info tab.
  */
-function BasicInfoTab() {
+function CountryBasicInfoTab() {
   const methods = useFormContext();
-  const { control, formState } = methods;
-  const { errors } = formState;
+  const { control, formState, setValue, watch, } = methods;
+  const { errors  } = formState;
+
+  const countrylocation = watch("countrylocation");
+
+  const setCustomValue = (id, value) => {
+    setValue(id, value, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+  };
+
+  // console.log("CountySelect", countrylocation)
+
+//   useEffect(()=>{
+// if(countrylocation?.isoCode){
+//   console.log('StatesOfThisCountry', State.getStatesOfCountry(countrylocation?.isoCode))
+// }
+//   },[countrylocation?.isoCode])
+
   return (
     <div>
+
+<CountrySelect
+            value={countrylocation}
+            onChange={(value) => setCustomValue("countrylocation", value)}
+          />
+
+          
     
-      <Controller
+      {/* <Controller
         name="name"
         control={control}
         render={({ field }) => (
@@ -30,7 +64,7 @@ function BasicInfoTab() {
             helperText={errors?.name?.message}
           />
         )}
-      />
+      /> */}
 
       <>
         <Typography style={{ fontSize: "12px", fontWeight: "800" }}>
@@ -124,4 +158,4 @@ function BasicInfoTab() {
   );
 }
 
-export default BasicInfoTab;
+export default CountryBasicInfoTab;

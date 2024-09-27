@@ -21,27 +21,29 @@ import ShippingTab from './tabs/ShippingTab';
 import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
 import { useSingleState } from 'src/app/api/states/useStates';
+import { 
+	// Country, 
+	State, 
+	// City
+   }  from 'country-state-city';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
-	name: z.string().nonempty('You must enter a product name').min(5, 'The product name must be at least 5 characters')
+	businessCountry: z.string().nonempty('You must select a county').min(5, 'The product name must be at least 5 characters'),
+	statelocation: z.object({
+		name: z.string(),
+	})
 });
 
 /**
  * The product page.
  */
-function State() {
+function StatePage() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	// const {
-	// 	data: product,
-	// 	isLoading,
-	// 	isError
-	// } = useGetECommerceProductQuery(productId, {
-	// 	skip: !productId || productId === 'new'
-	// });
+	
 
 	const {data:state,
 		isLoading,
@@ -52,7 +54,10 @@ function State() {
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
-		defaultValues: {},
+		defaultValues: {
+			businessCountry:'',
+			statelocation: {},
+		},
 		resolver: zodResolver(schema)
 	});
 	const { reset, watch } = methods;
@@ -63,10 +68,18 @@ function State() {
 		}
 	}, [productId, reset]);
 	useEffect(() => {
+		// if (state?.data) {
+		// 	reset({ ...state?.data });
+		// }
 		if (state?.data) {
-			reset({ ...state?.data });
+			console.log("stateData", state?.data)
+			reset({ ...state?.data, 
+				// statelocation:State.getStatesOfCountry(state?.data?.countryCode),
+				statelocation: State.getStateByCodeAndCountry(state?.data?.isoCode, state?.data?.countryCode)
+			 });
 		}
 	}, [state?.data, reset]);
+	
 
 	/**
 	 * Tab Change
@@ -78,6 +91,7 @@ function State() {
 	if (isLoading) {
 		return <FuseLoading />;
 	}
+
 
 	/**
 	 * Show Message if the requested products is not exists
@@ -183,4 +197,4 @@ function State() {
 	);
 }
 
-export default State;
+export default StatePage;

@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 const CountriesApp = lazy(() => import('./CountriesApp'));
-const Country = lazy(() => import('./product/Country'));
+const Country = lazy(() => import('./product/CountryPage'));
 const Countries = lazy(() => import('./products/Countries'));
 /**
  * The E-Commerce app configuration.

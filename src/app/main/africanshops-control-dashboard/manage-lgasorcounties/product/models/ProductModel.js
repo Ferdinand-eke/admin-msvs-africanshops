@@ -33,6 +33,11 @@ const ProductModel = (data) =>
 		// active: true,
 		// image: '',
 		// total: ''
+		countryCode: "",
+		stateCode: "",
+		// isoCode: '',
+		latitude: "",
+		longitude: "",
 
 		isFeatured: "",
 		isInOperation: "",

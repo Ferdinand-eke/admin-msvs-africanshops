@@ -13,7 +13,7 @@ import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import LgaCountyHeader from './LgaCountyHeader';
-import BasicInfoTab from './tabs/BasicInfoTab';
+import BasicInfoTab from './tabs/LgaBasicInfoTab';
 import InventoryTab from './tabs/InventoryTab';
 import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
@@ -21,6 +21,7 @@ import ShippingTab from './tabs/ShippingTab';
 import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
 import { useSingleLga } from 'src/app/api/lgas/useLgas';
+import { City } from 'country-state-city';
 /**
  * Form Validation Schema
  */
@@ -50,14 +51,21 @@ function LgaCounty() {
 	})
 
 	// console.log("Single LGA", lgacounty?.data)
+
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			name: '',
+		name: '',
 		businessCountry: '',
 		businessState: '',
 		images: [],
+
+		countryCode: '',
+		stateCode: '',
+		isoCode: '',
+		latitude: '',
+		longitude: '',
 
 		isFeatured: "",
 		isInOperation: "",
@@ -75,6 +83,14 @@ function LgaCounty() {
 	useEffect(() => {
 		if (lgacounty?.data) {
 			reset({ ...lgacounty?.data });
+		}
+
+		if (lgacounty?.data) {
+			console.log("stateData", lgacounty?.data)
+			reset({ ...lgacounty?.data, 
+				// lgalocation: State.getStateByCodeAndCountry(lgacounty?.data?.isoCode, lgacounty?.data?.countryCode)
+				lgalocation:City.getCitiesOfState(lgacounty?.data?.countryCode, lgacounty?.data?.stateCode)
+			 });
 		}
 	}, [lgacounty?.data, reset]);
 

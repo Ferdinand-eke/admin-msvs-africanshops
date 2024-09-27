@@ -4,6 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 /**
  * The inventory tab.
  */
+
 function InventoryTab() {
 	const methods = useFormContext();
 	const { control } = methods;

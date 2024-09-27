@@ -5,11 +5,18 @@ import useCountries from "src/app/api/countries/useCountries";
 import { MenuItem, Select, Typography } from "@mui/material";
 import { getStateByCountryId } from "src/app/api/apiRoutes";
 import { useEffect, useState } from "react";
+import {
+  // Country,
+  // State,
+  City,
+} from "country-state-city";
+import LgaSelect from "src/app/apselects/lgaselect";
+import { VolunteerActivismOutlined } from "@mui/icons-material";
 
 /**
  * The basic info tab.
  */
-function BasicInfoTab() {
+function LgaBasicInfoTab() {
   const {
     data: countries,
     isLoading: countriesLoading,
@@ -19,8 +26,19 @@ function BasicInfoTab() {
   const [bstates, setBstates] = useState([]);
 
   const methods = useFormContext();
-  const { control, formState, getValues } = methods;
+  const { control, formState, getValues, setValue, watch } = methods;
   const { errors } = formState;
+  const [filteredCountry, setFilteredCountry] = useState({});
+  const [filteredState, setFilteredState] = useState({});
+  const setCustomValue = (id, value) => {
+    setValue(id, value, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+  };
+
+  const lgalocation = watch("lgalocation");
 
   useEffect(() => {
     if (getValues()?.businessCountry?.length > 0) {
@@ -30,6 +48,56 @@ function BasicInfoTab() {
     getValues()?.businessCountry,
     // getValues()?.businezState
   ]);
+
+  useEffect(() => {
+    if (getValues()?.businessCountry?.length > 0) {
+      // const filteredCountry = countries?.data?.data?.filter((county) => county._id === getValues()?.businessCountry )
+      setFilteredCountry(
+        countries?.data?.data?.filter(
+          (county) => county._id === getValues()?.businessCountry
+        )[0]
+      );
+    }
+    if (getValues()?.businessState?.length > 0) {
+      console.log("performFilter");
+      // const filteredCountry = countries?.data?.data?.filter((county) => county._id === getValues()?.businessCountry )
+      setFilteredState(
+        bstates?.filter((state) => state._id === getValues()?.businessState)[0]
+      );
+    }
+
+    if (getValues()?.businessCountry && getValues()?.businessState) {
+      // console.log("filteredCountries", getValues()?.businessCountry, filteredCountry)
+      // console.log("filteredStates", getValues()?.businessState, filteredState)
+
+      console.log(
+        "citiesOfAState",
+        City.getCitiesOfState(filteredCountry?.isoCode, filteredState?.isoCode)
+      );
+    }
+  }, [
+    getValues()?.businessState,
+    getValues()?.businessCountry,
+    // filteredCountry?.isoCode,
+    // filteredState?.isoCode,
+  ]);
+
+  useEffect(()=>{
+    if( getValues()?.name){
+      const lgaIsoCode = getValues()?.name?.trim()?.toUpperCase()
+      const lgaCode = getValues()?.name?.split(" ").join("")?.toUpperCase()
+      // console.log('LGA-ISO-CODE', lgaIsoCode)
+      // console.log('LGA-ISO-CODE22', lgaCode)
+      setValue('isoCode', lgaCode)
+    }
+
+  },[ getValues()?.name])
+  // console.log("countries", countries?.data?.data)
+  // console.log("filteredCountries_ID", getValues()?.businessCountry);
+  // console.log("filteredCountry", filteredCountry);
+  // console.log("======================================================");
+  // console.log("filteredStates_ID", getValues()?.businessState);
+  // console.log("filteredState", filteredState);
 
   async function getStateDFromCountryId(pid) {
     setLoading(true);
@@ -54,7 +122,7 @@ function BasicInfoTab() {
           Country of L.G.A/County?
         </Typography>
         <Controller
-          name="businessCountry"
+          name={`businessCountry`}
           control={control}
           defaultValue={[]}
           render={({ field: { onChange, value } }) => (
@@ -87,7 +155,7 @@ function BasicInfoTab() {
           State of L.G.A/County? (Dependent on country selected)
         </Typography>
         <Controller
-          name="businessState"
+          name={`businessState`}
           control={control}
           defaultValue={[]}
           render={({ field: { onChange, value } }) => (
@@ -115,6 +183,13 @@ function BasicInfoTab() {
         />
       </>
 
+      <LgaSelect
+        value={lgalocation}
+        onChange={(value) => setCustomValue("lgalocation", value)}
+        countryCode={filteredCountry?.isoCode}
+        stateCode={filteredState?.isoCode}
+      />
+
       <Controller
         name="name"
         control={control}
@@ -134,77 +209,7 @@ function BasicInfoTab() {
         )}
       />
 
-      {/* <Controller
-        name="isInOperation"
-        control={control}
-        defaultValue={[]}
-        render={({ field: { onChange, value } }) => (
-          <Select
-            className="mt-8 mb-16"
-            id="isInOperation"
-            label="Operational Status"
-            fullWidth
-            defaultValue=""
-            onChange={onChange}
-            value={value === undefined || null ? "" : value}
-            error={!!errors.isInOperation}
-            helpertext={errors?.isInOperation?.message}
-          >
-            <MenuItem value="">Select an operations status</MenuItem>
-            <MenuItem value={false}>Not Operational</MenuItem>
 
-            <MenuItem value={true}>Operational</MenuItem>
-          </Select>
-        )}
-      />
-
-      <Controller
-        name="isPublished"
-        control={control}
-        defaultValue={[]}
-        render={({ field: { onChange, value } }) => (
-          <Select
-            className="mt-8 mb-16"
-            id="isPublished"
-            label="Operational Status"
-            fullWidth
-            defaultValue=""
-            onChange={onChange}
-            value={value === undefined || null ? "" : value}
-            error={!!errors.isPublished}
-            helpertext={errors?.isPublished?.message}
-          >
-            <MenuItem value="">Select a publish status</MenuItem>
-            <MenuItem value={false}>Not Published</MenuItem>
-
-            <MenuItem value={true}>Published</MenuItem>
-          </Select>
-        )}
-      />
-
-      <Controller
-        name="isFeatured"
-        control={control}
-        defaultValue={[]}
-        render={({ field: { onChange, value } }) => (
-          <Select
-            className="mt-8 mb-16"
-            id="isFeatured"
-            label="Operational Status"
-            fullWidth
-            defaultValue=""
-            onChange={onChange}
-            value={value === undefined || null ? "" : value}
-            error={!!errors.isFeatured}
-            helpertext={errors?.isFeatured?.message}
-          >
-            <MenuItem value="">Select an fetaured status</MenuItem>
-            <MenuItem value={false}>Not Featured</MenuItem>
-
-            <MenuItem value={true}>Featured</MenuItem>
-          </Select>
-        )}
-      /> */}
 
       <>
         <Typography style={{ fontSize: "12px", fontWeight: "800" }}>
@@ -294,8 +299,77 @@ function BasicInfoTab() {
           )}
         />
       </>
+
+      {/* <Controller
+        name="lgaCode"
+        control={control}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            className="mt-8 mb-16"
+            required
+            label="LGA Code"
+            autoFocus
+            id="sku"
+            variant="outlined"
+            fullWidth
+          />
+        )}
+      /> */}
+      <Controller
+        name="isoCode"
+        control={control}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            className="mt-8 mb-16"
+            required
+            label="iso code"
+            autoFocus
+            id="isoCode"
+            variant="outlined"
+            fullWidth
+            error={!!errors.isoCode}
+            helperText={errors?.isoCode?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="longitude"
+        control={control}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            className="mt-8 mb-16"
+            required
+            label="Longitudinal Location"
+            autoFocus
+            id="lng"
+            variant="outlined"
+            fullWidth
+          />
+        )}
+      />
+
+      <Controller
+        name="latitude"
+        control={control}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            className="mt-8 mb-16"
+            required
+            label="Loatitudinal Location"
+            autoFocus
+            id="lat"
+            variant="outlined"
+            fullWidth
+          />
+        )}
+      />
     </div>
   );
 }
 
-export default BasicInfoTab;
+export default LgaBasicInfoTab;

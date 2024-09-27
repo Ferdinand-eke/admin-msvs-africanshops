@@ -48,7 +48,7 @@ function NavbarStyle1() {
 	const config = useAppSelector(selectFuseCurrentLayoutConfig);
 	const navbar = useAppSelector(selectFuseNavbar);
 
-	console.log("SIDDBAR-USER", user)
+	// console.log("SIDDBAR-USER", user)
 
 
 	return (

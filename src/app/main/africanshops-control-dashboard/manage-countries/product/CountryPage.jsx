@@ -13,35 +13,32 @@ import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import CountryHeader from './CountryHeader';
-import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
+import CountryBasicInfoTab from './tabs/CountryBasicInfoTab';
+// import InventoryTab from './tabs/InventoryTab';
+// import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
+// import ShippingTab from './tabs/ShippingTab';
 import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
 import { useSingleCountry } from 'src/app/api/countries/useCountries';
+import { Country, State, City }  from 'country-state-city';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
-	name: z.string().nonempty('You must enter a product name').min(5, 'The product name must be at least 5 characters')
+	countrylocation: z.object({
+		name: z.string(),
+	})
 });
 
 /**
  * The product page.
  */
-function Country() {
+function CountryPage() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	// const {
-	// 	data: product,
-	// 	isLoading,
-	// 	isError
-	// } = useGetECommerceProductQuery(productId, {
-	// 	skip: !productId || productId === 'new'
-	// });
+
 
 	const {data:singleCountry,
 		isLoading,
@@ -50,7 +47,6 @@ function Country() {
 		skip: !productId || productId === 'new'
 	})
 
-	// console.log("Single-COUNTRY", singleCountry?.data)
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
@@ -62,6 +58,7 @@ function Country() {
 			isPublished: "",
 
 			images: [],
+			countrylocation:{},
 		},
 		resolver: zodResolver(schema)
 	});
@@ -74,10 +71,12 @@ function Country() {
 	}, [productId, reset]);
 	useEffect(() => {
 		if (singleCountry?.data) {
-			reset({ ...singleCountry?.data });
+			reset({ ...singleCountry?.data, 
+				countrylocation:Country.getCountryByCode(singleCountry?.data?.isoCode)
+			 });
 		}
 	}, [singleCountry?.data, reset]);
-// console.log("SINGLE-COUNTRY:DATA", singleCountry?.data)
+
 	/**
 	 * Tab Change
 	 */
@@ -164,7 +163,7 @@ function Country() {
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
-								<BasicInfoTab />
+								<CountryBasicInfoTab />
 							</div>
 
 							<div className={tabValue !== 1 ? 'hidden' : ''}>
@@ -192,4 +191,4 @@ function Country() {
 	);
 }
 
-export default Country;
+export default CountryPage;

@@ -30,18 +30,7 @@ const LgasCountiesAppConfig = {
 					path: 'lgas/:productId/*',
 					element: <LgaCounty />
 				},
-				// {
-				// 	path: 'inventory',
-				// 	element: <ShopProducts />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+			
 			]
 		}
 	]

@@ -19,15 +19,15 @@ import { useAddLgaMutation, useDeleteSingleLGA, useLgaUpdateMutation } from 'src
 function LgaCountyHeader() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	const [createProduct] = useCreateECommerceProductMutation();
-	const [saveProduct] = useUpdateECommerceProductMutation();
-	const [removeProduct] = useDeleteECommerceProductMutation();
+	// const [createProduct] = useCreateECommerceProductMutation();
+	// const [saveProduct] = useUpdateECommerceProductMutation();
+	// const [removeProduct] = useDeleteECommerceProductMutation();
 	const methods = useFormContext();
 	const { formState, watch, getValues } = methods;
 	const { isValid, dirtyFields } = formState;
 	const theme = useTheme();
 	const navigate = useNavigate();
-	const { name, images, featuredImageId } = watch();
+	const { name, images, featuredImageId, lgalocation} = watch();
 
 
    const updateLgaMutation = useLgaUpdateMutation();
@@ -36,11 +36,13 @@ function LgaCountyHeader() {
 	function handleSaveProduct() {
 
 		updateLgaMutation.mutate(getValues())
-		// saveProduct(getValues());
+
 	}
 
 	function handleCreateProduct() {
 
+		// console.log("LGA_Payload", getValues())
+		// return
 		addNewLga.mutate(getValues())
 		// createProduct(getValues())
 		// 	.unwrap()
@@ -53,8 +55,7 @@ function LgaCountyHeader() {
 		if (window.confirm("Comfirm delete of this L.G.A/County?")) {
 			deleteLGA.mutate(productId)
 		}
-		// removeProduct(productId);
-		// navigate('/administrations/lgas');
+	
 	}
 
 	return (
@@ -114,8 +115,21 @@ function LgaCountyHeader() {
 						>
 							County Detail
 						</Typography>
+						{/* <Typography>
+						{JSON.stringify(lgalocation)}
+						</Typography> */}
 					</motion.div>
+					
 				</div>
+
+						{lgalocation && <motion.div
+					className="flex flex-col min-w-0 mx-8 sm:mx-16"
+					initial={{ x: -20 }}
+					animate={{ x: 0, transition: { delay: 0.3 } }}
+					>
+					{JSON.stringify(lgalocation)}
+					</motion.div>}
+				
 			</div>
 			<motion.div
 				className="flex flex-1 w-full"
@@ -137,7 +151,7 @@ function LgaCountyHeader() {
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid}
+							disabled={_.isEmpty(dirtyFields) || !isValid || updateLgaMutation.isLoading}
 							onClick={handleSaveProduct}
 						>
 							Save LGA/County
@@ -148,7 +162,7 @@ function LgaCountyHeader() {
 						className="whitespace-nowrap mx-4"
 						variant="contained"
 						color="secondary"
-						disabled={_.isEmpty(dirtyFields) || !isValid}
+						disabled={_.isEmpty(dirtyFields) || !isValid || addNewLga.isLoading}
 						onClick={handleCreateProduct}
 					>
 						Add LGA/County

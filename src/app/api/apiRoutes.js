@@ -12,7 +12,6 @@ import { toast } from "react-toastify";
 // const baseDomain = "http://localhost:8000";
 //====================================================
 /***Digital Ocean Server : Current main server*/
-// const baseDomain = 'https://clownfish-app-kb625.ondigitalocean.app';
 
 const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/'; //deployed serve
 

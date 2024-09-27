@@ -28,6 +28,7 @@ import { firebaseApp } from "src/app/auth/services/firebase/initializeFirebase";
 import ProductModel from "./models/ProductModel";
 import { downloadData } from "aws-amplify/storage";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 /**
  * The product header.
@@ -49,6 +50,8 @@ function CountryHeader() {
   const deleteCountry = useDeleteSingleCountry();
 
   function handleSaveProduct() {
+    // console.log("COUNTRY-VALUES222", getValues())
+    // return
     if (images?.length > 0) {
       const fileName = new Date().getTime() + images[0]?.id;
       const storage = getStorage(firebaseApp);
@@ -63,7 +66,6 @@ function CountryHeader() {
           .then(() => {
             uploadTask.then((snapshot) => {
               getDownloadURL(snapshot.ref).then((downloadURL) => {
-
                 setValue("flag", downloadURL);
                 updateCountryMutation.mutate(getValues());
               });
@@ -94,6 +96,8 @@ function CountryHeader() {
   }
 
   function handleCreateProduct() {
+    console.log("COUNTRY-VALUES", getValues());
+    // return
     if (images?.length > 0) {
       const fileName = new Date().getTime() + images[0]?.id;
       const storage = getStorage(firebaseApp);
@@ -112,7 +116,6 @@ function CountryHeader() {
       });
     } else {
       addNewcountry.mutate(getValues());
-      reset(ProductModel({}));
     }
   }
 
@@ -144,6 +147,12 @@ function CountryHeader() {
       }
     }
   }
+
+  useEffect(() => {
+    if (addNewcountry.isSuccess) {
+      reset(ProductModel({}));
+    }
+  }, [addNewcountry.isSuccess]);
 
   return (
     <div className="flex flex-col sm:flex-row flex-1 w-full items-center justify-between space-y-8 sm:space-y-0 py-24 sm:py-32 px-24 md:px-32">
@@ -229,7 +238,7 @@ function CountryHeader() {
               disabled={_.isEmpty(dirtyFields) || !isValid}
               onClick={handleSaveProduct}
             >
-              Save
+              Save County
             </Button>
           </>
         ) : (
@@ -240,7 +249,7 @@ function CountryHeader() {
             disabled={_.isEmpty(dirtyFields) || !isValid}
             onClick={handleCreateProduct}
           >
-            Add
+            Add Country
           </Button>
         )}
       </motion.div>

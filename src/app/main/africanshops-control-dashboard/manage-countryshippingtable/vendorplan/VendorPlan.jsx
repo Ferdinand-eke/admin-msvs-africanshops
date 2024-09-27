@@ -52,7 +52,6 @@ function VendorPlan() {
 			adsbost: '',
 			price: '',
 			support: '',
-			adsbost: '',
 			numberofproducts: '',
 			dashboardandanalytics: '',
 			numberoffeaturedimages: '',

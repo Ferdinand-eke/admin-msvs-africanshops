@@ -5,6 +5,7 @@ import config from './jwtAuthConfig';
 import {  useSnackbar } from 'notistack';
 import Cookie from 'js-cookie'
 import { toast } from 'react-toastify';
+import { useAdminLogin } from 'src/app/api/auth/admin-auth';
 
 const defaultAuthContext = {
 	isAuthenticated: false,
@@ -19,6 +20,7 @@ const defaultAuthContext = {
 	authStatus: 'configuring'
 };
 export const JwtAuthContext = createContext(defaultAuthContext);
+
 
 function JwtAuthProvider(props) {
 /**
@@ -122,6 +124,7 @@ function JwtAuthProvider(props) {
 	 * Handle sign-in success
 	 */
 	const handleSignInSuccess = useCallback((userData, accessToken) => {
+
 		setSession(accessToken);
 		// setIsAuthenticated(true);
 		setIsAuthenticated(setIsAthenticatedStorage(accessToken));
@@ -258,6 +261,9 @@ function JwtAuthProvider(props) {
 		getAccessToken,
 		isAuthenticated
 	]);
+
+	const adminLogIn = useAdminLogin()
+	
 	const handleRequest = async (url, data,
 		//  handleSuccess,
 		 handleSignInSuccess,
@@ -265,37 +271,34 @@ function JwtAuthProvider(props) {
 		handleSignInFailure
 		 ) => {
 		try {
-			const response = await axios.post(url, data);
 
-			console.log("Request-SUCESS Token", response?.data?.accessToken)
-			console.log("Request-SUCESS USER", response.data)
-			if(response?.data && response?.data?.accessToken){
-				const transFormedUser = {
-					id:response?.data?._id,
-					name:response?.data?.name,
-					email:response?.data?.email,
-					// role:response?.data?.user?.role.toLowerCase(),
-					role:'admin',
+		
 
-					isAdmin:response?.data?.isAdmin,
-					avatar:response?.data?.avatar,
-					// isAdmin:response?.data?.isAdmin,
-					// isAdmin:response?.data?.isAdmin,
+			adminLogIn.mutate(data)
+			// const response = await axios.post(url, data);
+
+			// console.log("Request-SUCESS Token", response?.data?.accessToken)
+			// console.log("Request-SUCESS USER", response.data)
+			// if(response?.data && response?.data?.accessToken){
+			// 	const transFormedUser = {
+			// 		id:response?.data?._id,
+			// 		name:response?.data?.name,
+			// 		email:response?.data?.email,
+			// 		role:'admin',
+
+			// 		isAdmin:response?.data?.isAdmin,
+			// 		avatar:response?.data?.avatar,
 					
-				}
+			// 	}
 
-			// return
-			console.log("User Tor store", transFormedUser)
-			// return
-
-				const accessToken = response?.data?.accessToken;
-				handleSignInSuccess(transFormedUser, accessToken);
-			return transFormedUser;
-			}
-			if(response.data.error){
-				toast.error(`${response?.data?.error?.message}`)
-				return
-			}
+			// 	const accessToken = response?.data?.accessToken;
+			// 	handleSignInSuccess(transFormedUser, accessToken);
+			// return transFormedUser;
+			// }
+			// if(response.data.error){
+			// 	toast.error(`${response?.data?.error?.message}`)
+			// 	return
+			// }
 			
 		} catch (error) {
 			const axiosError = error;
@@ -307,6 +310,7 @@ function JwtAuthProvider(props) {
 			return axiosError;
 		}
 	};
+
 	// Refactor signIn function
 	const signIn = (credentials) => {
 		// console.log("IN-JWT-Provider", credentials)

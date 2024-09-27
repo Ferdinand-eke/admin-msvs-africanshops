@@ -3,6 +3,13 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { Controller, useFormContext } from "react-hook-form";
 import useCountries from "src/app/api/countries/useCountries";
 import { MenuItem, Select, Typography } from "@mui/material";
+import StateSelect from "src/app/apselects/stateselect";
+import { 
+  // Country, 
+  State, 
+  // City
+ }  from 'country-state-city';
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * The basic info tab.
@@ -13,9 +20,38 @@ function BasicInfoTab() {
     isLoading: countriesLoading,
     refetch,
   } = useCountries();
+
   const methods = useFormContext();
-  const { control, formState } = methods;
+  const { control, formState, getValues, setValue, watch,  } = methods;
   const { errors } = formState;
+  const [filteredCountry, setFilteredCountry] = useState({})
+
+  const statelocation = watch("statelocation");
+
+  
+  const setCustomValue = (id, value) => {
+    setValue(id, value, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+  };
+
+  useEffect(()=>{
+    if(getValues().businessCountry){
+      // const filteredCountry = countries?.data?.data?.filter((county) => county._id === getValues().businessCountry )
+      setFilteredCountry(countries?.data?.data?.filter((county) => county._id === getValues().businessCountry )[0])
+     
+    }
+   
+  },[getValues().businessCountry])
+
+
+  // console.log("statesREPO", State.getStateByCodeAndCountry(stateCode, countryCode))
+
+  // console.log("filteredCountry", filteredCountry)
+  // console.log("statesREPO", State.getStatesOfCountry(filteredCountry?.isoCode))
+  // console.log("countryOdState", getValues().businessCountry)
   return (
     <div>
       <>
@@ -67,9 +103,17 @@ function BasicInfoTab() {
             fullWidth
             error={!!errors.name}
             helperText={errors?.name?.message}
+            disabled
           />
         )}
       />
+
+      {/* <StateSelect /> */}
+      <StateSelect
+            value={statelocation}
+            onChange={(value) => setCustomValue("statelocation", value)}
+            countryCode={filteredCountry?.isoCode}
+          />
 
       {/* <Controller
         name="isInOperation"

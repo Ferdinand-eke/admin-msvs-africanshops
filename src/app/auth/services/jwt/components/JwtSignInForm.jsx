@@ -7,9 +7,10 @@ import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import useJwtAuth from '../useJwtAuth';
+import { useAdminLogin } from 'src/app/api/auth/admin-auth';
 /**
  * Form Validation Schema
  */
@@ -35,15 +36,7 @@ function JwtSignInForm() {
 		resolver: zodResolver(schema)
 	});
 	const { isValid, dirtyFields, errors } = formState;
-	// useEffect(() => {
-	// 	setValue('email', 'admin@fusetheme.com', { shouldDirty: true, shouldValidate: true });
-	// 	setValue('password', 'admin', { shouldDirty: true, shouldValidate: true });
-	// }, [setValue]);
 
-	// useEffect(() => {
-	// 	setValue('email', defaultValues.email, { shouldDirty: true, shouldValidate: true });
-	// 	setValue('password', defaultValues.password, { shouldDirty: true, shouldValidate: true });
-	// }, [setValue]);
 
 	function onSubmit(formData) {
 		console.log("Login-Values", formData)
@@ -55,13 +48,7 @@ function JwtSignInForm() {
 			console.log('FormJSXError', error)
 
 
-			// const errorData = error.response.data;
-			// errorData.forEach((err) => {
-			// 	setError(err.type, {
-			// 		type: 'manual',
-			// 		message: err.message
-			// 	});
-			// });
+			
 		});
 	}
 	return (
@@ -141,7 +128,9 @@ function JwtSignInForm() {
 				className=" mt-16 w-full"
 				aria-label="Sign in"
 				//|| isLoading
-				disabled={_.isEmpty(dirtyFields) || !isValid }
+				disabled={_.isEmpty(dirtyFields) || !isValid 
+				
+				 }
 				type="submit"
 				size="large"
 			>

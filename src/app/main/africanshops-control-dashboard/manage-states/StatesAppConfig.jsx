@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 const StatesApp = lazy(() => import('./StatesApp'));
-const Product = lazy(() => import('./product/State'));
+const StatePage = lazy(() => import('./product/StatePage'));
 const ShopProducts = lazy(() => import('./products/States'));
 /**
  * The E-Commerce app configuration.
@@ -27,7 +27,7 @@ const StatesAppConfig = {
 				},
 				{
 					path: 'states/:productId/*',
-					element: <Product />
+					element: <StatePage />
 				},
 				// {
 				// 	path: 'inventory',

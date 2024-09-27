@@ -35,6 +35,7 @@ const ProductModel = (data) =>
     isFeatured: "",
     isInOperation: "",
     isPublished: "",
+    countrylocation:"",
 
   });
 export default ProductModel;

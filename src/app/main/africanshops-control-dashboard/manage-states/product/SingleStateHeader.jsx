@@ -27,26 +27,27 @@ function SingleStateHeader() {
 	const { isValid, dirtyFields } = formState;
 	const theme = useTheme();
 	const navigate = useNavigate();
-	const { name, images, featuredImageId } = watch();
+	const { name, images, featuredImageId,  } = watch();
 
   const updateStatesMutation = useStateUpdateMutation();
   const addNewStates = useAddStateMutation();
   const deleteState = useDeleteSingleState()
 
 	function handleSaveProduct() {
+		// console.log("statePayLoad1", getValues())
+
+		// return
 		updateStatesMutation.mutate(getValues())
 		
 		// saveProduct(getValues());
 	}
 
 	function handleCreateProduct() {
+// console.log("statePayLoad", getValues())
+
+// 		return
 		addNewStates.mutate(getValues())
 
-		// createProduct(getValues())
-		// 	.unwrap()
-		// 	.then((data) => {
-		// 		navigate(`/administrations/states/${data.id}`);
-		// 	});
 	}
 
 	function handleRemoveProduct() {
@@ -54,9 +55,8 @@ function SingleStateHeader() {
 			deleteState.mutate(productId)
 		}
 		
-		// removeProduct(productId);
-		// navigate('/administrations/states');
 	}
+
 
 
 	return (
@@ -139,10 +139,10 @@ function SingleStateHeader() {
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid}
+							disabled={_.isEmpty(dirtyFields) || !isValid || updateStatesMutation.isLoading}
 							onClick={handleSaveProduct}
 						>
-							Save
+							Save State
 						</Button>
 					</>
 				) : (
@@ -150,10 +150,10 @@ function SingleStateHeader() {
 						className="whitespace-nowrap mx-4"
 						variant="contained"
 						color="secondary"
-						disabled={_.isEmpty(dirtyFields) || !isValid}
+						disabled={_.isEmpty(dirtyFields) || !isValid || addNewStates.isLoading}
 						onClick={handleCreateProduct}
 					>
-						Add
+						Add State
 					</Button>
 				)}
 			</motion.div>
