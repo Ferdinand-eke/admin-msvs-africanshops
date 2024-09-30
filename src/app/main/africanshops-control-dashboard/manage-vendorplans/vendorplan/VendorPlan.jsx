@@ -55,6 +55,8 @@ function VendorPlan() {
 			numberofproducts: '',
 			dashboardandanalytics: '',
 			numberoffeaturedimages: '',
+			planinfo:'',
+			plankey:'',
 		},
 		resolver: zodResolver(schema)
 	});

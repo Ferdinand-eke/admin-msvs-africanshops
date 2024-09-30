@@ -30,18 +30,7 @@ const VendorPlansAppConfig = {
 					path: 'packages/:productId/*',
 					element: <VendorPlan />
 				},
-				// {
-				// 	path: 'inventory',
-				// 	element: <VendorPlans />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+			
 			]
 		}
 	]

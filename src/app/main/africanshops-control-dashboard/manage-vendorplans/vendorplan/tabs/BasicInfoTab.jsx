@@ -227,6 +227,44 @@ function BasicInfoTab() {
 				)}
 			/>
 
+
+<Controller
+				name="planinfo"
+				control={control}
+				render={({ field }) => (
+					<TextField
+						{...field}
+						className="mt-8 mb-16"
+						id="planinfo"
+						label="Plan Info"
+						type="text"
+						multiline
+						rows={3}
+						variant="outlined"
+						fullWidth
+					/>
+				)}
+			/>
+
+<Controller
+				name="plankey"
+				control={control}
+				render={({ field }) => (
+					<TextField
+						{...field}
+						className="mt-8 mb-16"
+						required
+						// label="Plan Key"
+						autoFocus
+						id="plankey"
+						variant="outlined"
+						fullWidth
+						error={!!errors.plankey}
+						helperText={errors?.plankey?.message}
+						disabled
+					/>
+				)}
+			/>
 		
 		</div>
 	);
