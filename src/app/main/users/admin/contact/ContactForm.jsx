@@ -34,6 +34,7 @@ function BirtdayIcon() {
 	return <FuseSvgIcon size={20}>heroicons-solid:cake</FuseSvgIcon>;
 }
 
+
 /**
  * Form Validation Schema
  */
@@ -75,6 +76,7 @@ function ContactForm() {
 	// 	skip: !contactId
 	// });
 
+	
 	const {
 		data: admin,
 		isLoading: adminLoading,
@@ -82,15 +84,6 @@ function ContactForm() {
 	} = useGetAdminById(id, {
 		skip: !id || id === 'new'
 	});
-
-	// useGetAdminById(contactId, {
-	// 	return: !contactId || contactId === 'new'
-	// });
-console.log("ADMIN FORM DATAS", admin?.data)
-	// const [createContact] = useCreateContactsItemMutation();
-	// const [updateContact] = useUpdateContactsItemMutation();
-	// const [deleteContact] = useDeleteContactsItemMutation();
-	// const { data: tags } = useGetContactsTagsQuery();
 
 
 
@@ -100,27 +93,11 @@ console.log("ADMIN FORM DATAS", admin?.data)
 	});
 	const { isValid, dirtyFields, errors } = formState;
 	const form = watch();
-	//admin?.data
-	// useEffect(() => {
-	// 	if (contactId === 'new') {
-	// 		reset(ContactModel({}));
-	// 	} else {
-	// 		reset({ ...contact });
-	// 	}
-	// }, [contact, reset, routeParams]);
-	// useEffect(() => {
-	// 	if (contactId === 'new') {
-	// 		reset(ContactModel({}));
-	// 	} else {
-	// 		reset({ ...admin?.data });
-	// 	}
-	// }, [contactId, admin?.data, reset, routeParams]);
+	
 
 
 	useEffect(() => {
-		// if (contactId === 'new') {
-		// 	reset(ContactModel({}));
-		// }
+	
 		if (id === 'new') {
 			reset(ContactModel({}));
 		}
@@ -171,21 +148,6 @@ console.log("ADMIN FORM DATAS", admin?.data)
 	const background = watch('background');
 	const name = watch('name');
 
-	// if (isError && contactId !== 'new') {
-	// 	setTimeout(() => {
-	// 		navigate('/users/admin');
-	// 		dispatch(showMessage({ message: 'NOT FOUND' }));
-	// 	}, 0);
-	// 	return null;
-	// }
-
-	// if (adminIsError && id !== 'new') {
-	// 	setTimeout(() => {
-	// 		navigate('/users/admin');
-	// 		dispatch(showMessage({ message: 'NOT FOUND' }));
-	// 	}, 0);
-	// 	return null;
-	// }
 	
 	if (adminIsError && id !== 'new' ) {
 		//&& id !== 'new'

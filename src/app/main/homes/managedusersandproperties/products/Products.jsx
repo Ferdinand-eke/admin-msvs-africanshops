@@ -1,6 +1,6 @@
 import GlobalStyles from '@mui/material/GlobalStyles';
 import ProductsHeader from './ProductsHeader';
-import ProductsTable from './ProductsTable';
+import ProductsTable from './ShopOnEstatePropertiesTable';
 
 /**
  * The products page.

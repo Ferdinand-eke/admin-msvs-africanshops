@@ -19,6 +19,10 @@ function AllVendorsTable() {
 	const [removeProducts] = useDeleteECommerceProductsMutation();
 
 	const { data:vendors, isLoading, isError } = useAdmiManageShop();
+
+	console.log("MERCHANTS", vendors?.data)
+
+
 	const columns = useMemo(
 		() => [
 			{
@@ -168,45 +172,45 @@ function AllVendorsTable() {
 			<DataTable
 				data={vendors?.data?.data}
 				columns={columns}
-				renderRowActionMenuItems={({ closeMenu, row, table }) => [
-					<MenuItem
-						key={0}
-						onClick={() => {
-							removeProducts([row.original.id]);
-							closeMenu();
-							table.resetRowSelection();
-						}}
-					>
-						<ListItemIcon>
-							<FuseSvgIcon>heroicons-outline:trash</FuseSvgIcon>
-						</ListItemIcon>
-						Delete
-					</MenuItem>
-				]}
-				renderTopToolbarCustomActions={({ table }) => {
-					const { rowSelection } = table.getState();
+				// renderRowActionMenuItems={({ closeMenu, row, table }) => [
+				// 	<MenuItem
+				// 		key={0}
+				// 		onClick={() => {
+				// 			// removeProducts([row.original.id]);
+				// 			closeMenu();
+				// 			table.resetRowSelection();
+				// 		}}
+				// 	>
+				// 		<ListItemIcon>
+				// 			<FuseSvgIcon>heroicons-outline:trash</FuseSvgIcon>
+				// 		</ListItemIcon>
+				// 		Delete
+				// 	</MenuItem>
+				// ]}
+				// renderTopToolbarCustomActions={({ table }) => {
+				// 	const { rowSelection } = table.getState();
 
-					if (Object.keys(rowSelection).length === 0) {
-						return null;
-					}
+				// 	if (Object.keys(rowSelection).length === 0) {
+				// 		return null;
+				// 	}
 
-					return (
-						<Button
-							variant="contained"
-							size="small"
-							onClick={() => {
-								const selectedRows = table.getSelectedRowModel().rows;
-								removeProducts(selectedRows.map((row) => row.original.id));
-								table.resetRowSelection();
-							}}
-							className="flex shrink min-w-40 ltr:mr-8 rtl:ml-8"
-							color="secondary"
-						>
-							<FuseSvgIcon size={16}>heroicons-outline:trash</FuseSvgIcon>
-							<span className="hidden sm:flex mx-8">Delete selected items</span>
-						</Button>
-					);
-				}}
+				// 	return (
+				// 		<Button
+				// 			variant="contained"
+				// 			size="small"
+				// 			onClick={() => {
+				// 				const selectedRows = table.getSelectedRowModel().rows;
+				// 				// removeProducts(selectedRows.map((row) => row.original.id));
+				// 				table.resetRowSelection();
+				// 			}}
+				// 			className="flex shrink min-w-40 ltr:mr-8 rtl:ml-8"
+				// 			color="secondary"
+				// 		>
+				// 			<FuseSvgIcon size={16}>heroicons-outline:trash</FuseSvgIcon>
+				// 			<span className="hidden sm:flex mx-8">Delete selected items</span>
+				// 		</Button>
+				// 	);
+				// }}
 			/>
 		</Paper>
 	);

@@ -8,8 +8,8 @@ const guestBaseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/'; //deploye
 
 export const guestBaseUrl = `${guestBaseDomain}`;
 
-// const baseDomain = 'http://localhost:8000/api';
-const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/api'; //deployed serve
+const baseDomain = 'http://localhost:8000/api';
+// const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/api'; //deployed serve
 export const baseUrl = `${baseDomain}`;
 
 export default function reqApi() {

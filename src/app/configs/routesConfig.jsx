@@ -54,13 +54,14 @@ const routeConfigs = [
   // SignUpConfig,
   SignAcceptInviteConfig,
   // DocumentationConfig,
-  // UsersAppConfig,
-  // StaffAppConfig,
+  UsersAppConfig,
+  StaffAppConfig,
   // PropertiesAppConfig,
   // ServiceTypesAppConfig,
-  // ManagedListingsAppConfig,
+ 
   // PropertyTypesAppConfig,
-  // ManagedUserListingsAppConfig,
+  ManagedListingsAppConfig,
+  ManagedUserListingsAppConfig,
 
   /****Africanshops Merhcant's Dashboard Configs Starts Here */
   ShopDashboardAppConfig,

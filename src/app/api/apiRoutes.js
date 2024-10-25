@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 //====================================================
 /***Digital Ocean Server : Current main server*/
 
-const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/'; //deployed serve
+const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app'; //deployed serve
 
 //===================================================================================
 
@@ -157,6 +157,10 @@ export const getCountries = () => authApi().get("/buzcountries"); //done
 /****operational countries */
 export const getCountriesWithShippinTable = () =>
   Api().get("/buzcountries/with-shipping-table"); //done
+
+  export const getCountriesWithShippinTableExcludeOrigin = (originId) =>
+  Api().get(`/buzcountries/with-shipping-table/excluded-origin/${originId}`); //done
+
 export const getCountryById = (id) => authApi().get(`/buzcountries/${id}`); //done
 
 export const updateCountryById = (countryFormData) => {
@@ -182,10 +186,19 @@ export const createCountryShippingTable = (countryFormData) =>
 
 export const updateCountryShippingTableById = (countryFormData) => {
   return authApi().put(
-    `/buzcountries/update-shipping-table/${countryFormData?._id}`,
+    `/buzcountries/update-shipping-table/${countryFormData?.countryToShipTo}`,
     countryFormData
   ); //done
 };
+
+export const deleteCountryShippingTableById = (countryFormData) => {
+  // console.log("InROUTES-FILE", countryFormData)
+  return authApi().put(
+    `/buzcountries/delete-shipping-table/${countryFormData?.countryToShipTo}`,
+    countryFormData
+  ); //done
+};
+
 export const getCountryShippingTable = (shipFrom, id) =>
   Api().get(`/buzcountries/get-shipping-table/${shipFrom}/${id}`);
 export const deleteCountryById = (id) =>
@@ -752,9 +765,45 @@ export const updateApiAdminUserById = (adminFormData) =>
 export const createApiAdminUser = (adminFormData) =>
   authApi().post("/admin", adminFormData);
 
+  export const createRecruitAdminUserApi = (adminFormData) =>
+  authApi().post("/admin/recruit-staff", adminFormData);
+
+  export const newAdminUserInviteAcceptanceEndpoint = (adminFormData) =>
+  authApi().post("/admin/accept-invite", adminFormData);
+  //
+
+
 // Admin/ControlPanel Admin Get Shops Routes  starts
 export const getApiAdminMerchants = () => authApi().get("/shops"); //new Dashboard done
 
+
+
+/*****
+ * ###################################################################################################
+ * ESTATE PROPERTIES handling starts here  (All done as @ 20th August, 2024)
+ * ####################################################################################################
+ */
+export const adminGetEstatePropertiess = () => authApi().get("/handl-estates"); //done
+
+
+
+
+
+/****Shop on Estate properties */
+export const adminGetShopOnEstateProperties = () => authApi().get("/handl-estates/get-shopsonestates"); //done
+export const adminGetSingleShopAndEstateProperties = (id) => authApi().get(`/handl-estates/get-shop-and-its-estateproperties/${id}`);
+/*****
+ * ###################################################################################################
+ * ESTATE PROPERTIES handling ends here  (All done as @ 20th August, 2024)
+ * ####################################################################################################
+ */
+/**============================================================================================================= */
+
+
+/****
+ * 
+ * LOG OUT HANDLING BELOW
+ */
 export const AdminLogOutCall = () => {
   if (typeof window !== "undefined") {
     // Cookies.set(

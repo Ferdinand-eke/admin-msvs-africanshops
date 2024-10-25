@@ -265,6 +265,35 @@ function BasicInfoTab() {
 					/>
 				)}
 			/>
+
+<>
+        <Typography style={{ fontSize: "12px", fontWeight: "800" }}>
+          Is Account Operational?
+        </Typography>
+        <Controller
+          name="isInOperation"
+          control={control}
+          defaultValue={[]}
+          render={({ field: { onChange, value } }) => (
+            <Select
+              className="mt-8 mb-16"
+              id="isInOperation"
+              label="Operational Status"
+              fullWidth
+              defaultValue=""
+              onChange={onChange}
+              value={value === undefined || null ? "" : value}
+              error={!!errors.isInOperation}
+              helpertext={errors?.isInOperation?.message}
+            >
+              <MenuItem value="">Select an operations status</MenuItem>
+              <MenuItem value={false}>Not Operational</MenuItem>
+
+              <MenuItem value={true}>Operational</MenuItem>
+            </Select>
+          )}
+        />
+      </>
 		
 		</div>
 	);

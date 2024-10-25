@@ -9,8 +9,7 @@ import { useAppDispatch, useAppSelector } from 'app/store/hooks';
 import { useEffect } from 'react';
 import { setSearchText, resetSearchText, selectSearchText } from './contactsAppSlice';
 import { selectFilteredContactList, useGetContactsListQuery } from './ContactsApi';
-import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
-import useGetAllAdminUsers from 'src/app/aaqueryhooks/adminHandlingQuery';
+import useAdminUsers from 'src/app/api/admin-users/useAdmins';
 
 /**
  * The contacts header.
@@ -18,14 +17,7 @@ import useGetAllAdminUsers from 'src/app/aaqueryhooks/adminHandlingQuery';
 function StaffHeader() {
 	const dispatch = useAppDispatch();
 	const searchText = useAppSelector(selectSearchText);
-	// const { data, isLoading } = useGetContactsListQuery();
-	
-
-	// const filteredData = useAppSelector(selectFilteredContactList(data)); 
-
-	// const {data:usersData1, isLoading:usersIsLoading2} = useGetAllAdminUsers()
-	// const {data:usersData, isLoading:usersIsLoading} = useGetAllUsers()
-	const {data:usersData, isLoading:usersIsLoading} = useGetAllAdminUsers()
+	const {data:usersData, isLoading:usersIsLoading} = useAdminUsers()
 
 	// console.log("ADMIN-Staff11", usersData?.data)
 

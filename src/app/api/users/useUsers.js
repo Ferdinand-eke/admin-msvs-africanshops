@@ -1,9 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { getApiUserById, getApiUsers } from '../../store-redux/api/apiRoutes';
+import { getApiUserById, getApiUsers } from '../apiRoutes';
+// import { getApiUserById, getApiUsers } from '../../store-redux/api/apiRoutes';
 
 export default function useOurPlatformUsers() {
   return useQuery(['__our_users'], getApiUsers);
 }
+
+
 
 //Admin get single User Details
 export function useSingleUser(userId) {

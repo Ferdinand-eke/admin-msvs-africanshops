@@ -6,7 +6,8 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import { useAppSelector } from 'app/store/hooks';
 import ContactListItem from './ContactListItem';
 import { selectFilteredContactList, selectGroupedFilteredContacts, useGetContactsListQuery } from './ContactsApi';
-import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
+// import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
+import useOurPlatformUsers from 'src/app/api/users/useUsers';
 
 /**
  * The contacts list.
@@ -14,15 +15,15 @@ import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
 function UsersList() {
 
 	// const { data, isLoading } = useGetContactsListQuery();
-	const {data:usresData, isLoading:usersIsLoading} = useGetAllUsers()
+	const {data:usresData, isLoading:usersIsLoading} = useOurPlatformUsers()
 
 	// const filteredData = useAppSelector(selectFilteredContactList(data));
 
 	// const groupedFilteredContacts = useAppSelector(selectGroupedFilteredContacts(filteredData));
 
 
-	console.log("users-on-HOMES", usresData?.data?.userlist)
-	const filteredData = useAppSelector(selectFilteredContactList(usresData?.data?.userlist));
+	// console.log("users-on-HOMES", usresData?.data?.filteredUsers)
+	const filteredData = useAppSelector(selectFilteredContactList(usresData?.data?.filteredUsers));
 
 	const groupedFilteredContacts = useAppSelector(selectGroupedFilteredContacts(filteredData));
 
@@ -69,7 +70,7 @@ function UsersList() {
 						<List className="w-full m-0 p-0">
 							{group?.children?.map((item) => (
 								<ContactListItem
-									key={item.id}
+									key={item?._id}
 									contact={item}
 								/>
 							))}

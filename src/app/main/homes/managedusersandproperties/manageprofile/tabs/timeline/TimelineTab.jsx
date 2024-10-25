@@ -48,7 +48,7 @@ function TimelineTab({listings, loading}) {
 			className="w-full"
 		>
 			<div className="md:flex">
-				{/* <div className="flex flex-col w-full md:w-320 md:ltr:mr-32 md:rtl:ml-32">
+				<div className="flex flex-col w-full md:w-320 md:ltr:mr-32 md:rtl:ml-32">
 					<Card
 						component={motion.div}
 						variants={item}
@@ -66,81 +66,27 @@ function TimelineTab({listings, loading}) {
 						</div>
 
 						<CardContent className="p-0">
-							<List className="p-0">
+							{/* <List className="p-0">
 								{timeline.activities.map((activity) => (
 									<ActivityItem
 										item={activity}
 										key={activity.id}
 									/>
 								))}
-							</List>
+							</List> */}
 						</CardContent>
 					</Card>
-				</div> */}
+				</div>
 
 				<div className="flex flex-col flex-1">
-					{/* <Card
-						component={motion.div}
-						variants={item}
-						className="w-full overflow-hidden w-full mb-32"
-					>
-						<Input
-							className="p-24 w-full"
-							classes={{ root: 'text-14' }}
-							placeholder="Write something.."
-							multiline
-							rows="6"
-							margin="none"
-							disableUnderline
-						/>
-						<Box
-							className="card-footer flex items-center flex-row border-t-1 px-24 py-12"
-							sx={{
-								backgroundColor: (theme) =>
-									theme.palette.mode === 'light'
-										? lighten(theme.palette.background.default, 0.4)
-										: lighten(theme.palette.background.default, 0.02)
-							}}
-						>
-							<div className="flex flex-1 items-center">
-								<IconButton aria-label="Add photo">
-									<FuseSvgIcon size={20}>heroicons-solid:photograph</FuseSvgIcon>
-								</IconButton>
-								<IconButton aria-label="Mention somebody">
-									<FuseSvgIcon size={20}>heroicons-solid:user</FuseSvgIcon>
-								</IconButton>
-								<IconButton aria-label="Add location">
-									<FuseSvgIcon size={20}>heroicons-solid:location-marker</FuseSvgIcon>
-								</IconButton>
-							</div>
+					
 
-							<div>
-								<Button
-									variant="contained"
-									color="secondary"
-									size="small"
-									aria-label="post"
-								>
-									Post
-								</Button>
-							</div> 
-						</Box>
-					</Card> */}
-
-					{/* {timeline.posts.map((post) => (
-						<motion.div
-							variants={item}
-							key={post.id}
-						>
-							<PostItem item={post} />
-
-						</motion.div>
-					))} */}
+				
 
 {listings?.map((post) => (
 						<motion.div
 							variants={item}
-							key={post.id}
+							key={post._id}
 						>
 							<PropertyListItem item={post} />
 

@@ -10,6 +10,7 @@ function jwtSignInTab() {
 		<div className="w-full">
 			<JwtSignAcceptInviteForm />
 			
+			
 
 			{/* <div className="mt-32 flex items-center">
 				<div className="mt-px flex-auto border-t" />

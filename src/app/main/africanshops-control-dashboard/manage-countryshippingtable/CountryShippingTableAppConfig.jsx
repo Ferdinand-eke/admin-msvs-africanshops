@@ -1,9 +1,11 @@
 import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
+// import CountryShipmentFormPage from './product/CountryShipmentFormPage';
 
 const CountryShippingTableApp = lazy(() => import('./CountryShippingTableApp'));
-const VendorPlan = lazy(() => import('./vendorplan/VendorPlan'));
-const CountryShippingTables = lazy(() => import('./vendorplans/CountryShippingTables'));
+const CountryShipping = lazy(() => import('./countryshipment/CountryShipping'));
+const CountryShippingTables = lazy(() => import('./countryshippings/CountryShippingTables'));
+const CountryShipmentFormPage = lazy(() => import('./product/CountryShipmentFormPage'));
 /**
  * The E-Commerce app configuration.
  */
@@ -27,21 +29,16 @@ const CountryShippingTableAppConfig = {
 					element: <CountryShippingTables />
 				},
 				{
-					path: 'packages/:productId/*',
-					element: <VendorPlan />
+					path: 'routes/:productId/*',
+					element: <CountryShipping />,
+				
 				},
 				// {
-				// 	path: 'inventory',
-				// 	element: <VendorPlans />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
+				// 	path: 'countryorigin/:productId/manage/:destinationId/*',
+				// 	element: <CountryShipmentFormPage />
 				// }
+
+				
 			]
 		}
 	]

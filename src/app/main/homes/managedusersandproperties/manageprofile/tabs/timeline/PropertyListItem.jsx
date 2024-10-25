@@ -71,25 +71,25 @@ function PropertyListItem(props) {
 					</Typography>
 				)}
 
-				{item?.imageSrc && (
+				{/* {item?.images?.length > 0 && (
 					<img
-						src={item?.imageSrc}
+						src={item?.images[0]?.url}
 						alt="post"
 						className="rounded-8"
 					/>
-				)}
+				)} */}
 
-				{item?.article && (
+				{item?.description && (
 					<div className="border-1 rounded-8 overflow-hidden">
 						<img
 							className="w-full border-b-1"
-							src={item?.article.media.preview}
+							src={item?.images[0]?.url}
 							alt="article"
 						/>
 						<div className="p-16">
-							<Typography variant="subtitle1">{item?.article.title}</Typography>
-							<Typography variant="caption">{item?.article.subtitle}</Typography>
-							<Typography className="mt-16">{item?.article.excerpt}</Typography>
+							<Typography variant="subtitle1">{item?.title}</Typography>
+							{/* <Typography variant="caption">{item?.article.subtitle}</Typography> */}
+							<Typography className="mt-16">{item?.description}</Typography>
 						</div>
 					</div>
 				)}

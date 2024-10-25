@@ -1,42 +1,55 @@
-import Button from '@mui/material/Button';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useCallback, useEffect } from 'react';
-import FuseLoading from '@fuse/core/FuseLoading';
-import _ from '@lodash';
-import { Controller, useForm } from 'react-hook-form';
-import Box from '@mui/system/Box';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import Avatar from '@mui/material/Avatar';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import Autocomplete from '@mui/material/Autocomplete/Autocomplete';
-import Checkbox from '@mui/material/Checkbox/Checkbox';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import history from '@history';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { showMessage } from '@fuse/core/FuseMessage/fuseMessageSlice';
-import { useAppDispatch } from 'app/store/hooks';
-import ContactEmailSelector from './email-selector/ContactEmailSelector';
-import PhoneNumberSelector from './phone-number-selector/PhoneNumberSelector';
+import Button from "@mui/material/Button";
+import { useNavigate, useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import FuseLoading from "@fuse/core/FuseLoading";
+import _ from "@lodash";
+import { Controller, useForm } from "react-hook-form";
+import Box from "@mui/system/Box";
+import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
+import Avatar from "@mui/material/Avatar";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
+import Checkbox from "@mui/material/Checkbox/Checkbox";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import history from "@history";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { showMessage } from "@fuse/core/FuseMessage/fuseMessageSlice";
+import { useAppDispatch } from "app/store/hooks";
+import ContactEmailSelector from "./email-selector/ContactEmailSelector";
+import PhoneNumberSelector from "./phone-number-selector/PhoneNumberSelector";
 import {
-	useCreateContactsItemMutation,
-	useDeleteContactsItemMutation,
-	useGetContactsItemQuery,
-	useGetContactsTagsQuery,
-	useUpdateContactsItemMutation
-} from '../ContactsApi';
-import ContactModel from '../models/ContactModel';
+  useCreateContactsItemMutation,
+  useDeleteContactsItemMutation,
+  useGetContactsItemQuery,
+  useGetContactsTagsQuery,
+  useUpdateContactsItemMutation,
+} from "../ContactsApi";
+import ContactModel from "../models/ContactModel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { useAdminRecruitStaff, useGetAdminById } from 'src/app/aaqueryhooks/adminHandlingQuery';
+import {
+  useAdminRecruitStaff,
+  useGetAdminById,
+} from "src/app/aaqueryhooks/adminHandlingQuery";
+import { useAdminRecruitAfricanshopStaff } from "src/app/api/admin-users/useAdmins";
+import { useGetDepartments } from "src/app/api/departments/useDepartments";
+import {
+  getDesigByDepartmentId,
+  getLgaByStateId,
+  getOfficeByLgaId,
+  getStateByCountryId,
+} from "src/app/api/apiRoutes";
+import { Typography } from "@mui/material";
+import useCountries from "src/app/api/countries/useCountries";
 // import InputAdornment from '@mui/material/InputAdornment';
 // import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 // import { useGetAdminById } from 'src/app/aaqueryhooks/adminHandlingQuery';
 
 function BirtdayIcon() {
-	return <FuseSvgIcon size={20}>heroicons-solid:cake</FuseSvgIcon>;
+  return <FuseSvgIcon size={20}>heroicons-solid:cake</FuseSvgIcon>;
 }
 
 /**
@@ -44,27 +57,27 @@ function BirtdayIcon() {
  */
 // Zod schema for ContactEmail
 const ContactEmailSchema = z.object({
-	email: z.string().optional(),
-	type: z.string().optional()
+  email: z.string().optional(),
+  type: z.string().optional(),
 });
 // Zod schema for ContactPhoneNumber
 const ContactPhoneNumberSchema = z.object({
-	number: z.string().optional(),
-	type: z.string().optional()
+  number: z.string().optional(),
+  type: z.string().optional(),
 });
 const schema = z.object({
-	avatar: z.string().optional(),
-	background: z.string().optional(),
-	name: z.string().min(1, { message: 'Name is required' }),
-	emails: z.array(ContactEmailSchema).optional(),
-	email: z.string().optional(),
-	phoneNumbers: z.array(ContactPhoneNumberSchema).optional(),
-	title: z.string().optional(),
-	company: z.string().optional(),
-	birthday: z.string().optional(),
-	address: z.string().optional(),
-	notes: z.string().optional(),
-	tags: z.array(z.string()).optional()
+  avatar: z.string().optional(),
+  background: z.string().optional(),
+  name: z.string().min(1, { message: "Name is required" }),
+  emails: z.array(ContactEmailSchema).optional(),
+  email: z.string().optional(),
+  phoneNumbers: z.array(ContactPhoneNumberSchema).optional(),
+  title: z.string().optional(),
+  company: z.string().optional(),
+  birthday: z.string().optional(),
+  address: z.string().optional(),
+  notes: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 // const schema = z.object({
 // 	email: z.string().optional(),
@@ -76,319 +89,498 @@ const schema = z.object({
  */
 
 
-
-
-
-export const roleset = [
-		{
-		role: "Admin",
-		// icon: TbBeach,
-	  //   description: "This property is close to the beach",
-	  },
-	  {
-		role: "HR",
-		// icon: TbBeach,
-	  //   description: "This property is close to the beach",
-	  },
-	  {
-		role: "Marketing",
-		// icon: TbBeach,
-	  //   description: "This property is close to the beach",
-	  },
-	{
-	  role: "IT",
-	  // icon: GiWindmill,
-	//   description: "This property has windmills",
-	},
-	{
-	  role: "Finance",
-	  // icon: MdOutlineVilla,
-	//   description: "This property is modern",
-	},
-	
-	
-  ];
-
-
 function AddContactForm() {
+ 
 
-	const generateSingleOptions = () => {
-		return roleset.map((option, index) => {
-		  return (
-			<MenuItem key={index} value={option.role}>
-			  {option.role}
-			</MenuItem>
-		  );
-		});
-	  };
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const routeParams = useParams();
+  const { id } = routeParams;
+ 
 
-	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
-	const routeParams = useParams();
-	// const { id: contactId } = routeParams;
-	const { id } = routeParams;
+  const recruitStaff = useAdminRecruitAfricanshopStaff();
 
-	// const { data: contact, isError } = useGetContactsItemQuery(contactId, {
-	// 	skip: !contactId
-	// });
+  const { control, watch, reset, handleSubmit, getValues, formState } = useForm(
+    {
+      mode: "all",
+      resolver: zodResolver(schema),
+    }
+  );
+  const { isValid, dirtyFields, errors } = formState;
+  const form = watch();
+  const [loading, setLoading] = useState(false);
 
-	// const {
-	// 	data: admin,
-	// 	isLoading: adminLoading,
-	// 	isError: adminIsError
-	// } = useGetAdminById(id, {
-	// 	skip: !id || id === 'new'
-	// });
-// console.log("Single-Admin-Contact", admin?.data)
-	const recruitStaff =  useAdminRecruitStaff()
-
-	const { control, watch, reset, handleSubmit, formState } = useForm({
-		mode: 'all',
-		resolver: zodResolver(schema)
-	});
-	const { isValid, dirtyFields, errors } = formState;
-	const form = watch();
-
-	useEffect(() => {
-		// if (contactId === 'new') {
-		// 	reset(ContactModel({}));
-		// }
-		// if (id === 'new') {
-		// 	reset(ContactModel({}));
-		// }
-		reset(ContactModel({}))
-	}, 
-	// [contactId, reset]
-	[
-		// id,
-		 reset]
-	);
-
-	
-	// useEffect(() => {
-	// 	if (admin?.data) {
-	// 		reset({ ...admin?.data });
-	// 	}
-	// }, [admin?.data, reset]);
+  const { data: countries, isFetching } = useCountries();
+  const { data: departments } = useGetDepartments();
 
 
-	/**
-	 * Form Submit
-	 */
+  const [designationsList, setDesignationList] = useState([]);
+  const [bstates, setBstates] = useState([]);
+  const [blgas, setBlgas] = useState([]);
+  const [lgasOffices, setLgasOffices] = useState([]);
 
-	const onSubmit = useCallback(() => {
-		// console.log("Crete STAFF-FORMDATA", { contact: form })
-		console.log("Crete STAFF-FORMDATA", form)
+  useEffect(() => {
+    reset(ContactModel({}));
+  }, [
+    // id,
+    reset,
+  ]);
 
-		// return
-		recruitStaff.mutate(form)
-		// if (id === 'new') {
-		// 	// createContact({ contact: form })
-		// 	// 	.unwrap()
-		// 	// 	.then((action) => {
-		// 	// 		navigate(`/users/admin/${action.id}`);
-		// 	// 	});
-		// } else {
-		// 	// updateContact({ id: admin?.data.id, ...form });
-		// }
-	}, [form]);
+  useEffect(() => {
+    if (getValues()?.department) {
+      const getDesignationData = async () => {
+        setLoading(true);
+        try {
+          if (getValues()?.department) {
+            await getDesigByDepartmentId(getValues()?.department).then(
+              (response) => {
+                setDesignationList(response.data);
+              }
+            );
+            setLoading(false);
+          }
+        } catch (error) {
+          console.log(error);
+          setLoading(false);
+        }
+      };
 
+      getDesignationData();
+    }
 
-	function handleRemoveContact() {
-		// if (!contact) {
-		// 	return;
-		// }
-		// if (!admin?.data) {
-		// 	return;
-		// }
-		
-	}
+    if (getValues()?.officeCountry) {
+      getStateDFromCountryId(getValues()?.officeCountry);
+    }
 
-	const background = watch('background');
-	const name = watch('name');
+    if (getValues()?.officeState) {
+      getLgasFromState(getValues()?.officeState);
+    }
 
-	// if (adminIsError && id !== 'new' ) {
-	// 	//&& id !== 'new'
-	// 	setTimeout(() => {
-	// 		navigate('/users/admin');
-	// 		dispatch(showMessage({ message: 'NOT FOUND' }));
-	// 	}, 0);
-	// 	return null;
-	// }
+    if (getValues()?.officeLga) {
+      getOfficesFromLga(getValues()?.officeLga);
+    }
+  }, [
+    getValues()?.department,
+    getValues()?.officeCountry,
+    getValues()?.officeState,
+    getValues()?.officeLga,
+  ]);
 
-	// if (_.isEmpty(form)) {
-	// 	return <FuseLoading className="min-h-screen" />;
-	// }
+  async function getStateDFromCountryId(pid) {
+    setLoading(true);
+    const responseData = await getStateByCountryId(pid);
+    if (responseData) {
+      setBstates(responseData?.data);
+      setTimeout(
+        function () {
+          setLoading(false);
+        }.bind(this),
+        250
+      );
+    }
+  }
 
-	console.log("Ading Contacts......")
-	
-	return (
-		<>
-			<Box
-				className="relative w-full h-160 sm:h-192 px-32 sm:px-48"
-				sx={{
-					backgroundColor: 'background.default'
-				}}
-			>
-				{background && (
-					<img
-						className="absolute inset-0 object-cover w-full h-full"
-						src={background}
-						alt="user background"
-					/>
-				)}
-			</Box>
+  //**Get L.G.As from state_ID data */
+  async function getLgasFromState(sid) {
+    setLoading(true);
+    const responseData = await getLgaByStateId(sid);
+    if (responseData) {
+      setBlgas(responseData?.data);
+      setTimeout(
+        function () {
+          setLoading(false);
+        }.bind(this),
+        250
+      );
+    }
+  }
 
+  //**Get L.G.As from state_ID data */
+  async function getOfficesFromLga(sid) {
+    setLoading(true);
+    const responseData = await getOfficeByLgaId(sid);
+    if (responseData) {
+      setLgasOffices(responseData?.data);
+      setTimeout(
+        function () {
+          setLoading(false);
+        }.bind(this),
+        250
+      );
+    }
+  }
 
-			<div className="relative flex flex-col flex-auto items-center px-24 sm:px-48">
-				<div className="w-full">
-					<div className="flex flex-auto items-end -mt-64">
-						<Controller
-							control={control}
-							name="avatar"
-							render={({ field: { onChange, value } }) => (
-								<Box
-									sx={{
-										borderWidth: 4,
-										borderStyle: 'solid',
-										borderColor: 'background.paper'
-									}}
-									className="relative flex items-center justify-center w-128 h-128 rounded-full overflow-hidden"
-								>
-									<div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
-									<div className="absolute inset-0 flex items-center justify-center z-20">
-										<div>
-											<label
-												htmlFor="button-avatar"
-												className="flex p-8 cursor-pointer"
-											>
-												<input
-													accept="image/*"
-													className="hidden"
-													id="button-avatar"
-													type="file"
-													onChange={async (e) => {
-														function readFileAsync() {
-															return new Promise((resolve, reject) => {
-																const file = e?.target?.files?.[0];
+  // useEffect(() => {
+  // 	if (admin?.data) {
+  // 		reset({ ...admin?.data });
+  // 	}
+  // }, [admin?.data, reset]);
 
-																if (!file) {
-																	return;
-																}
+  /**
+   * Form Submit
+   */
 
-																const reader = new FileReader();
-																reader.onload = () => {
-																	if (typeof reader.result === 'string') {
-																		resolve(
-																			`data:${file.type};base64,${btoa(reader.result)}`
-																		);
-																	} else {
-																		reject(
-																			new Error(
-																				'File reading did not result in a string.'
-																			)
-																		);
-																	}
-																};
-																reader.onerror = reject;
-																reader.readAsBinaryString(file);
-															});
-														}
+  const onSubmit = useCallback(() => {
+    console.log("Crete STAFF-FORMDATA", form);
 
-														const newImage = await readFileAsync();
-														onChange(newImage);
-													}}
-												/>
-												<FuseSvgIcon className="text-white">
-													heroicons-outline:camera
-												</FuseSvgIcon>
-											</label>
-										</div>
-										<div>
-											<IconButton
-												onClick={() => {
-													onChange('');
-												}}
-											>
-												<FuseSvgIcon className="text-white">heroicons-solid:trash</FuseSvgIcon>
-											</IconButton>
-										</div>
-									</div>
-									<Avatar
-										sx={{
-											backgroundColor: 'background.default',
-											color: 'text.secondary'
-										}}
-										className="object-cover w-full h-full text-64 font-bold"
-										src={value}
-										alt={name}
-									>
-										{name?.charAt(0)}
-									</Avatar>
-								</Box>
-							)}
-						/>
-					</div>
-				</div>
+  
+    recruitStaff.mutate(form);
+  
+  }, [form]);
 
-				<Controller
-        control={control}
-        name={`role`}
-        //: { onChange, value }
-        render={({ field}) => (
-          <Select
-			className="mt-32"
-			{...field}
-            id="role"
-            label="Role"
-            //   type="text"
-			placeholder="Role"
-            variant="outlined"
-            fullWidth
-            error={!!errors.role}
-            helperText={errors?.role?.message}
-            //   onChange={onChange} value={value}
-          >
-			<MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-            {/* <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem> */}
-            {generateSingleOptions()}
-          </Select>
+  function handleRemoveContact() {
+    // if (!contact) {
+    // 	return;
+    // }
+    // if (!admin?.data) {
+    // 	return;
+    // }
+  }
+
+  const background = watch("background");
+  const name = watch("name");
+
+  // if (adminIsError && id !== 'new' ) {
+  // 	//&& id !== 'new'
+  // 	setTimeout(() => {
+  // 		navigate('/users/admin');
+  // 		dispatch(showMessage({ message: 'NOT FOUND' }));
+  // 	}, 0);
+  // 	return null;
+  // }
+
+  // if (_.isEmpty(form)) {
+  // 	return <FuseLoading className="min-h-screen" />;
+  // }
+
+  console.log("Ading Contacts......");
+
+  return (
+    <>
+      <Box
+        className="relative w-full h-160 sm:h-192 px-32 sm:px-48"
+        sx={{
+          backgroundColor: "background.default",
+        }}
+      >
+        {background && (
+          <img
+            className="absolute inset-0 object-cover w-full h-full"
+            src={background}
+            alt="user background"
+          />
         )}
-      />
+      </Box>
 
-				<Controller
-					control={control}
-					name="name"
-					render={({ field }) => (
-						<TextField
-							className="mt-32"
-							{...field}
-							label="Name"
-							placeholder="Name"
-							id="name"
-							error={!!errors.name}
-							helperText={errors?.name?.message}
-							variant="outlined"
-							required
-							fullWidth
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">
-										<FuseSvgIcon size={20}>heroicons-solid:user-circle</FuseSvgIcon>
-									</InputAdornment>
-								)
-							}}
-						/>
-					)}
-				/>
-				{/* <Controller
+      <div className="relative flex flex-col flex-auto items-center px-24 sm:px-48">
+        {/* <div className="w-full">
+          <div className="flex flex-auto items-end -mt-64">
+            <Controller
+              control={control}
+              name="avatar"
+              render={({ field: { onChange, value } }) => (
+                <Box
+                  sx={{
+                    borderWidth: 4,
+                    borderStyle: "solid",
+                    borderColor: "background.paper",
+                  }}
+                  className="relative flex items-center justify-center w-128 h-128 rounded-full overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
+                  <div className="absolute inset-0 flex items-center justify-center z-20">
+                    <div>
+                      <label
+                        htmlFor="button-avatar"
+                        className="flex p-8 cursor-pointer"
+                      >
+                        <input
+                          accept="image/*"
+                          className="hidden"
+                          id="button-avatar"
+                          type="file"
+                          onChange={async (e) => {
+                            function readFileAsync() {
+                              return new Promise((resolve, reject) => {
+                                const file = e?.target?.files?.[0];
+
+                                if (!file) {
+                                  return;
+                                }
+
+                                const reader = new FileReader();
+                                reader.onload = () => {
+                                  if (typeof reader.result === "string") {
+                                    resolve(
+                                      `data:${file.type};base64,${btoa(reader.result)}`
+                                    );
+                                  } else {
+                                    reject(
+                                      new Error(
+                                        "File reading did not result in a string."
+                                      )
+                                    );
+                                  }
+                                };
+                                reader.onerror = reject;
+                                reader.readAsBinaryString(file);
+                              });
+                            }
+
+                            const newImage = await readFileAsync();
+                            onChange(newImage);
+                          }}
+                        />
+                        <FuseSvgIcon className="text-white">
+                          heroicons-outline:camera
+                        </FuseSvgIcon>
+                      </label>
+                    </div>
+                    <div>
+                      <IconButton
+                        onClick={() => {
+                          onChange("");
+                        }}
+                      >
+                        <FuseSvgIcon className="text-white">
+                          heroicons-solid:trash
+                        </FuseSvgIcon>
+                      </IconButton>
+                    </div>
+                  </div>
+                  <Avatar
+                    sx={{
+                      backgroundColor: "background.default",
+                      color: "text.secondary",
+                    }}
+                    className="object-cover w-full h-full text-64 font-bold"
+                    src={value}
+                    alt={name}
+                  >
+                    {name?.charAt(0)}
+                  </Avatar>
+                </Box>
+              )}
+            />
+          </div>
+        </div> */}
+
+        <>
+        {/* <div className="flex items-center justify-between p-16 sm:p-24 "> */}
+        {/* <Typography className="items-start" style={{ fontSize: "12px", fontWeight: "800" }}>Staff Country</Typography> */}
+        <Controller
+          control={control}
+          name={`officeCountry`}
+          render={({ field }) => (
+            <Select
+              className="mt-16"
+              {...field}
+              id="officeCountry"
+              label="Country of posting"
+              placeholder="Country of posting"
+              variant="outlined"
+              fullWidth
+              error={!!errors.officeCountry}
+              helperText={errors?.officeCountry?.message}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+
+              {countries?.data?.data?.map((cnty) => (
+                <MenuItem value={cnty._id}>{cnty.name}</MenuItem>
+              ))}
+
+              
+            </Select>
+          )}
+
+         
+         
+        />
+        {/* </div> */}
+        </>
+
+
+        {getValues()?.officeCountry && (
+          <>
+        {/* <Typography style={{ fontSize: "12px", fontWeight: "800" }}>Staff State</Typography> */}
+        <Controller
+          control={control}
+          name={`officeState`}
+          render={({ field }) => (
+            <Select
+              className="mt-32"
+              {...field}
+              id="officeState"
+              label="State of posting"
+              placeholder="State of posting"
+              variant="outlined"
+              fullWidth
+              error={!!errors.officeState}
+              helperText={errors?.officeState?.message}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+
+              {bstates?.map((bsts) => (
+                <MenuItem value={bsts._id}>{bsts.name}</MenuItem>
+              ))}
+            </Select>
+          )}
+        />
+        </>
+        )}
+
+{getValues()?.officeState && getValues()?.officeCountry && (
+          <>
+        {/* <Typography style={{ fontSize: "12px", fontWeight: "800" }}>Staff State</Typography> */}
+        <Controller
+          control={control}
+          name={`officeLga`}
+          render={({ field }) => (
+            <Select
+              className="mt-32"
+              {...field}
+              id="officeLga"
+              label="L.G.A of posting"
+              placeholder="L.G.A of posting"
+              variant="outlined"
+              fullWidth
+              error={!!errors.officeLga}
+              helperText={errors?.officeLga?.message}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+
+              {blgas?.map((blg) => (
+                <MenuItem value={blg._id}>{blg.name}</MenuItem>
+              ))}
+            </Select>
+          )}
+        />
+        </>
+        )}
+
+
+{getValues()?.officeLga && (
+          <>
+        {/* <Typography style={{ fontSize: "12px", fontWeight: "800" }}>Office Designante</Typography> */}
+        <Controller
+          control={control}
+          name={`officeDesignate`}
+          render={({ field }) => (
+            <Select
+              className="mt-32"
+              {...field}
+              id="officeDesignate"
+              label="Office of posting"
+              placeholder="Office of posting"
+              variant="outlined"
+              fullWidth
+              error={!!errors.officeDesignate}
+              helperText={errors?.officeDesignate?.message}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+
+              {lgasOffices?.map((office) => (
+                <MenuItem value={office._id}>{office.name}</MenuItem>
+              ))}
+            </Select>
+          )}
+        />
+        </>
+        )}
+        
+
+<Controller
+          control={control}
+          name={`department`}
+          render={({ field }) => (
+            <Select
+              className="mt-32"
+              {...field}
+              id="department"
+              label="Department"
+              placeholder="Department"
+              variant="outlined"
+              fullWidth
+              error={!!errors.department}
+              helperText={errors?.department?.message}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+
+              {departments?.data?.data?.map((dt) => (
+                <MenuItem value={dt._id}>{dt.name}</MenuItem>
+              ))}
+            </Select>
+          )}
+        />
+
+{getValues()?.department && (
+  <Controller
+  control={control}
+  name={`designation`}
+  render={({ field }) => (
+    <Select
+      className="mt-32"
+      {...field}
+      id="designation"
+      label="Designation"
+      placeholder="Designation"
+      variant="outlined"
+      fullWidth
+      error={!!errors.designation}
+      helperText={errors?.designation?.message}
+    >
+      <MenuItem value="">
+        <em>None</em>
+      </MenuItem>
+
+      {designationsList?.map((desig) => (
+        <MenuItem value={desig._id}>{desig.name}</MenuItem>
+      ))}
+    </Select>
+  )}
+/>
+)}
+
+
+
+        <Controller
+          control={control}
+          name="name"
+          render={({ field }) => (
+            <TextField
+              className="mt-32"
+              {...field}
+              label="Name"
+              placeholder="Name"
+              id="name"
+              error={!!errors.name}
+              helperText={errors?.name?.message}
+              variant="outlined"
+              required
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <FuseSvgIcon size={20}>
+                      heroicons-solid:user-circle
+                    </FuseSvgIcon>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
+        />
+        {/* <Controller
 					control={control}
 					name="tags"
 					render={({ field: { onChange, value } }) => (
@@ -424,7 +616,7 @@ function AddContactForm() {
 					)}
 				/> */}
 
-				{/* <Controller
+        {/* <Controller
 					control={control}
 					name="title"
 					render={({ field }) => (
@@ -449,7 +641,7 @@ function AddContactForm() {
 					)}
 				/> */}
 
-				{/* <Controller
+        {/* <Controller
 					control={control}
 					name="company"
 					render={({ field }) => (
@@ -473,7 +665,7 @@ function AddContactForm() {
 						/>
 					)}
 				/> */}
-				{/* <Controller
+        {/* <Controller
 					control={control}
 					name="emails"
 					render={({ field }) => (
@@ -486,161 +678,146 @@ function AddContactForm() {
 					)}
 				/> */}
 
-<Controller
-				control={control}
-				name="email"
-				render={({ field }) => (
-					<TextField
-					className="mt-32"
-						{...field}
-						label="Email"
-						placeholder="Email"
-						variant="outlined"
-						fullWidth
-						error={!!errors.email}
-						helperText={errors?.email?.message}
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<FuseSvgIcon size={20}>heroicons-solid:mail</FuseSvgIcon>
-								</InputAdornment>
-							)
-						}}
-					/>
-				)}
-			/>
+        <Controller
+          control={control}
+          name="email"
+          render={({ field }) => (
+            <TextField
+              className="mt-32"
+              {...field}
+              label="Email"
+              placeholder="Email"
+              variant="outlined"
+              fullWidth
+              error={!!errors.email}
+              helperText={errors?.email?.message}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <FuseSvgIcon size={20}>heroicons-solid:mail</FuseSvgIcon>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
+        />
 
-				{/* <Controller
-					control={control}
-					name="phoneNumbers"
-					render={({ field }) => (
-						<PhoneNumberSelector
-							className="mt-32"
-							{...field}
-							error={!!errors.phoneNumbers}
-							helperText={errors?.phoneNumbers?.message}
-							value={field.value}
-							onChange={(val) => field.onChange(val)}
-						/>
-					)}
-				/> */}
-
-
-				<Controller
-					control={control}
-					name="address"
-					render={({ field }) => (
-						<TextField
-							className="mt-32"
-							{...field}
-							label="Address"
-							placeholder="Address"
-							id="address"
-							error={!!errors.address}
-							helperText={errors?.address?.message}
-							variant="outlined"
-							fullWidth
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">
-										<FuseSvgIcon size={20}>heroicons-solid:location-marker</FuseSvgIcon>
-									</InputAdornment>
-								)
-							}}
-						/>
-					)}
-				/>
-				<Controller
-					control={control}
-					name="birthday"
-					render={({ field: { value, onChange } }) => (
-						<DateTimePicker
-							value={new Date(value)}
-							onChange={(val) => {
-								onChange(val?.toISOString());
-							}}
-							className="mt-32 mb-16 w-full"
-							slotProps={{
-								textField: {
-									id: 'birthday',
-									label: 'Birthday',
-									InputLabelProps: {
-										shrink: true
-									},
-									fullWidth: true,
-									variant: 'outlined',
-									error: !!errors.birthday,
-									helperText: errors?.birthday?.message
-								},
-								actionBar: {
-									actions: ['clear', 'today']
-								}
-							}}
-							slots={{
-								openPickerIcon: BirtdayIcon
-							}}
-						/>
-					)}
-				/>
-				<Controller
-				control={control}
-				name="phone"
-				render={({ field }) => (
-					<TextField
-						{...field}
-						label="Phone"
-						placeholder="Phone"
-						variant="outlined"
-						fullWidth
-						error={!!errors.phone}
-						helperText={errors?.phone?.message}
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<FuseSvgIcon size={20}>heroicons-solid:tag</FuseSvgIcon>
-								</InputAdornment>
-							)
-						}}
-					/>
-				)}
-			/>
-				<Controller
-					control={control}
-					name="notes"
-					render={({ field }) => (
-						<TextField
-							className="mt-32"
-							{...field}
-							label="Notes"
-							placeholder="Notes"
-							id="notes"
-							error={!!errors.notes}
-							helperText={errors?.notes?.message}
-							variant="outlined"
-							fullWidth
-							multiline
-							minRows={5}
-							maxRows={10}
-							InputProps={{
-								className: 'max-h-min h-min items-start',
-								startAdornment: (
-									<InputAdornment
-										className="mt-16"
-										position="start"
-									>
-										<FuseSvgIcon size={20}>heroicons-solid:menu-alt-2</FuseSvgIcon>
-									</InputAdornment>
-								)
-							}}
-						/>
-					)}
-				/>
-			</div>
-			<Box
-				className="flex items-center mt-40 py-14 pr-16 pl-4 sm:pr-48 sm:pl-36 border-t"
-				sx={{ backgroundColor: 'background.default' }}
-			>
-				{/* {id !== 'new' && (
+        <Controller
+          control={control}
+          name="address"
+          render={({ field }) => (
+            <TextField
+              className="mt-32"
+              {...field}
+              label="Address"
+              placeholder="Address"
+              id="address"
+              error={!!errors.address}
+              helperText={errors?.address?.message}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <FuseSvgIcon size={20}>
+                      heroicons-solid:location-marker
+                    </FuseSvgIcon>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="birthday"
+          render={({ field: { value, onChange } }) => (
+            <DateTimePicker
+              value={new Date(value)}
+              onChange={(val) => {
+                onChange(val?.toISOString());
+              }}
+              className="mt-32 mb-16 w-full"
+              slotProps={{
+                textField: {
+                  id: "birthday",
+                  label: "Birthday",
+                  InputLabelProps: {
+                    shrink: true,
+                  },
+                  fullWidth: true,
+                  variant: "outlined",
+                  error: !!errors.birthday,
+                  helperText: errors?.birthday?.message,
+                },
+                actionBar: {
+                  actions: ["clear", "today"],
+                },
+              }}
+              slots={{
+                openPickerIcon: BirtdayIcon,
+              }}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="phone"
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Phone"
+              placeholder="Phone"
+              variant="outlined"
+              fullWidth
+              error={!!errors.phone}
+              helperText={errors?.phone?.message}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <FuseSvgIcon size={20}>heroicons-solid:tag</FuseSvgIcon>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="notes"
+          render={({ field }) => (
+            <TextField
+              className="mt-32"
+              {...field}
+              label="Notes"
+              placeholder="Notes"
+              id="notes"
+              error={!!errors.notes}
+              helperText={errors?.notes?.message}
+              variant="outlined"
+              fullWidth
+              multiline
+              minRows={5}
+              maxRows={10}
+              InputProps={{
+                className: "max-h-min h-min items-start",
+                startAdornment: (
+                  <InputAdornment className="mt-16" position="start">
+                    <FuseSvgIcon size={20}>
+                      heroicons-solid:menu-alt-2
+                    </FuseSvgIcon>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
+        />
+      </div>
+      <Box
+        className="flex items-center mt-40 py-14 pr-16 pl-4 sm:pr-48 sm:pl-36 border-t"
+        sx={{ backgroundColor: "background.default" }}
+      >
+        {/* {id !== 'new' && (
 					<Button
 						color="error"
 						// onClick={handleRemoveContact}
@@ -648,24 +825,23 @@ function AddContactForm() {
 						Delete
 					</Button>
 				)} */}
-				<Button
-					className="ml-auto"
-					onClick={() => history.back()}
-				>
-					Cancel
-				</Button>
-				<Button
-					className="ml-8"
-					variant="contained"
-					color="secondary"
-					disabled={_.isEmpty(dirtyFields) || !isValid}
-					onClick={handleSubmit(onSubmit)}
-				>
-					Save
-				</Button>
-			</Box>
-		</>
-	);
+        <Button className="ml-auto" onClick={() => history.back()}>
+          Cancel
+        </Button>
+        <Button
+          className="ml-8"
+          variant="contained"
+          color="secondary"
+          disabled={_.isEmpty(dirtyFields) || !isValid
+          || recruitStaff?.isLoading
+          }
+          onClick={handleSubmit(onSubmit)}
+        >
+          Save
+        </Button>
+      </Box>
+    </>
+  );
 }
 
 export default AddContactForm;

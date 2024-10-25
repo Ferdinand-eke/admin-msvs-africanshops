@@ -18,6 +18,7 @@ function Products() {
 			<div className="w-full h-full container flex flex-col">
 				<ProductsHeader />
 				
+				
 				<ProductsTable />
 				
 				

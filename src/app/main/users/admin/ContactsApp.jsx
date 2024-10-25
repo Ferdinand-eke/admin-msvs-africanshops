@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import StaffHeader from './StaffHeader';
-import UsersList from './UsersList';
+import UsersList from './StaffUsersList';
 import { useGetContactsListQuery, useGetContactsCountriesQuery, useGetContactsTagsQuery } from './ContactsApi';
 import StaffContactsSidebarContent from './StaffContactsSidebarContent';
 
@@ -36,6 +36,7 @@ function ContactsApp() {
 	return (
 		<Root
 			header={<StaffHeader />}
+
 			content={<UsersList />}
 			ref={pageLayout}
 			rightSidebarContent={<StaffContactsSidebarContent />}

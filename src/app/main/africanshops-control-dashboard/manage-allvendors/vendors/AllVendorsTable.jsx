@@ -16,9 +16,10 @@ import useAdmiManageShop from 'src/app/api/shops/useAdminShops';
 function AllVendorsTable() {
 	
 	// const { data: products, isLoading } = useGetECommerceProductsQuery();
-	const [removeProducts] = useDeleteECommerceProductsMutation();
+	// const [removeProducts] = useDeleteECommerceProductsMutation();
 
 	const { data:vendors, isLoading, isError } = useAdmiManageShop();
+	console.log("AllVENDORS", vendors?.data)
 
 	const columns = useMemo(
 		() => [
@@ -123,6 +124,24 @@ function AllVendorsTable() {
 			},
 
 			{
+				accessorKey: 'shopplan;',
+				header: 'Plan',
+				accessorFn: (row) => (
+					<div className="flex flex-wrap space-x-2">
+						{/* {row.categories.map((item) => ( */}
+							<Chip
+								// key={item}
+								className="text-11"
+								size="small"
+								color="default"
+								label={row?.shopplan?.plansname}
+							/>
+						{/* ))} */}
+					</div>
+				)
+			},
+
+			{
 				accessorKey: '[isSuspended, isBlocked]',
 				header: 'Shop Compliance',
 				accessorFn: (row) => (
@@ -195,6 +214,8 @@ function AllVendorsTable() {
 		);
 	}
 
+
+
 	return (
 		<Paper
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"
@@ -203,45 +224,45 @@ function AllVendorsTable() {
 			<DataTable
 				data={vendors?.data?.data}
 				columns={columns}
-				renderRowActionMenuItems={({ closeMenu, row, table }) => [
-					<MenuItem
-						key={0}
-						onClick={() => {
-							removeProducts([row?.original?.id]);
-							closeMenu();
-							table.resetRowSelection();
-						}}
-					>
-						<ListItemIcon>
-							<FuseSvgIcon>heroicons-outline:trash</FuseSvgIcon>
-						</ListItemIcon>
-						Delete
-					</MenuItem>
-				]}
-				renderTopToolbarCustomActions={({ table }) => {
-					const { rowSelection } = table.getState();
+				// renderRowActionMenuItems={({ closeMenu, row, table }) => [
+				// 	<MenuItem
+				// 		key={0}
+				// 		onClick={() => {
+				// 			removeProducts([row?.original?.id]);
+				// 			closeMenu();
+				// 			table.resetRowSelection();
+				// 		}}
+				// 	>
+				// 		<ListItemIcon>
+				// 			<FuseSvgIcon>heroicons-outline:trash</FuseSvgIcon>
+				// 		</ListItemIcon>
+				// 		Delete
+				// 	</MenuItem>
+				// ]}
+				// renderTopToolbarCustomActions={({ table }) => {
+				// 	const { rowSelection } = table.getState();
 
-					if (Object.keys(rowSelection).length === 0) {
-						return null;
-					}
+				// 	if (Object.keys(rowSelection).length === 0) {
+				// 		return null;
+				// 	}
 
-					return (
-						<Button
-							variant="contained"
-							size="small"
-							onClick={() => {
-								const selectedRows = table.getSelectedRowModel().rows;
-								removeProducts(selectedRows.map((row) => row?.original?.id));
-								table.resetRowSelection();
-							}}
-							className="flex shrink min-w-40 ltr:mr-8 rtl:ml-8"
-							color="secondary"
-						>
-							<FuseSvgIcon size={16}>heroicons-outline:trash</FuseSvgIcon>
-							<span className="hidden sm:flex mx-8">Delete selected items</span>
-						</Button>
-					);
-				}}
+				// 	return (
+				// 		<Button
+				// 			variant="contained"
+				// 			size="small"
+				// 			onClick={() => {
+				// 				const selectedRows = table.getSelectedRowModel().rows;
+				// 				removeProducts(selectedRows.map((row) => row?.original?.id));
+				// 				table.resetRowSelection();
+				// 			}}
+				// 			className="flex shrink min-w-40 ltr:mr-8 rtl:ml-8"
+				// 			color="secondary"
+				// 		>
+				// 			<FuseSvgIcon size={16}>heroicons-outline:trash</FuseSvgIcon>
+				// 			<span className="hidden sm:flex mx-8">Delete selected items</span>
+				// 		</Button>
+				// 	);
+				// }}
 			/>
 		</Paper>
 	);

@@ -10,7 +10,8 @@ import Checkbox from "@mui/material/Checkbox";
 import { Link, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import useJwtAuth from "../useJwtAuth";
-import { useAdminInvitationAcceptance } from "src/app/aaqueryhooks/adminHandlingQuery";
+import { useNewAdminInvitationAcceptance } from "src/app/api/admin-users/useAdmins";
+import { toast } from "react-toastify";
 /**
  * Form Validation Schema
  */
@@ -35,7 +36,7 @@ const schema = z
 const defaultValues = {
   // email: '',
   activationCode: "",
-  activationToken:"",
+  preuser: "",
   password: "",
   passwordConfirm: "",
   acceptTermsConditions: false,
@@ -43,9 +44,9 @@ const defaultValues = {
 };
 
 function JwtSignAcceptInviteForm() {
-	const acceptInvite = useAdminInvitationAcceptance()
-	const routeParams = useParams();
-	const { token } = routeParams;
+  const acceptInvite = useNewAdminInvitationAcceptance();
+  const routeParams = useParams();
+  const { token } = routeParams;
   const { signIn } = useJwtAuth();
   const { control, formState, handleSubmit, setValue, setError } = useForm({
     mode: "onChange",
@@ -54,24 +55,22 @@ function JwtSignAcceptInviteForm() {
   });
   const { isValid, dirtyFields, errors } = formState;
 
-//   console.log("Token STRING", token)
-
   function onSubmit(formData) {
-   
-	const formDataWithUpdatedTokenParam = {...formData, activationToken:token}
+    const formDataWithUpdatedTokenParam = {
+      ...formData,
+      preuser: token,
+    };
 
-	console.log("ACCEPT-INVITE-Values", formDataWithUpdatedTokenParam);
-	// return
-	acceptInvite.mutate(formDataWithUpdatedTokenParam)
-    
+    console.log("ACCEPT-INVITE-Values", formDataWithUpdatedTokenParam);
+    // return
+    acceptInvite.mutate(formDataWithUpdatedTokenParam);
   }
 
-
-  useEffect(()=>{
-if(acceptInvite.isError){
-	window.alert(acceptInvite.error)
-}
-  },[acceptInvite.isError])
+  // useEffect(() => {
+  //   if (acceptInvite.isError) {
+  //     toast.error(acceptInvite.error)
+  //   }
+  // }, [acceptInvite.isError]);
   return (
     <form
       name="loginForm"
@@ -97,25 +96,6 @@ if(acceptInvite.isError){
           />
         )}
       />
-
-      {/* <Controller
-				name="email"
-				control={control}
-				render={({ field }) => (
-					<TextField
-						{...field}
-						className="mb-24"
-						label="Email"
-						autoFocus
-						type="email"
-						error={!!errors.email}
-						helperText={errors?.email?.message}
-						variant="outlined"
-						required
-						fullWidth
-					/>
-				)}
-			/> */}
 
       <Controller
         name="password"
@@ -153,39 +133,15 @@ if(acceptInvite.isError){
         )}
       />
 
-      {/* <div className="flex flex-col items-center justify-center sm:flex-row sm:justify-between">
-				<Controller
-					name="remember"
-					control={control}
-					render={({ field }) => (
-						<FormControl>
-							<FormControlLabel
-								label="Remember me"
-								control={
-									<Checkbox
-										size="small"
-										{...field}
-									/>
-								}
-							/>
-						</FormControl>
-					)}
-				/>
-
-				<Link
-					className="text-md font-medium"
-					to="/pages/auth/forgot-password"
-				>
-					Forgot password?
-				</Link>
-			</div> */}
-
       <Button
         variant="contained"
         color="secondary"
         className=" mt-16 w-full"
         aria-label="Sign in"
-        disabled={_.isEmpty(dirtyFields) || !isValid || acceptInvite.isLoading}
+        disabled={
+          _.isEmpty(dirtyFields) || !isValid
+           || acceptInvite.isLoading
+        }
         type="submit"
         size="large"
       >

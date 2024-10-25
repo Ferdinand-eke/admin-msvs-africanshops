@@ -36,38 +36,38 @@ const navigationConfig = [
 	},
 
 	/***Manage users and roles */
-	// {
-	// 	id: 'users',
-	// 	title: 'Users Management',
-	// 	subtitle: 'Users management helpers',
-	// 	type: 'group',
-	// 	icon: 'heroicons-outline:home',
-	// 	// translate: 'SHOP-STAFF-USERS',
-	// 	children: [
-	// 		{
-	// 			id: 'users.admin',
-	// 			title: 'Admin staff',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:user-group',
-	// 			url: '/users/admin'
-	// 		},
-	// 		{
-	// 			id: 'users.user',
-	// 			title: 'Uers',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:user-group',
-	// 			url: '/users/user'
-	// 		},
-	// 		{
-	// 			id: 'users.shopstaff',
-	// 			title: 'Shop Staff',
-	// 			type: 'item',
-	// 			icon: 'heroicons-outline:user-group',
-	// 			url: '/users/shopstaff'
-	// 		},
+	{
+		id: 'users',
+		title: 'Users Management',
+		subtitle: 'Users management helpers',
+		type: 'group',
+		icon: 'heroicons-outline:home',
+		// translate: 'SHOP-STAFF-USERS',
+		children: [
+			{
+				id: 'users.admin',
+				title: 'Admin staff',
+				type: 'item',
+				icon: 'heroicons-outline:user-group',
+				url: '/users/admin'
+			},
+			{
+				id: 'users.user',
+				title: 'Uers',
+				type: 'item',
+				icon: 'heroicons-outline:user-group',
+				url: '/users/user'
+			},
+			// {
+			// 	id: 'users.shopstaff',
+			// 	title: 'Shop Staff',
+			// 	type: 'item',
+			// 	icon: 'heroicons-outline:user-group',
+			// 	url: '/users/shopstaff'
+			// },
 			
-	// 	]
-	// },
+		]
+	},
 
 	/***Admistrative activities & management pane */
 	{
@@ -305,6 +305,42 @@ const navigationConfig = [
 		
 	// 	]
 	// },
+
+	/***Estate Properties management pane */
+	{
+		id: 'properties',
+		title: 'Manage prperties',
+		subtitle: 'Properties management helpers',
+		type: 'group',
+		icon: 'heroicons-outline:home',
+		translate: 'PROPERTIES',
+		children: [
+			// {
+			// 	id: 'properties.list',
+			// 	title: 'Properties',
+			// 	type: 'item',
+			// 	icon: 'heroicons-outline:clipboard-check',
+			// 	url: '/properties/listings'
+			// },
+
+			{
+				id: 'properties.managedlist',
+				title: 'Managed Properties',
+				type: 'item',
+				icon: 'heroicons-outline:clipboard-check',
+				url: '/property/managed-listings'
+			},
+
+			{
+				id: 'users.managedlist',
+				title: 'Managed Merchants Properties',
+				type: 'item',
+				icon: 'heroicons-outline:clipboard-check',
+				url: '/userlistings'
+			},
+			
+		]
+	},
 
 		/***Editorial management pane */
 		{

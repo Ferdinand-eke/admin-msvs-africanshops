@@ -81,7 +81,7 @@ function App() {
       <ToastContainer
         className="z-1000"
         // position="bottom-center"
-        position="top-left"
+        position="bottom-center"
         autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}

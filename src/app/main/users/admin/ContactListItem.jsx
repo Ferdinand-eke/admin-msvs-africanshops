@@ -12,13 +12,14 @@ import ListItemButton from "@mui/material/ListItemButton";
 function ContactListItem(props) {
   const { contact } = props;
 
+  
   return (
     <>
       <ListItemButton
         className="px-32 py-16"
         sx={{ bgcolor: "background.paper" }}
         component={NavLinkAdapter}
-        to={`/users/admin/${contact?.id}`}
+        to={`/users/admin/${contact?._id}`}
         // to={`/users/admin/${contact?.id}`}
       >
 {/* productId */}

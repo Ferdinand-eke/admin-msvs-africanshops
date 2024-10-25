@@ -9,7 +9,8 @@ import { useAppDispatch, useAppSelector } from 'app/store/hooks';
 import { useEffect } from 'react';
 import { setSearchText, resetSearchText, selectSearchText } from './contactsAppSlice';
 import { selectFilteredContactList, useGetContactsListQuery } from './ContactsApi';
-import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
+// import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
+import useOurPlatformUsers from 'src/app/api/users/useUsers';
 
 /**
  * The contacts header.
@@ -21,11 +22,9 @@ function UsersHeader() {
 	
 
 	// const filteredData = useAppSelector(selectFilteredContactList(data));
+	const {data:usresData, isLoading:usersIsLoading} = useOurPlatformUsers()
 
-
-	const {data:usresData, isLoading:usersIsLoading} = useGetAllUsers()
-
-	const filteredData = useAppSelector(selectFilteredContactList(usresData?.data?.userlist));
+	const filteredData = useAppSelector(selectFilteredContactList(usresData?.data?.filteredUsers));
 	useEffect(() => {
 		return () => {
 			dispatch(resetSearchText());
@@ -39,6 +38,7 @@ function UsersHeader() {
 		return null;
 	}
 
+	// console.log("PageHeadreUser", usresData?.data?.filteredUsers)
 	return (
 		<div className="p-24 sm:p-32 w-full border-b-1">
 			<div className="flex flex-col">

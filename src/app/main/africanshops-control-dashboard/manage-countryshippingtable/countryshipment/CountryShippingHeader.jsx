@@ -12,12 +12,16 @@ import {
 	useUpdateECommerceProductMutation
 } from '../ECommerceApi';
 import { useAddShopPlanMutation, useDeleteShopPlan, useShopPlanUpdateMutation, useSingleShopplans } from 'src/app/api/shopplans/useShopPlans';
+import { Chip } from '@mui/material';
+import NavLinkAdapter from '@fuse/core/NavLinkAdapter';
 
 /**
  * The product header.
  */
 
-function VendorPlanHeader() {
+function CountryShippingHeader(
+	// {toggleDrawer}
+	) {
 	const routeParams = useParams();
 	const { productId } = routeParams;
 	const [createProduct] = useCreateECommerceProductMutation();
@@ -28,7 +32,7 @@ function VendorPlanHeader() {
 	const { isValid, dirtyFields } = formState;
 	const theme = useTheme();
 	const navigate = useNavigate();
-	const { plansname, name, images, featuredImageId } = watch();
+	const { plansname,  images, featuredImageId, name, flag, _id:countryOrigin } = watch();
 
 	// const getSingleShopPlan = useSingleShopplans(transferData?.id);
 	const updateShopPlans = useShopPlanUpdateMutation();
@@ -36,30 +40,22 @@ function VendorPlanHeader() {
 	const deleteShopPlan = useDeleteShopPlan()
 
 	function handleSaveProduct() {
-		updateShopPlans.mutate(getValues());
+		// updateShopPlans.mutate(getValues());
 	}
 
 	function handleCreateProduct() {
-		addNewShopPlans.mutate(getValues())
+		// addNewShopPlans.mutate(getValues())
 
-
-			// .unwrap()
-			// .then((data) => {
-			// 	navigate(`/vendorplans/packages/${data.id}`);
-			// });
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm("Comfirm delete of this shop plan?")) {
-			deleteShopPlan.mutate(productId)
-		}
-
-		// removeProduct(productId);
-		// navigate('/vendorplans/packages');
+		// if (window.confirm("Comfirm delete of this shop plan?")) {
+		// 	deleteShopPlan.mutate(productId)
+		// }
 	}
 
 	return (
-		<div className="flex flex-col sm:flex-row flex-1 w-full items-center justify-between space-y-8 sm:space-y-0 py-24 sm:py-32 px-24 md:px-32">
+		<div className="flex flex-col sm:flex-row flex-1 w-full items-center justify-between space-y-8 sm:space-y-0 py-24 sm:py-10 px-24 md:px-32">
 			<div className="flex flex-col items-start space-y-8 sm:space-y-0 w-full sm:max-w-full min-w-0">
 				<motion.div
 					initial={{ x: 20, opacity: 0 }}
@@ -69,7 +65,7 @@ function VendorPlanHeader() {
 						className="flex items-center sm:mb-12"
 						component={Link}
 						role="button"
-						to="/vendorplans/packages"
+						to="/countryshipping/list"
 						color="inherit"
 					>
 						<FuseSvgIcon size={20}>
@@ -77,7 +73,7 @@ function VendorPlanHeader() {
 								? 'heroicons-outline:arrow-sm-left'
 								: 'heroicons-outline:arrow-sm-right'}
 						</FuseSvgIcon>
-						<span className="flex mx-4 font-medium">Merchant plan</span>
+						<span className="flex mx-4 font-medium">Country shipping plan for {name} </span>
 					</Typography>
 				</motion.div>
 
@@ -87,10 +83,10 @@ function VendorPlanHeader() {
 						initial={{ scale: 0 }}
 						animate={{ scale: 1, transition: { delay: 0.3 } }}
 					>
-						{images && images.length > 0 && featuredImageId ? (
+						{flag ? (
 							<img
 								className="w-32 sm:w-48 rounded"
-								src={_.find(images, { id: featuredImageId })?.url}
+								src={flag}
 								alt={name}
 							/>
 						) : (
@@ -107,7 +103,7 @@ function VendorPlanHeader() {
 						animate={{ x: 0, transition: { delay: 0.3 } }}
 					>
 						<Typography className="text-16 sm:text-20 truncate font-semibold">
-							{plansname || 'New Product'}
+							{name || 'New Product'}
 						</Typography>
 						<Typography
 							variant="caption"
@@ -118,27 +114,31 @@ function VendorPlanHeader() {
 					</motion.div>
 				</div>
 			</div>
+
+			{/* <div className="flex flex-1 items-center justify-end space-x-8"> */}
 			<motion.div
-				className="flex flex-1 w-full"
+				// className="flex flex-1 w-full"
+				className="flex flex-grow-0"
 				initial={{ opacity: 0, x: 20 }}
 				animate={{ opacity: 1, x: 0, transition: { delay: 0.3 } }}
 			>
-				{productId !== 'new' ? (
+				{/* {productId !== 'new' ? (
 					<>
 						<Button
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							onClick={handleRemoveProduct}
 							startIcon={<FuseSvgIcon className="hidden sm:flex">heroicons-outline:trash</FuseSvgIcon>}
 						>
-							Remove
+							Open Shipment Form
 						</Button>
 						<Button
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid || updateShopPlans?.isLoading}
+							disabled={_.isEmpty(dirtyFields) || !isValid
+						    //  || updateShopPlans?.isLoading
+							}
 							onClick={handleSaveProduct}
 						>
 							Save
@@ -149,15 +149,27 @@ function VendorPlanHeader() {
 						className="whitespace-nowrap mx-4"
 						variant="contained"
 						color="secondary"
-						disabled={_.isEmpty(dirtyFields) || !isValid || addNewShopPlans?.isLoading}
+						disabled={_.isEmpty(dirtyFields) || !isValid 
+						}
 						onClick={handleCreateProduct}
 					>
 						Add Vendor Plan
 					</Button>
-				)}
+				)} */}
+				{/* <Button
+					className="whitespace-nowrap mx-4"
+						variant="contained"
+						color="secondary"
+						component={NavLinkAdapter}
+						to={`/countryshipping/countryorigin/${countryOrigin}/manage/new`}
+					>
+						<FuseSvgIcon size={20}>heroicons-outline:plus</FuseSvgIcon>
+						<span className="mx-4 sm:mx-8">Add New Shipment Route</span>
+					</Button> */}
 			</motion.div>
+			{/* </div> */}
 		</div>
 	);
 }
 
-export default VendorPlanHeader;
+export default CountryShippingHeader;

@@ -126,17 +126,7 @@ function AddUserForm() {
   // const { id: contactId } = routeParams;
   const { id } = routeParams;
 
-  // const { data: contact, isError } = useGetContactsItemQuery(contactId, {
-  // 	skip: !contactId
-  // });
 
-  // const {
-  // 	data: admin,
-  // 	isLoading: adminLoading,
-  // 	isError: adminIsError
-  // } = useGetAdminById(id, {
-  // 	skip: !id || id === 'new'
-  // });
 
   const recruitNewUserAccount = useAdminCreateNewUser();
 

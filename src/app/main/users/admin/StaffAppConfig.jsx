@@ -18,6 +18,7 @@ const StaffAppConfig = {
 		}
 	},
 	// auth: authRoles.admin,
+	
 	routes: [
 		{
 			path: 'users/admin',
@@ -27,21 +28,19 @@ const StaffAppConfig = {
 					path: ':id/create',
 					element: <AddContactForm />
 				},
+
 				{
 					path: ':id',
 					element: <ContactView />
 				},
 				{
 					path: ':id/edit',
-					element: <ContactForm />
+					// element: <ContactForm />
+					element: <AddContactForm />
 		
 				},
 
-				
-				// { 
-				// 	path: 'operate/:productId/*',
-				// 	element: <PropertyType />
-				// },
+			
 
 
 			]

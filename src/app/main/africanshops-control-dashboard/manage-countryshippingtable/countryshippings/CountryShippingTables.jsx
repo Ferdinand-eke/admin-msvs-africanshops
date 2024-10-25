@@ -1,10 +1,11 @@
 import GlobalStyles from '@mui/material/GlobalStyles';
 import CountryShippingTablesHeader from './CountryShippingTablesHeader';
-import CountryTable from './CountryTable';
+import CountryShippingTable from './CountryShippingTable';
 
 /**
  * The products page.
  */
+
 function CountryShippingTables() {
 	return (
 		<>
@@ -17,9 +18,11 @@ function CountryShippingTables() {
 			/>
 			<div className="w-full h-full container flex flex-col">
 				<CountryShippingTablesHeader />
-				<CountryTable />
+
+				<CountryShippingTable />
 				
 			</div>
+
 		</>
 	);
 }

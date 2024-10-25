@@ -1,10 +1,11 @@
+
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Button from '@mui/material/Button';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import _ from '@lodash';
@@ -12,15 +13,15 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import VendorPlanHeader from './VendorPlanHeader';
+import VendorPlanHeader from './CountryShippingHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
-import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
+
 import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
 import { useSingleShopplans } from 'src/app/api/shopplans/useShopPlans';
+import { useSingleCountry } from 'src/app/api/countries/useCountries';
+
+// import CountryShipmentForm from "./CountryShipmentForm";
 /**
  * Form Validation Schema
  */
@@ -31,17 +32,21 @@ const schema = z.object({
 /**
  * The product page.
  */
-function VendorPlan() {
+
+function CountryShipping() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
 	const { productId } = routeParams;
 	const {
-		data: merchantplan,
+		data: countryshipping,
 		isLoading,
 		isError
-	} = useSingleShopplans(productId, {
+	} = useSingleCountry(productId, {
 		skip: !productId || productId === 'new'
 	});
+	// useCountriesWithShippingTableOriginExcluded
+	// console.log("SINGLE_COUNTY_SHIPPING", countryshipping?.data)
+
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
@@ -66,10 +71,10 @@ function VendorPlan() {
 		}
 	}, [productId, reset]);
 	useEffect(() => {
-		if (merchantplan?.data) {
-			reset({ ...merchantplan?.data });
+		if (countryshipping?.data) {
+			reset({ ...countryshipping?.data });
 		}
-	}, [merchantplan?.data, reset]);
+	}, [countryshipping?.data, reset]);
 
 
 	/**
@@ -82,6 +87,8 @@ function VendorPlan() {
 	if (isLoading) {
 		return <FuseLoading />;
 	}
+
+// 
 
 	/**
 	 * Show Message if the requested products is not exists
@@ -115,14 +122,15 @@ function VendorPlan() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (merchantplan?.data && routeParams.productId !== merchantplan?.data._id && routeParams.productId !== 'new')) {
+	if (_.isEmpty(form) || (countryshipping?.data && routeParams.productId !== countryshipping?.data._id && routeParams.productId !== 'new')) {
 		return <FuseLoading />;
 	}
 
 	return (
 		<FormProvider {...methods}>
 			<FusePageCarded
-				header={<VendorPlanHeader />}
+				header={<VendorPlanHeader 
+				/>}
 				content={
 					<>
 						<Tabs
@@ -138,43 +146,18 @@ function VendorPlan() {
 								className="h-64"
 								label="Basic Info"
 							/>
-							{/* <Tab
-								className="h-64"
-								label="Product Images"
-							/>
-							<Tab
-								className="h-64"
-								label="Pricing"
-							/>
-							<Tab
-								className="h-64"
-								label="Inventory"
-							/>
-							<Tab
-								className="h-64"
-								label="Shipping"
-							/> */}
+							
 						</Tabs>
-						<div className="p-16 sm:p-24 max-w-3xl">
+						<div className="p-16 sm:p-24 max-w-auto">
+						{/* max-w-3xl */}
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
-								<BasicInfoTab />
+								<BasicInfoTab 
+								shipmentTable={countryshipping?.data?.shippingTable}
+							
+								/>
 							</div>
 
-							{/* <div className={tabValue !== 1 ? 'hidden' : ''}>
-								<ProductImagesTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 2 ? 'hidden' : ''}>
-								<PricingTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 3 ? 'hidden' : ''}>
-								<InventoryTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 4 ? 'hidden' : ''}>
-								<ShippingTab />
-							</div> */}
+							
 						</div>
 					</>
 				}
@@ -184,4 +167,4 @@ function VendorPlan() {
 	);
 }
 
-export default VendorPlan;
+export default CountryShipping;

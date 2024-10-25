@@ -96,6 +96,7 @@ function SinglePostHeader() {
 			updateNewsPost?.mutate(getValues())
 		  }
 	}
+	
 
 	function handleCreateProduct() {
 		console.log("PostValues", getValues())

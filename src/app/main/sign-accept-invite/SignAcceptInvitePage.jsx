@@ -57,7 +57,7 @@ function SignInPage() {
 
 					<Typography className="mt-32 text-4xl font-extrabold leading-tight tracking-tight">
 						{/* Accept  */}
-						CharizHomes Invite
+						Africanshops Invite
 					</Typography>
 					<div className="mt-2 flex items-baseline font-medium">
 						<Typography>Considering accepting this invitation?</Typography>
@@ -78,28 +78,7 @@ function SignInPage() {
 						to all terms and conditions as stated above.
 					</Alert>
 
-					{/* <Tabs
-						value={_.findIndex(tabs, { id: selectedTabId })}
-						variant="fullWidth"
-						className="w-full mt-24 mb-32"
-						indicatorColor="secondary"
-					>
-						{tabs.map((item) => (
-							<Tab
-								onClick={() => handleSelectTab(item.id)}
-								key={item.id}
-								icon={
-									<img
-										className={item.logoClass}
-										src={item.logo}
-										alt={item.title}
-									/>
-								}
-								className="min-w-0"
-								label={item.title}
-							/>
-						))}
-					</Tabs> */}
+					
 
 					{selectedTabId === 'jwt' && <JwtSignAcceptInviteTab />}
 				</CardContent>
@@ -176,8 +155,8 @@ function SignInPage() {
 						<div>our community</div>
 					</div>
 					<div className="mt-24 text-lg leading-6 tracking-tight text-gray-400">
-						Fuse helps developers to build organized and well coded dashboards full of beautiful and rich
-						modules. Join us and start building your application today.
+						An invite to join our community to drive trade and investment with the sole goal of wealth creation. 
+						We look forward to having you onboard!
 					</div>
 					<div className="mt-32 flex items-center">
 						<AvatarGroup
@@ -194,7 +173,7 @@ function SignInPage() {
 						</AvatarGroup>
 
 						<div className="ml-16 font-medium tracking-tight text-gray-400">
-							More than 17k people joined us, it's your turn
+							More than 7k people joined us, it's your turn
 						</div>
 					</div>
 				</div>

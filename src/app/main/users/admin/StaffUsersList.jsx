@@ -6,17 +6,19 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import { useAppSelector } from 'app/store/hooks';
 import ContactListItem from './ContactListItem';
 import { selectFilteredContactList, selectGroupedFilteredContacts, useGetContactsListQuery } from './ContactsApi';
-import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
-import useGetAllAdminUsers from 'src/app/aaqueryhooks/adminHandlingQuery';
+// import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
+// import useGetAllAdminUsers from 'src/app/aaqueryhooks/adminHandlingQuery';
+import useAdminUsers from 'src/app/api/admin-users/useAdmins';
 
 /**
  * The contacts list.
  */
-function UsersList() {
+function StaffUsersList() {
 
 	// const { data, isLoading } = useGetContactsListQuery();
 	// const {data:usersData, isLoading:usersIsLoading} = useGetAllUsers()
-	const {data:usersData, isLoading:usersIsLoading} = useGetAllAdminUsers()
+	
+	const {data:usersData, isLoading:usersIsLoading} = useAdminUsers()
 	// const filteredData = useAppSelector(selectFilteredContactList(data));
 
 	// const groupedFilteredContacts = useAppSelector(selectGroupedFilteredContacts(filteredData));
@@ -70,7 +72,7 @@ function UsersList() {
 						<List className="w-full m-0 p-0">
 							{group?.children?.map((item) => (
 								<ContactListItem
-									key={item.id}
+									key={item._id}
 									contact={item}
 								/>
 							))}
@@ -87,4 +89,4 @@ function UsersList() {
 
 
 
-export default UsersList;
+export default StaffUsersList;

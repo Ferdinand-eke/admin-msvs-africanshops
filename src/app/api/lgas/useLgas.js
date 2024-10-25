@@ -18,7 +18,7 @@ export default function useLgas() {
 //get single lga
 export function useSingleLga(lgaId) {
   if (!lgaId || lgaId === "new") {
-    return "";
+    return {};
   }
   return useQuery(['lgas', lgaId], () => getLgaById(lgaId), {
     enabled: Boolean(lgaId),

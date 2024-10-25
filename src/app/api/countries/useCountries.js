@@ -4,8 +4,10 @@ import {
   createCountry,
   createCountryShippingTable,
   deleteCountryById,
+  deleteCountryShippingTableById,
   getCountries,
   getCountriesWithShippinTable,
+  getCountriesWithShippinTableExcludeOrigin,
   getCountryById,
   getOperationalCountries,
   updateCountryById,
@@ -21,9 +23,7 @@ export function useOperationalCountries() {
   return useQuery(["__operational_countries"], getOperationalCountries);
 }
 
-export function useCountriesWithShippingTable() {
-  return useQuery(["__countries_shippintables"], getCountriesWithShippinTable);
-}
+
 
 //get single country
 export function useSingleCountry(countryId) {
@@ -35,6 +35,7 @@ export function useSingleCountry(countryId) {
     // staleTime: 5000,
   });
 }
+
 
 //create new country
 export function useAddCountryMutation() {
@@ -85,47 +86,8 @@ export function useCountryUpdateMutation() {
   });
 }
 
-//Add To Country Shipping Table country
-export function useCountryAddShippingTableMutation() {
-  const queryClient = useQueryClient();
 
-  return useMutation(createCountryShippingTable, {
-    onSuccess: (data) => {
-      if (data) {
-        toast.success("country shipping table aded successfully!!");
-        toast.success(`${data?.message ? data?.message : data?.data?.message}`);
-        queryClient.invalidateQueries("__countries");
-      }
-    },
-    onError: (error) => {
-      toast.success(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-    },
-  });
-}
 
-//update Country Shipping Table  country
-export function useCountryUpdateShippingMutation() {
-  const queryClient = useQueryClient();
-
-  return useMutation(updateCountryShippingTableById, {
-    onSuccess: (data) => {
-      toast.success("country shipping table updated successfully!!");
-      toast.success(`${data?.message ? data?.message : data?.data?.message}`);
-      queryClient.invalidateQueries("__countries");
-    },
-    onError: () => {
-      toast.success(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
-    },
-  });
-}
 
 /***Delete a county */
 export function useDeleteSingleCountry() {
@@ -147,3 +109,105 @@ export function useDeleteSingleCountry() {
     },
   });
 }
+
+
+/*****
+ * #####################################################################
+ * HANDLE SHIPPING-ROUTES-TABLE STARTS
+ * #####################################################################
+ */
+
+export function useCountriesWithShippingTable() {
+  return useQuery(["__countries_shippintables"], getCountriesWithShippinTable);
+}
+
+
+export function useCountriesWithShippingTableOriginExcluded(countryId) {
+  if (!countryId || countryId === "new") {
+    return "";
+  }
+  return useQuery(["__countriesOriginExcluded", countryId], () => getCountriesWithShippinTableExcludeOrigin(countryId), {
+    enabled: Boolean(countryId),
+    // staleTime: 5000,
+  });
+}
+
+
+//Add To Country Shipping Table country
+export function useCountryAddShippingTableMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation(createCountryShippingTable, {
+    onSuccess: (data) => {
+      console.log("NEW-SHIPMENT-ADD", data)
+      if (data?.data?.success) {
+        toast.success("country shipping table aded successfully!!");
+        toast.success(`${data?.message ? data?.message : data?.data?.message}`);
+        queryClient.invalidateQueries("__countries");
+      }
+    },
+    onError: (error) => {
+      toast.error(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    },
+  });
+}
+
+
+/*****update Country Shipping Table  country */
+export function useCountryUpdateShippingMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation(updateCountryShippingTableById, {
+    onSuccess: (data) => {
+     if(data?.data?.success){
+      console.log("Updated-SHIPMENT", data?.data)
+      toast.success("country shipping table updated successfully!!");
+      // toast.success(`${data?.message ? data?.message : data?.data?.message}`);
+      queryClient.invalidateQueries("__countries");
+     }
+    },
+    onError: () => {
+      toast.success(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    },
+  });
+}
+
+
+/*****update Country Shipping Table  country */
+export function useCountryDeleteShippingMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation(deleteCountryShippingTableById, {
+    onSuccess: (data) => {
+     if(data?.data?.success){
+      console.log("Updated-SHIPMENT", data?.data)
+      toast.success("country shipping table deleted successfully!!");
+      // toast.success(`${data?.message ? data?.message : data?.data?.message}`);
+      queryClient.invalidateQueries("__countries");
+     }
+    },
+    onError: () => {
+      toast.success(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+      );
+    },
+  });
+}
+
+
+
+/*****
+ * #####################################################################
+ * HANDLE SHIPPING-ROUTES-TABLE ENDS
+ * #####################################################################
+ */
