@@ -154,6 +154,7 @@ function CountryShipmentForm(props) {
                     helpertext={errors?.countryToShipTo?.message}
                     //  {...other}
                     //  {...(error && {error: true, helperText: error})}
+                    disabled
                   >
                     <MenuItem value="">Select a country</MenuItem>
                     {countries?.data &&
