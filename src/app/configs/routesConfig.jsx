@@ -58,7 +58,7 @@ const routeConfigs = [
   StaffAppConfig,
   // PropertiesAppConfig,
   // ServiceTypesAppConfig,
- 
+
   // PropertyTypesAppConfig,
   ManagedListingsAppConfig,
   ManagedUserListingsAppConfig,
@@ -115,12 +115,17 @@ const routeConfigs = [
   CountryShippingTableAppConfig,
   /****Africanshops Countries Shipping Table Management  Configs Ends Here */
 
-  /**Routes Below to be disabled */
-  ...PagesConfigs,
-  ...UserInterfaceConfigs,
-  ...DashboardsConfigs,
-  ...AppsConfigs,
-  ...authRoleExamplesConfigs,
+  /**
+   * Routes Below to be disabled starts
+   */
+  // ...PagesConfigs,
+  // ...UserInterfaceConfigs,
+  // ...DashboardsConfigs,
+  // ...AppsConfigs,
+  // ...authRoleExamplesConfigs,
+  /**
+   * Routes Below to be disabled ends
+   */
 ];
 
 /**
@@ -134,7 +139,7 @@ const routes = [
   {
     path: "/",
     element: <Navigate to="/dashboards/project" />,
-	// element: <Navigate to="/home" />,
+    // element: <Navigate to="/home" />,
     auth: settingsConfig.defaultAuth,
   },
   {

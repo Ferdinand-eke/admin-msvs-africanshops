@@ -10,6 +10,7 @@ const Orders = lazy(() => import('./orders/Orders'));
  * The E-Commerce app configuration.
  */
 
+
 const AdminManageOrdersAppConfig = {
 	settings: {
 		layout: {}

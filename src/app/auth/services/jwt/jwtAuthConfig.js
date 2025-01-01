@@ -1,6 +1,8 @@
 
-const baseUrl = 'https://coral-app-n8ox9.ondigitalocean.app'; //deployed serve
+// const baseUrl = 'https://coral-app-n8ox9.ondigitalocean.app'; //deployed serve
 // const baseUrl = 'http://localhost:8000';
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL_PROD;   /**production & dev */
 
 
 const jwtAuthConfig = {

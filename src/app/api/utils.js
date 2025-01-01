@@ -3,13 +3,12 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
-// const guestBaseDomain = 'http://localhost:8000';
-const guestBaseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/'; //deployed serve
+
+const guestBaseDomain = import.meta.env.VITE_API_BASE_URL_PROD;  /**production & dev */
 
 export const guestBaseUrl = `${guestBaseDomain}`;
 
-const baseDomain = 'http://localhost:8000/api';
-// const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app/api'; //deployed serve
+const baseDomain = `${guestBaseDomain}/api`;
 export const baseUrl = `${baseDomain}`;
 
 export default function reqApi() {

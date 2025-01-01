@@ -8,16 +8,14 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { useDeleteECommerceOrdersMutation, useGetECommerceOrdersQuery } from '../ECommerceApi';
+// import { useDeleteECommerceOrdersMutation, useGetECommerceOrdersQuery } from '../ECommerceApi';
 import OrdersStatus from '../order/OrdersStatus';
 import useAdminGetOrders from 'src/app/api/orders/useAdminGetShopOrders';
 import OrdersCreatedAndPaymentStatus from '../order/OrdersCreatedAndPaymentStatus';
 
 function OrdersTable() {
 	const { data: adminOrders, isLoading, isError } = useAdminGetOrders();
-	const [removeOrders] = useDeleteECommerceOrdersMutation();
-
-
+	// const [removeOrders] = useDeleteECommerceOrdersMutation();
 
 	const columns = useMemo(
 		() => [
@@ -109,6 +107,7 @@ function OrdersTable() {
 			
 			</motion.div>
 		);
+		
 	}
 
 if (!adminOrders?.data?.MOrders) {

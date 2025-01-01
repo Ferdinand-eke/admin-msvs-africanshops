@@ -9,11 +9,13 @@ import { toast } from "react-toastify";
 /**
  * MAIN APIs STARTS
  */
+const baseDomain = import.meta.env.VITE_API_BASE_URL_PROD;  /**production & dev */
+
 // const baseDomain = "http://localhost:8000";
 //====================================================
 /***Digital Ocean Server : Current main server*/
 
-const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app'; //deployed serve
+// const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app'; //deployed serve
 
 //===================================================================================
 
@@ -661,7 +663,6 @@ export const adminGetOrderById = (id) => authApi().get(`/adminorders/${id}`);
 export const adminGetOrderItemsOfOrderById = (id) =>
   authApi().get(`/adminorders/adminorderitems-of-order/${id}`);
 export const adminDeleteOrders = (id) => authApi().delete(`/adminorders/${id}`);
-// export const getShopById = (id) => Api().get(`/shops/${id}`);
 export const adminPackOrders = (id) =>
   authApi().put(`/adminorders/pack-unpack/${id}`);
 export const adminShipOrders = (id) =>
