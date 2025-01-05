@@ -1,5 +1,3 @@
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@mui/material/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
@@ -11,9 +9,6 @@ import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 // import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-// import IconButton from "@mui/material/IconButton";
-// import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
-// import Checkbox from "@mui/material/Checkbox/Checkbox";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import history from "@history";
 import { useAppDispatch } from "app/store/hooks";
@@ -32,6 +27,8 @@ import {
   useAdminUpdateUserDetailMutation,
   useSingleUser,
 } from "src/app/api/users/useUsers";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 
 function BirtdayIcon() {
