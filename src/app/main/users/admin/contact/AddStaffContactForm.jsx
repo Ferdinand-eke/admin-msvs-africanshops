@@ -14,26 +14,9 @@ import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
 import Checkbox from "@mui/material/Checkbox/Checkbox";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import history from "@history";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { showMessage } from "@fuse/core/FuseMessage/fuseMessageSlice";
 import { useAppDispatch } from "app/store/hooks";
-import ContactEmailSelector from "./email-selector/ContactEmailSelector";
-import PhoneNumberSelector from "./phone-number-selector/PhoneNumberSelector";
-import {
-  useCreateContactsItemMutation,
-  useDeleteContactsItemMutation,
-  useGetContactsItemQuery,
-  useGetContactsTagsQuery,
-  useUpdateContactsItemMutation,
-} from "../ContactsApi";
-import ContactModel from "../models/ContactModel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import {
-  useAdminRecruitStaff,
-  useGetAdminById,
-} from "src/app/aaqueryhooks/adminHandlingQuery";
 import {
   useAdminRecruitAfricanshopStaff,
   useAdminStaffUpdateMutation,
@@ -50,9 +33,8 @@ import {
 } from "src/app/api/apiRoutes";
 import { Typography } from "@mui/material";
 import useCountries from "src/app/api/countries/useCountries";
-// import InputAdornment from '@mui/material/InputAdornment';
-// import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-// import { useGetAdminById } from 'src/app/aaqueryhooks/adminHandlingQuery';
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 function BirtdayIcon() {
   return <FuseSvgIcon size={20}>heroicons-solid:cake</FuseSvgIcon>;
@@ -75,21 +57,11 @@ const schema = z.object({
   avatar: z.string().optional(),
   background: z.string().optional(),
   name: z.string().min(1, { message: "Name is required" }),
-  // emails: z.array(ContactEmailSchema).optional(),
   email: z.string().optional(),
-  // phoneNumbers: z.array(ContactPhoneNumberSchema).optional(),
   phone: z.string(ContactPhoneNumberSchema).optional(),
-  // title: z.string().optional(),
-  // company: z.string().optional(),
   birthday: z.string().optional(),
   address: z.string().optional(),
-  // notes: z.string().optional(),
-  // tags: z.array(z.string()).optional(),
 });
-// const schema = z.object({
-// 	email: z.string().optional(),
-// 	label: z.string().optional()
-// });
 
 const defaultValues = {
   avatar: "",
