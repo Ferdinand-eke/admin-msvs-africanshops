@@ -84,7 +84,7 @@ const defaultValues = {
  * The contact form.
  */
 
-function AddStaffContactForm() {
+const AddStaffContactForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const routeParams = useParams();
