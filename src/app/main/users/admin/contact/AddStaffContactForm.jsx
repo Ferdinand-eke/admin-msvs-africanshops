@@ -159,14 +159,6 @@ function AddStaffContactForm() {
   const [blgas, setBlgas] = useState([]);
   const [lgasOffices, setLgasOffices] = useState([]);
 
-  // console.log("ADMIN_USER", admin?.data)
-
-  // useEffect(() => {
-  //   reset(ContactModel({}));
-  // }, [
-  //   // id,
-  //   reset,
-  // ]);
 
   useEffect(() => {
     if (getValues()?.department) {
@@ -254,20 +246,7 @@ function AddStaffContactForm() {
     }
   };
 
-  // useEffect(() => {
-  // 	if (admin?.data) {
-  // 		reset({ ...admin?.data,
-  //     department:admin?.data?.department?._id,
-  //     designation:admin?.data?.designation?._id
-  //     });
-  // 	}
-  // }, [
-  //   contactId,
-  //   admin?.data,
-  //   reset]);
-
   useEffect(() => {
-    // reset(admin?.data({}));
     reset(admin?.data);
   }, [admin?.data, reset]);
 
@@ -276,14 +255,12 @@ function AddStaffContactForm() {
    */
 
   const onSubmit = useCallback(() => {
-    // recruitStaff.mutate(form);
     recruitStaff.mutate(getValues());
 
     
   }, [getValues()]);
 
   const onUpdate = useCallback(() => {
-    // console.log("UPDATE_ADMINDATA..", getValues());
     updateStaffInfo.mutate(getValues())
   }, [getValues()]);
 

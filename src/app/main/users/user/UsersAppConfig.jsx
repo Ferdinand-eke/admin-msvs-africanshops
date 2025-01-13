@@ -28,18 +28,18 @@ const UsersAppConfig = {
 					path: ':id/create',
 					element: <AddUserForm />
 				},
-				{
-					path: ':id/activate',
-					element: <ActivateUserForm />
-				},
+				// {
+				// 	path: ':id/activate',
+				// 	element: <ActivateUserForm />
+				// },
 				{
 					path: ':id',
 					element: <UserContactView />
 				},
 				{
 					path: ':id/edit',
-					// element: <ContactForm />
-					element:<ContactForm />
+					// element:<ContactForm />
+					element:<AddUserForm />
 				}
 			]
 		}

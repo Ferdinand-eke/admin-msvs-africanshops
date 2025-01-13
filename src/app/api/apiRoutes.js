@@ -713,8 +713,8 @@ export const getApiUserById = (id) => authApi().get(`/users/${id}`);
 export const getApiPopuplatedUserById = (id) => authApi().get(`/users/${id}/populated-user`);
 
 
-export const updateApiUserById = (id, usersFormData) =>
-  authApi().put(`/users/${id}`, usersFormData);
+export const updateApiUserById = (usersFormData) =>
+  authApi().put(`/users/${usersFormData?._id}`, usersFormData);
 
 export const createApiUser = (usersFormData) =>
   authApi().post("/users", usersFormData);

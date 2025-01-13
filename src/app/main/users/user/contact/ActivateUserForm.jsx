@@ -187,8 +187,6 @@ const getActivateNewUserToken = getNewUserAccountToken()
     console.log("Activate And Crete User-FORMDATA", form);
     const formAndToken = {...form, activationToken:getActivateNewUserToken}
 
-    console.log("Activate User AccountFormDATA:", formAndToken)
-    // return
     activateNewUserCallback.mutate(formAndToken);
 	// reset(ContactModel({}));
    

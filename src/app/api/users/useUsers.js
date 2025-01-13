@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { adminSuspendDisciplineUser, adminUnSuspendDisciplineUser, getApiPopuplatedUserById, getApiUserById, getApiUsers } from '../apiRoutes';
+import { adminBlockDisciplineUser, adminSuspendDisciplineUser, adminUnBlockDisciplineUser, adminUnSuspendDisciplineUser, getApiPopuplatedUserById, getApiUserById, getApiUsers, updateApiUserById } from '../apiRoutes';
 import { toast } from 'react-toastify';
 // import { getApiUserById, getApiUsers } from '../../store-redux/api/apiRoutes';
 
@@ -13,6 +13,9 @@ export default function useOurPlatformUsers() {
 
 /***2) Admin get single User Details */
 export function useSingleUser(userId) {
+  if (!userId || userId === "new") {
+    return "";
+  }
   return useQuery(['__our_userById', userId], () => getApiUserById(userId), {
     enabled: Boolean(userId),
     staleTime: 2000,
@@ -21,6 +24,9 @@ export function useSingleUser(userId) {
 
 /***3) Admin get poplulated single User Details */
 export function usePopulatedSingleUser(userId) {
+  if (!userId || userId === "new") {
+    return "";
+  }
   return useQuery(['__our_populatedUserBId', userId], () => getApiPopuplatedUserById(userId), {
     enabled: Boolean(userId),
     staleTime: 2000,
@@ -66,6 +72,81 @@ export function useAdminUnSuspendUserMutation() {
       queryClient.refetchQueries('__our_populatedUserBId', { force: true });
 
      }
+    },
+    onError: (err) => {
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
+    },
+  });
+}
+
+/**** 6) Admin Disciplinary: Block existing  User  */
+export function useAdminBlockUserMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation(adminBlockDisciplineUser, {
+    onSuccess: (data) => {
+      if (data?.data?.success) {
+        toast.success(`${data?.data?.message ? data?.data?.message : "User blocked successfully!!"}`,{
+          position: "top-left"
+        });
+        queryClient.invalidateQueries('__our_populatedUserBId');
+        queryClient.refetchQueries('__our_populatedUserBId', { force: true });
+      }
+    },
+    onError: (err) => {
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
+    },
+  });
+}
+
+/**** 7) Admin Disciplinary: Un-Block existing user  */
+export function useAdminUnBlockUserMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation(adminUnBlockDisciplineUser, {
+    onSuccess: (data) => {
+     if(data?.data?.success){
+      toast.success(`${data?.data?.message ? data?.data?.message : "Suspension lifted successfully!!"}`,{
+        position: "top-left"
+      });
+      queryClient.invalidateQueries('__our_populatedUserBId');
+      queryClient.refetchQueries('__our_populatedUserBId', { force: true });
+
+     }
+    },
+    onError: (err) => {
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
+    },
+  });
+}
+
+/**** 8) Admin update  User data" */
+export function useAdminUpdateUserDetailMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation(updateApiUserById, {
+    onSuccess: (data) => {
+
+      if (data?.data?.success) {
+        toast.success(`${data?.data?.message ? data?.data?.message : "User details  updated successfully!!"}`,{
+          position: "top-left"
+        });
+        queryClient.invalidateQueries('__our_populatedUserBId');
+        queryClient.refetchQueries('__our_populatedUserBId', { force: true });
+      }
+
     },
     onError: (err) => {
       toast.error(

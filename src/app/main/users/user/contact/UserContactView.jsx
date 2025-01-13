@@ -17,7 +17,7 @@ import {
   useGetContactsCountriesQuery,
   useGetContactsTagsQuery,
 } from "../ContactsApi";
-import { useAdminSuspendUserMutation, useAdminUnSuspendUserMutation, usePopulatedSingleUser } from "src/app/api/users/useUsers";
+import { useAdminBlockUserMutation, useAdminSuspendUserMutation, useAdminUnBlockUserMutation, useAdminUnSuspendUserMutation, usePopulatedSingleUser } from "src/app/api/users/useUsers";
 import {
   Card,
   CardContent,
@@ -84,8 +84,8 @@ function UserContactView() {
     const handleSuspension = useAdminSuspendUserMutation();
     const handleLiftSuspension = useAdminUnSuspendUserMutation()
 
-  //   const handleBlockAdmin = useAdminStaffBlockMutation();
-  //   const handleUnBlockAdmin = useAdminStaffUnBlockMutation()
+    const handleBlockUser = useAdminBlockUserMutation();
+    const handleUnBlockUser = useAdminUnBlockUserMutation()
 
   const routeParams = useParams();
   const { id: contactId } = routeParams;
@@ -114,15 +114,14 @@ function UserContactView() {
   };
 
   /***Handle User Block||Un-Block */
-
-  const blockAdmin = (adminId) => {
-    if (window.confirm("Blocking a Staff?")) {
-      // handleBlockAdmin.mutate(adminId);
+  const blockUser = (adminId) => {
+    if (window.confirm("Blocking a user?")) {
+      handleBlockUser.mutate(adminId);
     }
   };
-  const unblockAdmin = (adminId) => {
-    if (window.confirm("Removing block on Staff?")) {
-      // handleUnBlockAdmin.mutate(adminId);
+  const unblockUser = (adminId) => {
+    if (window.confirm("Removing block on user?")) {
+      handleUnBlockUser.mutate(adminId);
     }
   };
 
@@ -540,7 +539,7 @@ function UserContactView() {
                               label="Block"
                               className="mr-12 mb-12 cursor-pointer bg-red-500 hover:bg-red-800 w-full"
                               size="small"
-                              onClick={() => blockAdmin(userInfo?.data?._id)}
+                              onClick={() => blockUser(userInfo?.data?._id)}
                             />
                           </div>
                         </ListItem>
@@ -558,7 +557,7 @@ function UserContactView() {
                                       color="secondary.main"
                                       paragraph={false}
                                     >
-                                      Un-block Admin
+                                      Un-block User
                                     </Typography>
                                   }
                                 />
@@ -569,7 +568,7 @@ function UserContactView() {
                                     className="mr-12 mb-12 cursor-pointer bg-orange-500 hover:bg-orange-800 w-full"
                                     size="small"
                                     onClick={() =>
-                                      unblockAdmin(userInfo?.data?._id)
+                                      unblockUser(userInfo?.data?._id)
                                     }
                                   />
                                 </div>
