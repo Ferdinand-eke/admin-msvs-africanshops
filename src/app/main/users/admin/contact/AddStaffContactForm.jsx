@@ -672,7 +672,7 @@ function AddStaffContactForm() {
               fullWidth
               error={!!errors.email}
               helperText={errors?.email?.message}
-              disabled
+              disabled={contactId !== "new" && true}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -766,9 +766,14 @@ function AddStaffContactForm() {
         />
       </div>
       <Box
-        className="flex items-center mt-40 py-14 pr-16 pl-4 sm:pr-48 sm:pl-36 border-t"
+        className="flex items-center justify-between mt-40 py-14 pr-16 pl-4 sm:pr-48 sm:pl-36 border-t"
         sx={{ backgroundColor: "background.default" }}
       >
+        <Button className="bg-red-400 hover:bg-red-800" >
+          Delete This Account
+        </Button>
+
+        <div>
         <Button className="ml-auto" onClick={() => history.back()}>
           Cancel
         </Button>
@@ -800,6 +805,7 @@ function AddStaffContactForm() {
             update staff
           </Button>
         )}
+        </div>
       </Box>
     </>
   );
