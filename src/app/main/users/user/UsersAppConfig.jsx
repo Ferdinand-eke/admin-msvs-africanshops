@@ -4,7 +4,6 @@ import UserContactView from './contact/UserContactView';
 // import { authRoles } from 'src/app/auth';
 import authRoles from '../../../auth/authRoles';
 import AddUserForm from './contact/AddUserForm';
-import ActivateUserForm from './contact/ActivateUserForm';
 
 const ContactsOfUsersApp = lazy(() => import('./ContactsOfUsersApp'));
 /**
@@ -28,10 +27,6 @@ const UsersAppConfig = {
 					path: ':id/create',
 					element: <AddUserForm />
 				},
-				// {
-				// 	path: ':id/activate',
-				// 	element: <ActivateUserForm />
-				// },
 				{
 					path: ':id',
 					element: <UserContactView />
