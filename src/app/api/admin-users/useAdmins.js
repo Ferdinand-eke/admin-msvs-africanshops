@@ -19,6 +19,7 @@ import {
   createRecruitAdminUserApi,
   newAdminUserInviteAcceptanceEndpoint,
   getApiAdminUserByIdNotPopulated,
+  adminDeleteAdminStaff,
 } from '../apiRoutes';
 import { useNavigate } from 'react-router';
 
@@ -98,15 +99,14 @@ export function useAdminStaffUpdateMutation() {
   return useMutation(updateApiAdminUserById, {
     onSuccess: (data) => {
 
-      // toast.success('Admin staff  updated successfully!!');
-      // queryClient.invalidateQueries('__admins');
-
       if (data?.data?.success) {
         toast.success(`${data?.data?.message ? data?.data?.message : "Admin staff  updated successfully!!"}`,{
           position: "top-left"
         });
         queryClient.invalidateQueries('__adminById');
+        queryClient.invalidateQueries(['__admins']);
         queryClient.refetchQueries('__adminById', { force: true });
+        queryClient.refetchQueries('__admins', { force: true });
       }
 
     },
@@ -256,6 +256,36 @@ export function useAdminStaffUnMakeLeaderMutation() {
     onSuccess: (data) => {
       toast.success('Adminstaff leader removed successfully!!');
       queryClient.invalidateQueries('__adminById');
+    },
+    onError: (err) => {
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
+    },
+  });
+}
+
+/**** 11) Admin Handling: Delete and existing AdminStaff  */
+export function useDeleteAdminStaffMutation() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate()
+
+  return useMutation(adminDeleteAdminStaff, {
+    onSuccess: (data) => {
+     if(data?.data?.success){
+      toast.success(`${data?.data?.message ? data?.data?.message : "Admin deleted successfully!!"}`,{
+        position: "top-left"
+      });
+      
+      queryClient.invalidateQueries('__adminById');
+      queryClient.invalidateQueries('__admins');
+      queryClient.refetchQueries('__admins', { force: true });
+      navigate('/users/admin')
+
+
+     }
     },
     onError: (err) => {
       toast.error(

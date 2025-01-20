@@ -37,6 +37,7 @@ import {
 import {
   useAdminRecruitAfricanshopStaff,
   useAdminStaffUpdateMutation,
+  useDeleteAdminStaffMutation,
   useNonPopulatedSingleAdminStaff,
   useSingleAdminStaff,
 } from "src/app/api/admin-users/useAdmins";
@@ -133,6 +134,7 @@ function AddStaffContactForm() {
 
   const recruitStaff = useAdminRecruitAfricanshopStaff();
   const updateStaffInfo = useAdminStaffUpdateMutation()
+  const deleteAdmin = useDeleteAdminStaffMutation()
 
   const { control,
      watch, 
@@ -264,7 +266,11 @@ function AddStaffContactForm() {
     updateStaffInfo.mutate(getValues())
   }, [getValues()]);
 
-  function handleRemoveAdmin() {
+  function handleRemoveAdmin(adminUserId) {
+    if (window.confirm("Are you certain anout deleting this staff?")) {
+      deleteAdmin.mutate(adminUserId)
+    }
+   
   }
 
   const background = watch("background");
@@ -769,7 +775,9 @@ function AddStaffContactForm() {
         className="flex items-center justify-between mt-40 py-14 pr-16 pl-4 sm:pr-48 sm:pl-36 border-t"
         sx={{ backgroundColor: "background.default" }}
       >
-        <Button className="bg-red-400 hover:bg-red-800" >
+        <Button className="bg-red-400 hover:bg-red-800" 
+        onClick={() => handleRemoveAdmin(admin?.data?._id)}
+        >
           Delete This Account
         </Button>
 

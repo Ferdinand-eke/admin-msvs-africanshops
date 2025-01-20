@@ -135,6 +135,7 @@ export function useAdminUnBlockUserMutation() {
 /**** 8) Admin update  User data" */
 export function useAdminUpdateUserDetailMutation() {
   const queryClient = useQueryClient();
+  
 
   return useMutation(updateApiUserById, {
     onSuccess: (data) => {

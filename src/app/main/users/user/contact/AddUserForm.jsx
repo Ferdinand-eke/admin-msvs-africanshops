@@ -238,6 +238,7 @@ function AddStaffContactForm() {
   }, [getValues()]);
 
   function handleRemoveAdmin() {
+    
   }
 
   const background = watch("background");

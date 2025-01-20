@@ -735,7 +735,9 @@ export const adminUnBlockDisciplineUser = (id) =>
 
 //Users/Customers and discipinary Routes ends here
 
-// Admin/ControlPanel AdminUsers Routes adminusers starts
+/***
+ * Admin/ControlPanel AdminUsers Routes adminusers starts
+ */
 export const getApiAdminUsers = () => authApi().get("/admin"); //new Dashboard done
 export const getApiAdminUserById = (id) => authApi().get(`/admin/${id}`);
 export const getApiAdminUserByIdNotPopulated = (id) => authApi().get(`/admin/${id}/not-populated`);
@@ -773,9 +775,15 @@ export const createRecruitAdminUserApi = (adminFormData) =>
 
 export const newAdminUserInviteAcceptanceEndpoint = (adminFormData) =>
   authApi().post("/admin/accept-invite", adminFormData);
-//
 
-// Admin/ControlPanel Admin Get Shops Routes  starts
+  export const adminDeleteAdminStaff = (id) =>
+  authApi().delete(`/admin/${id}/delete-admin`);
+
+/******
+ * #######################################################################
+ * Admin/ControlPanel Admin Get Shops Routes  starts and MERCHANT__STATS |
+ * ########################################################################
+ */
 export const getApiAdminMerchants = () => authApi().get("/shops"); //new Dashboard done
 
 /*****
