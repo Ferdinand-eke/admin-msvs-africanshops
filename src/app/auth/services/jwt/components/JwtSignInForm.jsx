@@ -16,13 +16,13 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 /**
  * Form Validation Schema
  */
-const schema = z.object({
-	email: z.string().email('You must enter a valid email').nonempty('You must enter an email'),
-	password: z
-		.string()
-		.min(4, 'Password is too short - must be at least 4 chars.')
-		.nonempty('Please enter your password.')
-});
+// const schema = z.object({
+// 	email: z.string().email('You must enter a valid email').nonempty('You must enter an email'),
+// 	password: z
+// 		.string()
+// 		.min(4, 'Password is too short - must be at least 4 chars.')
+// 		.nonempty('Please enter your password.')
+// });
 const defaultValues = {
 	email: '',
 	password: '',
@@ -111,7 +111,7 @@ function JwtSignInForm() {
 				)}
 			/>
 
-			{/* <div className="flex flex-col items-center justify-center sm:flex-row sm:justify-between">
+			<div className="flex flex-col items-center justify-center sm:flex-row sm:justify-between">
 				<Controller
 					name="remember"
 					control={control}
@@ -134,9 +134,9 @@ function JwtSignInForm() {
 					className="text-md font-medium"
 					to="/pages/auth/forgot-password"
 				>
-					Forgot password?
+					Request password reset from admin?
 				</Link>
-			</div> */}
+			</div>
 
 			<Button
 				variant="contained"
