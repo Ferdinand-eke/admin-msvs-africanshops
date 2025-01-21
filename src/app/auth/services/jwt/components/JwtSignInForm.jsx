@@ -36,10 +36,8 @@ function JwtSignInForm() {
 	const { control, formState, handleSubmit, setValue, setError, getValues } = useForm({
 		mode: 'onChange',
 		defaultValues,
-		// resolver: zodResolver(schema)
 	});
 	const [showPassword, setShowPassword] = useState(false) 
-	// const {showPassword} = getValues()
 	const { isValid, dirtyFields, errors } = formState;
 
 
