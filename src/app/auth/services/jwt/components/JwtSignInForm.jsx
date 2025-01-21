@@ -1,6 +1,6 @@
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import _ from '@lodash';
 import TextField from '@mui/material/TextField';
@@ -11,6 +11,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import useJwtAuth from '../useJwtAuth';
 import { useAdminLogin } from 'src/app/api/auth/admin-auth';
+import { IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 /**
  * Form Validation Schema
  */
@@ -24,17 +26,20 @@ const schema = z.object({
 const defaultValues = {
 	email: '',
 	password: '',
-	remember: true
+	remember: true,
+	
 };
 
 function JwtSignInForm() {
 
 	const { signIn, isLoginLoading } = useJwtAuth();
-	const { control, formState, handleSubmit, setValue, setError } = useForm({
+	const { control, formState, handleSubmit, setValue, setError, getValues } = useForm({
 		mode: 'onChange',
 		defaultValues,
 		// resolver: zodResolver(schema)
 	});
+	const [showPassword, setShowPassword] = useState(false) 
+	// const {showPassword} = getValues()
 	const { isValid, dirtyFields, errors } = formState;
 
 
@@ -47,6 +52,11 @@ function JwtSignInForm() {
 			console.log('FormJSXError', error)
 			toast.error(error?.message)
 		});
+	}
+
+
+	const toggleShowPassword = () =>{
+		setShowPassword(!showPassword)
 	}
 	return (
 		<form
@@ -78,16 +88,27 @@ function JwtSignInForm() {
 				name="password"
 				control={control}
 				render={({ field }) => (
+
 					<TextField
 						{...field}
 						className="mb-24"
 						label="Password"
-						type="password"
+						type={showPassword ? "text" : "password"}
 						error={!!errors.password}
 						helperText={errors?.password?.message}
 						variant="outlined"
 						required
 						fullWidth
+						InputProps={{
+							endAdornment: <InputAdornment position="end">
+								<IconButton
+								onClick={() => toggleShowPassword()}
+								>
+
+									{showPassword ? <VisibilityOff/> : <Visibility/>}
+								</IconButton>
+								</InputAdornment>
+						}}
 					/>
 				)}
 			/>
