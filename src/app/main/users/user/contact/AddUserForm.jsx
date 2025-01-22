@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@mui/material/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
@@ -6,20 +8,15 @@ import _ from "@lodash";
 import { Controller, useForm } from "react-hook-form";
 import Box from "@mui/system/Box";
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
-import Avatar from "@mui/material/Avatar";
+// import Avatar from "@mui/material/Avatar";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
-import Checkbox from "@mui/material/Checkbox/Checkbox";
+// import IconButton from "@mui/material/IconButton";
+// import Autocomplete from "@mui/material/Autocomplete/Autocomplete";
+// import Checkbox from "@mui/material/Checkbox/Checkbox";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import history from "@history";
-import { showMessage } from "@fuse/core/FuseMessage/fuseMessageSlice";
 import { useAppDispatch } from "app/store/hooks";
-import ContactEmailSelector from "./email-selector/ContactEmailSelector";
-import PhoneNumberSelector from "./phone-number-selector/PhoneNumberSelector";
-
-import ContactModel from "../models/ContactModel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { useGetDepartments } from "src/app/api/departments/useDepartments";
@@ -35,8 +32,7 @@ import {
   useAdminUpdateUserDetailMutation,
   useSingleUser,
 } from "src/app/api/users/useUsers";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 
 function BirtdayIcon() {
   return <FuseSvgIcon size={20}>heroicons-solid:cake</FuseSvgIcon>;
