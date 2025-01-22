@@ -31,7 +31,10 @@ import {
 } from "src/app/api/apiRoutes";
 import { Typography } from "@mui/material";
 import useCountries from "src/app/api/countries/useCountries";
-import { useAdminUpdateUserDetailMutation, useSingleUser } from "src/app/api/users/useUsers";
+import {
+  useAdminUpdateUserDetailMutation,
+  useSingleUser,
+} from "src/app/api/users/useUsers";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -84,7 +87,6 @@ const defaultValues = {
   linkedin: "",
 };
 
-
 /**
  * The contact form.
  */
@@ -103,15 +105,9 @@ function AddStaffContactForm() {
     skip: !contactId,
   });
 
-  const updateUserInfo = useAdminUpdateUserDetailMutation()
+  const updateUserInfo = useAdminUpdateUserDetailMutation();
 
-  const { control,
-     watch, 
-     reset, 
-     handleSubmit, 
-     getValues, 
-     formState 
-    } = useForm(
+  const { control, watch, reset, handleSubmit, getValues, formState } = useForm(
     {
       defaultValues,
       mode: "all",
@@ -130,12 +126,11 @@ function AddStaffContactForm() {
   const [blgas, setBlgas] = useState([]);
   const [lgasOffices, setLgasOffices] = useState([]);
 
-
   useEffect(() => {
     if (getValues()?.department) {
       getDesignationData();
     }
-    
+
     if (getValues()?.countryorigin) {
       getStateDFromCountryId(getValues()?.countryorigin);
     }
@@ -228,18 +223,14 @@ function AddStaffContactForm() {
   // const onSubmit = useCallback(() => {
   //   recruitStaff.mutate(getValues());
 
-    
   // }, [getValues()]);
 
   const onUpdate = useCallback(() => {
-  
     // console.log("UPDATE__USERS", getValues())
-    updateUserInfo.mutate(getValues())
+    updateUserInfo.mutate(getValues());
   }, [getValues()]);
 
-  function handleRemoveAdmin() {
-    
-  }
+  function handleRemoveAdmin() {}
 
   const background = watch("background");
   const name = watch("name");
@@ -262,99 +253,7 @@ function AddStaffContactForm() {
       </Box>
 
       <div className="relative flex flex-col flex-auto  px-24 sm:px-48">
-        {/* <div className="w-full">
-          <div className="flex flex-auto items-end -mt-64">
-            <Controller
-              control={control}
-              name="avatar"
-              render={({ field: { onChange, value } }) => (
-                <Box
-                  sx={{
-                    borderWidth: 4,
-                    borderStyle: "solid",
-                    borderColor: "background.paper",
-                  }}
-                  className="relative flex items-center justify-center w-128 h-128 rounded-full overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
-                  <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <div>
-                      <label
-                        htmlFor="button-avatar"
-                        className="flex p-8 cursor-pointer"
-                      >
-                        <input
-                          accept="image/*"
-                          className="hidden"
-                          id="button-avatar"
-                          type="file"
-                          onChange={async (e) => {
-                            function readFileAsync() {
-                              return new Promise((resolve, reject) => {
-                                const file = e?.target?.files?.[0];
-
-                                if (!file) {
-                                  return;
-                                }
-
-                                const reader = new FileReader();
-                                reader.onload = () => {
-                                  if (typeof reader.result === "string") {
-                                    resolve(
-                                      `data:${file.type};base64,${btoa(reader.result)}`
-                                    );
-                                  } else {
-                                    reject(
-                                      new Error(
-                                        "File reading did not result in a string."
-                                      )
-                                    );
-                                  }
-                                };
-                                reader.onerror = reject;
-                                reader.readAsBinaryString(file);
-                              });
-                            }
-
-                            const newImage = await readFileAsync();
-                            onChange(newImage);
-                          }}
-                        />
-                        <FuseSvgIcon className="text-white">
-                          heroicons-outline:camera
-                        </FuseSvgIcon>
-                      </label>
-                    </div>
-                    <div>
-                      <IconButton
-                        onClick={() => {
-                          onChange("");
-                        }}
-                      >
-                        <FuseSvgIcon className="text-white">
-                          heroicons-solid:trash
-                        </FuseSvgIcon>
-                      </IconButton>
-                    </div>
-                  </div>
-                  <Avatar
-                    sx={{
-                      backgroundColor: "background.default",
-                      color: "text.secondary",
-                    }}
-                    className="object-cover w-full h-full text-64 font-bold"
-                    src={value}
-                    alt={name}
-                  >
-                    {name?.charAt(0)}
-                  </Avatar>
-                </Box>
-              )}
-            />
-          </div>
-        </div> */}
-
-<div className="sm:col-span-2 text-sm">
+        <div className="sm:col-span-2 text-sm">
           <Typography
             className="text-start mt-1 mb-[-20px]"
             style={{ fontSize: "12px", fontWeight: "800" }}
@@ -363,16 +262,15 @@ function AddStaffContactForm() {
           </Typography>
           <Controller
             control={control}
-            // name={`countryorigin`}
             name="countryorigin"
             className="mt-0.5"
             render={({ field }) => (
               <Select
-              sx={{
-                "& .MuiSelect-select": {
-                  minHeight: "0!important",
-                },
-              }}
+                sx={{
+                  "& .MuiSelect-select": {
+                    minHeight: "0!important",
+                  },
+                }}
                 className="mt-16"
                 {...field}
                 id="countryorigin"
@@ -388,7 +286,9 @@ function AddStaffContactForm() {
                 </MenuItem>
 
                 {countries?.data?.data?.map((cnty, index) => (
-                  <MenuItem key={index} value={cnty._id}>{cnty.name}</MenuItem>
+                  <MenuItem key={index} value={cnty._id}>
+                    {cnty.name}
+                  </MenuItem>
                 ))}
               </Select>
             )}
@@ -396,148 +296,80 @@ function AddStaffContactForm() {
         </div>
 
         <div className="sm:col-span-2 text-sm">
-            <Typography
-              className="text-start mt-10  mb-[-30px]"
-              style={{ fontSize: "12px", fontWeight: "800" }}
-            >
-              State Location
-            </Typography>
-            <Controller
-              control={control}
-              // name={`stateorigin`}
-              name="stateorigin"
-              render={({ field }) => (
-                <Select
-                  className="mt-32"
-                  {...field}
-                  id="stateorigin"
-                  label="State of posting"
-                  placeholder="State of posting"
-                  variant="outlined"
-                  fullWidth
-                  error={!!errors.stateorigin}
-                  helperText={errors?.stateorigin?.message}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-
-                  {bstates?.map((bsts, index) => (
-                    <MenuItem key={index} value={bsts._id}>{bsts.name}</MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </div>
-       
-
-          <div className="sm:col-span-2 text-sm">
-            <Typography
-              className="text-start mt-10  mb-[-30px]"
-              style={{ fontSize: "12px", fontWeight: "800" }}
-            >
-              L.G.A|Country Location
-            </Typography>
-            <Controller
-              control={control}
-              // name={`lgaorigin`}
-              name="lgaorigin"
-              render={({ field }) => (
-                <Select
-                  className="mt-32"
-                  {...field}
-                  id="lgaorigin"
-                  label="L.G.A of posting"
-                  placeholder="L.G.A of posting"
-                  variant="outlined"
-                  fullWidth
-                  error={!!errors.lgaorigin}
-                  helperText={errors?.lgaorigin?.message}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-
-                  {blgas?.map((blg, index) => (
-                    <MenuItem key={index} value={blg._id}>{blg.name}</MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </div>
-        {/* )} */}
-
-        
-        {/* <>
           <Typography
-           className="text-start mt-10  mb-[-30px]"
+            className="text-start mt-10  mb-[-30px]"
             style={{ fontSize: "12px", fontWeight: "800" }}
           >
-            Department
+            State Location
           </Typography>
           <Controller
             control={control}
-            name={`department`}
+            name="stateorigin"
             render={({ field }) => (
               <Select
                 className="mt-32"
                 {...field}
-                id="department"
-                label="Department"
-                placeholder="Department"
+                id="stateorigin"
+                label="State of posting"
+                placeholder="State of posting"
                 variant="outlined"
                 fullWidth
-                error={!!errors.department}
-                helperText={errors?.department?.message}
+                error={!!errors.stateorigin}
+                helperText={errors?.stateorigin?.message}
               >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
 
-                {departments?.data?.data?.map((dt) => (
-                  <MenuItem value={dt._id}>{dt.name}</MenuItem>
+                {bstates?.map((bsts, index) => (
+                  <MenuItem key={index} value={bsts._id}>
+                    {bsts.name}
+                  </MenuItem>
                 ))}
               </Select>
             )}
           />
-        </> */}
+        </div>
 
-        {/* {getValues()?.department && (
-          <>
-            <Typography
-             className="text-start mt-10  mb-[-30px]"
-              style={{ fontSize: "12px", fontWeight: "800" }}
-            >
-              Designation
-            </Typography>
-            <Controller
-              control={control}
-              name={`designation`}
-              render={({ field }) => (
-                <Select
-                  className="mt-32"
-                  {...field}
-                  id="designation"
-                  label="Designation"
-                  placeholder="Designation"
-                  variant="outlined"
-                  fullWidth
-                  error={!!errors.designation}
-                  helperText={errors?.designation?.message}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
+        <div className="sm:col-span-2 text-sm">
+          <Typography
+            className="text-start mt-10  mb-[-30px]"
+            style={{ fontSize: "12px", fontWeight: "800" }}
+          >
+            L.G.A|Country Location
+          </Typography>
+          <Controller
+            control={control}
+            name="lgaorigin"
+            render={({ field }) => (
+              <Select
+                className="mt-32"
+                {...field}
+                id="lgaorigin"
+                label="L.G.A of posting"
+                placeholder="L.G.A of posting"
+                variant="outlined"
+                fullWidth
+                error={!!errors.lgaorigin}
+                helperText={errors?.lgaorigin?.message}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+
+                {blgas?.map((blg, index) => (
+                  <MenuItem key={index} value={blg._id}>
+                    {blg.name}
                   </MenuItem>
+                ))}
+              </Select>
+            )}
+          />
+        </div>
 
-                  {designationsList?.map((desig) => (
-                    <MenuItem value={desig._id}>{desig.name}</MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </>
-        )} */}
+        
 
+        
         <Controller
           control={control}
           name="name"
@@ -568,7 +400,7 @@ function AddStaffContactForm() {
 
         <>
           <Typography
-           className="text-start mt-10  mb-[-30px]"
+            className="text-start mt-10  mb-[-30px]"
             style={{ fontSize: "12px", fontWeight: "800" }}
           >
             Gender
@@ -588,7 +420,6 @@ function AddStaffContactForm() {
                 error={!!errors.gender}
                 helperText={errors?.gender?.message}
                 value={getValues()?.gender}
-                // getValues()?.countryorigin
               >
                 <MenuItem value="">
                   <em>Select a gender</em>
@@ -626,7 +457,6 @@ function AddStaffContactForm() {
           )}
         />
 
-        
         <Controller
           control={control}
           name="birthday"
@@ -682,7 +512,7 @@ function AddStaffContactForm() {
           )}
         />
 
-<Controller
+        <Controller
           control={control}
           name="address"
           render={({ field }) => (
@@ -708,8 +538,6 @@ function AddStaffContactForm() {
             />
           )}
         />
-
-
       </div>
       <Box
         className="flex items-center mt-40 py-14 pr-16 pl-4 sm:pr-48 sm:pl-36 border-t"
@@ -740,7 +568,6 @@ function AddStaffContactForm() {
             disabled={
               _.isEmpty(dirtyFields) || !isValid || updateUserInfo?.isLoading
             }
-
             onClick={handleSubmit(onUpdate)}
           >
             update user
