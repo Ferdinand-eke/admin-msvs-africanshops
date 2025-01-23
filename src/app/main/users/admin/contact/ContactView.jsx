@@ -96,9 +96,6 @@ function ContactView() {
 
 
 
-  // function getCountryByIso(iso) {
-  //   return countries?.find((country) => country.iso === iso);
-  // }
 
   if (adminLoading) {
     return <FuseLoading className="min-h-screen" />;
@@ -133,7 +130,7 @@ function ContactView() {
           />
         )}
       </Box>
-      
+
       <div className="relative flex flex-col flex-auto items-center p-24 pt-0 sm:p-48 sm:pt-0">
         <div className="w-full max-w-3xl">
           <div className="flex flex-auto items-end -mt-64">
@@ -237,8 +234,6 @@ function ContactView() {
                         background:
                           "url('/assets/images/apps/contacts/flags.png') no-repeat 0 0",
                         backgroundSize: "24px 3876px",
-                        // backgroundPosition: getCountryByIso(item.country)
-                        // 	?.flagImagePos
                       }}
                     />
                     <div className="ml-10 font-mono">{admin?.data?.phone}</div>

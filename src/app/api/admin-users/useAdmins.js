@@ -1,11 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import {
-  createMarket,
-  getMarketById,
-  getMarkets,
-  updateMarketById,
-  //admins
   getApiAdminUsers,
   createApiAdminUser,
   updateApiAdminUserById,
@@ -126,10 +121,6 @@ export function useAdminStaffBlockMutation() {
 
   return useMutation(adminBlockDisciplineStaff, {
     onSuccess: (data) => {
-      // if (data?.data) {
-      //   toast.success('Adminstaff  blocked successfully!!');
-      //   queryClient.invalidateQueries('__admins');
-      // }
       if (data?.data?.success) {
         toast.success(`${data?.data?.message ? data?.data?.message : "Adminstaff  blocked successfully!!"}`,{
           position: "top-left"
@@ -155,10 +146,6 @@ export function useAdminStaffUnBlockMutation() {
 
   return useMutation(adminUnBlockDisciplineStaff, {
     onSuccess: (data) => {
-      // if (data?.data) {
-      //   toast.success('Adminstaff un-blocked successfully!!');
-      //   queryClient.invalidateQueries('__adminById');
-      // }
       if (data?.data?.success) {
         toast.success(`${data?.data?.message ? data?.data?.message : "Adminstaff un-blocked successfully!!"}`,{
           position: "top-left"
@@ -354,18 +341,18 @@ export function useNewAdminInvitationAcceptance() {
         navigate("/sign-in");
         return;
       } 
-      // else if (data?.data?.error) {
-      //   toast.error(
-      //     data?.data?.error?.response && error?.response?.data?.message
-      //       ? error?.response?.data?.message
-      //       : error?.message
-      //   );
-      //   return;
-      // } 
-      // else {
-      //   toast.info('something unexpected happened')
-      //   return;
-      // }
+      else if (data?.data?.error) {
+        toast.error(
+          data?.data?.error?.response && error?.response?.data?.message
+            ? error?.response?.data?.message
+            : error?.message
+        );
+        return;
+      } 
+      else {
+        toast.info('something unexpected happened')
+        return;
+      }
     },
     onError: (error) => {
       toast.error(

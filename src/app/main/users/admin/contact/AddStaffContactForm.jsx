@@ -294,98 +294,7 @@ function AddStaffContactForm() {
       </Box>
 
       <div className="relative flex flex-col flex-auto  px-24 sm:px-48">
-        {/* <div className="w-full">
-          <div className="flex flex-auto items-end -mt-64">
-            <Controller
-              control={control}
-              name="avatar"
-              render={({ field: { onChange, value } }) => (
-                <Box
-                  sx={{
-                    borderWidth: 4,
-                    borderStyle: "solid",
-                    borderColor: "background.paper",
-                  }}
-                  className="relative flex items-center justify-center w-128 h-128 rounded-full overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />
-                  <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <div>
-                      <label
-                        htmlFor="button-avatar"
-                        className="flex p-8 cursor-pointer"
-                      >
-                        <input
-                          accept="image/*"
-                          className="hidden"
-                          id="button-avatar"
-                          type="file"
-                          onChange={async (e) => {
-                            function readFileAsync() {
-                              return new Promise((resolve, reject) => {
-                                const file = e?.target?.files?.[0];
-
-                                if (!file) {
-                                  return;
-                                }
-
-                                const reader = new FileReader();
-                                reader.onload = () => {
-                                  if (typeof reader.result === "string") {
-                                    resolve(
-                                      `data:${file.type};base64,${btoa(reader.result)}`
-                                    );
-                                  } else {
-                                    reject(
-                                      new Error(
-                                        "File reading did not result in a string."
-                                      )
-                                    );
-                                  }
-                                };
-                                reader.onerror = reject;
-                                reader.readAsBinaryString(file);
-                              });
-                            }
-
-                            const newImage = await readFileAsync();
-                            onChange(newImage);
-                          }}
-                        />
-                        <FuseSvgIcon className="text-white">
-                          heroicons-outline:camera
-                        </FuseSvgIcon>
-                      </label>
-                    </div>
-                    <div>
-                      <IconButton
-                        onClick={() => {
-                          onChange("");
-                        }}
-                      >
-                        <FuseSvgIcon className="text-white">
-                          heroicons-solid:trash
-                        </FuseSvgIcon>
-                      </IconButton>
-                    </div>
-                  </div>
-                  <Avatar
-                    sx={{
-                      backgroundColor: "background.default",
-                      color: "text.secondary",
-                    }}
-                    className="object-cover w-full h-full text-64 font-bold"
-                    src={value}
-                    alt={name}
-                  >
-                    {name?.charAt(0)}
-                  </Avatar>
-                </Box>
-              )}
-            />
-          </div>
-        </div> */}
-
+        
 <div className="sm:col-span-2 text-sm">
           <Typography
             className="text-start mt-1 mb-[-20px]"
@@ -395,7 +304,6 @@ function AddStaffContactForm() {
           </Typography>
           <Controller
             control={control}
-            // name={`officeCountry`}
             name="officeCountry"
             className="mt-0.5"
             render={({ field }) => (
@@ -436,7 +344,6 @@ function AddStaffContactForm() {
             </Typography>
             <Controller
               control={control}
-              // name={`officeState`}
               name="officeState"
               render={({ field }) => (
                 <Select
@@ -472,7 +379,6 @@ function AddStaffContactForm() {
             </Typography>
             <Controller
               control={control}
-              // name={`officeLga`}
               name="officeLga"
               render={({ field }) => (
                 <Select
@@ -652,7 +558,6 @@ function AddStaffContactForm() {
                 error={!!errors.gender}
                 helperText={errors?.gender?.message}
                 value={getValues()?.gender}
-                // getValues()?.officeCountry
               >
                 <MenuItem value="">
                   <em>Select a gender</em>

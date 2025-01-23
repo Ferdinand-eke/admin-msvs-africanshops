@@ -222,7 +222,6 @@ function AddStaffContactForm() {
   // }, [getValues()]);
 
   const onUpdate = useCallback(() => {
-    // console.log("UPDATE__USERS", getValues())
     updateUserInfo.mutate(getValues());
   }, [getValues()]);
 

@@ -101,13 +101,10 @@ function OrderItemsTable() {
         name: item?.name,
 
         quantity: item?.quantity,
-        // status: item.isPaid,
         price: item?.Price,
         isCanceled: item.isCanceled,
         isRefundRequested: item.isRefundRequested,
 		isApprovedAndRefundedByAfricanshops: item.isApprovedAndRefundedByAfricanshops,
-        // isShipped: item.isShipped,
-        // isDelivered: item.isDelivered,
         createdAt: item?.createdAt.slice(0, 10),
       });
     });
@@ -159,7 +156,6 @@ if (! orderItems?.data) {
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"
 			elevation={0}
 		>
-			{/* <p>Getting all order items</p> */}
 			<DataTable
 				initialState={{
 					density: 'spacious',

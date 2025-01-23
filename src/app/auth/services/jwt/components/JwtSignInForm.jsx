@@ -150,7 +150,6 @@ function JwtSignInForm() {
 				size="large"
 			>
 				{isLoginLoading ? "processing..." : "Sign in"}
-				{/* Sign in */}
 			</Button>
 		</form>
 	);
