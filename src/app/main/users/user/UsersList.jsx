@@ -5,8 +5,7 @@ import Divider from '@mui/material/Divider';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { useAppSelector } from 'app/store/hooks';
 import ContactListItem from './ContactListItem';
-import { selectFilteredContactList, selectGroupedFilteredContacts, useGetContactsListQuery } from './ContactsApi';
-// import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
+import { selectFilteredContactList, selectGroupedFilteredContacts } from './ContactsApi';
 import useOurPlatformUsers from 'src/app/api/users/useUsers';
 
 /**
@@ -14,22 +13,12 @@ import useOurPlatformUsers from 'src/app/api/users/useUsers';
  */
 function UsersList() {
 
-	// const { data, isLoading } = useGetContactsListQuery();
 	const {data:usresData, isLoading:usersIsLoading} = useOurPlatformUsers()
-
-	// const filteredData = useAppSelector(selectFilteredContactList(data));
-
-	// const groupedFilteredContacts = useAppSelector(selectGroupedFilteredContacts(filteredData));
-
-
-	// console.log("users-on-HOMES", usresData?.data?.filteredUsers)
 	const filteredData = useAppSelector(selectFilteredContactList(usresData?.data?.filteredUsers));
 
 	const groupedFilteredContacts = useAppSelector(selectGroupedFilteredContacts(filteredData));
 
-	// if (isLoading) {
-	// 	return <FuseLoading />;
-	// }
+	
 	if (usersIsLoading) {
 		return <FuseLoading />;
 	}

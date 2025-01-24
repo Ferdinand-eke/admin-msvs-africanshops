@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { adminBlockDisciplineUser, adminSuspendDisciplineUser, adminUnBlockDisciplineUser, adminUnSuspendDisciplineUser, getApiPopuplatedUserById, getApiUserById, getApiUsers, updateApiUserById } from '../apiRoutes';
+import { adminBlockDisciplineUser, adminSuspendDisciplineUser, adminUnBlockDisciplineUser,
+   adminUnSuspendDisciplineUser, getApiPopuplatedUserById, getApiUserById, getApiUsers, 
+   updateApiUserById } from '../apiRoutes';
 import { toast } from 'react-toastify';
-// import { getApiUserById, getApiUsers } from '../../store-redux/api/apiRoutes';
 
 
 /***1) Admin get all users */
@@ -135,7 +136,7 @@ export function useAdminUnBlockUserMutation() {
 /**** 8) Admin update  User data" */
 export function useAdminUpdateUserDetailMutation() {
   const queryClient = useQueryClient();
-  
+
 
   return useMutation(updateApiUserById, {
     onSuccess: (data) => {
