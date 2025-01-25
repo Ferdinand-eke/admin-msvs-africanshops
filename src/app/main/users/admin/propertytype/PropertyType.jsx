@@ -10,17 +10,17 @@ import { Link, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+
 import PropertyTypeHeader from './PropertyTypeHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
 import InventoryTab from './tabs/InventoryTab';
 import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
 import ShippingTab from './tabs/ShippingTab';
-// import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
 import { useGetPropertyType } from 'src/app/aaqueryhooks/propertytypeHandlingQuery';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 /**
  * Form Validation Schema
  */
@@ -35,14 +35,6 @@ function PropertyType() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	// const {
-	// 	data: product,
-	// 	isLoading,
-	// 	isError
-	// } = useGetECommerceProductQuery(productId, {
-	// 	skip: !productId || productId === 'new'
-	// });
-
 	const {
 		data:propertyType,
 		isLoading:propertyTypeTypeLoading,
@@ -69,36 +61,22 @@ function PropertyType() {
 			reset(ProductModel({}));
 		}
 	}, [productId, reset]);
-	// useEffect(() => {
-	// 	if (product) {
-	// 		reset({ ...product });
-	// 	}
-	// }, [product, reset]);
 	useEffect(() => {
 		if (propertyType?.data) {
 			reset({ ...propertyType?.data });
 		}
 	}, [propertyType?.data, reset]);
 
-	/**
-	 * Tab Change
-	 */
+	/*** Tab Change*/
 	function handleTabChange(event, value) {
 		setTabValue(value);
 	}
 
-	// if (isLoading) {
-	// 	return <FuseLoading />;
-	// }
 	if (propertyTypeTypeLoading) {
 		return <FuseLoading />;
 	}
 
-	/**
-	 * Show Message if the requested products is not exists
-	 */
-
-
+	/*** Show Message if the requested products is not exists*/
 
 	if (propertyTypeError && productId !== 'new') {
 		return (
