@@ -12,27 +12,50 @@ import { format } from "date-fns/format";
 import _ from "@lodash";
 import { showMessage } from "@fuse/core/FuseMessage/fuseMessageSlice";
 import { useAppDispatch } from "app/store/hooks";
-// import { useGetContactsItemQuery, useGetContactsCountriesQuery, useGetContactsTagsQuery } from '../ContactsApi';
-// import { useGetAdminById } from 'src/app/aaqueryhooks/adminHandlingQuery';
-import { useSingleAdminStaff } from "src/app/api/admin-users/useAdmins";
+import {
+  useAdminStaffBlockMutation,
+  useAdminStaffSuspenMutation,
+  useAdminStaffUnBlockMutation,
+  useAdminStaffUnSuspednMutation,
+  useSingleAdminStaff,
+} from "src/app/api/admin-users/useAdmins";
+import {
+  Card,
+  CardContent,
+  IconButton,
+  ListItemSecondaryAction,
+  ListItemText,
+} from "@mui/material";
+import { motion } from "framer-motion";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 /**
  * The contact view.
  */
 function ContactView() {
-  // const { data: countries } = useGetContactsCountriesQuery();
-  // const { data: tags } = useGetContactsTagsQuery();
+  const container = {
+    show: {
+      transition: {
+        staggerChildren: 0.04,
+      },
+    },
+  };
+  const item = {
+    hidden: { opacity: 0, y: 40 },
+    show: { opacity: 1, y: 0 },
+  };
 
+  const handleSuspension = useAdminStaffSuspenMutation();
+  const handleLiftSuspension = useAdminStaffUnSuspednMutation()
+
+  const handleBlockAdmin = useAdminStaffBlockMutation();
+  const handleUnBlockAdmin = useAdminStaffUnBlockMutation()
+  
   const routeParams = useParams();
   const { id: contactId } = routeParams;
-  // const {
-  // 	data: contact,
-  // 	isLoading,
-  // 	isError
-  // } = useGetContactsItemQuery(contactId, {
-  // 	skip: !contactId
-  // });
-  //useGetAdminById
 
   const {
     data: admin,
@@ -42,29 +65,44 @@ function ContactView() {
     skip: !contactId,
   });
 
-  console.log("SINGLE ADMIN:", admin?.data);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  function getCountryByIso(iso) {
-    return countries?.find((country) => country.iso === iso);
-  }
+  /***Handle Admin-Staff Suspend||Un-suspend */
+  const suspendAdmin = (adminId) => {
+    if (window.confirm("Suspending a Staff?")) {
+      handleSuspension.mutate(adminId);
+    }
+  };
+  const removeAdminSuspension = (adminId) => {
+    if (window.confirm("Removing suspension on Staff?")) {
+      handleLiftSuspension.mutate(adminId);
+    }
+  };
 
-  // if (isLoading) {
-  // 	return <FuseLoading className="min-h-screen" />;
+    /***Handle Admin-Staff Block||Un-Block */
+
+    const blockAdmin = (adminId) => {
+      if (window.confirm("Blocking a Staff?")) {
+        handleBlockAdmin.mutate(adminId);
+      }
+    };
+    const unblockAdmin = (adminId) => {
+      if (window.confirm("Removing block on Staff?")) {
+        handleUnBlockAdmin.mutate(adminId);
+      }
+    };
+
+
+
+  // function getCountryByIso(iso) {
+  //   return countries?.find((country) => country.iso === iso);
   // }
+
   if (adminLoading) {
     return <FuseLoading className="min-h-screen" />;
   }
-  // adminIsError
-  // 	if (isError) {
-  // 		setTimeout(() => {
-  // 			navigate('/users/admin');
-  // 			dispatch(showMessage({ message: 'NOT FOUND' }));
-  // 		}, 0);
-  // 		return null;
-  // 	}
 
   if (adminIsError) {
     setTimeout(() => {
@@ -74,12 +112,10 @@ function ContactView() {
     return null;
   }
 
-  // if (!contact) {
-  // 	return null;
-  // }
   if (!admin?.data) {
     return null;
   }
+
 
   return (
     <>
@@ -120,10 +156,6 @@ function ContactView() {
                 color="secondary"
                 component={NavLinkAdapter}
                 to="edit"
-
-                // component={NavLinkAdapter}
-                // to={`/users/admin/${admin?.id}`}
-                // to={`/users/admin/operate/${admin?.id}`}
               >
                 <FuseSvgIcon size={20}>
                   heroicons-outline:pencil-alt
@@ -138,18 +170,8 @@ function ContactView() {
           </Typography>
 
           <div className="flex flex-wrap items-center mt-8">
-            {/* {contact?.tags?.map((id) => (
-							<Chip
-								key={id}
-								label={_.find(tags, { id })?.title}
-								className="mr-12 mb-12"
-								size="small"
-							/>
-						))} */}
             <Chip
-              // key={id}
-              // label={_.find(tags, { id })?.title}
-              label={admin?.data?.role}
+              label={admin?.data?.designation?.name}
               className="mr-12 mb-12"
               size="small"
             />
@@ -157,32 +179,28 @@ function ContactView() {
 
           <Divider className="mt-16 mb-24" />
 
-          <div className="flex flex-col space-y-32">
-            {/* {contact.title && (
-							<div className="flex items-center">
-								<FuseSvgIcon>heroicons-outline:briefcase</FuseSvgIcon>
-								<div className="ml-24 leading-6">{contact.title}</div>
-							</div>
-						)} */}
+          <div className="flex flex-col space-y-8">
+            {admin?.data && (
+              <div className="flex items-center">
+                <FuseSvgIcon>heroicons-outline:office-building</FuseSvgIcon>
+                <div className="ml-24 leading-6">AFRICANSHOPS</div>
+              </div>
+            )}
 
-            {/* {contact.company && (
-							<div className="flex items-center">
-								<FuseSvgIcon>heroicons-outline:office-building</FuseSvgIcon>
-								<div className="ml-24 leading-6">{contact.company}</div>
-							</div>
-						)} */}
+            {admin?.data?.department?.name && (
+              <div className="flex items-center">
+                <FuseSvgIcon>heroicons-outline:briefcase</FuseSvgIcon>
+                <div className="ml-24 leading-6">
+                  {admin?.data?.department?.name}
+                </div>
+              </div>
+            )}
 
             {admin?.data?.email && (
               <div className="flex">
                 <FuseSvgIcon>heroicons-outline:mail</FuseSvgIcon>
                 <div className="min-w-0 ml-24 space-y-4">
-                  {/* {contact.emails.map(
-		(item) =>
-			item.email !== '' && ( */}
-                  <div
-                    className="flex items-center leading-6"
-                    // key={item.email}
-                  >
+                  <div className="flex items-center leading-6">
                     <a
                       className="hover:underline text-primary-500"
                       href={`mailto: ${admin?.data?.email}`}
@@ -191,33 +209,27 @@ function ContactView() {
                     >
                       {admin?.data?.email}
                     </a>
-                    {/* {item.label && (
-						<Typography
-							className="text-md truncate"
-							color="text.secondary"
-						>
-							<span className="mx-8">&bull;</span>
-							<span className="font-medium">{item.label}</span>
-						</Typography>
-					)} */}
+                    {admin?.data?.email && (
+                      <Typography
+                        className="text-md truncate"
+                        color="text.secondary"
+                      >
+                        <span className="mx-8">&bull;</span>
+                        <span className="font-medium">
+                          {admin?.data?.email}
+                        </span>
+                      </Typography>
+                    )}
                   </div>
-                  {/* )
-	)} */}
                 </div>
               </div>
             )}
 
-            {admin?.data?.phone_number && (
+            {admin?.data?.phone && (
               <div className="flex">
                 <FuseSvgIcon>heroicons-outline:phone</FuseSvgIcon>
                 <div className="min-w-0 ml-24 space-y-4">
-                  {/* {contact.phoneNumbers.map(
-			(item, index) =>
-				item.phoneNumber !== '' && ( */}
-                  <div
-                    className="flex items-center leading-6"
-                    // key={index}
-                  >
+                  <div className="flex items-center leading-6">
                     <Box
                       className="hidden sm:flex w-24 h-16 overflow-hidden"
                       sx={{
@@ -228,17 +240,8 @@ function ContactView() {
                         // 	?.flagImagePos
                       }}
                     />
-
-                    {/* <div className="sm:ml-12 font-mono">
-							{getCountryByIso(item.country)?.code}
-						</div> */}
-
-                    <div className="ml-10 font-mono">
-                      {admin?.data?.phone_number}
-                    </div>
+                    <div className="ml-10 font-mono">{admin?.data?.phone}</div>
                   </div>
-                  {/* )
-		)} */}
                 </div>
               </div>
             )}
@@ -250,23 +253,302 @@ function ContactView() {
               </div>
             )}
 
-            {/* {contact.birthday && (
-							<div className="flex items-center">
-								<FuseSvgIcon>heroicons-outline:cake</FuseSvgIcon>
-								<div className="ml-24 leading-6">{format(new Date(contact.birthday), 'MMMM d, y')}</div>
-							</div>
-						)} */}
+            {admin?.data?.birthday && (
+              <div className="flex items-center">
+                <FuseSvgIcon>heroicons-outline:cake</FuseSvgIcon>
+                <div className="ml-24 leading-6">
+                  {format(new Date(admin?.data?.birthday), "MMMM d, y")}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
 
-            {/* {contact.notes && (
-							<div className="flex">
-								<FuseSvgIcon>heroicons-outline:menu-alt-2</FuseSvgIcon>
-								<div
-									className="max-w-none ml-24 prose dark:prose-invert"
-									// eslint-disable-next-line react/no-danger
-									dangerouslySetInnerHTML={{ __html: contact.notes }}
-								/>
-							</div>
-						)} */}
+        <div className="mt-10 flex flex-row gap-8">
+          <div className="items-center justify-start">
+            <Card
+              component={motion.div}
+              variants={item}
+              className="w-full mb-32 rounded-16 shadow"
+            >
+              <div className="px-8 gap-8 pt-24 flex justify-between items-center">
+                <Typography className="flex flex-1 text-start text-lg font-semibold leading-tight">
+                  Admin Compliance
+                </Typography>
+                <div className="-mx-8">
+                  <Button color="inherit" size="small">
+                    See status
+                  </Button>
+                </div>
+              </div>
+              <CardContent className="px-16">
+                <List className="p-0">
+                  <ListItem className="px-0 space-x-8 justify-between">
+                    <ListItemText
+                      primary={
+                        <>
+                          {admin?.data?.isSuspended && (
+                            <Typography
+                              className="font-medium "
+                              color="red"
+                              paragraph={false}
+                            >
+                              Suspended
+                            </Typography>
+                          )}
+                          {!admin?.data?.isSuspended && (
+                            <Typography
+                              className="font-medium "
+                              color="green"
+                              paragraph={false}
+                            >
+                              Not Suspended
+                            </Typography>
+                          )}
+                        </>
+                      }
+                    />
+
+                    <>
+                      {!admin?.data?.isSuspended && (
+                        <IconButton size="small">
+                          <FuseSvgIcon>
+                            heroicons-outline:check-circle
+                          </FuseSvgIcon>
+                        </IconButton>
+                      )}
+                      {admin?.data?.isSuspended && (
+                        <>
+
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636"
+                            />
+                          </svg>
+                        </>
+                      )}
+                    </>
+                  </ListItem>
+
+                  <ListItem className="px-0 space-x-8 justify-between">
+                    <ListItemText
+                      primary={
+                        <>
+                          {admin?.data?.isBlocked && (
+                            <Typography
+                              className="font-medium "
+                              color="red"
+                              paragraph={false}
+                            >
+                              Blocked
+                            </Typography>
+                          )}
+                          {!admin?.data?.isBlocked && (
+                            <Typography
+                              className="font-medium "
+                              color="green"
+                              paragraph={false}
+                            >
+                              Not Blocked
+                            </Typography>
+                          )}
+                        </>
+                      }
+                    />
+
+                    <>
+                      {!admin?.data?.isBlocked && (
+                        <IconButton size="small">
+                          <FuseSvgIcon>
+                            heroicons-outline:check-circle
+                          </FuseSvgIcon>
+                        </IconButton>
+                      )}
+                      {admin?.data?.isBlocked && (
+                      <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="size-24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636"
+                      />
+                    </svg>
+                      )}
+                    </>
+                  </ListItem>
+                </List>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="items-start">
+            <Card
+              component={motion.div}
+              variants={item}
+              className="w-full mb-32 rounded-16 shadow"
+            >
+              <div className="px-24 gap-8 pt-24 flex items-center">
+                <Typography className="flex flex-1 text-lg font-semibold leading-tight">
+                  Admin Disciplinary
+                </Typography>
+                <div className="-mx-8">
+                  <Button color="inherit" size="small">
+                    Act
+                  </Button>
+                </div>
+              </div>
+
+              <CardContent className="px-16">
+                <List className="p-0">
+                  <>
+                    {!admin?.data?.isSuspended && (
+                      <ListItem className="px-0 space-x-8 justify-between">
+                        <ListItemText
+                          primary={
+                            <Typography
+                              className="font-medium "
+                              color="secondary.main"
+                              paragraph={false}
+                            >
+                              Suspend Admin
+                            </Typography>
+                          }
+                        />
+
+                        <div className="flex flex-wrap items-center mt-8">
+                          <Chip
+                            label="Suspend"
+                            className="mr-12 mb-12 cursor-pointer bg-red-500 hover:bg-red-800 w-full"
+                            size="small"
+                            onClick={() => suspendAdmin(admin?.data?._id)}
+                          />
+                        </div>
+                      </ListItem>
+                    )}
+
+                    <>
+                      {!admin?.data?.isBlocked && (
+                        <>
+                          {admin?.data?.isSuspended && (
+                            <ListItem className="px-0 space-x-8 justify-between">
+                              <ListItemText
+                                primary={
+                                  <Typography
+                                    className="font-medium "
+                                    color="secondary.main"
+                                    paragraph={false}
+                                  >
+                                    Remove Suspension
+                                  </Typography>
+                                }
+                              />
+
+                              <div className="flex flex-wrap items-center mt-8">
+                                <Chip
+                                  label="Lift Suspension"
+                                  className="mr-12 mb-12 cursor-pointer bg-orange-500 hover:bg-orange-800 w-full"
+                                  size="small"
+                                  onClick={() => removeAdminSuspension(admin?.data?._id)}
+                                  
+                                />
+                              </div>
+                            </ListItem>
+                          )}
+                        </>
+                      )}
+
+                      {admin?.data?.isBlocked && (
+                        <>
+                          <div className="flex flex-wrap items-center mt-8">
+                            <Chip
+                              label="Unblock Admin Before lifting Suspension"
+                              className="mr-12 mb-12 bg-orange-500 hover:bg-orange-800 w-full"
+                              size="small"
+                            />
+                          </div>
+                        </>
+                      )}
+                    </>
+                  </>
+                </List>
+
+                {admin?.data?.isSuspended && (
+                  <List className="p-0">
+                    <>
+                      {!admin?.data?.isBlocked && (
+                        <ListItem className="px-0 space-x-8 justify-between">
+                          <ListItemText
+                            primary={
+                              <Typography
+                                className="font-medium "
+                                color="secondary.main"
+                                paragraph={false}
+                              >
+                                Block Admin
+                              </Typography>
+                            }
+                          />
+
+                          <div className="flex flex-wrap items-center mt-8">
+                            <Chip
+                              label="Block"
+                              className="mr-12 mb-12 cursor-pointer bg-red-500 hover:bg-red-800 w-full"
+                              size="small"
+                              onClick={() => blockAdmin(admin?.data?._id)}
+                            />
+                          </div>
+                        </ListItem>
+                      )}
+
+                      <>
+                        {admin?.data?.isBlocked && (
+                          <>
+                            {admin?.data?.isSuspended && (
+                              <ListItem className="px-0 space-x-8 justify-between">
+                                <ListItemText
+                                  primary={
+                                    <Typography
+                                      className="font-medium "
+                                      color="secondary.main"
+                                      paragraph={false}
+                                    >
+                                      Un-block Admin
+                                    </Typography>
+                                  }
+                                />
+
+                                <div className="flex flex-wrap items-center mt-8">
+                                  <Chip
+                                    label="Un-Block"
+                                    className="mr-12 mb-12 cursor-pointer bg-orange-500 hover:bg-orange-800 w-full"
+                                    size="small"
+                                    onClick={() => unblockAdmin(admin?.data?._id)}
+                                  />
+                                </div>
+                              </ListItem>
+                            )}
+                          </>
+                        )}
+                      </>
+                    </>
+                  </List>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

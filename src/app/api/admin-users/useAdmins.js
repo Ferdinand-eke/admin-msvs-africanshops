@@ -18,6 +18,7 @@ import {
   adminUnMakeLeader,
   createRecruitAdminUserApi,
   newAdminUserInviteAcceptanceEndpoint,
+  getApiAdminUserByIdNotPopulated,
 } from '../apiRoutes';
 import { useNavigate } from 'react-router';
 
@@ -38,6 +39,24 @@ export function useSingleAdminStaff(staffId) {
     }
   );
 }
+
+
+/****2.1) Admin get single admin data (not populated)" */
+export function useNonPopulatedSingleAdminStaff(staffId) {
+
+  if (!staffId || staffId === "new") {
+    return "";
+  }
+  return useQuery(
+    ['__adminByIdNonPopulated', staffId],
+    () => getApiAdminUserByIdNotPopulated(staffId),
+  
+    {
+      enabled: Boolean(staffId),
+    }
+  );
+}
+
 
 /**** 3) Admin create/invite new  Admin-Staff" */
 export function useAddAdminStaffMutation() {
@@ -78,8 +97,18 @@ export function useAdminStaffUpdateMutation() {
 
   return useMutation(updateApiAdminUserById, {
     onSuccess: (data) => {
-      toast.success('Admin staff  updated successfully!!');
-      queryClient.invalidateQueries('__admins');
+
+      // toast.success('Admin staff  updated successfully!!');
+      // queryClient.invalidateQueries('__admins');
+
+      if (data?.data?.success) {
+        toast.success(`${data?.data?.message ? data?.data?.message : "Admin staff  updated successfully!!"}`,{
+          position: "top-left"
+        });
+        queryClient.invalidateQueries('__adminById');
+        queryClient.refetchQueries('__adminById', { force: true });
+      }
+
     },
     onError: (err) => {
       toast.error(
@@ -97,9 +126,16 @@ export function useAdminStaffBlockMutation() {
 
   return useMutation(adminBlockDisciplineStaff, {
     onSuccess: (data) => {
-      if (data?.data) {
-        toast.success('Adminstaff  blocked successfully!!');
-        queryClient.invalidateQueries('__admins');
+      // if (data?.data) {
+      //   toast.success('Adminstaff  blocked successfully!!');
+      //   queryClient.invalidateQueries('__admins');
+      // }
+      if (data?.data?.success) {
+        toast.success(`${data?.data?.message ? data?.data?.message : "Adminstaff  blocked successfully!!"}`,{
+          position: "top-left"
+        });
+        queryClient.invalidateQueries('__adminById');
+        queryClient.refetchQueries('__adminById', { force: true });
       }
     },
     onError: (err) => {
@@ -119,9 +155,16 @@ export function useAdminStaffUnBlockMutation() {
 
   return useMutation(adminUnBlockDisciplineStaff, {
     onSuccess: (data) => {
-      if (data?.data) {
-        toast.success('Adminstaff un-blocked successfully!!');
-        queryClient.invalidateQueries('__admins');
+      // if (data?.data) {
+      //   toast.success('Adminstaff un-blocked successfully!!');
+      //   queryClient.invalidateQueries('__adminById');
+      // }
+      if (data?.data?.success) {
+        toast.success(`${data?.data?.message ? data?.data?.message : "Adminstaff un-blocked successfully!!"}`,{
+          position: "top-left"
+        });
+        queryClient.invalidateQueries('__adminById');
+        queryClient.refetchQueries('__adminById', { force: true });
       }
     },
     onError: (err) => {
@@ -140,9 +183,12 @@ export function useAdminStaffSuspenMutation() {
 
   return useMutation(adminSuspendDisciplineStaff, {
     onSuccess: (data) => {
-      if (data?.data) {
-        toast.success('Adminstaff suspended successfully!!');
-        queryClient.invalidateQueries('__admins');
+      if (data?.data?.success) {
+        toast.success(`${data?.data?.message ? data?.data?.message : "Adminstaff suspended successfully!!"}`,{
+          position: "top-left"
+        });
+        queryClient.invalidateQueries('__adminById');
+        queryClient.refetchQueries('__adminById', { force: true });
       }
     },
     onError: (err) => {
@@ -155,14 +201,21 @@ export function useAdminStaffSuspenMutation() {
   });
 }
 
+
 /**** 8) Admin Disciplinary: Un-Suspend existing AdminStaff  */
 export function useAdminStaffUnSuspednMutation() {
   const queryClient = useQueryClient();
 
   return useMutation(adminUnSuspendDisciplineStaff, {
     onSuccess: (data) => {
-      toast.success('Adminstaff un-suspended successfully!!');
-      queryClient.invalidateQueries('__admins');
+     if(data?.data?.success){
+      toast.success(`${data?.data?.message ? data?.data?.message : "Suspension lifted successfully!!"}`,{
+        position: "top-left"
+      });
+      queryClient.invalidateQueries('__adminById');
+      queryClient.refetchQueries('__adminById', { force: true });
+
+     }
     },
     onError: (err) => {
       toast.error(
@@ -180,8 +233,10 @@ export function useAdminStaffMakeLeaderMutation() {
 
   return useMutation(adminMakeLeader, {
     onSuccess: (data) => {
-      toast.success('Adminstaff made leader successfully!!');
-      queryClient.invalidateQueries('__admins');
+      toast.success('Adminstaff made leader successfully!!',{
+        position: "top-left"
+      });
+      queryClient.invalidateQueries('__adminById');
     },
     onError: (err) => {
       toast.error(
@@ -200,7 +255,7 @@ export function useAdminStaffUnMakeLeaderMutation() {
   return useMutation(adminUnMakeLeader, {
     onSuccess: (data) => {
       toast.success('Adminstaff leader removed successfully!!');
-      queryClient.invalidateQueries('__admins');
+      queryClient.invalidateQueries('__adminById');
     },
     onError: (err) => {
       toast.error(
@@ -228,8 +283,6 @@ export function useAdminRecruitAfricanshopStaff() {
   return useMutation(createRecruitAdminUserApi, {
 
     onSuccess: (data) => {
-      console.log("ADMIN-INVITATION-PAYLOAD", data);
-      // return
       if (data?.data?.success ) {
         toast.success("Admin Invite Sent, Acceptance Pending");
         navigate("/users/admin");
@@ -261,13 +314,11 @@ export function useAdminRecruitAfricanshopStaff() {
 
 
 
-/***Admin Accept Invites */
+/*** 2) Admin Accept Invites */
 export function useNewAdminInvitationAcceptance() {
   const navigate = useNavigate();
   return useMutation(newAdminUserInviteAcceptanceEndpoint, {
     onSuccess: (data) => {
-      console.log("ADMIN-ACCEPT-INVITATION-PAYLOAD", data);
-      //    return && data?.data?.adminuser?._id
       if (data?.data?.success ) {
         toast.success(`${data?.data?.message ? data?.data?.message : "Invitation Accepted, Welcome Onboard, Please Log in."}`);
         navigate("/sign-in");

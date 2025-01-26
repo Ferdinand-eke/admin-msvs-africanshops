@@ -734,6 +734,7 @@ export const adminUnSuspendDisciplineUser = (id) =>
 // Admin/ControlPanel AdminUsers Routes adminusers starts
 export const getApiAdminUsers = () => authApi().get("/admin"); //new Dashboard done
 export const getApiAdminUserById = (id) => authApi().get(`/admin/${id}`);
+export const getApiAdminUserByIdNotPopulated = (id) => authApi().get(`/admin/${id}/not-populated`);
 
 ///blockuser/
 export const adminBlockDisciplineStaff = (id) =>
@@ -744,6 +745,7 @@ export const adminUnBlockDisciplineStaff = (id) =>
 ///suspend/unsuspend admin control panel user/
 export const adminSuspendDisciplineStaff = (id) =>
   authApi().put(`/admin/suspenduser/${id}`);
+
 
 export const adminUnSuspendDisciplineStaff = (id) =>
   authApi().put(`/admin/unsuspenduser/${id}`);

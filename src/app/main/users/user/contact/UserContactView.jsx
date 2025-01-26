@@ -43,7 +43,7 @@ function UserContactView() {
 
 	if (isError) {
 		setTimeout(() => {
-			navigate('/users/user');
+			navigate('/users/list');
 			dispatch(showMessage({ message: 'NOT FOUND' }));
 		}, 0);
 		return null;

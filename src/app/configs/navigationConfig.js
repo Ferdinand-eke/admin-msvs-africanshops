@@ -56,7 +56,7 @@ const navigationConfig = [
 				title: 'Uers',
 				type: 'item',
 				icon: 'heroicons-outline:user-group',
-				url: '/users/user'
+				url: '/users/list'
 			},
 			// {
 			// 	id: 'users.shopstaff',

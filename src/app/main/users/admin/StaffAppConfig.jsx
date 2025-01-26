@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 import ContactView from './contact/ContactView';
 import ContactForm from './contact/ContactForm';
-import AddContactForm from './contact/AddContactForm';
+import AddStaffContactForm from './contact/AddStaffContactForm';
 // import { authRoles } from 'src/app/auth';
 import authRoles from '../../../auth/authRoles';
 
@@ -26,7 +26,7 @@ const StaffAppConfig = {
 			children: [
 				{
 					path: ':id/create',
-					element: <AddContactForm />
+					element: <AddStaffContactForm />
 				},
 
 				{
@@ -36,7 +36,7 @@ const StaffAppConfig = {
 				{
 					path: ':id/edit',
 					// element: <ContactForm />
-					element: <AddContactForm />
+					element: <AddStaffContactForm />
 		
 				},
 

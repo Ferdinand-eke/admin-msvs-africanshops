@@ -6,9 +6,9 @@ import authRoles from '../../../auth/authRoles';
 import AddUserForm from './contact/AddUserForm';
 import ActivateUserForm from './contact/ActivateUserForm';
 
-const ContactsApp = lazy(() => import('./ContactsApp'));
+const ContactsOfUsersApp = lazy(() => import('./ContactsOfUsersApp'));
 /**
- * The ContactsApp configuration.
+ * The ContactsOfUsersApp configuration.
  */
 const UsersAppConfig = {
 	settings: {
@@ -21,8 +21,8 @@ const UsersAppConfig = {
 	routes: [
 
 		{
-			path: 'users/user',
-			element: <ContactsApp />,
+			path: 'users/list',
+			element: <ContactsOfUsersApp />,
 			children: [
 				{
 					path: ':id/create',

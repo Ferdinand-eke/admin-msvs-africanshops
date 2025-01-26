@@ -66,7 +66,7 @@ function OrderItemsCancellationStatus(props) {
         <div
           className={clsx(
             "inline text-12 font-semibold py-4 px-12 rounded-full truncate",
-            "bg-green text-white"
+            "bg-gray-400 text-white"
           )}
         >
           View Item

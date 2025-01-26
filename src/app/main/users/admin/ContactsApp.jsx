@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import StaffHeader from './StaffHeader';
 import UsersList from './StaffUsersList';
-import { useGetContactsListQuery, useGetContactsCountriesQuery, useGetContactsTagsQuery } from './ContactsApi';
 import StaffContactsSidebarContent from './StaffContactsSidebarContent';
 import useAdminUsers from 'src/app/api/admin-users/useAdmins';
 
@@ -26,9 +25,6 @@ function ContactsApp() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 
 	const {data:usersData, isLoading:usersIsLoading} = useAdminUsers()
-	// useGetContactsListQuery();
-	// useGetContactsCountriesQuery();
-	// useGetContactsTagsQuery();
 	useEffect(() => {
 		setRightSidebarOpen(Boolean(routeParams.id));
 	}, [routeParams]);

@@ -50,7 +50,7 @@ function StaffHeader(props) {
 						className="text-14 font-medium ml-2"
 						color="text.secondary"
 					>
-						{`${filteredData?.length} contacts`}
+						{`${filteredData?.length} employees`}
 					</Typography>
 				</motion.span>
 			</div>
@@ -85,14 +85,13 @@ function StaffHeader(props) {
 					variant="contained"
 					color="secondary"
 					component={NavLinkAdapter}
-					// to="new/edit"
 					to="new/create"
 
 				>
 					<FuseSvgIcon size={20}>heroicons-outline:plus</FuseSvgIcon>
 					<span className="hidden sm:flex mx-8">Add Admin Staff</span>
 				</Button>
-				
+
 				
 			</div>
 		</div>

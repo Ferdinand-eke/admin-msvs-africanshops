@@ -15,9 +15,9 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 /**
- * The ContactsApp page.
+ * The ContactsOfUsersApp page.
  */
-function ContactsApp() {
+function ContactsOfUsersApp() {
 	const pageLayout = useRef(null);
 	const routeParams = useParams();
 	const [rightSidebarOpen, setRightSidebarOpen] = useState(false);
@@ -45,4 +45,4 @@ function ContactsApp() {
 	);
 }
 
-export default ContactsApp;
+export default ContactsOfUsersApp;
