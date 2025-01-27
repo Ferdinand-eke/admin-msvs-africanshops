@@ -133,6 +133,7 @@ function ContactView() {
           />
         )}
       </Box>
+      
       <div className="relative flex flex-col flex-auto items-center p-24 pt-0 sm:p-48 sm:pt-0">
         <div className="w-full max-w-3xl">
           <div className="flex flex-auto items-end -mt-64">

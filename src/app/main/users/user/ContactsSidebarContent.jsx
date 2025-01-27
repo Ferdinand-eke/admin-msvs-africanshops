@@ -13,7 +13,7 @@ function ContactsSidebarContent() {
 				className="absolute top-0 right-0 my-16 mx-32 z-10"
 				sx={{ color: 'white' }}
 				component={NavLinkAdapter}
-				to="/users/admin"
+				to="/users/list"
 				size="large"
 			>
 				<FuseSvgIcon>heroicons-outline:x</FuseSvgIcon>

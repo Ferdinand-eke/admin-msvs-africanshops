@@ -710,6 +710,8 @@ export const adminFinancePayoutWithdrawals = (id) =>
 // Users/Customers Routes users
 export const getApiUsers = () => authApi().get("/users"); //new Dashboard ***Done
 export const getApiUserById = (id) => authApi().get(`/users/${id}`);
+export const getApiPopuplatedUserById = (id) => authApi().get(`/users/${id}/populated-user`);
+
 
 export const updateApiUserById = (id, usersFormData) =>
   authApi().put(`/users/${id}`, usersFormData);
@@ -717,17 +719,19 @@ export const updateApiUserById = (id, usersFormData) =>
 export const createApiUser = (usersFormData) =>
   authApi().post("/users", usersFormData);
 
+  export const adminSuspendDisciplineUser = (id) =>
+  authApi().put(`/users/suspenduser/${id}`);
+
+export const adminUnSuspendDisciplineUser = (id) =>
+  authApi().put(`/users/unsuspenduser/${id}`);
+
 export const adminBlockDisciplineUser = (id) =>
   authApi().put(`/users/blockuser/${id}`);
 ///blockuser/
 export const adminUnBlockDisciplineUser = (id) =>
   authApi().put(`/users/unblockuser/${id}`);
 
-export const adminSuspendDisciplineUser = (id) =>
-  authApi().put(`/users/suspenduser/${id}`);
 
-export const adminUnSuspendDisciplineUser = (id) =>
-  authApi().put(`/users/unsuspenduser/${id}`);
 
 //Users/Customers and discipinary Routes ends here
 
