@@ -346,7 +346,7 @@ function AddContactForm() {
 
         <>
           <Typography
-            className="text-start"
+            className="text-start mt-1"
             style={{ fontSize: "12px", fontWeight: "800" }}
           >
             Country Location
@@ -354,6 +354,7 @@ function AddContactForm() {
           <Controller
             control={control}
             name={`officeCountry`}
+            className="mt-0.5"
             render={({ field }) => (
               <Select
                 className="mt-16"
@@ -367,7 +368,7 @@ function AddContactForm() {
                 helperText={errors?.officeCountry?.message}
               >
                 <MenuItem value="">
-                  <em>None</em>
+                  <em>Select a country</em>
                 </MenuItem>
 
                 {countries?.data?.data?.map((cnty) => (
@@ -446,7 +447,7 @@ function AddContactForm() {
           </>
         )}
 
-        {getValues()?.officeLga && (
+        {/* {getValues()?.officeLga && (
           <>
             <Typography 
                className="text-start"
@@ -477,7 +478,7 @@ function AddContactForm() {
               )}
             />
           </>
-        )}
+        )} */}
 
         <>
         <Typography  className="text-start" style={{ fontSize: "12px", fontWeight: "800" }}>Department</Typography>
@@ -566,6 +567,36 @@ function AddContactForm() {
             />
           )}
         />
+
+<>
+        <Typography  className="text-start" style={{ fontSize: "12px", fontWeight: "800" }}>Gender</Typography>
+        <Controller
+          control={control}
+          name={`gender`}
+          render={({ field }) => (
+            <Select
+              className="mt-32"
+              {...field}
+              id="gender"
+              label="Gender"
+              placeholder="Gender"
+              variant="outlined"
+              fullWidth
+              error={!!errors.gender}
+              helperText={errors?.gender?.message}
+            >
+              <MenuItem value="">
+                <em>Select a gender</em>
+              </MenuItem>
+
+             
+                <MenuItem value="MALE">MALE</MenuItem>
+                <MenuItem value="FEMALE">FEMALE</MenuItem>
+            
+            </Select>
+          )}
+        />
+        </>
       
        
 

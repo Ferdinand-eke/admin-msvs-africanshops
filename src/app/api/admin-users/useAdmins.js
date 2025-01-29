@@ -225,16 +225,12 @@ export function useAdminStaffUnMakeLeaderMutation() {
 /*** 1) Recruite New Admins */
 export function useAdminRecruitAfricanshopStaff() {
   const navigate = useNavigate();
-  //   const queryClient = useQueryClient()
   return useMutation(createRecruitAdminUserApi, {
 
     onSuccess: (data) => {
-      console.log("ADMIN-INVITATION-PAYLOAD", data?.data);
+      console.log("ADMIN-INVITATION-PAYLOAD", data);
       // return
       if (data?.data?.success ) {
-        //data?.data?.activation_token
-
-        //   window.alert('Admin Invite Sent, Acceptance Pending')
         toast.success("Admin Invite Sent, Acceptance Pending");
         navigate("/users/admin");
         return;
@@ -270,10 +266,10 @@ export function useNewAdminInvitationAcceptance() {
   const navigate = useNavigate();
   return useMutation(newAdminUserInviteAcceptanceEndpoint, {
     onSuccess: (data) => {
-      console.log("ADMIN-ACCEPT-INVITATION-PAYLOAD", data?.data);
-      //    return
-      if (data?.data?.success && data?.data?.adminuser) {
-        toast.success("Invitation Accepted, Welcome Onboard, Please Log in.");
+      console.log("ADMIN-ACCEPT-INVITATION-PAYLOAD", data);
+      //    return && data?.data?.adminuser?._id
+      if (data?.data?.success ) {
+        toast.success(`${data?.data?.message ? data?.data?.message : "Invitation Accepted, Welcome Onboard, Please Log in."}`);
         navigate("/sign-in");
         return;
       } 
@@ -285,10 +281,10 @@ export function useNewAdminInvitationAcceptance() {
       //   );
       //   return;
       // } 
-      else {
-        toast.info('something unexpected happened')
-        return;
-      }
+      // else {
+      //   toast.info('something unexpected happened')
+      //   return;
+      // }
     },
     onError: (error) => {
       toast.error(
