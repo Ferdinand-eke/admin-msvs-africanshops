@@ -21,11 +21,13 @@ import {
 } from '../apiRoutes';
 import { useNavigate } from 'react-router';
 
+
+/***1) Get all admin staff */
 export default function useAdminUsers() {
   return useQuery(['__admins'], getApiAdminUsers);
-} //done
+} 
 
-//get single market
+/****2) Admin get single admin data" */
 export function useSingleAdminStaff(staffId) {
   return useQuery(
     ['__adminById', staffId],
@@ -33,12 +35,11 @@ export function useSingleAdminStaff(staffId) {
   
     {
       enabled: Boolean(staffId),
-      // staleTime: 2000,
     }
   );
 }
 
-//create new  AdminStaff
+/**** 3) Admin create/invite new  Admin-Staff" */
 export function useAddAdminStaffMutation() {
   const queryClient = useQueryClient();
   return useMutation(
@@ -71,8 +72,7 @@ export function useAddAdminStaffMutation() {
 }
 
 
-
-//update existing AdminStaff market
+/**** 4) Admin update  Admin-Staff data" */
 export function useAdminStaffUpdateMutation() {
   const queryClient = useQueryClient();
 
@@ -91,7 +91,7 @@ export function useAdminStaffUpdateMutation() {
   });
 }
 
-//Block existing AdminStaff market
+/**** 5) Admin Disciplinary: Block existing AdminStaff  */
 export function useAdminStaffBlockMutation() {
   const queryClient = useQueryClient();
 
@@ -112,7 +112,8 @@ export function useAdminStaffBlockMutation() {
   });
 }
 
-//UnBlock existing AdminStaff market
+
+/**** 6) Admin Disciplinary: UnBlock existing AdminStaff  */
 export function useAdminStaffUnBlockMutation() {
   const queryClient = useQueryClient();
 
@@ -133,7 +134,7 @@ export function useAdminStaffUnBlockMutation() {
   });
 }
 
-//Suspend existing AdminStaff market
+/**** 7) Admin Disciplinary: Suspend existing  AdminStaff  */
 export function useAdminStaffSuspenMutation() {
   const queryClient = useQueryClient();
 
@@ -154,7 +155,7 @@ export function useAdminStaffSuspenMutation() {
   });
 }
 
-//Un-Suspend existing AdminStaff market adminUnSuspendDisciplineStaff
+/**** 8) Admin Disciplinary: Un-Suspend existing AdminStaff  */
 export function useAdminStaffUnSuspednMutation() {
   const queryClient = useQueryClient();
 
@@ -173,7 +174,7 @@ export function useAdminStaffUnSuspednMutation() {
   });
 }
 
-//Make Leadership to existing AdminStaff market adminUnSuspendDisciplineStaff
+/**** 9) Admin Upgrade: Make Leadership to existing AdminStaff  */
 export function useAdminStaffMakeLeaderMutation() {
   const queryClient = useQueryClient();
 
@@ -192,7 +193,7 @@ export function useAdminStaffMakeLeaderMutation() {
   });
 }
 
-//Un-Make Leadership to existing AdminStaff market adminUnSuspendDisciplineStaff
+/**** 10) Admin Upgrade: Un-Make Leadership to existing AdminStaff market  */
 export function useAdminStaffUnMakeLeaderMutation() {
   const queryClient = useQueryClient();
 
@@ -215,21 +216,24 @@ export function useAdminStaffUnMakeLeaderMutation() {
 
 
 /******
- * #######################################################
- * INVITATION OF NEW ADMIN STAFF STARTS
- * #######################################################
+ * ############################################################
+ *          INVITATION OF NEW ADMIN STAFF STARTS              #
+ * ############################################################
  */
 
 
-/***Recruite New Admins */
+/*** 1) Recruite New Admins */
 export function useAdminRecruitAfricanshopStaff() {
   const navigate = useNavigate();
   //   const queryClient = useQueryClient()
   return useMutation(createRecruitAdminUserApi, {
+
     onSuccess: (data) => {
       console.log("ADMIN-INVITATION-PAYLOAD", data?.data);
       // return
-      if (data?.data?.success && data?.data?.activation_token) {
+      if (data?.data?.success ) {
+        //data?.data?.activation_token
+
         //   window.alert('Admin Invite Sent, Acceptance Pending')
         toast.success("Admin Invite Sent, Acceptance Pending");
         navigate("/users/admin");
@@ -240,8 +244,6 @@ export function useAdminRecruitAfricanshopStaff() {
             ? error?.response?.data?.message
             : error?.message
         );
-        //   toast.error(data?.data?.error?.message)
-        //   console.log("In-BoundError:", data?.data?.error)
         return;
       } else {
         toast.info("something unexpected happened");
@@ -249,13 +251,6 @@ export function useAdminRecruitAfricanshopStaff() {
       }
     },
     onError: (error) => {
-      // const {
-      //   response: { data },
-      // } = error ?? {};
-
-      // Array.isArray(data?.message)
-      //   ? data?.message?.map((m) => toast.error(m))
-      //   : toast.error(data?.message);
       toast.error(
         error.response && error.response.data.message
           ? error.response.data.message
@@ -268,10 +263,11 @@ export function useAdminRecruitAfricanshopStaff() {
 
 
 
+
+
 /***Admin Accept Invites */
 export function useNewAdminInvitationAcceptance() {
   const navigate = useNavigate();
-  // const queryClient = useQueryClient()
   return useMutation(newAdminUserInviteAcceptanceEndpoint, {
     onSuccess: (data) => {
       console.log("ADMIN-ACCEPT-INVITATION-PAYLOAD", data?.data);
@@ -295,14 +291,6 @@ export function useNewAdminInvitationAcceptance() {
       }
     },
     onError: (error) => {
-      // onsole.log("In-BoundError222:", error);
-      // const {
-      //   response: { data },
-      // } = error ?? {};
-
-      // Array.isArray(data?.message)
-      //   ? data?.message?.map((m) => toast.error(m))
-      //   : toast.error(data?.message);
       toast.error(
         error.response && error.response.data.message
           ? error.response.data.message

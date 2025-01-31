@@ -9,19 +9,16 @@ import { useAppDispatch, useAppSelector } from 'app/store/hooks';
 import { useEffect } from 'react';
 import { setSearchText, resetSearchText, selectSearchText } from './contactsAppSlice';
 import { selectFilteredContactList, useGetContactsListQuery } from './ContactsApi';
-import useAdminUsers from 'src/app/api/admin-users/useAdmins';
 
 /**
  * The contacts header.
  */
-function StaffHeader() {
+function StaffHeader(props) {
+	const {usersData, usersIsLoading} = props
 	const dispatch = useAppDispatch();
 	const searchText = useAppSelector(selectSearchText);
-	const {data:usersData, isLoading:usersIsLoading} = useAdminUsers()
 
-	// console.log("ADMIN-Staff11", usersData?.data)
-
-	const filteredData = useAppSelector(selectFilteredContactList(usersData?.data));
+	const filteredData = useAppSelector(selectFilteredContactList(usersData));
 	useEffect(() => {
 		return () => {
 			dispatch(resetSearchText());
@@ -29,9 +26,6 @@ function StaffHeader() {
 	}, []);
 
 
-	// if (isLoading) {
-	// 	return null;
-	// }
 	if (usersIsLoading) {
 		return null;
 	}
@@ -94,15 +88,11 @@ function StaffHeader() {
 					// to="new/edit"
 					to="new/create"
 
-				
-					// component={NavLinkAdapter}
-					// to="/users/admin/operate/edit"
-					// to="/users/admin/operate/new"
-						// size={isMobile ? 'small' : 'medium'}
 				>
 					<FuseSvgIcon size={20}>heroicons-outline:plus</FuseSvgIcon>
 					<span className="hidden sm:flex mx-8">Add Admin Staff</span>
 				</Button>
+				
 				
 			</div>
 		</div>

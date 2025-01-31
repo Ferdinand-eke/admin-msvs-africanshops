@@ -6,35 +6,24 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import { useAppSelector } from 'app/store/hooks';
 import ContactListItem from './ContactListItem';
 import { selectFilteredContactList, selectGroupedFilteredContacts, useGetContactsListQuery } from './ContactsApi';
-// import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
-// import useGetAllAdminUsers from 'src/app/aaqueryhooks/adminHandlingQuery';
-import useAdminUsers from 'src/app/api/admin-users/useAdmins';
+
 
 /**
  * The contacts list.
  */
-function StaffUsersList() {
+function StaffUsersList(props) {
+	const {usersData, usersIsLoading} = props
 
-	// const { data, isLoading } = useGetContactsListQuery();
-	// const {data:usersData, isLoading:usersIsLoading} = useGetAllUsers()
 	
-	const {data:usersData, isLoading:usersIsLoading} = useAdminUsers()
-	// const filteredData = useAppSelector(selectFilteredContactList(data));
-
-	// const groupedFilteredContacts = useAppSelector(selectGroupedFilteredContacts(filteredData));
-
-
-	// console.log("users-on-HOMES", usersData?.data?.userlist)
-	const filteredData = useAppSelector(selectFilteredContactList(usersData?.data));
+	const filteredData = useAppSelector(selectFilteredContactList(usersData));
 
 	const groupedFilteredContacts = useAppSelector(selectGroupedFilteredContacts(filteredData));
 
-	// if (isLoading) {
-	// 	return <FuseLoading />;
-	// }
+
 	if (usersIsLoading) {
 		return <FuseLoading />;
 	}
+
 
 	if (filteredData.length === 0) {
 		return (

@@ -7,6 +7,7 @@ import StaffHeader from './StaffHeader';
 import UsersList from './StaffUsersList';
 import { useGetContactsListQuery, useGetContactsCountriesQuery, useGetContactsTagsQuery } from './ContactsApi';
 import StaffContactsSidebarContent from './StaffContactsSidebarContent';
+import useAdminUsers from 'src/app/api/admin-users/useAdmins';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
 	'& .FusePageSimple-header': {
@@ -23,6 +24,8 @@ function ContactsApp() {
 	const routeParams = useParams();
 	const [rightSidebarOpen, setRightSidebarOpen] = useState(false);
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
+
+	const {data:usersData, isLoading:usersIsLoading} = useAdminUsers()
 	// useGetContactsListQuery();
 	// useGetContactsCountriesQuery();
 	// useGetContactsTagsQuery();
@@ -31,13 +34,21 @@ function ContactsApp() {
 	}, [routeParams]);
 
 
+
 	
 
 	return (
 		<Root
-			header={<StaffHeader />}
+			header={<StaffHeader 
+				usersData={usersData?.data} 
+				usersIsLoading={usersIsLoading}
+			/>}
 
-			content={<UsersList />}
+
+			content={<UsersList 
+				usersData={usersData?.data} 
+				usersIsLoading={usersIsLoading}
+			/>}
 			ref={pageLayout}
 			rightSidebarContent={<StaffContactsSidebarContent />}
 			rightSidebarOpen={rightSidebarOpen}

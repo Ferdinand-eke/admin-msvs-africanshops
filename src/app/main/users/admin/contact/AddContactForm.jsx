@@ -76,8 +76,8 @@ const schema = z.object({
   company: z.string().optional(),
   birthday: z.string().optional(),
   address: z.string().optional(),
-  notes: z.string().optional(),
-  tags: z.array(z.string()).optional(),
+  // notes: z.string().optional(),
+  // tags: z.array(z.string()).optional(),
 });
 // const schema = z.object({
 // 	email: z.string().optional(),
@@ -88,15 +88,11 @@ const schema = z.object({
  * The contact form.
  */
 
-
 function AddContactForm() {
- 
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const routeParams = useParams();
   const { id } = routeParams;
- 
 
   const recruitStaff = useAdminRecruitAfricanshopStaff();
 
@@ -112,7 +108,6 @@ function AddContactForm() {
 
   const { data: countries, isFetching } = useCountries();
   const { data: departments } = useGetDepartments();
-
 
   const [designationsList, setDesignationList] = useState([]);
   const [bstates, setBstates] = useState([]);
@@ -166,6 +161,8 @@ function AddContactForm() {
     getValues()?.officeLga,
   ]);
 
+
+  /** 1) Get States from country IDs  */
   async function getStateDFromCountryId(pid) {
     setLoading(true);
     const responseData = await getStateByCountryId(pid);
@@ -180,7 +177,7 @@ function AddContactForm() {
     }
   }
 
-  //**Get L.G.As from state_ID data */
+  /** 2) Get L.G.As from state_ID data */
   async function getLgasFromState(sid) {
     setLoading(true);
     const responseData = await getLgaByStateId(sid);
@@ -195,7 +192,7 @@ function AddContactForm() {
     }
   }
 
-  //**Get L.G.As from state_ID data */
+  /** 3) Get L.G.As from state_ID data */
   async function getOfficesFromLga(sid) {
     setLoading(true);
     const responseData = await getOfficeByLgaId(sid);
@@ -221,11 +218,7 @@ function AddContactForm() {
    */
 
   const onSubmit = useCallback(() => {
-    console.log("Crete STAFF-FORMDATA", form);
-
-  
     recruitStaff.mutate(form);
-  
   }, [form]);
 
   function handleRemoveContact() {
@@ -240,20 +233,6 @@ function AddContactForm() {
   const background = watch("background");
   const name = watch("name");
 
-  // if (adminIsError && id !== 'new' ) {
-  // 	//&& id !== 'new'
-  // 	setTimeout(() => {
-  // 		navigate('/users/admin');
-  // 		dispatch(showMessage({ message: 'NOT FOUND' }));
-  // 	}, 0);
-  // 	return null;
-  // }
-
-  // if (_.isEmpty(form)) {
-  // 	return <FuseLoading className="min-h-screen" />;
-  // }
-
-  console.log("Ading Contacts......");
 
   return (
     <>
@@ -272,7 +251,7 @@ function AddContactForm() {
         )}
       </Box>
 
-      <div className="relative flex flex-col flex-auto items-center px-24 sm:px-48">
+      <div className="relative flex flex-col flex-auto  px-24 sm:px-48">
         {/* <div className="w-full">
           <div className="flex flex-auto items-end -mt-64">
             <Controller
@@ -366,138 +345,143 @@ function AddContactForm() {
         </div> */}
 
         <>
-        {/* <div className="flex items-center justify-between p-16 sm:p-24 "> */}
-        {/* <Typography className="items-start" style={{ fontSize: "12px", fontWeight: "800" }}>Staff Country</Typography> */}
-        <Controller
-          control={control}
-          name={`officeCountry`}
-          render={({ field }) => (
-            <Select
-              className="mt-16"
-              {...field}
-              id="officeCountry"
-              label="Country of posting"
-              placeholder="Country of posting"
-              variant="outlined"
-              fullWidth
-              error={!!errors.officeCountry}
-              helperText={errors?.officeCountry?.message}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
+          <Typography
+            className="text-start"
+            style={{ fontSize: "12px", fontWeight: "800" }}
+          >
+            Country Location
+          </Typography>
+          <Controller
+            control={control}
+            name={`officeCountry`}
+            render={({ field }) => (
+              <Select
+                className="mt-16"
+                {...field}
+                id="officeCountry"
+                label="Country of posting"
+                placeholder="Country of posting"
+                variant="outlined"
+                fullWidth
+                error={!!errors.officeCountry}
+                helperText={errors?.officeCountry?.message}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
 
-              {countries?.data?.data?.map((cnty) => (
-                <MenuItem value={cnty._id}>{cnty.name}</MenuItem>
-              ))}
-
-              
-            </Select>
-          )}
-
-         
-         
-        />
-        {/* </div> */}
+                {countries?.data?.data?.map((cnty) => (
+                  <MenuItem value={cnty._id}>{cnty.name}</MenuItem>
+                ))}
+              </Select>
+            )}
+          />
         </>
-
 
         {getValues()?.officeCountry && (
           <>
-        {/* <Typography style={{ fontSize: "12px", fontWeight: "800" }}>Staff State</Typography> */}
-        <Controller
-          control={control}
-          name={`officeState`}
-          render={({ field }) => (
-            <Select
-              className="mt-32"
-              {...field}
-              id="officeState"
-              label="State of posting"
-              placeholder="State of posting"
-              variant="outlined"
-              fullWidth
-              error={!!errors.officeState}
-              helperText={errors?.officeState?.message}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
+            <Typography 
+            className="text-start"
+            style={{ fontSize: "12px", fontWeight: "800" }}>
+              State Location
+            </Typography>
+            <Controller
+              control={control}
+              name={`officeState`}
+              render={({ field }) => (
+                <Select
+                  className="mt-32"
+                  {...field}
+                  id="officeState"
+                  label="State of posting"
+                  placeholder="State of posting"
+                  variant="outlined"
+                  fullWidth
+                  error={!!errors.officeState}
+                  helperText={errors?.officeState?.message}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
 
-              {bstates?.map((bsts) => (
-                <MenuItem value={bsts._id}>{bsts.name}</MenuItem>
-              ))}
-            </Select>
-          )}
-        />
-        </>
+                  {bstates?.map((bsts) => (
+                    <MenuItem value={bsts._id}>{bsts.name}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </>
         )}
 
-{getValues()?.officeState && getValues()?.officeCountry && (
+        {getValues()?.officeState && getValues()?.officeCountry && (
           <>
-        {/* <Typography style={{ fontSize: "12px", fontWeight: "800" }}>Staff State</Typography> */}
-        <Controller
-          control={control}
-          name={`officeLga`}
-          render={({ field }) => (
-            <Select
-              className="mt-32"
-              {...field}
-              id="officeLga"
-              label="L.G.A of posting"
-              placeholder="L.G.A of posting"
-              variant="outlined"
-              fullWidth
-              error={!!errors.officeLga}
-              helperText={errors?.officeLga?.message}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
+            <Typography 
+             className="text-start"
+            style={{ fontSize: "12px", fontWeight: "800" }}>L.G.A|Country Location</Typography>
+            <Controller
+              control={control}
+              name={`officeLga`}
+              render={({ field }) => (
+                <Select
+                  className="mt-32"
+                  {...field}
+                  id="officeLga"
+                  label="L.G.A of posting"
+                  placeholder="L.G.A of posting"
+                  variant="outlined"
+                  fullWidth
+                  error={!!errors.officeLga}
+                  helperText={errors?.officeLga?.message}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
 
-              {blgas?.map((blg) => (
-                <MenuItem value={blg._id}>{blg.name}</MenuItem>
-              ))}
-            </Select>
-          )}
-        />
-        </>
+                  {blgas?.map((blg) => (
+                    <MenuItem value={blg._id}>{blg.name}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </>
         )}
 
-
-{getValues()?.officeLga && (
+        {getValues()?.officeLga && (
           <>
-        {/* <Typography style={{ fontSize: "12px", fontWeight: "800" }}>Office Designante</Typography> */}
-        <Controller
-          control={control}
-          name={`officeDesignate`}
-          render={({ field }) => (
-            <Select
-              className="mt-32"
-              {...field}
-              id="officeDesignate"
-              label="Office of posting"
-              placeholder="Office of posting"
-              variant="outlined"
-              fullWidth
-              error={!!errors.officeDesignate}
-              helperText={errors?.officeDesignate?.message}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
+            <Typography 
+               className="text-start"
+            style={{ fontSize: "12px", fontWeight: "800" }}>Office Location</Typography>
+            <Controller
+              control={control}
+              name={`officeDesignate`}
+              render={({ field }) => (
+                <Select
+                  className="mt-32"
+                  {...field}
+                  id="officeDesignate"
+                  label="Office of posting"
+                  placeholder="Office of posting"
+                  variant="outlined"
+                  fullWidth
+                  error={!!errors.officeDesignate}
+                  helperText={errors?.officeDesignate?.message}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
 
-              {lgasOffices?.map((office) => (
-                <MenuItem value={office._id}>{office.name}</MenuItem>
-              ))}
-            </Select>
-          )}
-        />
-        </>
+                  {lgasOffices?.map((office) => (
+                    <MenuItem value={office._id}>{office.name}</MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </>
         )}
-        
 
-<Controller
+        <>
+        <Typography  className="text-start" style={{ fontSize: "12px", fontWeight: "800" }}>Department</Typography>
+        <Controller
           control={control}
           name={`department`}
           render={({ field }) => (
@@ -522,36 +506,38 @@ function AddContactForm() {
             </Select>
           )}
         />
+        </>
 
-{getValues()?.department && (
-  <Controller
-  control={control}
-  name={`designation`}
-  render={({ field }) => (
-    <Select
-      className="mt-32"
-      {...field}
-      id="designation"
-      label="Designation"
-      placeholder="Designation"
-      variant="outlined"
-      fullWidth
-      error={!!errors.designation}
-      helperText={errors?.designation?.message}
-    >
-      <MenuItem value="">
-        <em>None</em>
-      </MenuItem>
+        {getValues()?.department && (
+          <>
+           <Typography  className="text-start" style={{ fontSize: "12px", fontWeight: "800" }}>Designation</Typography>
+          <Controller
+            control={control}
+            name={`designation`}
+            render={({ field }) => (
+              <Select
+                className="mt-32"
+                {...field}
+                id="designation"
+                label="Designation"
+                placeholder="Designation"
+                variant="outlined"
+                fullWidth
+                error={!!errors.designation}
+                helperText={errors?.designation?.message}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
 
-      {designationsList?.map((desig) => (
-        <MenuItem value={desig._id}>{desig.name}</MenuItem>
-      ))}
-    </Select>
-  )}
-/>
-)}
-
-
+                {designationsList?.map((desig) => (
+                  <MenuItem value={desig._id}>{desig.name}</MenuItem>
+                ))}
+              </Select>
+            )}
+          />
+          </>
+        )}
 
         <Controller
           control={control}
@@ -580,103 +566,8 @@ function AddContactForm() {
             />
           )}
         />
-        {/* <Controller
-					control={control}
-					name="tags"
-					render={({ field: { onChange, value } }) => (
-						<Autocomplete
-							multiple
-							id="tags"
-							className="mt-32"
-							options={tags || []}
-							disableCloseOnSelect
-							getOptionLabel={(option) => option?.title}
-							renderOption={(_props, option, { selected }) => (
-								<li {..._props}>
-									<Checkbox
-										style={{ marginRight: 8 }}
-										checked={selected}
-									/>
-									{option?.title}
-								</li>
-							)}
-							value={value ? value?.map((id) => _.find(tags, { id })) : []}
-							onChange={(_event, newValue) => {
-								onChange(newValue?.map((item) => item?.id));
-							}}
-							fullWidth
-							renderInput={(params) => (
-								<TextField
-									{...params}
-									label="Tags"
-									placeholder="Tags"
-								/>
-							)}
-						/>
-					)}
-				/> */}
-
-        {/* <Controller
-					control={control}
-					name="title"
-					render={({ field }) => (
-						<TextField
-							className="mt-32"
-							{...field}
-							label="Title"
-							placeholder="Job title"
-							id="title"
-							error={!!errors.title}
-							helperText={errors?.title?.message}
-							variant="outlined"
-							fullWidth
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">
-										<FuseSvgIcon size={20}>heroicons-solid:briefcase</FuseSvgIcon>
-									</InputAdornment>
-								)
-							}}
-						/>
-					)}
-				/> */}
-
-        {/* <Controller
-					control={control}
-					name="company"
-					render={({ field }) => (
-						<TextField
-							className="mt-32"
-							{...field}
-							label="Company"
-							placeholder="Company"
-							id="company"
-							error={!!errors.company}
-							helperText={errors?.company?.message}
-							variant="outlined"
-							fullWidth
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">
-										<FuseSvgIcon size={20}>heroicons-solid:office-building</FuseSvgIcon>
-									</InputAdornment>
-								)
-							}}
-						/>
-					)}
-				/> */}
-        {/* <Controller
-					control={control}
-					name="emails"
-					render={({ field }) => (
-						<ContactEmailSelector
-							className="mt-32"
-							{...field}
-							value={field?.value}
-							onChange={(val) => field.onChange(val)}
-						/>
-					)}
-				/> */}
+      
+       
 
         <Controller
           control={control}
@@ -782,49 +673,13 @@ function AddContactForm() {
             />
           )}
         />
-        <Controller
-          control={control}
-          name="notes"
-          render={({ field }) => (
-            <TextField
-              className="mt-32"
-              {...field}
-              label="Notes"
-              placeholder="Notes"
-              id="notes"
-              error={!!errors.notes}
-              helperText={errors?.notes?.message}
-              variant="outlined"
-              fullWidth
-              multiline
-              minRows={5}
-              maxRows={10}
-              InputProps={{
-                className: "max-h-min h-min items-start",
-                startAdornment: (
-                  <InputAdornment className="mt-16" position="start">
-                    <FuseSvgIcon size={20}>
-                      heroicons-solid:menu-alt-2
-                    </FuseSvgIcon>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          )}
-        />
+      
       </div>
       <Box
         className="flex items-center mt-40 py-14 pr-16 pl-4 sm:pr-48 sm:pl-36 border-t"
         sx={{ backgroundColor: "background.default" }}
       >
-        {/* {id !== 'new' && (
-					<Button
-						color="error"
-						// onClick={handleRemoveContact}
-					>
-						Delete
-					</Button>
-				)} */}
+       
         <Button className="ml-auto" onClick={() => history.back()}>
           Cancel
         </Button>
@@ -832,8 +687,8 @@ function AddContactForm() {
           className="ml-8"
           variant="contained"
           color="secondary"
-          disabled={_.isEmpty(dirtyFields) || !isValid
-          || recruitStaff?.isLoading
+          disabled={
+            _.isEmpty(dirtyFields) || !isValid || recruitStaff?.isLoading
           }
           onClick={handleSubmit(onSubmit)}
         >
