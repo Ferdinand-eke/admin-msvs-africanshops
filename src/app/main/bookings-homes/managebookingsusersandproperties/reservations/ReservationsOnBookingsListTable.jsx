@@ -9,36 +9,16 @@ import { Link } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import clsx from "clsx";
 import Button from "@mui/material/Button";
-// import {
-//   useDeleteECommerceProductsMutation,
-//   useGetECommerceProductsQuery,
-// } from "../ECommerceApi";
-import useGetAllListings from "src/app/aaqueryhooks/listingssHandlingQuery";
-import useGetAllUsers from "src/app/aaqueryhooks/usersHandlingQuery";
-import { useShopOnEstateProperties } from "src/app/api/admin-handle-estateproperties/useAdminHandleEstateProperties";
 import { useBookingPropertiesReservationsByAdmin } from "src/app/api/admin-handle-bookingsproperties/useAdminHandleBookingsProperties";
 
 function ReservationsOnBookingsListTable(props) {
   const {active} = props
-  const [filteredShop, setFilteredShop] = useState([]);
-
-  // const { data: usresData, isLoading: usersIsLoading } =
-  //   useShopOnEstateProperties();
-
+ 
   const { data: allReservations, isLoading: allReservationsIsLoading } =
     useBookingPropertiesReservationsByAdmin();
 
-  console.log("ALL__RESERVATIONS", allReservations?.data?.bookingsReservations);
+  // console.log("ALL__RESERVATIONS", allReservations?.data?.bookingsReservations);
 
-  // useEffect(() => {
-  //   if (usresData?.data?.shopsOnEstates?.length > 0) {
-  //     setFilteredShop(
-  //       usresData?.data?.shopsOnEstates?.filter(
-  //         (shop) => shop?.shopplan?.plankey === "HOTELSANDAPARTMENTS"
-  //       )
-  //     );
-  //   }
-  // }, [usresData?.data?.shopsOnEstates]);
 
   const usercolumns = useMemo(
     () => [
@@ -61,20 +41,6 @@ function ReservationsOnBookingsListTable(props) {
           </Typography>
         ),
       },
-      // {
-      //   accessorKey: "shopemail",
-      //   header: "Email",
-      //   accessorFn: (row) => (
-      //     <div className="flex flex-wrap space-x-2">
-      //       <Chip
-      //         className="text-11"
-      //         size="small"
-      //         color="default"
-      //         label={row?.shopemail}
-      //       />
-      //     </div>
-      //   ),
-      // },
       {
         accessorKey: "isPaid",
         header: "Payment status",
@@ -94,22 +60,6 @@ function ReservationsOnBookingsListTable(props) {
         ),
       },
 
-      // {
-      //   accessorKey: "management",
-      //   header: "Management User Console",
-      //   Cell: ({ row }) => (
-      //     <div className="flex flex-wrap space-x-2">
-      //       <Chip
-      //         component={Link}
-      //         to={`/userlistings/managed-user-listings/${row.original._id}/userproperties`}
-      //         className="bg-green-400 text-11 cursor-pointer"
-      //         size="small"
-      //         color="default"
-      //         label="Manage this User & listing(s)"
-      //       />
-      //     </div>
-      //   ),
-      // },
     ],
     []
   );

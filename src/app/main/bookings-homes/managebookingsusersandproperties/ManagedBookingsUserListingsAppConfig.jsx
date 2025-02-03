@@ -55,10 +55,6 @@ const ManagedBookingsUserListingsAppConfig = {
 					path: 'reservations',
 					element: <ReservationsOnBookingsProperties />
 				},
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
 			]
 		}
 	]
