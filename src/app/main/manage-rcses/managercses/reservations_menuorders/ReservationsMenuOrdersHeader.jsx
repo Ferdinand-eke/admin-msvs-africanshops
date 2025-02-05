@@ -8,7 +8,7 @@ import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 /**
  * The products header.
  */
-function ReservationsBookingsPropertiesHeader(props) {
+function ReservationsMenuOrdersHeader(props) {
 	const {active, setActive, allReservations, allCancelledReservations} = props
 
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
@@ -18,7 +18,7 @@ function ReservationsBookingsPropertiesHeader(props) {
 				initial={{ x: -20 }}
 				animate={{ x: 0, transition: { delay: 0.2 } }}
 			>
-				<Typography className="text-16 md:text-24 font-extrabold tracking-tight">Reservations On Booking Properties</Typography>
+				<Typography className="text-16 md:text-24 font-extrabold tracking-tight">Reservations/orders On RCS</Typography>
 			</motion.span>
 
 			<div className="flex flex-1 items-center justify-end space-x-8">
@@ -37,9 +37,11 @@ function ReservationsBookingsPropertiesHeader(props) {
 						<path strokeLinecap="round" strokeLinejoin="round" d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3" />
 						</svg>
 
-						<span className="mx-4 sm:mx-8">Reservations  ({(allReservations?.length)})</span>
+						<span className="mx-4 sm:mx-8">Reservations/Menu Orders  
+						{/* ({(allReservations?.length)}) */}
+						</span>
 					</Button>
-					<Button
+					{/* <Button
 						className={` ${active === 2 ? "bg-orange-500 hover:bg-orange-800" : ""}`}
 						variant="contained"
 						size={isMobile ? 'small' : 'small'}
@@ -49,12 +51,14 @@ function ReservationsBookingsPropertiesHeader(props) {
 						<path strokeLinecap="round" strokeLinejoin="round" d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3" />
 						</svg>
 
-						<span className="mx-4 sm:mx-8">Cancelled Reservations  ({allCancelledReservations?.length})</span>
-					</Button>
+						<span className="mx-4 sm:mx-8">Cancelled Reservations  
+						({allCancelledReservations?.length})
+						</span>
+					</Button> */}
 				</motion.div>
 			</div>
 		</div>
 	);
 }
 
-export default ReservationsBookingsPropertiesHeader;
+export default ReservationsMenuOrdersHeader;

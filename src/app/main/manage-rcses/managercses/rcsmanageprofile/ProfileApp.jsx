@@ -8,8 +8,8 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import useThemeMediaQuery from "@fuse/hooks/useThemeMediaQuery";
-// import AboutTab from "./tabs/about/AboutTab";
-// import PhotosVideosTab from "./tabs/photos-videos/PhotosVideosTab";
+import AboutTab from "./tabs/about/AboutTab";
+import PhotosVideosTab from "./tabs/photos-videos/PhotosVideosTab";
 import TimelineTab from "./tabs/timeline/TimelineTab";
 import { useNavigate, useParams } from "react-router";
 // import { useGetUserDataById } from 'src/app/aaqueryhooks/usersHandlingQuery';
@@ -39,17 +39,28 @@ function ProfileApp() {
   const theme = useTheme();
   const navigate = useNavigate();
   const routeParams = useParams();
+  // const { id: contactId } = routeParams;
   const { userId } = routeParams;
 
+  // console.log("User-Id to find DATA", userId)
+  // const {data:singleUser, isLoading:singleUserIsLoading} = useGetUserDataById(userId)
   const { data: shopAndProperties, isLoading: accountDetailsIsLoading } =
     useAdminGetSingleShopAndEstateProperties(userId);
 
+  // console.log("SINGLE-USER DATA", singleUser?.data)
   const [selectedTab, setSelectedTab] = useState(0);
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down("lg"));
 
   function handleTabChange(event, value) {
     setSelectedTab(value);
   }
+
+  console.log("UserAccount", shopAndProperties?.data?.shopAccount);
+  console.log(
+    "UserAccount-Properties",
+    shopAndProperties?.data?.shopAccountEstateProperties
+  );
+  
 
   return (
     <Root
@@ -61,6 +72,8 @@ function ProfileApp() {
           >
             <Typography
               className="flex items-center sm:mb-12"
+              // component={Link}
+              // to="/property/managed-listings"
               onClick={() => navigate(-1)}
               role="button"
               color="inherit"
@@ -93,6 +106,7 @@ function ProfileApp() {
               <Typography className="text-lg font-bold leading-none">
                 {shopAndProperties?.data?.shopAccount?.shopname}
               </Typography>
+              {/* <Typography color="text.secondary">London, UK</Typography> */}
             </div>
 
             <div className="hidden lg:flex h-32 mx-32 border-l-2" />
@@ -103,6 +117,7 @@ function ProfileApp() {
 									N {shopAndProperties?.data?.shopAccount?.realEstateAccount?.accountbalance}
 								</Typography>
 
+                {/* <Typography className="font-bold">N 100000000</Typography> */}
                 <Typography
                   className="text-sm font-medium"
                   color="text.secondary"
@@ -142,9 +157,35 @@ function ProfileApp() {
                   ),
                 }}
               >
-                
+                {/* <Tab
+									className="text-14 font-semibold min-h-40 min-w-64 mx-4 px-12 "
+									disableRipple
+									label="Properties Listed By this Account"
+								/> */}
+                {/* <Tab
+									className="text-14 font-semibold min-h-40 min-w-64 mx-4 px-12 "
+									disableRipple
+									label="Un-Approved"
+								/> */}
+                {/* <Tab
+									className="text-14 font-semibold min-h-40 min-w-64 mx-4 px-12 "
+									disableRipple
+									label="Approvals On Appeal"
+								/> */}
               </Tabs>
-             
+              {/* <Typography className="text-14 font-semibold min-h-40 min-w-64 mx-4 px-12 "
+									
+								>Timeline</Typography> */}
+              {/* <Button
+										component={Link}
+										to={`/userlistings/managed-user-listings/${row.original.id}/manage`}
+								variant="contained"
+								color="secondary"
+								size="small"
+							>
+								Add listings To User Profile
+							</Button> */}
+
               <Button
                 className=""
                 variant="contained"
@@ -162,6 +203,7 @@ function ProfileApp() {
       }
       content={
         <div className="flex flex-auto justify-center w-full max-w-5xl mx-auto p-24 sm:p-32">
+          {/* <TimelineTab  listings={singleUser?.data?.listings} loading={singleUserIsLoading} /> */}
           {selectedTab === 0 && (
             <TimelineTab
               listings={shopAndProperties?.data?.shopAccountEstateProperties}

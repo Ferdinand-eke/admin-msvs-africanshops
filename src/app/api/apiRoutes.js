@@ -820,9 +820,13 @@ export const adminGetSingleMerchantAndHospitalityProperties = (merchantId) =>
 
 
 
-  /******###CANCELLED RESERVATIONS######### */
+  /******###CANCELLED RESERVATIONS Handling######### */
   export const adminGetCancelledReservationsApi = () =>
   authApi().get("/handle-hospitality/get-cancelled-reservations"); 
+
+
+  export const adminApproveRefundsApi = (refundPayload) =>
+  authApi().get(`/handle-hospitality/${refundPayload}/approve-credit-refund_request`); 
 /*****
  * ###################################################################################################
  * HOSPITALITY/BOOKINGS PROPERTIES handling ends here  (All done as @ 20th August, 2024)
@@ -835,11 +839,6 @@ export const adminGetSingleMerchantAndHospitalityProperties = (merchantId) =>
  */
 export const AdminLogOutCall = () => {
   if (typeof window !== "undefined") {
-    // Cookies.set(
-    //   'AMD_AFSP_Show_Hide_tmp_Lead_ARC',
-    //   JSON.stringify(response?._nnip_shop_ASHP_ALOG),
-    //   '1h'
-    // );
 
     try {
       /**Fuse admin starts */
@@ -872,113 +871,6 @@ export const AdminLogOutCall = () => {
   }
 };
 
-// export const adminlogOut = () => {
-//   if (typeof window !== 'undefined') {
-
-//     MyShopLogOutSession()
-//       .then((response) => {
-//         console.log('logged out successfully', response);
-
-//         Cookies.remove('_auth');
-//         Cookies.remove('_auth_storage');
-//         Cookies.remove('_auth_state');
-//         Cookies.remove('AMD_AFSP_Show_Hide_tmp_Lead_ARC');
-//         Cookies.remove('SLG_GWPT_Show_Hide_tmp');
-
-//         window.location.reload(false);
-//       })
-//       .catch((error) => {
-//         console.log(
-//           error.response && error.response.data.message
-//             ? error.response.data.message
-//             : error.message
-//         );
-//       });
-
-//     Cookies.remove('_auth');
-//     Cookies.remove('_auth_storage');
-//     Cookies.remove('_auth_state');
-//     Cookies.remove('AMD_AFSP_Show_Hide_tmp_Lead_ARC');
-//     Cookies.remove('SLG_GWPT_Show_Hide_tmp');
-
-//     window.location.reload(false);
-
-//   }
-// };
-
-///=================Sellers Routes are below. Admin routes above========================================================
-///=================Sellers Routes are below. Admin routes above========================================================
-///=================Sellers Routes are below. Admin routes above========================================================
-
-//Seller auth routes
-// export const sellerSignIn = (formData) => Api().post(`/shop/login`, formData);
-
-// export const signIn = (formData) =>
-//   Api().post(`/authuser/seller/login`, formData);
-
-// export const secureSignIn = (formData) =>
-//   Api().post(`/auth/seller/securelogin`, formData);
-// export const secureForgotPassword = (formData) =>
-//   Api().post(`/auth/seller/forgot-password`, formData);
-// export const secureResetPassword = (formData) =>
-//   Api().post(`/auth/seller/reset-password`, formData);
-
-// {===============================shop product handling starts=======================================}
-// export const storeProductImages = (formData) =>
-//   authApi().post('/usersprodimages/uploadimages', formData);
-
-// export const removeProductImagesById = (formData) =>
-//   authApi().post('/usersprodimages/removeimage', formData);
-
-// export const getShopProducts = () => authApi().get('/usersproducts');
-
-// export const storeShopProduct = (formData) =>
-//   authApi().post('/usersproducts', formData);
-
-// export const getShopProductById = (id) => Api().get(`/usersproducts/${id}`);
-
-// export const updateShopProductById = (id, productFormData) =>
-//   authApi().put(`/usersproducts/${id}`, productFormData);
-
-// export const deleteShopProduct = (id) =>
-//   authApi().delete(`/usersproducts/${id}`);
-// {===============================shop product handling ends   =======================================}
-// export const getMyShopDetails = () =>
-//   authApi().get('/myshop/get-myshop-details');
-
-// export const updateMyShopDetails = (id, shopFormData) =>
-//   authApi().post(`/myshop/update-myshop-details/${id}`, shopFormData);
-
-// export const deleteMyShopCompletely = (id, shopFormData) =>
-//   authApi().post(`/myshop/delete-myshop-completely/${id}`, shopFormData);
-
-//======handle shop bank account updates and withdrawals
-// export const updateMyShopBankAccount = (id, shopFormData) =>
-//   authApi().put(`/myshop/update-shopbankdetails/${id}`, shopFormData);
-
-// export const withdrawFromMyShopNow = (productFormData) =>
-//   authApi().post('/shopwihtdrawals/place-shop-withdrawal', productFormData);
-
-// export const getMyShopWithdrawals = () =>
-//   authApi().get('/shopwihtdrawals/get-ushopwithdrawals');
-
-// {===============================user shop details handling starts=======================================}
-
-// {===============================user shop details handling ends=======================================}
-
-// {===============================shop orders handling starts=======================================}
-//user order Items Routes
-// export const GetShopOrderItems = () => authApi().get(`/user-shop-orderitems`);
-
-// export const myShopOrderByShopId = (id) =>
-//   authApi().get(`/user-shop-orderitems/${id}`);
-
-// export const CashOutOrderByShopId = (id) =>
-//   authApi().put(`/user-shop-orderitems/cashoutorder/${id}`);
-
-// {===============================shop orders handling ends=======================================}
-// export const createProduct = (productFormData) =>
-//   authApi().post('/usersproducts', productFormData);
 
 //Shop Users Logout functionality  usersproducts
 export const logOut = () => {

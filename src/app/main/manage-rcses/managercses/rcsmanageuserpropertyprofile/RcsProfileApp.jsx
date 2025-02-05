@@ -8,17 +8,12 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import useThemeMediaQuery from "@fuse/hooks/useThemeMediaQuery";
-// import AboutTab from "./tabs/about/AboutTab";
-// import PhotosVideosTab from "./tabs/photos-videos/PhotosVideosTab";
+import AboutTab from "./tabs/about/AboutTab";
+import PhotosVideosTab from "./tabs/photos-videos/PhotosVideosTab";
 import TimelineTab from "./tabs/timeline/TimelineTab";
-import { useNavigate, useParams } from "react-router";
-// import { useGetUserDataById } from 'src/app/aaqueryhooks/usersHandlingQuery';
-import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
-import NavLinkAdapter from "@fuse/core/NavLinkAdapter";
 import { useTheme } from "@mui/material/styles";
-import { useAdminGetSingleShopAndEstateProperties } from "src/app/api/admin-handle-estateproperties/useAdminHandleEstateProperties";
+import { useNavigate } from "react-router";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -35,15 +30,9 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 /**
  * The profile page.
  */
-function ProfileApp() {
+function RcsProfileApp() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const routeParams = useParams();
-  const { userId } = routeParams;
-
-  const { data: shopAndProperties, isLoading: accountDetailsIsLoading } =
-    useAdminGetSingleShopAndEstateProperties(userId);
-
   const [selectedTab, setSelectedTab] = useState(0);
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down("lg"));
 
@@ -55,12 +44,21 @@ function ProfileApp() {
     <Root
       header={
         <div className="flex flex-col w-full">
+          {/* <img
+						className="h-160 lg:h-320 object-cover w-full"
+						src="assets/images/pages/profile/cover.jpg"
+						alt="Profile Cover"
+					/>
+					 */}
+
           <motion.div
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
           >
             <Typography
               className="flex items-center sm:mb-12"
+              // component={Link}
+              // to="/property/managed-listings"
               onClick={() => navigate(-1)}
               role="button"
               color="inherit"
@@ -70,7 +68,7 @@ function ProfileApp() {
                   ? "heroicons-outline:arrow-sm-left"
                   : "heroicons-outline:arrow-sm-right"}
               </FuseSvgIcon>
-              <span className="flex mx-4 font-medium">Account Listings</span>
+              <span className="flex mx-4 font-medium">Property Listings</span>
             </Typography>
           </motion.div>
 
@@ -91,23 +89,21 @@ function ProfileApp() {
 
             <div className="flex flex-col items-center lg:items-start mt-16 lg:mt-0 lg:ml-32">
               <Typography className="text-lg font-bold leading-none">
-                {shopAndProperties?.data?.shopAccount?.shopname}
+                Brian Hughes
               </Typography>
+              <Typography color="text.secondary">London, UK</Typography>
             </div>
 
             <div className="hidden lg:flex h-32 mx-32 border-l-2" />
 
             <div className="flex items-center mt-24 lg:mt-0 space-x-24">
               <div className="flex flex-col items-center">
-                <Typography className="font-bold">
-									N {shopAndProperties?.data?.shopAccount?.realEstateAccount?.accountbalance}
-								</Typography>
-
+                <Typography className="font-bold">200k</Typography>
                 <Typography
                   className="text-sm font-medium"
                   color="text.secondary"
                 >
-                  Estate Acount
+                  FOLLOWERS
                 </Typography>
               </div>
               <div className="flex flex-col items-center">
@@ -142,35 +138,32 @@ function ProfileApp() {
                   ),
                 }}
               >
-                
+                <Tab
+                  className="text-14 font-semibold min-h-40 min-w-64 mx-4 px-12 "
+                  disableRipple
+                  label="Timeline"
+                />
+                <Tab
+                  className="text-14 font-semibold min-h-40 min-w-64 mx-4 px-12 "
+                  disableRipple
+                  label="About"
+                />
+                <Tab
+                  className="text-14 font-semibold min-h-40 min-w-64 mx-4 px-12 "
+                  disableRipple
+                  label="Reservations"
+                />
               </Tabs>
-             
-              <Button
-                className=""
-                variant="contained"
-                color="secondary"
-                component={NavLinkAdapter}
-                to="/userlistings/managed-user-listings/new"
-                size={isMobile ? "small" : "medium"}
-              >
-                <FuseSvgIcon size={20}>heroicons-outline:plus</FuseSvgIcon>
-                <span className="mx-4 sm:mx-8">Add Property/Listing</span>
-              </Button>
             </div>
           </div>
         </div>
       }
+      
       content={
         <div className="flex flex-auto justify-center w-full max-w-5xl mx-auto p-24 sm:p-32">
-          {selectedTab === 0 && (
-            <TimelineTab
-              listings={shopAndProperties?.data?.shopAccountEstateProperties}
-              loading={accountDetailsIsLoading}
-            />
-          )}
-          {/* {selectedTab === 1 && <AboutTab />} */}
-          {/* {selectedTab === 1 && <PhotosVideosTab />}
-					{selectedTab === 2 && <PhotosVideosTab />} */}
+          {selectedTab === 0 && <TimelineTab />}
+          {selectedTab === 1 && <AboutTab />}
+          {selectedTab === 2 && <PhotosVideosTab />}
         </div>
       }
       scroll={isMobile ? "normal" : "page"}
@@ -178,4 +171,4 @@ function ProfileApp() {
   );
 }
 
-export default ProfileApp;
+export default RcsProfileApp;

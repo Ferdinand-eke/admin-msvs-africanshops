@@ -317,18 +317,18 @@ const navigationConfig = [
 		translate: 'RESTAURANTS-&-CLUBS',
 		children: [
 			{
-				id: 'admin-manage.rcs',
+				id: 'rcs-management.rcs',
 				title: 'Manage RCS',
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
-				url: '/admin-manage/rcs'
+				url: '/rcs-management/rcs-listings'
 			},
 			{
-				id: 'admin-manage.rcs-orders',
+				id: 'rcs-management.rcs-orders',
 				title: 'Manage RCS Orders ',
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
-				url: '/admin-manage/rcs-orders'
+				url: '/rcs-management/rcs-reservations-menuorders'
 			},
 		
 		]

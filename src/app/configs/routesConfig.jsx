@@ -47,6 +47,7 @@ import AdminManageOrdersAppConfig from "../main/africanshops-control-dashboard/m
 import CountryShippingTableAppConfig from "../main/africanshops-control-dashboard/manage-countryshippingtable/CountryShippingTableAppConfig";
 import ManagedUserListingsAppConfig from "../main/homes/managedusersandproperties/ManagedUserListingsAppConfig";
 import ManagedBookingsUserListingsAppConfig from "../main/bookings-homes/managebookingsusersandproperties/ManagedBookingsUserListingsAppConfig";
+import ManagedRcsListingsAppConfig from "../main/manage-rcses/managercses/ManagedRcsListingsAppConfig";
 // import AfricanshopsMessengerAppConfig from '../main/africanshops-messenger/AfricanshopsMessengerAppConfig';
 
 const routeConfigs = [
@@ -121,6 +122,10 @@ const routeConfigs = [
    ManagedBookingsUserListingsAppConfig,
    /****Africanshops Bookings Property Management  Configs Ends Here */
   
+  /****Africanshops RCS  Management  Configs Starts  Here */
+  ManagedRcsListingsAppConfig,
+  /****Africanshops RCS Management  Configs Ends Here */
+   
 
   /**
    * Routes Below to be disabled starts

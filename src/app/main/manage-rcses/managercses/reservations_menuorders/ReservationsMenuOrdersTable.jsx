@@ -16,7 +16,7 @@ import {
 } from "src/app/api/admin-handle-bookingsproperties/useAdminHandleBookingsProperties";
 import { formatCurrency } from "src/app/main/africanshops-control-dashboard/manage-lgashippingtable/PosUtils";
 
-function ReservationsOnBookingsListTable(props) {
+function ReservationsMenuOrdersTable(props) {
   const {
     active,
     allReservations,
@@ -209,4 +209,4 @@ function ReservationsOnBookingsListTable(props) {
   );
 }
 
-export default ReservationsOnBookingsListTable;
+export default ReservationsMenuOrdersTable;

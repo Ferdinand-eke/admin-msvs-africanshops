@@ -1,13 +1,13 @@
 import GlobalStyles from '@mui/material/GlobalStyles';
-import ReservationsBookingsPropertiesHeader from './ReservationsBookingsPropertiesHeader';
-import ReservationsOnBookingsListTable from './ReservationsOnBookingsListTable';
+import ReservationsMenuOrdersHeader from './ReservationsMenuOrdersHeader';
+import ReservationsMenuOrdersTable from './ReservationsMenuOrdersTable';
 import { useState } from 'react';
 import { useBookingPropertiesReservationsByAdmin, useCancelledBookingsReservationsByAdmin } from 'src/app/api/admin-handle-bookingsproperties/useAdminHandleBookingsProperties';
 
 /**
  * The products page.
  */
-function ReservationsOnBookingsProperties() {
+function ReservationsMenuOrders() {
 
 	const { data: allReservations, isLoading: allReservationsIsLoading } =
     useBookingPropertiesReservationsByAdmin();
@@ -32,14 +32,14 @@ function ReservationsOnBookingsProperties() {
 				})}
 			/>
 			<div className="w-full h-full container flex flex-col">
-				<ReservationsBookingsPropertiesHeader 
+				<ReservationsMenuOrdersHeader 
 				active={active}
 				setActive={setActive}
 				allReservations={allReservations?.data?.bookingsReservations}
 				allCancelledReservations={allCancelledReservations?.data?.payload}
 				/>
 				
-				<ReservationsOnBookingsListTable 
+				<ReservationsMenuOrdersTable 
 				active={active}
 				allReservations={allReservations?.data?.bookingsReservations}
 				allCancelledReservations={allCancelledReservations?.data?.payload}
@@ -54,4 +54,4 @@ function ReservationsOnBookingsProperties() {
 	
 }
 
-export default ReservationsOnBookingsProperties;
+export default ReservationsMenuOrders;
