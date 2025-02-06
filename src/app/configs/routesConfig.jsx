@@ -65,9 +65,11 @@ const routeConfigs = [
   ManagedUserListingsAppConfig,
 
   /****Africanshops Merhcant's Dashboard Configs Starts Here */
-  ShopDashboardAppConfig,
-  ShopProductsAppConfig,
-  ShopOrdersAppConfig,
+  // ShopDashboardAppConfig,
+  // ShopProductsAppConfig,
+  // ShopOrdersAppConfig,
+
+  
   SupportHelpCenterAppConfig,
   AfricanshopsFinanceDashboardAppConfig,
   AfricanshopsMessengerAppConfig,

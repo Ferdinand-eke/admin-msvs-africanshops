@@ -664,8 +664,9 @@ export const createInfo = (InfoFormData) =>
 //Admin Order Routes
 export const adminGetOrders = () => authApi().get("/adminorders");
 export const adminGetOrderById = (id) => authApi().get(`/adminorders/${id}`);
-export const adminGetOrderItemsOfOrderById = (id) =>
-  authApi().get(`/adminorders/adminorderitems-of-order/${id}`);
+
+
+
 export const adminDeleteOrders = (id) => authApi().delete(`/adminorders/${id}`);
 export const adminPackOrders = (id) =>
   authApi().put(`/adminorders/pack-unpack/${id}`);
@@ -675,6 +676,14 @@ export const adminConfirmOrderArrival = (id) =>
   authApi().put(`/adminorders/confirm-order-arrival/${id}`);
 export const adminDeliverOrders = (id) =>
   authApi().put(`/adminorders/deliver-undeliver/${id}`);
+
+
+/******Manaing order-items */
+
+export const adminGet_OrderItems = () => authApi().get("/adminmanage-orderitems");
+
+  export const adminGetOrderItemsOfOrderById = (id) =>
+  authApi().get(`/adminorders/adminorderitems-of-order/${id}`);
 /*****
  * ###########################################################################################
  * Admin ORDERS-Management handling ends here  (All done as @ 20th August, 2024)

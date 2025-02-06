@@ -13,6 +13,7 @@ import {
   adminGetOrderById,
   adminGetOrderItemsOfOrderById,
   adminGetOrders,
+  adminGet_OrderItems,
   adminPackOrders,
   adminShipOrders,
 } from '../apiRoutes';
@@ -106,15 +107,28 @@ export function useDeliverOrder() {
   });
 }
 
-
-/******
- * ==================================================
- * HANDLING OF ORDER ITEMS 
- * =====================================================
- */
-
 export function useAdminOrderItems(orderId) {
+  // orderId
+  if (!orderId ) {
+    return {};
+  }
+
   return useQuery(['orders_items', orderId], () =>
     adminGetOrderItemsOfOrderById(orderId)
   );
 }
+
+
+/******
+ * ==================================================
+ * HANDLING OF ORDER ITEMS  STARTS HERE 
+ * =====================================================
+ */
+
+export function useAdminGetOrderItems() {
+  return useQuery(['admin_orders_items'], adminGet_OrderItems);
+}
+
+
+
+

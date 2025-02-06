@@ -9,22 +9,21 @@ import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
 import FuseLoading from '@fuse/core/FuseLoading';
 import OrdersStatus from '../order/OrdersStatus';
-import useAdminGetOrders from 'src/app/api/orders/useAdminGetShopOrders';
+import  { useAdminGetOrderItems } from 'src/app/api/orders/useAdminGetShopOrders';
 import OrdersCreatedAndPaymentStatus from '../order/OrdersCreatedAndPaymentStatus';
 import { formatCurrency } from '../../../manage-lgashippingtable/PosUtils';
+import OrderItemsCancellationStatus from '../order/OrderItemsCancellationStatus';
 
-function OrdersTable() {
-	const { data: adminOrders, isLoading, isError } = useAdminGetOrders();
+function OrderItemsTable() {
+	const { data: orderItems, isLoading, isError } = useAdminGetOrderItems();
 
-	// console.log("ORDERS", adminOrders?.data?.MOrders)
+
+	// console.log("ORDERS__ITEMS", adminOrders)
+
+	// console.log("GEtting all oredr-items...", orderItems?.data)
 
 	const columns = useMemo(
 		() => [
-			// {
-			// 	accessorKey: 'id',
-			// 	header: 'Id',
-			// 	size: 64
-			// },
 			{
 				accessorKey: '_id',
 				header: 'Reference',
@@ -37,30 +36,42 @@ function OrdersTable() {
 						color="secondary"
 						role="button"
 					>
-						{/* {row?.original?._id} */}
 						{row?.original?.paymentResult?.reference ? row?.original?.paymentResult?.reference : row?.original?._id}
 					</Typography>
 				)
 			},
 			{
 				id: 'name',
-				accessorFn: (row) => `${row?.shippingAddress?.fullName}`,
+				accessorFn: (row) => `${row?.userOrderCreator?.name}`,
 				header: 'Customer'
 			},
 			{
-				id: 'total',
-				accessorFn: (row) => `NGN ${formatCurrency(row?.totalPrice)}`,
+				id: 'price',
+				accessorFn: (row) => `NGN ${formatCurrency(row?.price)}`,
 				header: 'Total',
 				size: 64
 			},
-			// { id: 'payment', accessorFn: (row) => row.payment.method, header: 'Payment', size: 128 },
 			{
-				id: 'isPaid',
-				accessorFn: (row) => <OrdersCreatedAndPaymentStatus 
-				createdAt={row?.createdAt}
-				isPaid={row?.isPaid} />,
+				id: 'quantity',
+				accessorFn: (row) => ` ${(row?.quantity)}`,
+				header: 'Quantity',
+				size: 64
+			},
+
+			{
+				id: 'total',
+				accessorFn: (row) => `NGN ${formatCurrency(row?.price * row?.quantity)}`,
+				header: 'Total',
+				size: 64
+			},
+			
+			{
+				id: 'isCanceled',
+				accessorFn: (row) => <OrderItemsCancellationStatus 
+				isCanceled={row?.isCanceled}
+				isRefundRequested={row?.isRefundRequested} />,
 				accessorKey: 'isPaid',
-				header: 'Payment Status'
+				header: 'Cancellation Status'
 			},
 			{
 				accessorKey: 'createdAt',
@@ -80,19 +91,19 @@ function OrdersTable() {
 
 
 	const rows = [];
-	adminOrders?.data?.MOrders &&
-    adminOrders?.data?.MOrders?.forEach((item) => {
+	 orderItems?.data &&
+     orderItems?.data?.forEach((item) => {
       rows.push({
         id: item?._id,
-        name: item?.shippingAddress?.fullName,
+        name: item?.name,
 
-        address: item?.shippingAddress?.address,
-        status: item.isPaid,
-        totalPrice: item?.totalPrice,
-        isPaid: item.isPaid,
-        isPacked: item.isPacked,
-        isShipped: item.isShipped,
-        isDelivered: item.isDelivered,
+        quantity: item?.quantity,
+        // status: item.isPaid,
+        price: item?.Price,
+        isCanceled: item.isCanceled,
+        isRefundRequested: item.isRefundRequested,
+        // isShipped: item.isShipped,
+        // isDelivered: item.isDelivered,
         createdAt: item?.createdAt.slice(0, 10),
       });
     });
@@ -121,7 +132,7 @@ function OrdersTable() {
 		
 	}
 
-if (!adminOrders?.data?.MOrders) {
+if (! orderItems?.data) {
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -144,6 +155,7 @@ if (!adminOrders?.data?.MOrders) {
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"
 			elevation={0}
 		>
+			{/* <p>Getting all order items</p> */}
 			<DataTable
 				initialState={{
 					density: 'spacious',
@@ -158,52 +170,13 @@ if (!adminOrders?.data?.MOrders) {
 						pageSize: 20
 					}
 				}}
-				// data={orders}
 				rows={rows}
-				data={adminOrders?.data?.MOrders}
+				data={ orderItems?.data}
 				columns={columns}
-				// renderRowActionMenuItems={({ closeMenu, row, table }) => [
-				// 	<MenuItem
-				// 		key={0}
-				// 		onClick={() => {
-				// 			removeOrders([row.original.id]);
-				// 			closeMenu();
-				// 			table.resetRowSelection();
-				// 		}}
-				// 	>
-				// 		<ListItemIcon>
-				// 			<FuseSvgIcon>heroicons-outline:trash</FuseSvgIcon>
-				// 		</ListItemIcon>
-				// 		Delete
-				// 	</MenuItem>
-				// ]}
-				// renderTopToolbarCustomActions={({ table }) => {
-				// 	const { rowSelection } = table.getState();
-
-				// 	if (Object.keys(rowSelection).length === 0) {
-				// 		return null;
-				// 	}
-
-				// 	return (
-				// 		<Button
-				// 			variant="contained"
-				// 			size="small"
-				// 			onClick={() => {
-				// 				const selectedRows = table.getSelectedRowModel().rows;
-				// 				removeOrders(selectedRows.map((row) => row.original.id));
-				// 				table.resetRowSelection();
-				// 			}}
-				// 			className="flex shrink min-w-40 ltr:mr-8 rtl:ml-8"
-				// 			color="secondary"
-				// 		>
-				// 			<FuseSvgIcon size={16}>heroicons-outline:trash</FuseSvgIcon>
-				// 			<span className="hidden sm:flex mx-8">Delete selected items</span>
-				// 		</Button>
-				// 	);
-				// }}
+				
 			/>
 		</Paper>
 	);
 }
 
-export default OrdersTable;
+export default OrderItemsTable;

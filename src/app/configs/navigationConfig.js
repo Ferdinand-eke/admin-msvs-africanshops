@@ -275,6 +275,14 @@ const navigationConfig = [
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/admin-manage/pos'
 			},
+
+			{
+				id: 'shoporders.orderitems',
+				title: 'Manage Order Items',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/admin-manage/orderitems'
+			},
 		
 		]
 	},

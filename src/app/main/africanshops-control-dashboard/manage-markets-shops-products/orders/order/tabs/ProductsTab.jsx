@@ -13,7 +13,7 @@ function ProductsTab() {
 		skip: !orderId
 	});
 
-	console.log("Order-ITEMS", orderItems?.data)
+	// console.log("Order-ITEMS", orderItems?.data)
 
 	return (
 		<div className="table-responsive">

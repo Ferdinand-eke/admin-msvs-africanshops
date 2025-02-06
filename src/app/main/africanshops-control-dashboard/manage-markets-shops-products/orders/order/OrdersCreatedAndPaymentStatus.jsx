@@ -82,6 +82,7 @@ export const orderStatuses = [
 
 function OrdersCreatedAndPaymentStatus(props) {
 	const {createdAt, isPaid } = props;
+	
 	return (
 		<>
 		{
