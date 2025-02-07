@@ -17,11 +17,6 @@ import OrderItemsCancellationStatus from '../order/OrderItemsCancellationStatus'
 function OrderItemsTable() {
 	const { data: orderItems, isLoading, isError } = useAdminGetOrderItems();
 
-
-	// console.log("ORDERS__ITEMS", adminOrders)
-
-	// console.log("GEtting all oredr-items...", orderItems?.data)
-
 	const columns = useMemo(
 		() => [
 			{
@@ -66,13 +61,21 @@ function OrderItemsTable() {
 			},
 			
 			{
-				id: 'isCanceled',
+				id: 'id',
+				accessorKey: 'isCanceled',
+				header: 'Cancellation Status',
+				
 				accessorFn: (row) => <OrderItemsCancellationStatus 
+				orderItemId={row?._id}
 				isCanceled={row?.isCanceled}
-				isRefundRequested={row?.isRefundRequested} />,
-				accessorKey: 'isPaid',
-				header: 'Cancellation Status'
+				isRefundRequested={row?.isRefundRequested} 
+				isApprovedAndRefundedByAfricanshops={row?.isApprovedAndRefundedByAfricanshops} 
+				
+				/>,
+				
+				
 			},
+
 			{
 				accessorKey: 'createdAt',
 				header: 'Date Created',
@@ -102,6 +105,7 @@ function OrderItemsTable() {
         price: item?.Price,
         isCanceled: item.isCanceled,
         isRefundRequested: item.isRefundRequested,
+		isApprovedAndRefundedByAfricanshops: item.isApprovedAndRefundedByAfricanshops,
         // isShipped: item.isShipped,
         // isDelivered: item.isDelivered,
         createdAt: item?.createdAt.slice(0, 10),

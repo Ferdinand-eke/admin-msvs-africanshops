@@ -134,7 +134,7 @@ const routeConfigs = [
    */
   // ...PagesConfigs,
   // ...UserInterfaceConfigs,
-  // ...DashboardsConfigs,
+  ...DashboardsConfigs,
   // ...AppsConfigs,
   // ...authRoleExamplesConfigs,
   /**

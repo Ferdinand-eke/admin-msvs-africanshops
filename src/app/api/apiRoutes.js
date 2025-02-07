@@ -12,15 +12,6 @@ import { toast } from "react-toastify";
 const baseDomain = import.meta.env
   .VITE_API_BASE_URL_PROD; /**production & dev */
 
-// console.log("domain from ENV", baseDomain)
-
-// const baseDomain = "http://localhost:8000";
-//====================================================
-/***Digital Ocean Server : Current main server*/
-
-// const baseDomain = "https://coral-app-n8ox9.ondigitalocean.app"; //deployed serve
-
-//===================================================================================
 
 export const baseUrl = `${baseDomain}`;
 
@@ -94,12 +85,13 @@ export function authApi() {
   return Api;
 }
 
-//News Blog
+/***News Blog */
 export const getNewBlogPosts = () => Api().get("/posts");
 export const getNewBlogPostsById = (id) => authApi().get(`/posts/${id}`);
 
+
+/****Admin Authentication */
 export const adminSigin = (formData) => {
-  // console.log("LOGIN_API_CALL", formData)
   return Api().post("/authadmin/adminlogin", formData);
 };
 
@@ -108,7 +100,7 @@ export const adminSigin = (formData) => {
  * Departments handling starts here  (All functional as @ 20th August, 2024)
  * ###############################################################################
  */
-//departments
+/***Handle departments */
 export const getDepts = () => Api().get("/departments"); //done
 export const getDeptById = (id) => Api().get(`/departments/${id}`); //done
 export const createDepartMent = (deptFormData) =>
@@ -132,7 +124,6 @@ export const deleteDepartmentById = (id) =>
  * Designation handling starts here  (All functional as @ 20th August, 2024)
  * ###############################################################################
  */
-//designation
 export const getDesigs = () => Api().get("/designations"); //done
 export const getDesigById = (id) => Api().get(`/designations/${id}`); //done
 export const getDesigByDepartmentId = (id) =>
@@ -157,7 +148,7 @@ export const deleteDesignationById = (id) =>
  * countries handling starts here  (All functional as @ 20th August, 2024)
  * ###############################################################################
  */
-//Countries
+/***Countries */
 export const getCountries = () => authApi().get("/buzcountries"); //done
 
 /****operational countries */
@@ -179,7 +170,7 @@ export const updateCountryById = (countryFormData) => {
 export const createCountry = (countryFormData) =>
   authApi().post("/buzcountries", countryFormData); //done
 
-//operational countries
+/***operational countries */
 export const getOperationalCountries = () =>
   authApi().get("/buzcountries/operational"); //done
 export const getOperationalCountryById = (id) =>
@@ -198,7 +189,6 @@ export const updateCountryShippingTableById = (countryFormData) => {
 };
 
 export const deleteCountryShippingTableById = (countryFormData) => {
-  // console.log("InROUTES-FILE", countryFormData)
   return authApi().put(
     `/buzcountries/delete-shipping-table/${countryFormData?.countryToShipTo}`,
     countryFormData
@@ -255,7 +245,6 @@ export const getOperationalStateByCountryId = (cid) =>
  * LGAs/COUNTIES handling starts here  (All done as @ 20th August, 2024)
  * ####################################################################
  */
-//lgas ''
 export const getBLgas = () => authApi().get("/buz-lgas"); //done
 export const getOperationalBLgas = () => Api().get("/buz-lgas/operational"); //done
 export const getLgaById = (id) => authApi().get(`/buz-lgas/${id}`); //done
@@ -283,12 +272,10 @@ export const deleteLgaById = (id) => authApi().delete(`/buz-lgas/${id}`);
  * TRADEHUBS handling starts here  (All done as @ 20th August, 2024)
  * ####################################################################
  */
-//Tradehubs
 export const getTradehubs = () => Api().get("/tradehubs"); //done
 export const getTradehubById = (id) => Api().get(`/tradehubs/${id}`); //done/
 
 export const updateTradehubById = (hubFormData) => {
-  // console.log("TradeHub to UPDATE", hubFormData)
   return authApi().put(`/tradehubs/${hubFormData?._id}`, hubFormData); //done
 };
 
@@ -374,11 +361,6 @@ export const createLargeProdUnit = (prodLargeUnitData) =>
 // Product Routes Routes
 export const getProducts = () => Api().get("/products");
 export const getProductById = (id) => Api().get(`/products/${id}`);
-// export const updateProductById = (id, productFormData) =>
-//   authApi().put(`/products/${id}`, productFormData);
-
-// export const createProduct = (productFormData) =>
-//   authApi().post('/products', productFormData);
 
 ///============Product related========================//
 
@@ -682,6 +664,8 @@ export const adminDeliverOrders = (id) =>
 
 export const adminGet_OrderItems = () => authApi().get("/adminmanage-orderitems");
 
+export const adminGet_ApproveAndPayRefund = (itemId) => authApi().put(`/adminmanage-orderitems/refund-credit-wallet/${itemId}/on-order-item`);
+
   export const adminGetOrderItemsOfOrderById = (id) =>
   authApi().get(`/adminorders/adminorderitems-of-order/${id}`);
 /*****
@@ -711,7 +695,6 @@ export const adminFinanceApproveWithdrawals = (id) =>
 export const adminFinancePayoutWithdrawals = (id) =>
   authApi().put(`/handlewithdrawals/payout-withdrawal/${id}`);
 
-//others 61b3279cdc3ce9f8fb5160f7
 // export const getBarners = () => Api().get('/barners');
 // export const getPosts = () => Api().get('/posts');
 // export const findOnePost = (id) => Api().get(`/posts/${id}`);
@@ -881,7 +864,7 @@ export const AdminLogOutCall = () => {
 };
 
 
-//Shop Users Logout functionality  usersproducts
+/*****Shop Users Logout functionality */
 export const logOut = () => {
   // const logeAuthOut = useSignOut();
   if (typeof window !== "undefined") {

@@ -1,87 +1,28 @@
 import _ from "@lodash";
+import { Tag } from "@mui/icons-material";
+import { Typography } from "@mui/material";
 import clsx from "clsx";
-/**
- * The order statuses.
- */
-export const orderStatuses = [
-  {
-    id: "1",
-    name: "Awaiting check payment",
-    color: "bg-blue text-white",
-  },
-  {
-    id: "2",
-    name: "Payment accepted",
-    color: "bg-green text-white",
-  },
-  {
-    id: "3",
-    name: "Preparing the order",
-    color: "bg-orange text-black",
-  },
-  {
-    id: "4",
-    name: "Shipped",
-    color: "bg-purple text-white",
-  },
-  {
-    id: "5",
-    name: "Delivered",
-    color: "bg-green-700 text-white",
-  },
-  {
-    id: "6",
-    name: "Canceled",
-    color: "bg-pink text-white",
-  },
-  {
-    id: "7",
-    name: "Refunded",
-    color: "bg-red text-white",
-  },
-  {
-    id: "8",
-    name: "Payment error",
-    color: "bg-red-700 text-white",
-  },
-  {
-    id: "9",
-    name: "On pre-order (paid)",
-    color: "bg-purple-300 text-white",
-  },
-  {
-    id: "10",
-    name: "Awaiting bank wire payment",
-    color: "bg-blue text-white",
-  },
-  {
-    id: "11",
-    name: "Awaiting PayPal payment",
-    color: "bg-blue-700 text-white",
-  },
-  {
-    id: "12",
-    name: "Remote payment accepted",
-    color: "bg-green-800 text-white",
-  },
-  {
-    id: "13",
-    name: "On pre-order (not paid)",
-    color: "bg-purple-700 text-white",
-  },
-  {
-    id: "14",
-    name: "Awaiting Cash-on-delivery payment",
-    color: "bg-blue-800 text-white",
-  },
-];
+import { useHandleRefundApprovalAndPayment } from "src/app/api/orders/useAdminGetShopOrders";
 
 /**
- * The orders status component.
+ * The order item cancellation status component.
  */
 
 function OrderItemsCancellationStatus(props) {
-  const { isCanceled, isRefundRequested } = props;
+  const {
+    isCanceled,
+    isRefundRequested,
+    orderItemId,
+    isApprovedAndRefundedByAfricanshops,
+  } = props;
+
+  const approveRefundAndPay = useHandleRefundApprovalAndPayment();
+
+  const initiateRefund = (itemId) => {
+    if (window.confirm("Approving refund?")) {
+      approveRefundAndPay.mutate(itemId);
+    }
+  };
 
   return (
     <>
@@ -96,14 +37,28 @@ function OrderItemsCancellationStatus(props) {
         </div>
       )}
 
-      {isCanceled && isRefundRequested && (
+      {isCanceled &&
+        isRefundRequested &&
+        !isApprovedAndRefundedByAfricanshops && (
+          <div
+            className={clsx(
+              "inline text-12 font-semibold py-4 px-12 rounded-full truncate",
+              "bg-orange text-white cursor-pointer"
+            )}
+            onClick={() => initiateRefund(orderItemId)}
+          >
+            Refund Requested: Iniiate Refund{" "}
+          </div>
+        )}
+
+      {isApprovedAndRefundedByAfricanshops && (
         <div
           className={clsx(
-            "inline text-12 font-semibold py-4 px-12 rounded-full truncate",
-            "bg-orange text-white"
+            "inline text-12 font-semibold py-4 px-12 rounded-full truncate ",
+            "bg-orange-900 text-white"
           )}
         >
-          Item Cancelled & Refund Requested{" "}
+          Refund Paid
         </div>
       )}
 
@@ -114,31 +69,9 @@ function OrderItemsCancellationStatus(props) {
             "bg-green text-white"
           )}
         >
-          View Item 
+          View Item
         </div>
       )}
-
-      {/* {
-			isCanceled && !isRefundRequested ?
-			<div
-			className={clsx(
-				'inline text-12 font-semibold py-4 px-12 rounded-full truncate',
-				'bg-green text-white'
-			)}
-		>
-			Order Created & Paid
-		</div>
-		
-		
-		: <div
-			className={clsx(
-				'inline text-12 font-semibold py-4 px-12 rounded-full truncate',
-				'bg-red-700 text-white'
-			)}
-		>
-			Order Created & Not Paid
-		</div>
-		} */}
     </>
   );
 }

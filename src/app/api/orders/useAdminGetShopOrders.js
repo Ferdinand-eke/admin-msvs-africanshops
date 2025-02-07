@@ -13,27 +13,34 @@ import {
   adminGetOrderById,
   adminGetOrderItemsOfOrderById,
   adminGetOrders,
+  adminGet_ApproveAndPayRefund,
   adminGet_OrderItems,
   adminPackOrders,
   adminShipOrders,
 } from '../apiRoutes';
 
+
+/*** 1) Get all orders on database by admin */
 export default function useAdminGetOrders() {
   return useQuery(['orders_adminrole'], adminGetOrders);
 }
 
+/*** 2) Get single order  by admin */
 export function useAdminFindSingleOrder(orderId) {
   return useQuery(['orders_adminrole', orderId], () =>
     adminGetOrderById(orderId)
   );
 }
 
+
+/*** 3) Get shop orders  by admin */
 export function useAdminFindShopOrder(orderId) {
   return useQuery(['orders_adminrole', orderId], () =>
     adminGetOrderById(orderId)
   );
 }
 
+/*** 4) Handle Pack order  by admin */
 export function usePackOrder() {
   const queryClient = useQueryClient();
   return useMutation(adminPackOrders, {
@@ -42,7 +49,6 @@ export function usePackOrder() {
       queryClient.invalidateQueries('orders_adminrole');
     },
     onError: (err) => {
-      // toast.success('Oops!, an error occured');
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
@@ -52,6 +58,7 @@ export function usePackOrder() {
   });
 }
 
+/*** 5) Handle Ship order  by admin */
 export function useShipOrder() {
   const queryClient = useQueryClient();
   return useMutation(adminShipOrders, {
@@ -60,7 +67,6 @@ export function useShipOrder() {
       queryClient.invalidateQueries('orders_adminrole');
     },
     onError: (err) => {
-      // toast.success('Oops!, an error occured');
 
       toast.error(
         err.response && err.response.data.message
@@ -70,16 +76,15 @@ export function useShipOrder() {
   });
 }
 
-/***Handle for order arrival */
+/*** 6) Handle  order arrival  by admin */
 export function useHandleOrderArrival() {
   const queryClient = useQueryClient();
   return useMutation(adminConfirmOrderArrival, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Order Arrived Warehouse successfully!');
       queryClient.invalidateQueries('orders_adminrole');
     },
     onError: (err) => {
-      // toast.success('Oops!, an error occured');
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
@@ -89,6 +94,7 @@ export function useHandleOrderArrival() {
   });
 }
 
+/*** 6) Handle  Deliver order after arrival  by admin */
 export function useDeliverOrder() {
   const queryClient = useQueryClient();
   return useMutation(adminDeliverOrders, {
@@ -97,7 +103,6 @@ export function useDeliverOrder() {
       queryClient.invalidateQueries('orders_adminrole');
     },
     onError: (err) => {
-      // toast.success('Oops!, an error occured while processing request');
       toast.error(
         err.response && err.response.data.message
           ? err.response.data.message
@@ -107,12 +112,12 @@ export function useDeliverOrder() {
   });
 }
 
+
+/*** 6) Admin get order items on an order */
 export function useAdminOrderItems(orderId) {
-  // orderId
   if (!orderId ) {
     return {};
   }
-
   return useQuery(['orders_items', orderId], () =>
     adminGetOrderItemsOfOrderById(orderId)
   );
@@ -125,9 +130,40 @@ export function useAdminOrderItems(orderId) {
  * =====================================================
  */
 
+/*** 1) Handle Get all order_items and cancellation statuses */
 export function useAdminGetOrderItems() {
   return useQuery(['admin_orders_items'], adminGet_OrderItems);
 }
+
+/*** 2) Handle cancelled order item refunds approval by admin */
+export function useHandleRefundApprovalAndPayment() {
+  const queryClient = useQueryClient();
+  return useMutation(adminGet_ApproveAndPayRefund, {
+    onSuccess: (data) => {
+
+      if(data?.data?.success){
+        toast.success(`${data?.data?.success ? data?.data?.message : 'Refund on order item successful!'}`);
+        queryClient.invalidateQueries('admin_orders_items');
+      }
+   
+    },
+    onError: (err) => {
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
+    },
+  });
+}
+
+
+
+/******
+ * ==================================================
+ * HANDLING OF ORDER ITEMS  ENDS HERE   
+ * =====================================================
+ */
 
 
 

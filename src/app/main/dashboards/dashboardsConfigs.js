@@ -6,9 +6,9 @@ import CryptoDashboardAppConfig from './crypto/CryptoDashboardAppConfig';
  * Dashboards
  */
 const dashboardsConfigs = [
-	AnalyticsDashboardAppConfig,
+	// AnalyticsDashboardAppConfig,
 	ProjectDashboardAppConfig,
-	FinanceDashboardAppConfig,
-	CryptoDashboardAppConfig
+	// FinanceDashboardAppConfig,
+	// CryptoDashboardAppConfig
 ];
 export default dashboardsConfigs;

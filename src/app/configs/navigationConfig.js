@@ -29,7 +29,7 @@ const navigationConfig = [
 				title: 'Dashboard',
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-check',
-				url: '/shop-dashboard'
+				url: '/dashboards/project'
 			},
 			
 		]
