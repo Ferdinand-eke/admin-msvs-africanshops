@@ -16,6 +16,8 @@ import NavigationShortcuts from '../../shared-components/navigation/NavigationSh
 import NavigationSearch from '../../shared-components/navigation/NavigationSearch';
 import UserMenu from '../../shared-components/UserMenu';
 import QuickPanelToggleButton from '../../shared-components/quickPanel/QuickPanelToggleButton';
+import { selectUser } from 'src/app/auth/user/store/userSlice';
+import LogoHome from 'app/theme-layouts/shared-components/LogoHome';
 
 /**
  * The toolbar layout 1.
@@ -25,6 +27,7 @@ function ToolbarLayout1(props) {
 	const config = useAppSelector(selectFuseCurrentLayoutConfig);
 	const navbar = useAppSelector(selectFuseNavbar);
 	const toolbarTheme = useAppSelector(selectToolbarTheme);
+	const user = useAppSelector(selectUser);
 	return (
 		<ThemeProvider theme={toolbarTheme}>
 			<AppBar
@@ -60,9 +63,17 @@ function ToolbarLayout1(props) {
 							</>
 						)}
 
-						<Hidden lgDown>
+						{/* <Hidden lgDown>
 							<NavigationShortcuts />
-						</Hidden>
+						</Hidden> */}
+						{user?.email && <LogoHome />}
+
+						{/* <Hidden lgDown> */}
+						{(!user?.role ||
+							(Array.isArray(user?.role) && user?.role?.length === 0)) && (
+							<LogoHome />
+						)}
+						{/* </Hidden> */}
 					</div>
 
 					<div className="flex h-full items-center overflow-x-auto px-8">

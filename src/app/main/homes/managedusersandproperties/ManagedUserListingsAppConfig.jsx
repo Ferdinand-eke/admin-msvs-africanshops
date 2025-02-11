@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 const ManagedUserListingApp = lazy(() => import('./ManagedUserListingApp'));
 const PropertyListing = lazy(() => import('./product/PropertyListing'));
-const Products = lazy(() => import('./products/Products'));
+const EstateProperties = lazy(() => import('./products/EstateProperties'));
 const ProfileApp = lazy(() => import('./manageprofile/ProfileApp'));
 const PropertyProfileApp = lazy(() => import('./manageuserpropertyprofile/PropertyProfileApp'))
 // const Order = lazy(() => import('./order/Order'));
@@ -19,6 +19,7 @@ const ManagedUserListingsAppConfig = {
 		layout: {}
 	},
 
+
 	routes: [
 		{
 			path: 'userlistings',
@@ -30,7 +31,7 @@ const ManagedUserListingsAppConfig = {
 				},
 				{
 					path: 'managed-user-listings',
-					element: <Products />
+					element: <EstateProperties />
 				},
 				
 			

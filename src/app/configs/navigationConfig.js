@@ -279,6 +279,62 @@ const navigationConfig = [
 		]
 	},
 
+
+	/***Admin Manage-Bookings-Providers and Reservations  pane */
+	{
+		id: 'adminmanagebookings',
+		title: 'Bookings-&-Reservations',
+		subtitle: 'Admin Manage Bookings',
+		type: 'group',
+		icon: 'heroicons-outline:home',
+		translate: 'BOOKINGS-&-RESERVATIONS',
+		children: [
+			{
+				id: 'admin-manage.bookingproviders',
+				title: 'Merchants & Bookings List',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/bookings-hospitality/user-listings'
+			},
+			{
+				id: 'admin-manage.reservations',
+				title: 'Manage Reservations ',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/bookings-hospitality/reservations'
+			},
+		
+		]
+	},
+
+	/***Admin Manage-Restaurants,Bars&Spots-Providers and orders  pane */
+	{
+		id: 'adminmanageRCS',
+		title: 'Restaurants-Clubs-&-Spots',
+		subtitle: 'Admin Manage RCS',
+		type: 'group',
+		icon: 'heroicons-outline:home',
+		translate: 'RESTAURANTS-&-CLUBS',
+		children: [
+			{
+				id: 'admin-manage.rcs',
+				title: 'Manage RCS',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/admin-manage/rcs'
+			},
+			{
+				id: 'admin-manage.rcs-orders',
+				title: 'Manage RCS Orders ',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/admin-manage/rcs-orders'
+			},
+		
+		]
+	},
+
+
 /***shop-orders orders pane */
 	// {
 	// 	id: 'shoporders',
@@ -308,12 +364,12 @@ const navigationConfig = [
 
 	/***Estate Properties management pane */
 	{
-		id: 'properties',
+		id: 'estateproperties',
 		title: 'Manage prperties',
 		subtitle: 'Properties management helpers',
 		type: 'group',
 		icon: 'heroicons-outline:home',
-		translate: 'PROPERTIES',
+		translate: 'REAL-ESTATE-PROPERTIES',
 		children: [
 			// {
 			// 	id: 'properties.list',
@@ -323,20 +379,20 @@ const navigationConfig = [
 			// 	url: '/properties/listings'
 			// },
 
-			{
-				id: 'properties.managedlist',
-				title: 'Managed Properties',
-				type: 'item',
-				icon: 'heroicons-outline:clipboard-check',
-				url: '/property/managed-listings'
-			},
+			// {
+			// 	id: 'properties.managedlist',
+			// 	title: 'Managed Properties',
+			// 	type: 'item',
+			// 	icon: 'heroicons-outline:clipboard-check',
+			// 	url: '/property/managed-listings'
+			// },
 
 			{
 				id: 'users.managedlist',
-				title: 'Managed Merchants Properties',
+				title: 'Merchants & Properties',
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-check',
-				url: '/userlistings'
+				url: '/userlistings/managed-user-listings'
 			},
 			
 		]

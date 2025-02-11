@@ -16,10 +16,9 @@ import UsersAppConfig from "../main/users/user/UsersAppConfig";
 import StaffAppConfig from "../main/users/admin/StaffAppConfig";
 import PropertiesAppConfig from "../main/properties/listings/PropertiesAppConfig";
 import ServiceTypesAppConfig from "../main/homes/servicetypes/ServiceTypesAppConfig";
-import ManagedListingsAppConfig from "../main/homes/managedproperties/ManagedListingsAppConfig";
 import PropertyTypesAppConfig from "../main/homes/propertytypes/PropertyTypesAppConfig";
 import SignAcceptInviteConfig from "../main/sign-accept-invite/SignAcceptInviteConfig";
-import ManagedUserListingsAppConfig from "../main/homes/managedusersandproperties/ManagedUserListingsAppConfig";
+// import ManagedUserListingsAppConfig from "../main/homes/managedusersandproperties/ManagedUserListingsAppConfigppConfig";
 import ShopDashboardAppConfig from "../main/vendors-shop/dasboard/ShopDashboardAppConfig";
 import ShopProductsAppConfig from "../main/vendors-shop/products/ShopProductsAppConfig";
 import ShopOrdersAppConfig from "../main/vendors-shop/orders/ShopOrdersAppConfig";
@@ -46,6 +45,8 @@ import PostCategoriesAppConfig from "../main/africanshops-control-dashboard/mana
 import PostsAppConfig from "../main/africanshops-control-dashboard/manage-editorials/posts/PostsAppConfig";
 import AdminManageOrdersAppConfig from "../main/africanshops-control-dashboard/manage-markets-shops-products/orders/AdminManageOrdersAppConfig";
 import CountryShippingTableAppConfig from "../main/africanshops-control-dashboard/manage-countryshippingtable/CountryShippingTableAppConfig";
+import ManagedUserListingsAppConfig from "../main/homes/managedusersandproperties/ManagedUserListingsAppConfig";
+import ManagedBookingsUserListingsAppConfig from "../main/bookings-homes/managebookingsusersandproperties/ManagedBookingsUserListingsAppConfig";
 // import AfricanshopsMessengerAppConfig from '../main/africanshops-messenger/AfricanshopsMessengerAppConfig';
 
 const routeConfigs = [
@@ -60,7 +61,6 @@ const routeConfigs = [
   // ServiceTypesAppConfig,
 
   // PropertyTypesAppConfig,
-  ManagedListingsAppConfig,
   ManagedUserListingsAppConfig,
 
   /****Africanshops Merhcant's Dashboard Configs Starts Here */
@@ -114,6 +114,13 @@ const routeConfigs = [
   /****Africanshops Countries Shipping Table Management  Configs Starts  Here */
   CountryShippingTableAppConfig,
   /****Africanshops Countries Shipping Table Management  Configs Ends Here */
+
+
+
+   /****Africanshops Bookings Property Management  Configs Starts  Here */
+   ManagedBookingsUserListingsAppConfig,
+   /****Africanshops Bookings Property Management  Configs Ends Here */
+  
 
   /**
    * Routes Below to be disabled starts

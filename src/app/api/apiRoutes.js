@@ -9,7 +9,8 @@ import { toast } from "react-toastify";
 /**
  * MAIN APIs STARTS
  */
-const baseDomain = import.meta.env.VITE_API_BASE_URL_PROD;  /**production & dev */
+const baseDomain = import.meta.env
+  .VITE_API_BASE_URL_PROD; /**production & dev */
 
 // console.log("domain from ENV", baseDomain)
 
@@ -99,8 +100,8 @@ export const getNewBlogPostsById = (id) => authApi().get(`/posts/${id}`);
 
 export const adminSigin = (formData) => {
   // console.log("LOGIN_API_CALL", formData)
-  return  Api().post("/authadmin/adminlogin", formData);}
- 
+  return Api().post("/authadmin/adminlogin", formData);
+};
 
 /*****
  * ###############################################################################
@@ -163,7 +164,7 @@ export const getCountries = () => authApi().get("/buzcountries"); //done
 export const getCountriesWithShippinTable = () =>
   Api().get("/buzcountries/with-shipping-table"); //done
 
-  export const getCountriesWithShippinTableExcludeOrigin = (originId) =>
+export const getCountriesWithShippinTableExcludeOrigin = (originId) =>
   Api().get(`/buzcountries/with-shipping-table/excluded-origin/${originId}`); //done
 
 export const getCountryById = (id) => authApi().get(`/buzcountries/${id}`); //done
@@ -769,18 +770,15 @@ export const updateApiAdminUserById = (adminFormData) =>
 export const createApiAdminUser = (adminFormData) =>
   authApi().post("/admin", adminFormData);
 
-  export const createRecruitAdminUserApi = (adminFormData) =>
+export const createRecruitAdminUserApi = (adminFormData) =>
   authApi().post("/admin/recruit-staff", adminFormData);
 
-  export const newAdminUserInviteAcceptanceEndpoint = (adminFormData) =>
+export const newAdminUserInviteAcceptanceEndpoint = (adminFormData) =>
   authApi().post("/admin/accept-invite", adminFormData);
-  //
-
+//
 
 // Admin/ControlPanel Admin Get Shops Routes  starts
 export const getApiAdminMerchants = () => authApi().get("/shops"); //new Dashboard done
-
-
 
 /*****
  * ###################################################################################################
@@ -789,23 +787,44 @@ export const getApiAdminMerchants = () => authApi().get("/shops"); //new Dashboa
  */
 export const adminGetEstatePropertiess = () => authApi().get("/handl-estates"); //done
 
-
-
-
-
 /****Shop on Estate properties */
-export const adminGetShopOnEstateProperties = () => authApi().get("/handl-estates/get-shopsonestates"); //done
-export const adminGetSingleShopAndEstateProperties = (id) => authApi().get(`/handl-estates/get-shop-and-its-estateproperties/${id}`);
+export const adminGetShopOnEstateProperties = () =>
+  authApi().get("/handle-estates/get-shopsonestates"); //done
+export const adminGetSingleShopAndEstateProperties = (id) =>
+  authApi().get(`/handle-estates/get-shop-and-its-estateproperties/${id}`);
 /*****
  * ###################################################################################################
  * ESTATE PROPERTIES handling ends here  (All done as @ 20th August, 2024)
  * ####################################################################################################
  */
 /**============================================================================================================= */
+/*****
+ * ###################################################################################################
+ * HOSPITALITY/BOOKINGS PROPERTIES handling starts here
+ * ####################################################################################################
+ */
 
+/****Shop on Hospitality properties */
+export const adminGetMerchantsOnHospitalityProperties = () =>
+  authApi().get("/handle-hospitality/get-merchants-on-hospitality"); //done
+export const adminGetSingleMerchantAndHospitalityProperties = (merchantId) =>
+  authApi().get(
+    `/handle-hospitality/get-marchants/${merchantId}/and-hospitality-properties`
+  );
+
+
+
+  /*******Getting and handling reservations */
+  export const adminGetBookingsReservationsApi = () =>
+  authApi().get("/handle-hospitality/get-hospitality-reservations"); 
+/*****
+ * ###################################################################################################
+ * HOSPITALITY/BOOKINGS PROPERTIES handling ends here  (All done as @ 20th August, 2024)
+ * ####################################################################################################
+ */
 
 /****
- * 
+ *
  * LOG OUT HANDLING BELOW
  */
 export const AdminLogOutCall = () => {

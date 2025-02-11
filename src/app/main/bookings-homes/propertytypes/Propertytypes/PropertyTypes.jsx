@@ -1,11 +1,11 @@
 import GlobalStyles from '@mui/material/GlobalStyles';
-import ProductsHeader from './ProductsHeader';
-import ProductsTable from './ShopOnEstatePropertiesTable';
+import PropertyTypesHeader from './PropertyTypesHeader';
+import PropertyTypesTable from './PropertyTypesTable';
 
 /**
- * The products page.
+ * The PropertyTypes page.
  */
-function Products() {
+function PropertyTypes() {
 	return (
 		<>
 			<GlobalStyles
@@ -16,16 +16,12 @@ function Products() {
 				})}
 			/>
 			<div className="w-full h-full container flex flex-col">
-				<ProductsHeader />
-				
-				<ProductsTable />
-				
+				<PropertyTypesHeader />
+				<PropertyTypesTable />
 				
 			</div>
 		</>
 	);
-
-	
 }
 
-export default Products;
+export default PropertyTypes;

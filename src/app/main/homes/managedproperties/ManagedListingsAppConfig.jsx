@@ -26,26 +26,19 @@ const ManagedListingsAppConfig = {
 					path: '',
 					element: <Navigate to="managed-listings" />
 				},
-				{
-					path: 'managed-listings',
-					element: <Products />
-				},
-				{
-					path: 'managed-listings/:productId/*',
-					element: <PropertyListing />
-				},
-				{
-					path: 'managed-listings/:productId/manage',
-					element: <ProfileApp />
-				},
 				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
+				// 	path: 'managed-listings',
+				// 	element: <Products />
 				// },
 				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+				// 	path: 'managed-listings/:productId/*',
+				// 	element: <PropertyListing />
+				// },
+				// {
+				// 	path: 'managed-listings/:productId/manage',
+				// 	element: <ProfileApp />
+				// },
+			
 			]
 		}
 	]

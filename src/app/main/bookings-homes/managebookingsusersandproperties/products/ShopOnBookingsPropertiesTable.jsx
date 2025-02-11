@@ -17,7 +17,7 @@ import useGetAllListings from "src/app/aaqueryhooks/listingssHandlingQuery";
 import useGetAllUsers from "src/app/aaqueryhooks/usersHandlingQuery";
 import { useShopOnEstateProperties } from "src/app/api/admin-handle-estateproperties/useAdminHandleEstateProperties";
 
-function ShopOnEstatePropertiesTable() {
+function ShopOnBookingsPropertiesTable() {
   const [filteredShop, setFilteredShop] = useState([]);
 
   const { data: usresData, isLoading: usersIsLoading } =
@@ -27,7 +27,7 @@ function ShopOnEstatePropertiesTable() {
     if (usresData?.data?.shopsOnEstates?.length > 0) {
       setFilteredShop(
         usresData?.data?.shopsOnEstates?.filter(
-          (shop) => shop?.shopplan?.plankey === "REALESTATES"
+          (shop) => shop?.shopplan?.plankey === "HOTELSANDAPARTMENTS"
         )
       );
     }
@@ -133,4 +133,4 @@ function ShopOnEstatePropertiesTable() {
   );
 }
 
-export default ShopOnEstatePropertiesTable;
+export default ShopOnBookingsPropertiesTable;
