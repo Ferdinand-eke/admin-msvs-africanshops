@@ -29,26 +29,23 @@ const defaultValues = {
 
 function JwtSignInForm() {
 
-	const { signIn, isLoading } = useJwtAuth();
+	const { signIn, isLoginLoading } = useJwtAuth();
 	const { control, formState, handleSubmit, setValue, setError } = useForm({
 		mode: 'onChange',
 		defaultValues,
-		resolver: zodResolver(schema)
+		// resolver: zodResolver(schema)
 	});
 	const { isValid, dirtyFields, errors } = formState;
 
 
 	function onSubmit(formData) {
-		console.log("Login-Values", formData)
 		const { email, password } = formData;
 		signIn({
 			email,
 			password
 		}).catch((error) => {
 			console.log('FormJSXError', error)
-
-
-			
+			toast.error(error?.message)
 		});
 	}
 	return (
@@ -127,15 +124,14 @@ function JwtSignInForm() {
 				color="secondary"
 				className=" mt-16 w-full"
 				aria-label="Sign in"
-				//|| isLoading
-				disabled={_.isEmpty(dirtyFields) || !isValid 
+				disabled={_.isEmpty(dirtyFields) || !isValid || isLoginLoading
 				
 				 }
 				type="submit"
 				size="large"
 			>
-				{/* {isLoading ? "processing..." : "Sign in"} */}
-				Sign in
+				{isLoginLoading ? "processing..." : "Sign in"}
+				{/* Sign in */}
 			</Button>
 		</form>
 	);

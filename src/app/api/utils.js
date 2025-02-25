@@ -4,8 +4,8 @@ import Cookies from 'js-cookie';
 
 
 
-const guestBaseDomain = import.meta.env.VITE_API_BASE_URL_PROD;  /**production & dev */
-
+// const guestBaseDomain = import.meta.env.VITE_API_BASE_URL_PROD;  /**production & dev */
+const guestBaseDomain = "http://localhost:8000";
 export const guestBaseUrl = `${guestBaseDomain}`;
 
 const baseDomain = `${guestBaseDomain}/api`;

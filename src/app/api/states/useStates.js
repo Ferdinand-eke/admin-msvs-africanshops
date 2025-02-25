@@ -13,6 +13,7 @@ export default function useStates() {
   return useQuery(['states'], getBStates);
 }
 
+
 //get single state
 export function useSingleState(stateId) {
   if (!stateId || stateId === "new") {

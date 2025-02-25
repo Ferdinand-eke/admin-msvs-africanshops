@@ -10,6 +10,7 @@ import { useAdminLogin } from 'src/app/api/auth/admin-auth';
 const defaultAuthContext = {
 	isAuthenticated: false,
 	isLoading: false,
+	isLoginLoading: false,
 	user: null,
 	updateUser: null,
 	signIn: null,
@@ -17,7 +18,9 @@ const defaultAuthContext = {
 	signOut: null,
 	refreshToken: null,
 	setIsLoading: () => {},
-	authStatus: 'configuring'
+	// authStatus: 'configuring'
+	authStatus: 'unauthenticated'
+	
 };
 export const JwtAuthContext = createContext(defaultAuthContext);
 
@@ -71,7 +74,11 @@ function JwtAuthProvider(props) {
 		// Reset IsAuthenticated
 	const resetAuthStatusStorage = useCallback(() => {
 		// localStorage.removeItem(config.authStatus);
-		localStorage.setItem(config.authStatus, 'configuring');
+		// localStorage.setItem(config.authStatus, 'configuring');
+
+		localStorage.setItem(config.authStatus, 'unauthenticated');
+
+		
 	}, []);
 
 	const getIsAuthStatusStorage = useCallback(() => {
@@ -114,6 +121,7 @@ function JwtAuthProvider(props) {
 
 	const [user, setUser] = useState(getUserCredentialsStorage());
 	const [isLoading, setIsLoading] = useState(true);
+	const [isLoginLoading, setLoginIsLoading] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(getIsAuthenticatedStatus());
 	const [authStatus, setAuthStatus] = useState(getIsAuthStatusStorage()); //'configuring'
 	const { children } = props;
@@ -250,6 +258,7 @@ function JwtAuthProvider(props) {
 				setAuthStatus(signedIn  ? 'authenticated' : 'unauthenticated');
 			});
 		}
+
 	}, [
 		isTokenValid,
 		setSession,
@@ -271,32 +280,9 @@ function JwtAuthProvider(props) {
 		try {
 
 		
-
+			setLoginIsLoading(true)
 			adminLogIn.mutate(data)
-			// const response = await axios.post(url, data);
-
-			// console.log("Request-SUCESS Token", response?.data?.accessToken)
-			// console.log("Request-SUCESS USER", response.data)
-			// if(response?.data && response?.data?.accessToken){
-			// 	const transFormedUser = {
-			// 		id:response?.data?._id,
-			// 		name:response?.data?.name,
-			// 		email:response?.data?.email,
-			// 		role:'admin',
-
-			// 		isAdmin:response?.data?.isAdmin,
-			// 		avatar:response?.data?.avatar,
-					
-			// 	}
-
-			// 	const accessToken = response?.data?.accessToken;
-			// 	handleSignInSuccess(transFormedUser, accessToken);
-			// return transFormedUser;
-			// }
-			// if(response.data.error){
-			// 	toast.error(`${response?.data?.error?.message}`)
-			// 	return
-			// }
+			setLoginIsLoading(false)
 			
 		} catch (error) {
 			const axiosError = error;
@@ -305,6 +291,7 @@ function JwtAuthProvider(props) {
                 ? error?.response?.data?.message
                 : error?.message)
 			handleSignInFailure(axiosError);
+			setLoginIsLoading(false);
 			return axiosError;
 		}
 	};
@@ -422,12 +409,14 @@ function JwtAuthProvider(props) {
 			isAuthenticated,
 			authStatus,
 			isLoading,
+			isLoginLoading,
 			signIn,
 			signUp,
 			signOut,
 			updateUser,
 			refreshToken,
-			setIsLoading
+			setIsLoading,
+			setLoginIsLoading,
 		}),
 		[user, isAuthenticated, isLoading, signIn, signUp, signOut, updateUser, refreshToken, setIsLoading]
 	);

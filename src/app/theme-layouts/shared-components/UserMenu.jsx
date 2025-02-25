@@ -30,9 +30,7 @@ function UserMenu() {
 		setUserMenu(null);
 	};
 
-	if (!user) {
-		return null;
-	}
+	
 
 	return (
 		<>

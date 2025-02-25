@@ -11,11 +11,13 @@ import { toast } from "react-toastify";
  */
 const baseDomain = import.meta.env.VITE_API_BASE_URL_PROD;  /**production & dev */
 
+// console.log("domain from ENV", baseDomain)
+
 // const baseDomain = "http://localhost:8000";
 //====================================================
 /***Digital Ocean Server : Current main server*/
 
-// const baseDomain = 'https://coral-app-n8ox9.ondigitalocean.app'; //deployed serve
+// const baseDomain = "https://coral-app-n8ox9.ondigitalocean.app"; //deployed serve
 
 //===================================================================================
 
@@ -50,7 +52,6 @@ export function authApi() {
     (response) => response,
     (error) => {
       if (error?.response?.status === 403) {
-        //error?.response?.status === 401 ||
         console.log("responseSTATS", error?.response?.status);
         AdminLogOutCall();
         toast.error(
@@ -96,8 +97,10 @@ export function authApi() {
 export const getNewBlogPosts = () => Api().get("/posts");
 export const getNewBlogPostsById = (id) => authApi().get(`/posts/${id}`);
 
-export const adminSigin = (formData) =>
-  Api().post("/authadmin/adminlogin", formData);
+export const adminSigin = (formData) => {
+  // console.log("LOGIN_API_CALL", formData)
+  return  Api().post("/authadmin/adminlogin", formData);}
+ 
 
 /*****
  * ###############################################################################
