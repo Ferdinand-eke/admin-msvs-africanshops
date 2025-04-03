@@ -817,6 +817,12 @@ export const adminGetSingleMerchantAndHospitalityProperties = (merchantId) =>
   /*******Getting and handling reservations */
   export const adminGetBookingsReservationsApi = () =>
   authApi().get("/handle-hospitality/get-hospitality-reservations"); 
+
+
+
+  /******###CANCELLED RESERVATIONS######### */
+  export const adminGetCancelledReservationsApi = () =>
+  authApi().get("/handle-hospitality/get-cancelled-reservations"); 
 /*****
  * ###################################################################################################
  * HOSPITALITY/BOOKINGS PROPERTIES handling ends here  (All done as @ 20th August, 2024)
