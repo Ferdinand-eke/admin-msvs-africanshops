@@ -23,14 +23,16 @@ import {
 } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import DataTable from 'app/shared-components/data-table/DataTable';
-import useAdminOffers, { useManageOffer, useDeleteOffer } from '../../../../../../api/real-estate-offers/useOffers';
+// import useAdminOffers, { useManageOffer, useDeleteOffer } from '../../../../../../api/real-estate-offers/useOffers';
 import { format } from 'date-fns';
+import useAdminOffers, { useDeleteOffer, useManageOffer } from 'src/app/api/real-estate-offers/useOffers';
 
 function OffersTab({ propertyId }) {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
+
 
   const [actionDialogOpen, setActionDialogOpen] = useState(false);
   const [selectedOffer, setSelectedOffer] = useState(null);
@@ -47,11 +49,13 @@ function OffersTab({ propertyId }) {
     propertyId,
   });
 
+  console.log("OFERS_ON_CLIENT", offersData?.data)
+
   const manageOfferMutation = useManageOffer();
   const deleteOfferMutation = useDeleteOffer();
 
-  const offers = offersData?.data?.offers || [];
-  const paginationInfo = offersData?.data?.pagination || {
+  const offers = offersData?.data?.payload?.offers || [];
+  const paginationInfo = offersData?.data?.payload?.pagination || {
     total: 0,
     limit: pagination.pageSize,
     offset: 0,

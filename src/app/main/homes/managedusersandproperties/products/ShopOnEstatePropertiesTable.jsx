@@ -205,11 +205,11 @@ function ShopOnEstatePropertiesTable() {
           onPaginationChange={setPagination}
           onGlobalFilterChange={setGlobalFilter}
           enableGlobalFilter={true}
-          // muiCircularProgressProps={{
-          //   color: 'secondary',
-          //   thickness: 5,
-          //   size: 55,
-          // }}
+          muiCircularProgressProps={{
+            color: 'secondary',
+            thickness: 5,
+            size: 55,
+          }}
           muiLinearProgressProps={{
             color: 'secondary',
           }}

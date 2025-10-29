@@ -70,6 +70,7 @@ function AcquisitionsTab({ propertyId }) {
     offset,
   });
 
+
   const verifyPaymentMutation = useVerifyAcquisitionPayment();
   const rejectPaymentMutation = useRejectAcquisitionPayment();
   const verifyDocumentsMutation = useVerifyAcquisitionDocuments();
@@ -83,6 +84,7 @@ function AcquisitionsTab({ propertyId }) {
     limit: pagination.pageSize,
     offset: 0,
   };
+  console.log("ADMIN_VIEW_ACQUISITIONS", acquisitions)
 
   // Mock chart data - Replace with actual historical data
   const chartData = {
@@ -261,11 +263,11 @@ function AcquisitionsTab({ propertyId }) {
         ),
       },
       {
-        accessorKey: 'amount',
+        accessorKey: 'totalAmountPaid',
         header: 'Amount',
         Cell: ({ row }) => (
           <Typography variant="body2" className="font-semibold text-green-600">
-            ${row.original.amount?.toLocaleString() || '0'}
+            N{row.original.totalAmountPaid?.toLocaleString() || '0'}
           </Typography>
         ),
       },
@@ -527,7 +529,7 @@ function AcquisitionsTab({ propertyId }) {
                 Buyer: <strong>{selectedAcquisition.buyer?.name}</strong>
               </Typography>
               <Typography variant="body2">
-                Amount: <strong>${selectedAcquisition.amount?.toLocaleString()}</strong>
+                Amount: <strong>${selectedAcquisition.totalAmountPaid?.toLocaleString()}</strong>
               </Typography>
 
               <TextField
@@ -615,7 +617,7 @@ function AcquisitionsTab({ propertyId }) {
                   Amount
                 </Typography>
                 <Typography variant="h6" className="mt-4 text-green-600">
-                  ${selectedAcquisition.amount?.toLocaleString()}
+                  N{selectedAcquisition.totalAmountPaid?.toLocaleString()}
                 </Typography>
               </Box>
 

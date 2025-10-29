@@ -44,6 +44,7 @@ function PropertyProfileApp() {
   // Fetch property data
   const { data: property, isLoading: propertyLoading } = useEstateProperty(propertyId);
 
+  console.log("PROPERT___ID", propertyId)
   console.log("PROPERTY__DATA", property)
 
   // Initialize tab from localStorage or default to 0
@@ -87,7 +88,7 @@ function PropertyProfileApp() {
           {/* Reduced height banner - property cover image */}
           <img
             className="h-120 lg:h-200 object-cover w-full"
-            src={property?.coverImage || property?.images?.[0] || "assets/images/pages/profile/cover.jpg"}
+            src={property?.coverImage || property?.images?.[0]?.url || "assets/images/pages/profile/cover.jpg"}
             alt="Property Cover"
           />
 
@@ -119,7 +120,7 @@ function PropertyProfileApp() {
                 <Avatar
                   sx={{ borderColor: "background.paper" }}
                   className="w-128 h-128 border-4"
-                  src={property?.images?.[0] || "assets/images/avatars/male-04.jpg"}
+                  src={property?.images?.[0]?.url || "assets/images/avatars/male-04.jpg"}
                   alt={property?.title}
                 >
                   <FuseSvgIcon size={64}>heroicons-outline:home</FuseSvgIcon>

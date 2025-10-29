@@ -33,7 +33,7 @@ const ManagedUserListingsAppConfig = {
 					element: <EstateProperties />
 				},
 				{
-					path: 'managed-user-listings/:popertyId/monitor-evaluate',
+					path: 'managed-user-listings/:propertyId/monitor-evaluate',
 					element: <PropertyProfileApp />
 				},
 
