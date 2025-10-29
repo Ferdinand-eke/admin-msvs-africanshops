@@ -12,18 +12,19 @@ import { useNavigate } from 'react-router';
 //get all designations
 export default function useDesignations() {
   return useQuery(['designations'], getDesigs);
-}
+} //(Msvs => Done)
 
 //get single designation
 export function useSingleDesignation(desigId) {
   if (!desigId || desigId === "new") {
     return "";
   }
-  return useQuery(['designation', desigId], () => getDesigById(desigId), {
-    enabled: Boolean(desigId),
-    // staleTime: 5000,
-  });
-}
+  return useQuery(['designation', desigId], () => getDesigById(desigId), 
+  {
+      keepPreviousData: true, // Keeps previous data while fetching new data
+      enabled: Boolean(desigId) && desigId !== "new" // Only fetch when we have a valid deptId
+    });
+} //(Msvs => Done)
 
 /*******create new designation */
 export function useDesigtMutation() {
@@ -36,7 +37,7 @@ export function useDesigtMutation() {
 
     {
       onSuccess: (data) => {
-        if (data?.data) {
+        if (data?.data?.success) {
           toast.success('Designation added successfully!');
           queryClient.invalidateQueries(['designations']);
           queryClient.refetchQueries('designations', { force: true });
@@ -68,7 +69,7 @@ export function useDesigUpdateMutation() {
 
     {
       onSuccess: (data) => {
-        if (data?.data) {
+        if (data?.data?.success) {
           toast.success('Designation updated successfully!');
           queryClient.invalidateQueries(['designations']);
           queryClient.refetchQueries('designations', { force: true });
@@ -87,7 +88,7 @@ export function useDesigUpdateMutation() {
       },
     }
   );
-}
+} //(Msvs => Done)
 
 
 /***Delete a desigation */

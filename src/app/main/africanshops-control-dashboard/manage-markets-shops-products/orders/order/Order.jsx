@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
@@ -29,13 +29,20 @@ function Order() {
 	} = useAdminFindSingleOrder(orderId, {
 		skip: !orderId
 	});
+	
+
 	const theme = useTheme();
 	const isMobile = useThemeMediaQuery((_theme) => _theme.breakpoints.down('lg'));
 	const [tabValue, setTabValue] = useState(0);
 
-	function handleTabChange(event, value) {
+	// Memoize the tab change handler
+	const handleTabChange = useCallback((event, value) => {
 		setTabValue(value);
-	}
+	}, []);
+
+	// Memoize order data extraction to prevent unnecessary re-computations
+	const orderData = useMemo(() => order?.data?.order, [order?.data?.order]);
+	const orderItems = useMemo(() => orderData?.orderItems, [orderData?.orderItems]);
 
 	if (isLoading) {
 		return <FuseLoading />;
@@ -70,7 +77,7 @@ function Order() {
 	return (
 		<FusePageCarded
 			header={
-				order && (
+				orderData && (
 					<div className="flex flex-1 flex-col py-32 px-24 md:px-32">
 						<motion.div
 							initial={{ x: 20, opacity: 0 }}
@@ -98,13 +105,13 @@ function Order() {
 							className="flex flex-col min-w-0"
 						>
 							<Typography className="text-20 truncate font-semibold">
-								{`Order ${order?.data?._id}`}
+								{`Order ${orderData?.id}`}
 							</Typography>
 							<Typography
 								variant="caption"
 								className="font-medium"
 							>
-								{`From ${order?.data?.shippingAddress?.fullName} `}
+								{`From ${orderData?.shippingAddress?.fullName} `}
 							</Typography>
 						</motion.div>
 					</div>
@@ -134,11 +141,11 @@ function Order() {
 							label="Invoice"
 						/>
 					</Tabs>
-					{order?.data && (
+					{orderData && (
 						<div className="p-16 sm:p-24 max-w-3xl w-full">
-							{tabValue === 0 && <OrderDetailsTab order={order?.data} isError={isError}/>}
-							{tabValue === 1 && <ProductsTab />}
-							{tabValue === 2 && <InvoiceTab order={order?.data} />}
+							{tabValue === 0 && <OrderDetailsTab order={orderData} isError={isError}/>}
+							{tabValue === 1 && <ProductsTab orderItems={orderItems}/>}
+							{tabValue === 2 && <InvoiceTab order={orderData} />}
 						</div>
 					)}
 				</>

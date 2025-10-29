@@ -40,9 +40,9 @@ Department of this designation
             helpertext={errors?.department?.message}
           >
             <MenuItem value="">Select a department</MenuItem>
-            {departments?.data?.data &&
-              departments?.data?.data?.map((option, id) => (
-                <MenuItem key={option._id} value={option._id}>
+            {departments?.data?.departments &&
+              departments?.data?.departments?.map((option, id) => (
+                <MenuItem key={option.id || option._id} value={option.id || option._id}>
                   {option.name}
                 </MenuItem>
               ))}

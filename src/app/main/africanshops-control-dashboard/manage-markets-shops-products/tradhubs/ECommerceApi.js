@@ -1,5 +1,5 @@
 import { apiService as api } from 'app/store/apiService';
-import ProductModel from './product/models/ProductModel';
+import ProductModel from './tradehub/models/ProductModel';
 
 export const addTagTypes = ['eCommerce_products', 'eCommerce_product', 'eCommerce_orders', 'eCommerce_order'];
 const ECommerceApi = api

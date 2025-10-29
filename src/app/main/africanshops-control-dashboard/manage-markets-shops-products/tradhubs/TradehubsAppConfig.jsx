@@ -2,8 +2,8 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 const TradehubsApp = lazy(() => import('./TradehubsApp'));
-const Designation = lazy(() => import('./product/Tradehub'));
-const ProductCategories = lazy(() => import('./products/Tradehubs'));
+const SingleTradehub = lazy(() => import('./tradehub/Tradehub'));
+const AllTradehubs = lazy(() => import('./all-tradehubs/Tradehubs'));
 /**
  * The E-Commerce app configuration.
  */
@@ -23,24 +23,13 @@ const TradehubsAppConfig = {
 				},
 				{
 					path: 'list',
-					element: <ProductCategories />
+					element: <AllTradehubs />
 				},
 				{
 					path: 'list/:productId/*',
-					element: <Designation />
+					element: <SingleTradehub />
 				},
-				// {
-				// 	path: 'inventory',
-				// 	element: <Designations />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+				
 			]
 		}
 	]

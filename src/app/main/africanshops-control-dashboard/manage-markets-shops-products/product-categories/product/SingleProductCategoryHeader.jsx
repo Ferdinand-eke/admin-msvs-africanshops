@@ -6,11 +6,6 @@ import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import {
-	useCreateECommerceProductMutation,
-	useDeleteECommerceProductMutation,
-	useUpdateECommerceProductMutation
-} from '../ECommerceApi';
 import { useAddProductCatMutation, useDeleteProductCategory, useProductCatUpdateMutation } from 'src/app/api/product-categories/useProductCategories';
 import { toast } from 'react-toastify';
 import { firebaseApp } from 'src/app/auth/services/firebase/initializeFirebase';
@@ -29,9 +24,6 @@ import {
 function SingleProductCategoryHeader() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	const [createProduct] = useCreateECommerceProductMutation();
-	const [saveProduct] = useUpdateECommerceProductMutation();
-	const [removeProduct] = useDeleteECommerceProductMutation();
 	const methods = useFormContext();
 	const { formState, watch, getValues, setValue } = methods;
 	const { isValid, dirtyFields } = formState;

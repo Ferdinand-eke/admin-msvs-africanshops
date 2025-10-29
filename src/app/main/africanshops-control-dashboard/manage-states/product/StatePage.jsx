@@ -14,11 +14,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import SingleStateHeader from './SingleStateHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
-import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
 import { useSingleState } from 'src/app/api/states/useStates';
 import { 
@@ -45,7 +40,7 @@ function StatePage() {
 	const { productId } = routeParams;
 	
 
-	const {data:state,
+	const {data:stateData,
 		isLoading,
 		isError
 	} = useSingleState(productId, {
@@ -71,14 +66,14 @@ function StatePage() {
 		// if (state?.data) {
 		// 	reset({ ...state?.data });
 		// }
-		if (state?.data) {
-			console.log("stateData", state?.data)
-			reset({ ...state?.data, 
+		if (stateData?.data?.state) {
+			// console.log("stateData", stateData?.data?.state)
+			reset({ ...stateData?.data?.state, 
 				// statelocation:State.getStatesOfCountry(state?.data?.countryCode),
-				statelocation: State.getStateByCodeAndCountry(state?.data?.isoCode, state?.data?.countryCode)
+				statelocation: State.getStateByCodeAndCountry(stateData?.data?.state?.isoCode, stateData?.data?.state?.countryCode)
 			 });
 		}
-	}, [state?.data, reset]);
+	}, [stateData?.data?.state, reset]);
 	
 
 	/**
@@ -96,7 +91,7 @@ function StatePage() {
 	/**
 	 * Show Message if the requested products is not exists
 	 */
-	console.log("Getting State error", isError)
+	// console.log("Getting State error", isError)
 	if (isError && productId !== 'new') {
 		return (
 			<motion.div
@@ -128,7 +123,7 @@ function StatePage() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (state?.data && routeParams.productId !== state?.data?._id && routeParams.productId !== 'new')) {
+	if (_.isEmpty(form) || (stateData?.data?.state && routeParams.productId !== stateData?.data?.state?.id && routeParams.productId !== 'new')) {
 		return <FuseLoading />;
 	}
 
@@ -151,43 +146,13 @@ function StatePage() {
 								className="h-64"
 								label="Basic Info"
 							/>
-							{/* <Tab
-								className="h-64"
-								label="Product Images"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Pricing"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Inventory"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Shipping"
-							/> */}
+						
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
 								<BasicInfoTab />
 							</div>
 
-							{/* <div className={tabValue !== 1 ? 'hidden' : ''}>
-								<ProductImagesTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 2 ? 'hidden' : ''}>
-								<PricingTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 3 ? 'hidden' : ''}>
-								<InventoryTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 4 ? 'hidden' : ''}>
-								<ShippingTab />
-							</div> */}
 						</div>
 					</>
 				}

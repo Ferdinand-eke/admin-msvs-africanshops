@@ -1,19 +1,65 @@
+import { memo, useMemo } from 'react';
 import Typography from '@mui/material/Typography';
-import { Link, useParams } from 'react-router-dom';
-// import { useGetECommerceOrderQuery } from '../../ECommerceApi';
-import { useAdminOrderItems } from 'src/app/api/orders/useAdminGetShopOrders';
 
 /**
- * The products tab.
+ * Individual product row component - memoized to prevent unnecessary re-renders
  */
-function ProductsTab() {
-	const routeParams = useParams();
-	const { orderId } = routeParams;
-	const { data: orderItems } = useAdminOrderItems(orderId, {
-		skip: !orderId
-	});
+const ProductRow = memo(({ product }) => (
+	<tr>
+		<td className="w-64">{product.id}</td>
+		<td className="w-80">
+			<img
+				className="product-image"
+				src={product.image}
+				alt={product.name}
+				loading="lazy"
+				style={{ maxWidth: '80px', height: 'auto' }}
+			/>
+		</td>
+		<td>
+			<Typography
+				className="truncate"
+				style={{
+					color: 'inherit',
+					textDecoration: 'underline'
+				}}
+			>
+				{product.name}
+			</Typography>
+		</td>
+		<td className="w-64 text-right">
+			<span className="truncate">NGN {product.price}</span>
+		</td>
+		<td className="w-64 text-right">
+			<span className="truncate">{product.quantity}</span>
+		</td>
+	</tr>
+));
 
-	// console.log("Order-ITEMS", orderItems?.data)
+ProductRow.displayName = 'ProductRow';
+
+/**
+ * The products tab - optimized with memoization
+ */
+function ProductsTab({ orderItems }) {
+
+	console.log('Order Items in ProductsTab:', orderItems);
+	// Memoize the rendered rows to prevent re-rendering when parent updates
+	const productRows = useMemo(() => {
+		if (!orderItems || orderItems.length === 0) {
+			return (
+				<tr>
+					<td colSpan={5} className="text-center py-24">
+						<Typography color="text.secondary">No products found</Typography>
+					</td>
+				</tr>
+			);
+		}
+
+		return orderItems.map((product) => (
+			<ProductRow key={product.id || product.id} product={product} />
+		));
+	}, [orderItems]);
 
 	return (
 		<div className="table-responsive">
@@ -38,39 +84,11 @@ function ProductsTab() {
 					</tr>
 				</thead>
 				<tbody>
-					{orderItems?.data?.map((product) => (
-						<tr key={product._id}>
-							<td className="w-64">{product._id}</td>
-							<td className="w-80">
-								<img
-									className="product-image"
-									src={product.image}
-									alt="product"
-								/>
-							</td>
-							<td>
-								<Typography
-									className="truncate"
-									style={{
-										color: 'inherit',
-										textDecoration: 'underline'
-									}}
-								>
-									{product.name}
-								</Typography>
-							</td>
-							<td className="w-64 text-right">
-								<span className="truncate">NGN {product.price}</span>
-							</td>
-							<td className="w-64 text-right">
-								<span className="truncate">{product.quantity}</span>
-							</td>
-						</tr>
-					))}
+					{productRows}
 				</tbody>
 			</table>
 		</div>
 	);
 }
 
-export default ProductsTab;
+export default memo(ProductsTab);

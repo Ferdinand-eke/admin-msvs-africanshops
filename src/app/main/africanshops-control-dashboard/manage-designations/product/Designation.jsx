@@ -57,10 +57,10 @@ function Designation() {
 		}
 	}, [productId, reset]);
 	useEffect(() => {
-		if (designation?.data) {
-			reset({ ...designation?.data });
+		if (designation?.data?.designation) {
+			reset({ ...designation?.data?.designation });
 		}
-	}, [designation?.data, reset]);
+	}, [designation?.data?.designation, reset]);
 
 	/**
 	 * Tab Change
@@ -102,12 +102,12 @@ function Designation() {
 		);
 	}
 
-	// console.log("STATE-DATA", designation?.data)
+	// console.log("STATE-DATA", designation?.data?.designation)
 
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (designation?.data && routeParams.productId !== designation?.data?._id && routeParams.productId !== 'new')) {
+	if (_.isEmpty(form) || (designation?.data?.designation && routeParams.productId !== designation?.data?.designation?.id && routeParams.productId !== 'new')) {
 		return <FuseLoading />;
 	}
 

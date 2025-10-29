@@ -89,6 +89,7 @@ function UsersHeader() {
 						onChange={(ev) => dispatch(setSearchText(ev))}
 					/>
 				</Box>
+				
 				<Button
 					className="mx-8"
 					variant="contained"

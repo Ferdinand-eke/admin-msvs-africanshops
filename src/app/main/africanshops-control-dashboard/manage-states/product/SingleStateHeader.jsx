@@ -6,11 +6,6 @@ import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import {
-	useCreateECommerceProductMutation,
-	useDeleteECommerceProductMutation,
-	useUpdateECommerceProductMutation
-} from '../ECommerceApi';
 import { useAddStateMutation, useDeleteSingleState, useStateUpdateMutation } from 'src/app/api/states/useStates';
 
 /**
@@ -19,9 +14,6 @@ import { useAddStateMutation, useDeleteSingleState, useStateUpdateMutation } fro
 function SingleStateHeader() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	// const [createProduct] = useCreateECommerceProductMutation();
-	// const [saveProduct] = useUpdateECommerceProductMutation();
-	// const [removeProduct] = useDeleteECommerceProductMutation();
 	const methods = useFormContext();
 	const { formState, watch, getValues } = methods;
 	const { isValid, dirtyFields } = formState;

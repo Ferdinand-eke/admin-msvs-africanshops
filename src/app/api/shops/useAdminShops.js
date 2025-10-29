@@ -24,7 +24,7 @@ import { useNavigate } from 'react-router';
 
 export default function useAdmiManageShop() {
   return useQuery(['shops'], getShops);
-}
+} //(Msvs => Done)
 
 
 /****
@@ -73,7 +73,7 @@ export function useSingleShop(shopId) {
       // staleTime: 2000,
     }
   );
-}
+} //(Msvs => Done)
 
 /**Create a new Shop Vendor */
 export function useAdminCreateVendorShop() {
@@ -106,7 +106,7 @@ export function useAdminUpdateVendorShop() {
 
   return useMutation(updateApiMerchantVendorShop, {
     onSuccess: (data) => {
-      if (data?.data) {
+      if (data?.data?.success) {
         toast.success('Shop data updated successfully');
         queryClient.invalidateQueries('shops');
         navigate("/vendors/listvendors");
@@ -121,7 +121,7 @@ export function useAdminUpdateVendorShop() {
       );
     },
   });
-}
+} //(Msvs => done)
 
 /***
  * MANAGE PARTNERS SHOP  STARTS HERE

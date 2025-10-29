@@ -20,7 +20,6 @@ import ProductImagesTab from './tabs/ProductImagesTab';
 import ShippingTab from './tabs/ShippingTab';
 import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleCountry } from 'src/app/api/countries/useCountries';
 import { useGetDepartmentById } from 'src/app/api/departments/useDepartments';
 /**
  * Form Validation Schema
@@ -36,34 +35,19 @@ function Department() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	// const {
-	// 	data: product,
-	// 	isLoading,
-	// 	isError
-	// } = useGetECommerceProductQuery(productId, {
-	// 	skip: !productId || productId === 'new'
-	// });
-
 	
-	const {data:singleCountry,
+	const {data:singleDepartment,
 		isLoading,
 		isError
 	} = useGetDepartmentById(productId, {
 		skip: !productId || productId === 'new'
 	})
 
-	// console.log("Single-COUNTRY", singleCountry?.data)
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
 		defaultValues: {
 			name: "",
-			flag: "",
-			isFeatured: "",
-			isInOperation: "",
-			isPublished: "",
-
-			images: [],
 		},
 		resolver: zodResolver(schema)
 	});
@@ -75,10 +59,10 @@ function Department() {
 		}
 	}, [productId, reset]);
 	useEffect(() => {
-		if (singleCountry?.data) {
-			reset({ ...singleCountry?.data });
+		if (singleDepartment?.data?.department) {
+			reset({ ...singleDepartment?.data?.department });
 		}
-	}, [singleCountry?.data, reset]);
+	}, [singleDepartment?.data?.department, reset]);
 
 	/**
 	 * Tab Change
@@ -94,36 +78,36 @@ function Department() {
 	/**
 	 * Show Message if the requested products is not exists
 	 */
-	if (isError && productId !== 'new') {
-		return (
-			<motion.div
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1, transition: { delay: 0.1 } }}
-				className="flex flex-col flex-1 items-center justify-center h-full"
-			>
-				<Typography
-					color="text.secondary"
-					variant="h5"
-				>
-					There is no such department!
-				</Typography>
-				<Button
-					className="mt-24"
-					component={Link}
-					variant="outlined"
-					to="/departments/list"
-					color="inherit"
-				>
-					Go to Departments Page
-				</Button>
-			</motion.div>
-		);
-	}
+	// if (isError && productId !== 'new') {
+	// 	return (
+	// 		<motion.div
+	// 			initial={{ opacity: 0 }}
+	// 			animate={{ opacity: 1, transition: { delay: 0.1 } }}
+	// 			className="flex flex-col flex-1 items-center justify-center h-full"
+	// 		>
+	// 			<Typography
+	// 				color="text.secondary"
+	// 				variant="h5"
+	// 			>
+	// 				There is no such department!
+	// 			</Typography>
+	// 			<Button
+	// 				className="mt-24"
+	// 				component={Link}
+	// 				variant="outlined"
+	// 				to="/departments/list"
+	// 				color="inherit"
+	// 			>
+	// 				Go to Departments Page
+	// 			</Button>
+	// 		</motion.div>
+	// 	);
+	// }
 
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (singleCountry?.data && routeParams.productId !== singleCountry?.data._id && routeParams.productId !== 'new')) {
+	if (_.isEmpty(form) || (singleDepartment?.data?.department && routeParams.productId !== singleDepartment?.data?.department.id && routeParams.productId !== 'new')) {
 		return <FuseLoading />;
 	}
 

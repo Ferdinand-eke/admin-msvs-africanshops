@@ -14,11 +14,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import LgaCountyHeader from './LgaCountyHeader';
 import BasicInfoTab from './tabs/LgaBasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
-import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
 import { useSingleLga } from 'src/app/api/lgas/useLgas';
 import { City } from 'country-state-city';
@@ -26,7 +21,15 @@ import { City } from 'country-state-city';
  * Form Validation Schema
  */
 const schema = z.object({
-	name: z.string().nonempty('You must enter a product name').min(3, 'The product name must be at least 5 characters')
+	name: z.string().nonempty('You must enter an LGA/County name').min(3, 'The name must be at least 3 characters'),
+	isoCode: z.string().optional(),
+	longitude: z.string().optional(),
+	latitude: z.string().optional(),
+	businessCountry: z.string().optional(),
+	businessState: z.string().optional(),
+	isInOperation: z.union([z.boolean(), z.string()]).optional(),
+	isPublished: z.union([z.boolean(), z.string()]).optional(),
+	isFeatured: z.union([z.boolean(), z.string()]).optional()
 });
 
 /**
@@ -50,7 +53,7 @@ function LgaCounty() {
 		skip: !productId || productId === 'new'
 	})
 
-	// console.log("Single LGA", lgacounty?.data)
+	// console.log("Single LGA", lgacounty?.data?.lga)
 
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
@@ -82,14 +85,13 @@ function LgaCounty() {
 	}, [productId, reset]);
 	useEffect(() => {
 		if (lgacounty?.data) {
-			reset({ ...lgacounty?.data });
+			reset({ ...lgacounty?.data?.lga });
 		}
 
-		if (lgacounty?.data) {
-			console.log("stateData", lgacounty?.data)
-			reset({ ...lgacounty?.data, 
-				// lgalocation: State.getStateByCodeAndCountry(lgacounty?.data?.isoCode, lgacounty?.data?.countryCode)
-				lgalocation:City.getCitiesOfState(lgacounty?.data?.countryCode, lgacounty?.data?.stateCode)
+		if (lgacounty?.data?.lga) {
+			reset({ ...lgacounty?.data?.lga, 
+				// lgalocation: State.getStateByCodeAndCountry(lgacounty?.data?.lga?.isoCode, lgacounty?.data?.lga?.countryCode)
+				lgalocation:City.getCitiesOfState(lgacounty?.data?.lga?.countryCode, lgacounty?.data?.lga?.stateCode)
 			 });
 		}
 	}, [lgacounty?.data, reset]);
@@ -97,7 +99,7 @@ function LgaCounty() {
 	/**
 	 * Tab Change
 	 */
-	function handleTabChange(event, value) {
+	function handleTabChange(_event, value) {
 		setTabValue(value);
 	}
 
@@ -137,7 +139,7 @@ function LgaCounty() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (lgacounty?.data && routeParams.productId !== lgacounty?.data._id && routeParams.productId !== 'new')) {
+	if (_.isEmpty(form) || (lgacounty?.data?.lga && routeParams.productId !== lgacounty?.data?.lga.id && routeParams.productId !== 'new')) {
 		return <FuseLoading />;
 	}
 
@@ -160,43 +162,13 @@ function LgaCounty() {
 								className="h-64"
 								label="Basic Info"
 							/>
-							{/* <Tab
-								className="h-64"
-								label="Product Images"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Pricing"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Inventory"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Shipping"
-							/> */}
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
 								<BasicInfoTab />
 							</div>
 
-							{/* <div className={tabValue !== 1 ? 'hidden' : ''}>
-								<ProductImagesTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 2 ? 'hidden' : ''}>
-								<PricingTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 3 ? 'hidden' : ''}>
-								<InventoryTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 4 ? 'hidden' : ''}>
-								<ShippingTab />
-							</div> */}
+							
 						</div>
 					</>
 				}

@@ -40,7 +40,7 @@ function BasicInfoTab() {
   useEffect(()=>{
     if(getValues().businessCountry){
       // const filteredCountry = countries?.data?.data?.filter((county) => county._id === getValues().businessCountry )
-      setFilteredCountry(countries?.data?.data?.filter((county) => county._id === getValues().businessCountry )[0])
+      setFilteredCountry(countries?.data?.countries?.filter((county) => county.id === getValues().businessCountry )[0])
      
     }
    
@@ -78,9 +78,9 @@ function BasicInfoTab() {
               //  {...(error && {error: true, helperText: error})}
             >
               <MenuItem value="">Select a country</MenuItem>
-              {countries?.data?.data &&
-                countries?.data?.data?.map((option, id) => (
-                  <MenuItem key={option._id} value={option._id}>
+              {countries?.data?.countries &&
+                countries?.data?.countries?.map((option, id) => (
+                  <MenuItem key={option.id} value={option.id}>
                     {option.name}
                   </MenuItem>
                 ))}

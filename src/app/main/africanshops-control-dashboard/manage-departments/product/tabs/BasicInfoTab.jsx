@@ -6,6 +6,7 @@ import { MenuItem, Select, Typography } from '@mui/material';
 /**
  * The basic info tab.
  */
+
 function BasicInfoTab() {
 	const methods = useFormContext();
 	const { control, formState } = methods;

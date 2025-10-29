@@ -21,8 +21,34 @@ import {
 
 
 /*** 1) Get all orders on database by admin */
-export default function useAdminGetOrders() {
-  return useQuery(['orders_adminrole'], adminGetOrders);
+export default function useAdminGetOrders(params = {}) {
+  return useQuery(
+    ['orders_adminrole', params],
+    () => adminGetOrders(params),
+    {
+      keepPreviousData: true, // Keep previous data while fetching new page
+      staleTime: 30000, // Consider data fresh for 30 seconds
+    }
+  );
+} //(Msvs => Done)
+
+/*** 1b) Get paginated orders with server-side pagination */
+export function useAdminGetOrdersPaginated({ page = 0, limit = 20, search = '', filters = {} }) {
+  const offset = page * limit;
+
+  return useQuery(
+    ['orders_adminrole_paginated', { page, limit, search, filters }],
+    () => adminGetOrders({
+      limit,
+      offset,
+      search,
+      ...filters
+    }),
+    {
+      keepPreviousData: true,
+      staleTime: 30000,
+    }
+  );
 }
 
 /*** 2) Get single order  by admin */
@@ -30,7 +56,7 @@ export function useAdminFindSingleOrder(orderId) {
   return useQuery(['orders_adminrole', orderId], () =>
     adminGetOrderById(orderId)
   );
-}
+}//(Msvs => Done)
 
 
 /*** 3) Get shop orders  by admin */

@@ -1,287 +1,358 @@
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
-import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
+import Chip from '@mui/material/Chip';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import { motion } from 'framer-motion';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { useGetProfileAboutQuery } from '../../ProfileApi';
+import useEstateProperty from '../../../../../../api/admin-handle-estateproperties/useEstateProperty';
 
 /**
- * The about tab.
+ * The about tab - displays property information
  */
-function AboutTab() {
-	const { data: profile, isLoading } = useGetProfileAboutQuery();
+function AboutTab({ propertyId }) {
+  const { data: property, isLoading } = useEstateProperty(propertyId);
 
-	if (isLoading) {
-		return <FuseLoading />;
-	}
+  if (isLoading) {
+    return <FuseLoading />;
+  }
 
-	const { general, work, contact, groups, friends } = profile;
-	const container = {
-		show: {
-			transition: {
-				staggerChildren: 0.04
-			}
-		}
-	};
-	const item = {
-		hidden: { opacity: 0, y: 40 },
-		show: { opacity: 1, y: 0 }
-	};
-	return (
-		<motion.div
-			variants={container}
-			initial="hidden"
-			animate="show"
-			className="w-full"
-		>
-			<div className="md:flex">
-				<div className="flex flex-col flex-1 md:ltr:pr-32 md:rtl:pl-32">
-					<Card
-						component={motion.div}
-						variants={item}
-						className="w-full mb-32"
-					>
-						<div className="px-32 pt-24">
-							<Typography className="text-2xl font-semibold leading-tight">
-								General Information
-							</Typography>
-						</div>
+  if (!property) {
+    return (
+      <Box className="flex flex-col items-center justify-center p-48">
+        <FuseSvgIcon size={64} color="disabled">
+          heroicons-outline:home
+        </FuseSvgIcon>
+        <Typography color="text.secondary" className="mt-16" variant="h6">
+          Property not found
+        </Typography>
+      </Box>
+    );
+  }
 
-						<CardContent className="px-32 py-24">
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">Gender</Typography>
-								<Typography>{general.gender}</Typography>
-							</div>
+  const container = {
+    show: {
+      transition: {
+        staggerChildren: 0.04,
+      },
+    },
+  };
 
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">Birthday</Typography>
-								<Typography>{general.birthday}</Typography>
-							</div>
+  const item = {
+    hidden: { opacity: 0, y: 40 },
+    show: { opacity: 1, y: 0 },
+  };
 
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">Locations</Typography>
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'available':
+        return 'success';
+      case 'sold':
+        return 'error';
+      case 'pending':
+        return 'warning';
+      case 'reserved':
+        return 'info';
+      default:
+        return 'default';
+    }
+  };
 
-								{general.locations.map((location) => (
-									<div
-										className="flex items-center"
-										key={location}
-									>
-										<Typography>{location}</Typography>
-										<FuseSvgIcon
-											className="mx-4"
-											size={16}
-											color="action"
-										>
-											heroicons-outline:location-marker
-										</FuseSvgIcon>
-									</div>
-								))}
-							</div>
+  return (
+    <motion.div
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="w-full"
+    >
+      <div className="md:flex gap-24">
+        <div className="flex flex-col flex-1">
+          {/* Basic Information */}
+          <Card component={motion.div} variants={item} className="w-full mb-24">
+            <div className="px-32 pt-24">
+              <Typography className="text-2xl font-semibold leading-tight">
+                Property Information
+              </Typography>
+            </div>
 
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">About Me</Typography>
-								<Typography>{general.about}</Typography>
-							</div>
-						</CardContent>
-					</Card>
+            <CardContent className="px-32 py-24">
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <Typography className="font-semibold mb-4 text-15">Title</Typography>
+                  <Typography>{property.title || 'N/A'}</Typography>
+                </Grid>
 
-					<Card
-						component={motion.div}
-						variants={item}
-						className="w-full mb-32"
-					>
-						<div className="px-32 pt-24">
-							<Typography className="text-2xl font-semibold leading-tight">Work</Typography>
-						</div>
+                <Grid item xs={12} sm={6}>
+                  <Typography className="font-semibold mb-4 text-15">Status</Typography>
+                  <Chip
+                    label={property.status || 'N/A'}
+                    color={getStatusColor(property.status)}
+                    size="small"
+                  />
+                </Grid>
 
-						<CardContent className="px-32 py-24">
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">Occupation</Typography>
-								<Typography>{work.occupation}</Typography>
-							</div>
+                <Grid item xs={12} sm={6}>
+                  <Typography className="font-semibold mb-4 text-15">Property Type</Typography>
+                  <Typography>{property.propertyType || 'N/A'}</Typography>
+                </Grid>
 
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">Skills</Typography>
-								<Typography>{work.skills}</Typography>
-							</div>
+                <Grid item xs={12} sm={6}>
+                  <Typography className="font-semibold mb-4 text-15">Use Case</Typography>
+                  <Typography>{property.propertyUseCase || 'N/A'}</Typography>
+                </Grid>
 
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">Jobs</Typography>
-								<table>
-									<tbody>
-										{work.jobs.map((job) => (
-											<tr key={job.company}>
-												<td>
-													<Typography>{job.company}</Typography>
-												</td>
-												<td className="px-16">
-													<Typography color="text.secondary">{job.date}</Typography>
-												</td>
-											</tr>
-										))}
-									</tbody>
-								</table>
-							</div>
-						</CardContent>
-					</Card>
+                <Grid item xs={12} sm={6}>
+                  <Typography className="font-semibold mb-4 text-15">Price</Typography>
+                  <Typography className="text-green-600 font-bold text-lg">
+                    ${property.price?.toLocaleString() || '0'}
+                  </Typography>
+                </Grid>
 
-					<Card
-						component={motion.div}
-						variants={item}
-						className="w-full mb-32"
-					>
-						<div className="px-32 pt-24">
-							<Typography className="text-2xl font-semibold leading-tight">Contact</Typography>
-						</div>
+                <Grid item xs={12} sm={6}>
+                  <Typography className="font-semibold mb-4 text-15">Number of Rooms</Typography>
+                  <Typography>{property.numberOfRooms || 'N/A'}</Typography>
+                </Grid>
 
-						<CardContent className="px-32 py-24">
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">Address</Typography>
-								<Typography>{contact.address}</Typography>
-							</div>
+                <Grid item xs={12}>
+                  <Typography className="font-semibold mb-4 text-15">Description</Typography>
+                  <Typography>{property.description || 'No description available'}</Typography>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
 
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">Tel.</Typography>
+          {/* Location Details */}
+          <Card component={motion.div} variants={item} className="w-full mb-24">
+            <div className="px-32 pt-24">
+              <Typography className="text-2xl font-semibold leading-tight">Location</Typography>
+            </div>
 
-								{contact.tel.map((tel) => (
-									<div
-										className="flex items-center"
-										key={tel}
-									>
-										<Typography>{tel}</Typography>
-									</div>
-								))}
-							</div>
+            <CardContent className="px-32 py-24">
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <Typography className="font-semibold mb-4 text-15">Address</Typography>
+                  <Box className="flex items-start gap-8">
+                    <FuseSvgIcon size={20} color="action">
+                      heroicons-outline:location-marker
+                    </FuseSvgIcon>
+                    <Typography>{property.address || 'N/A'}</Typography>
+                  </Box>
+                </Grid>
 
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">Website</Typography>
+                <Grid item xs={12} sm={6}>
+                  <Typography className="font-semibold mb-4 text-15">City</Typography>
+                  <Typography>{property.city || 'N/A'}</Typography>
+                </Grid>
 
-								{contact.websites.map((website) => (
-									<div
-										className="flex items-center"
-										key={website}
-									>
-										<Typography>{website}</Typography>
-									</div>
-								))}
-							</div>
+                <Grid item xs={12} sm={6}>
+                  <Typography className="font-semibold mb-4 text-15">State/Region</Typography>
+                  <Typography>{property.state || property.region || 'N/A'}</Typography>
+                </Grid>
 
-							<div className="mb-24">
-								<Typography className="font-semibold mb-4 text-15">Emails</Typography>
+                <Grid item xs={12} sm={6}>
+                  <Typography className="font-semibold mb-4 text-15">Country</Typography>
+                  <Typography>{property.country || 'N/A'}</Typography>
+                </Grid>
 
-								{contact.emails.map((email) => (
-									<div
-										className="flex items-center"
-										key={email}
-									>
-										<Typography>{email}</Typography>
-									</div>
-								))}
-							</div>
-						</CardContent>
-					</Card>
-				</div>
+                {property.zipCode && (
+                  <Grid item xs={12} sm={6}>
+                    <Typography className="font-semibold mb-4 text-15">Zip Code</Typography>
+                    <Typography>{property.zipCode}</Typography>
+                  </Grid>
+                )}
+              </Grid>
+            </CardContent>
+          </Card>
 
-				<div className="flex flex-col md:w-320">
-					<Card
-						component={motion.div}
-						variants={item}
-						className="w-full mb-32"
-					>
-						<div className="flex items-center px-32 pt-24">
-							<Typography className="flex flex-1 text-2xl font-semibold leading-tight">
-								Friends
-							</Typography>
+          {/* Property Features */}
+          <Card component={motion.div} variants={item} className="w-full mb-24">
+            <div className="px-32 pt-24">
+              <Typography className="text-2xl font-semibold leading-tight">Features</Typography>
+            </div>
 
-							<Button
-								className="-mx-8"
-								size="small"
-							>
-								See 454 more
-							</Button>
-						</div>
+            <CardContent className="px-32 py-24">
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Box className="flex items-center gap-8">
+                    <FuseSvgIcon size={20} color="action">
+                      heroicons-outline:home
+                    </FuseSvgIcon>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Bedrooms
+                      </Typography>
+                      <Typography className="font-semibold">
+                        {property.bedrooms || 'N/A'}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
 
-						<CardContent className="flex flex-wrap px-32">
-							{friends.map((friend) => (
-								<Avatar
-									key={friend.id}
-									className="w-64 h-64 rounded-12 m-4"
-									src={friend.avatar}
-									alt={friend.name}
-								/>
-							))}
-						</CardContent>
-					</Card>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Box className="flex items-center gap-8">
+                    <FuseSvgIcon size={20} color="action">
+                      heroicons-outline:office-building
+                    </FuseSvgIcon>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Bathrooms
+                      </Typography>
+                      <Typography className="font-semibold">
+                        {property.bathrooms || 'N/A'}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
 
-					<Card
-						component={motion.div}
-						variants={item}
-						className="w-full mb-32 rounded-16 shadow"
-					>
-						<div className="px-32 pt-24 flex items-center">
-							<Typography className="flex flex-1 text-2xl font-semibold leading-tight">
-								Joined Groups
-							</Typography>
-							<div className="-mx-8">
-								<Button
-									color="inherit"
-									size="small"
-								>
-									See 6 more
-								</Button>
-							</div>
-						</div>
-						<CardContent className="px-32">
-							<List className="p-0">
-								{groups.map((group) => (
-									<ListItem
-										key={group.id}
-										className="px-0 space-x-8"
-									>
-										<Avatar alt={group.name}>{group.name[0]}</Avatar>
-										<ListItemText
-											primary={
-												<div className="flex">
-													<Typography
-														className="font-medium"
-														color="secondary.main"
-														paragraph={false}
-													>
-														{group.name}
-													</Typography>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Box className="flex items-center gap-8">
+                    <FuseSvgIcon size={20} color="action">
+                      heroicons-outline:view-grid
+                    </FuseSvgIcon>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Square Feet
+                      </Typography>
+                      <Typography className="font-semibold">
+                        {property.squareFeet?.toLocaleString() || 'N/A'}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
 
-													<Typography
-														className="mx-4 font-normal"
-														paragraph={false}
-													>
-														{group.category}
-													</Typography>
-												</div>
-											}
-											secondary={group.members}
-										/>
-										<ListItemSecondaryAction>
-											<IconButton size="large">
-												<FuseSvgIcon>heroicons-outline:dots-vertical</FuseSvgIcon>
-											</IconButton>
-										</ListItemSecondaryAction>
-									</ListItem>
-								))}
-							</List>
-						</CardContent>
-					</Card>
-				</div>
-			</div>
-		</motion.div>
-	);
+                {property.yearBuilt && (
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Box className="flex items-center gap-8">
+                      <FuseSvgIcon size={20} color="action">
+                        heroicons-outline:calendar
+                      </FuseSvgIcon>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Year Built
+                        </Typography>
+                        <Typography className="font-semibold">{property.yearBuilt}</Typography>
+                      </Box>
+                    </Box>
+                  </Grid>
+                )}
+
+                {property.parking && (
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Box className="flex items-center gap-8">
+                      <FuseSvgIcon size={20} color="action">
+                        heroicons-outline:truck
+                      </FuseSvgIcon>
+                      <Box>
+                        <Typography variant="caption" color="text.secondary">
+                          Parking
+                        </Typography>
+                        <Typography className="font-semibold">{property.parking}</Typography>
+                      </Box>
+                    </Box>
+                  </Grid>
+                )}
+              </Grid>
+
+              {property.amenities && property.amenities.length > 0 && (
+                <>
+                  <Divider className="my-24" />
+                  <Typography className="font-semibold mb-12 text-15">Amenities</Typography>
+                  <Box className="flex flex-wrap gap-8">
+                    {property.amenities.map((amenity, index) => (
+                      <Chip key={index} label={amenity} size="small" variant="outlined" />
+                    ))}
+                  </Box>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="flex flex-col md:w-320">
+          {/* Owner/Merchant Information */}
+          <Card component={motion.div} variants={item} className="w-full mb-24">
+            <div className="px-32 pt-24">
+              <Typography className="text-2xl font-semibold leading-tight">
+                Owner Information
+              </Typography>
+            </div>
+
+            <CardContent className="px-32 py-24">
+              <Typography className="font-semibold mb-4 text-15">Owner Name</Typography>
+              <Typography className="mb-16">
+                {property.merchant?.name || property.owner?.name || 'N/A'}
+              </Typography>
+
+              {(property.merchant?.email || property.owner?.email) && (
+                <>
+                  <Typography className="font-semibold mb-4 text-15">Contact Email</Typography>
+                  <Typography className="mb-16">
+                    {property.merchant?.email || property.owner?.email}
+                  </Typography>
+                </>
+              )}
+
+              {(property.merchant?.phone || property.owner?.phone) && (
+                <>
+                  <Typography className="font-semibold mb-4 text-15">Contact Phone</Typography>
+                  <Typography>{property.merchant?.phone || property.owner?.phone}</Typography>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Additional Information */}
+          <Card component={motion.div} variants={item} className="w-full mb-24">
+            <div className="px-32 pt-24">
+              <Typography className="text-2xl font-semibold leading-tight">
+                Additional Details
+              </Typography>
+            </div>
+
+            <CardContent className="px-32 py-24">
+              {property.listedDate && (
+                <Box className="mb-16">
+                  <Typography className="font-semibold mb-4 text-15">Listed Date</Typography>
+                  <Typography>
+                    {new Date(property.listedDate).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </Typography>
+                </Box>
+              )}
+
+              {property.views && (
+                <Box className="mb-16">
+                  <Typography className="font-semibold mb-4 text-15">Views</Typography>
+                  <Box className="flex items-center gap-8">
+                    <FuseSvgIcon size={20} color="action">
+                      heroicons-outline:eye
+                    </FuseSvgIcon>
+                    <Typography>{property.views.toLocaleString()}</Typography>
+                  </Box>
+                </Box>
+              )}
+
+              {property.isFeatured && (
+                <Box className="mb-16">
+                  <Chip
+                    label="Featured Property"
+                    color="primary"
+                    icon={<FuseSvgIcon size={16}>heroicons-outline:star</FuseSvgIcon>}
+                  />
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </motion.div>
+  );
 }
 
 export default AboutTab;

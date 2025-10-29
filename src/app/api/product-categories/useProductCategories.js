@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router';
 
 export default function useProductCats() {
   return useQuery(['__productcats'], getProdCats);
-}
+} // (Msvs => Done)
 
 //get single product category
 export function useSingleProductCat(proCatId) {
@@ -26,7 +26,7 @@ export function useSingleProductCat(proCatId) {
       // staleTime: 5000,
     }
   );
-}
+} // (Msvs => Done)
 
 //create new product category
 export function useAddProductCatMutation() {
@@ -39,7 +39,7 @@ export function useAddProductCatMutation() {
 
     {
       onSuccess: (data) => {
-        if (data?.data) {
+        if (data?.data?.success) {
           toast.success('product category added successfully!');
           queryClient.invalidateQueries(['__productcats']);
           queryClient.refetchQueries('__productcats', { force: true });
@@ -67,7 +67,7 @@ export function useProductCatUpdateMutation() {
 
   return useMutation(updateProdCatById, {
     onSuccess: (data) => {
-      if (data?.data) {
+      if (data?.data?.success) {
       toast.success('product category updated successfully...!');
       queryClient.invalidateQueries('__productcats');
       queryClient.refetchQueries('__productcats', { force: true });
@@ -82,7 +82,7 @@ export function useProductCatUpdateMutation() {
       );
     },
   });
-}
+} // (Msvs => Done)
 
 
 export function useDeleteProductCategory() {
@@ -91,7 +91,7 @@ export function useDeleteProductCategory() {
 
   return useMutation(deleteProdCatById, {
     onSuccess: (data) => {
-      if(data?.data && data?.data?.success){
+      if(data?.data?.success){
         toast.success("category deleted successfully!!");
         queryClient.invalidateQueries("shopplans");
         queryClient.refetchQueries('shopplans', { force: true });

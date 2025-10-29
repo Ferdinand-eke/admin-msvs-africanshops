@@ -6,11 +6,6 @@ import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import {
-	useCreateECommerceProductMutation,
-	useDeleteECommerceProductMutation,
-	useUpdateECommerceProductMutation
-} from '../ECommerceApi';
 import { useAdminCreateVendorShop, useAdminUpdateVendorShop, useDeleteShop } from 'src/app/api/shops/useAdminShops';
 import { firebaseApp } from 'src/app/auth/services/firebase/initializeFirebase';
 import {
@@ -30,9 +25,6 @@ import ProductModel from './models/ProductModel';
 function VendorHeader() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	const [createProduct] = useCreateECommerceProductMutation();
-	const [saveProduct] = useUpdateECommerceProductMutation();
-	const [removeProduct] = useDeleteECommerceProductMutation();
 	const methods = useFormContext();
 	const { formState, watch, getValues, setValue } = methods;
 	const { isValid, dirtyFields } = formState;
@@ -93,9 +85,6 @@ function VendorHeader() {
 
 
 	function handleCreateProduct() {
-
-		// console.log("CreateShopsData", images)
-		// return
 		if (images?.length > 0) {
 			const fileName = new Date().getTime() + images[0]?.id;
 			const storage = getStorage(firebaseApp);

@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router';
 
 export default function useShopplans() {
   return useQuery(['shopplans'], getShopPlans);
-}
+} //(Msvs => Done)
 
 //get single shop plan
 export function useSingleShopplans(shopplanId) {
@@ -30,7 +30,7 @@ export function useSingleShopplans(shopplanId) {
       // staleTime: 2000,
     }
   );
-}
+} // (msvs => Done)
 
 //create single shop plan
 export function useAddShopPlanMutation() {
@@ -73,7 +73,7 @@ export function useShopPlanUpdateMutation() {
 
   return useMutation(updateShopPlanById, {
     onSuccess: (data) => {
-      if(data?.data){
+      if(data?.data?.success){
         toast.success('shop plan  updated successfully!!');
         queryClient.invalidateQueries('shopplans');
         navigate('/vendorplans/packages');
@@ -88,7 +88,7 @@ export function useShopPlanUpdateMutation() {
       );
     },
   });
-}
+} //(Msvs => Done)
 
 
 /***Delete shop plan  */

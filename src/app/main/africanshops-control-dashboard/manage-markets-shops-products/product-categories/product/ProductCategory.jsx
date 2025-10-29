@@ -14,14 +14,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import SingleDesignationHeader from './SingleProductCategoryHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleState } from 'src/app/api/states/useStates';
-import { useSingleDesignation } from 'src/app/api/designations/useDesignations';
 import { useSingleProductCat } from 'src/app/api/product-categories/useProductCategories';
 /**
  * Form Validation Schema
@@ -38,13 +32,7 @@ function ProductCategory() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	// const {
-	// 	data: product,
-	// 	isLoading,
-	// 	isError
-	// } = useGetECommerceProductQuery(productId, {
-	// 	skip: !productId || productId === 'new'
-	// });
+
 
 	const {data:productcat,
 		isLoading,
@@ -66,12 +54,11 @@ function ProductCategory() {
 		}
 	}, [productId, reset]);
 	useEffect(() => {
-		if (productcat?.data) {
-			reset({ ...productcat?.data });
+		if (productcat?.data?.category) {
+			reset({ ...productcat?.data?.category });
 		}
-	}, [productcat?.data, reset]);
+	}, [productcat?.data?.category, reset]);
 
-	// console.log("SIngle-ProdCAT", productcat?.data)
 
 	/**
 	 * Tab Change
@@ -84,10 +71,7 @@ function ProductCategory() {
 		return <FuseLoading />;
 	}
 
-	/**
-	 * Show Message if the requested products is not exists
-	 */
-	// console.log("Getting State error", isError)
+	/*** Show Message if the requested products is not exists*/
 	if (isError && productId !== 'new') {
 		return (
 			<motion.div
@@ -114,12 +98,10 @@ function ProductCategory() {
 		);
 	}
 
-	// console.log("STATE-DATA", state?.data)
-
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (productcat?.data && routeParams.productId !== productcat?.data?._id && routeParams.productId !== 'new')) {
+	if (_.isEmpty(form) || (productcat?.data?.category && routeParams.productId !== productcat?.data?.category?.id && routeParams.productId !== 'new')) {
 		return <FuseLoading />;
 	}
 
@@ -146,18 +128,6 @@ function ProductCategory() {
 								className="h-64"
 								label="Category Image"
 							/>
-							{/* <Tab
-								className="h-64"
-								label="Pricing"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Inventory"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Shipping"
-							/> */}
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
@@ -168,17 +138,7 @@ function ProductCategory() {
 								<ProductImagesTab />
 							</div>
 
-							{/* <div className={tabValue !== 2 ? 'hidden' : ''}>
-								<PricingTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 3 ? 'hidden' : ''}>
-								<InventoryTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 4 ? 'hidden' : ''}>
-								<ShippingTab />
-							</div> */}
+							
 						</div>
 					</>
 				}

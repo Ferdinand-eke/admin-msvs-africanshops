@@ -3,14 +3,9 @@ import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import { useFormContext } from 'react-hook-form';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import {
-	useCreateECommerceProductMutation,
-	useDeleteECommerceProductMutation,
-	useUpdateECommerceProductMutation
-} from '../ECommerceApi';
 import { useAddLgaMutation, useDeleteSingleLGA, useLgaUpdateMutation } from 'src/app/api/lgas/useLgas';
 
 /**
@@ -19,15 +14,11 @@ import { useAddLgaMutation, useDeleteSingleLGA, useLgaUpdateMutation } from 'src
 function LgaCountyHeader() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	// const [createProduct] = useCreateECommerceProductMutation();
-	// const [saveProduct] = useUpdateECommerceProductMutation();
-	// const [removeProduct] = useDeleteECommerceProductMutation();
 	const methods = useFormContext();
 	const { formState, watch, getValues } = methods;
-	const { isValid, dirtyFields } = formState;
+	const { dirtyFields } = formState;
 	const theme = useTheme();
-	const navigate = useNavigate();
-	const { name, images, featuredImageId, lgalocation} = watch();
+	const { name, lgalocation} = watch();
 
 
    const updateLgaMutation = useLgaUpdateMutation();
@@ -151,7 +142,8 @@ function LgaCountyHeader() {
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid || updateLgaMutation.isLoading}
+							disabled={_.isEmpty(dirtyFields) || updateLgaMutation.isLoading}
+
 							onClick={handleSaveProduct}
 						>
 							Save LGA/County
@@ -162,7 +154,7 @@ function LgaCountyHeader() {
 						className="whitespace-nowrap mx-4"
 						variant="contained"
 						color="secondary"
-						disabled={_.isEmpty(dirtyFields) || !isValid || addNewLga.isLoading}
+						disabled={_.isEmpty(dirtyFields) || addNewLga.isLoading}
 						onClick={handleCreateProduct}
 					>
 						Add LGA/County

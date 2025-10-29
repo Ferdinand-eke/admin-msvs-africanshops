@@ -14,7 +14,7 @@ import { selectFilteredContactList, useGetContactsListQuery } from './ContactsAp
  * The contacts header.
  */
 function StaffHeader(props) {
-	const {usersData, usersIsLoading} = props
+	const {usersData, usersIsLoading, onSearchChange, searchValue} = props
 	const dispatch = useAppDispatch();
 	const searchText = useAppSelector(selectSearchText);
 
@@ -29,6 +29,9 @@ function StaffHeader(props) {
 	if (usersIsLoading) {
 		return null;
 	}
+
+	// Use server-side search if onSearchChange is provided, otherwise use local search
+	const currentSearchText = onSearchChange ? searchValue : searchText;
 
 	return (
 		<div className="p-24 sm:p-32 w-full border-b-1">
@@ -73,11 +76,19 @@ function StaffHeader(props) {
 						className="flex flex-1 px-16"
 						disableUnderline
 						fullWidth
-						value={searchText}
+						value={currentSearchText}
 						inputProps={{
 							'aria-label': 'Search'
 						}}
-						onChange={(ev) => dispatch(setSearchText(ev))}
+						onChange={(ev) => {
+							if (onSearchChange) {
+								// Server-side search
+								onSearchChange(ev.target.value);
+							} else {
+								// Local search (fallback)
+								dispatch(setSearchText(ev));
+							}
+						}}
 					/>
 				</Box>
 				<Button

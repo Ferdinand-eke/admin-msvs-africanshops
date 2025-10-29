@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router';
 
 export default function useHubs() {
   return useQuery(['tradeHubs'], getTradehubs);
-}
+} //(Msvs => Done)
 
 //get single traade hub
 export function useSingleHub(hubId) {
@@ -22,7 +22,7 @@ export function useSingleHub(hubId) {
     enabled: Boolean(hubId),
     // staleTime: 5000,
   });
-}
+}//(Msvs => Done)
 
 //create new trade hub
 export function useAddHubMutation() {
@@ -35,7 +35,7 @@ export function useAddHubMutation() {
 
     {
       onSuccess: (data) => {
-        if (data?.data) {
+        if (data?.data?.success) {
           toast.success('trade hub added successfully!');
           queryClient.invalidateQueries(['tradeHubs']);
           queryClient.refetchQueries('tradeHubs', { force: true });
@@ -63,7 +63,7 @@ export function useHubUpdateMutation() {
  
   return useMutation(updateTradehubById, {
     onSuccess: (data) => {
-     if(data?.data){
+     if(data?.data?.success){
       toast.success('traded hub updated successfully!!');
 
       queryClient.invalidateQueries('tradeHubs');
@@ -82,7 +82,7 @@ export function useHubUpdateMutation() {
       // queryClient.invalidateQueries('__myshop_orders');
     },
   });
-}
+}//(Msvs => Done)
 
 //delet an exiting trade hub
 export function useDeleteHubMutation() {
@@ -91,7 +91,7 @@ export function useDeleteHubMutation() {
 
   return useMutation(deleteTradehubById, {
     onSuccess: (data) => {
-      if (data?.data) {
+      if (data?.data?.success) {
        
         toast.success('traded hub deleted successfully!!');
 

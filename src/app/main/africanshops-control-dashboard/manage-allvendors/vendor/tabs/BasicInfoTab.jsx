@@ -7,6 +7,7 @@ import {
   getLgaByStateId,
   getMarketsByLgaId,
   getMarketsByStateId,
+  getOperationalLgaByStateId,
   getStateByCountryId,
 } from "src/app/api/apiRoutes";
 import { useEffect, useState } from "react";
@@ -56,7 +57,7 @@ function BasicInfoTab({vendorId}) {
     setLoading(true);
     const responseData = await getStateByCountryId(pid);
     if (responseData) {
-      setBstates(responseData?.data);
+      setBstates(responseData?.data?.states);
       setTimeout(
         function () {
           setLoading(false);
@@ -69,9 +70,9 @@ function BasicInfoTab({vendorId}) {
   //**Get L.G.As from state_ID data */
   async function getLgasFromState(sid) {
     setLoading(true);
-    const responseData = await getLgaByStateId(sid);
+    const responseData = await getOperationalLgaByStateId(sid);
     if (responseData) {
-      setBlgas(responseData?.data);
+      setBlgas(responseData?.data?.lgas);
       setTimeout(
         function () {
           setLoading(false);
@@ -86,7 +87,7 @@ function BasicInfoTab({vendorId}) {
     setLoading(true);
     const responseData = await getMarketsByStateId(getValues()?.businezState);
     if (responseData) {
-      setBMarkets(responseData?.data);
+      setBMarkets(responseData?.data?.markets);
       setTimeout(
         function () {
           setLoading(false);
@@ -101,7 +102,7 @@ function BasicInfoTab({vendorId}) {
       setLoading(true);
       const responseData = await getMarketsByLgaId(lid);
       if (responseData) {
-        setBMarkets(responseData?.data);
+        setBMarkets(responseData?.data?.markets);
         setTimeout(
           function () {
             setLoading(false);
@@ -153,9 +154,9 @@ function BasicInfoTab({vendorId}) {
             helpertext={errors?.businessCountry?.message}
           >
             <MenuItem value="">Select a country</MenuItem>
-            {countries?.data?.data &&
-              countries?.data?.data?.map((option, id) => (
-                <MenuItem key={option._id} value={option._id}>
+            {countries?.data?.countries &&
+              countries?.data?.countries?.map((option, id) => (
+                <MenuItem key={option.id} value={option.id}>
                   {option.name}
                 </MenuItem>
               ))}
@@ -187,7 +188,7 @@ function BasicInfoTab({vendorId}) {
       <MenuItem value="">Select a state</MenuItem>
       {bstates &&
         bstates?.map((option, id) => (
-          <MenuItem key={option._id} value={option._id}>
+          <MenuItem key={option.id} value={option.id}>
             {option.name}
           </MenuItem>
         ))}
@@ -220,7 +221,7 @@ function BasicInfoTab({vendorId}) {
             <MenuItem value="">Select a state</MenuItem>
             {blgas &&
               blgas?.map((option, id) => (
-                <MenuItem key={option._id} value={option._id}>
+                <MenuItem key={option.id} value={option.id}>
                   {option.name}
                 </MenuItem>
               ))}
@@ -287,9 +288,9 @@ function BasicInfoTab({vendorId}) {
               helpertext={errors?.tradehub?.message}
             >
               <MenuItem value="">Select a trading hub</MenuItem>
-              {hubs?.data?.data &&
-                hubs?.data?.data?.map((option, id) => (
-                  <MenuItem key={option._id} value={option._id}>
+              {hubs?.data?.tradehubs &&
+                hubs?.data?.tradehubs?.map((option, id) => (
+                  <MenuItem key={option.id} value={option.id}>
                     {option.hubname}
                   </MenuItem>
                 ))}
@@ -320,9 +321,9 @@ function BasicInfoTab({vendorId}) {
               helpertext={errors?.shopplan?.message}
             >
               <MenuItem value="">Select a trading hub</MenuItem>
-              {plans?.data?.data &&
-                plans?.data?.data?.map((option, id) => (
-                  <MenuItem key={option._id} value={option._id}>
+              {plans?.data?.merchantPlans &&
+                plans?.data?.merchantPlans?.map((option, id) => (
+                  <MenuItem key={option.id} value={option.id}>
                     {option.plansname}
                   </MenuItem>
                 ))}

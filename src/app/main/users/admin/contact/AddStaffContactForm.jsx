@@ -221,8 +221,8 @@ const AddStaffContactForm = () => {
   };
 
   useEffect(() => {
-    reset(admin?.data);
-  }, [admin?.data, reset]);
+    reset(admin?.data?.admin);
+  }, [admin?.data?.admin, reset]);
 
   /**
    * Form Submit
@@ -334,7 +334,7 @@ const AddStaffContactForm = () => {
                   </MenuItem>
 
                   {bstates?.map((bsts, index) => (
-                    <MenuItem key={index} value={bsts._id}>{bsts.name}</MenuItem>
+                    <MenuItem key={index} value={bsts.id || bsts._id}>{bsts.name}</MenuItem>
                   ))}
                 </Select>
               )}

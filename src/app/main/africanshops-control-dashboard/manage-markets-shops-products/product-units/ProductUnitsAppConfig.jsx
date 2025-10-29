@@ -2,8 +2,8 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 const ProductCategoriesApp = lazy(() => import('./ProductUnitsApp'));
-const Designation = lazy(() => import('./product/ProductUnit'));
-const ProductCategories = lazy(() => import('./products/ProductUnits'));
+const ProductUnit = lazy(() => import('./product/ProductUnit'));
+const ProductUnits = lazy(() => import('./products/ProductUnits'));
 /**
  * The E-Commerce app configuration.
  */
@@ -23,25 +23,14 @@ const ProductUnitsAppConfig = {
 				},
 				{
 					path: 'list',
-					element: <ProductCategories />
+					element: <ProductUnits />
 				},
 
 				{
 					path: 'list/:productId/*',
-					element: <Designation />
+					element: <ProductUnit />
 				},
-				// {
-				// 	path: 'inventory',
-				// 	element: <Designations />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+				
 			]
 		}
 	]

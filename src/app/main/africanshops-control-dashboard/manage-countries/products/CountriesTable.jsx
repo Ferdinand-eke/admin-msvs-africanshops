@@ -1,26 +1,48 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
 import Button from '@mui/material/Button';
-import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
-import useCountries from 'src/app/api/countries/useCountries';
+import { useCountriesPaginated } from 'src/app/api/countries/useCountries';
 
 function CountriesTable() {
-	
-	const { data: products, isLoading } = useGetECommerceProductsQuery();
-	const [removeProducts] = useDeleteECommerceProductsMutation();
+	// Pagination state
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(20);
+	const [globalFilter, setGlobalFilter] = useState('');
 
-	const { data:countries, isLoading:countriesLoading, refetch, isError } = useCountries();
+	// Fetch countries with pagination
+	const { data: countriesResponse, isLoading, isError, isFetching } = useCountriesPaginated({
+		page,
+		limit: rowsPerPage,
+		search: globalFilter,
+		filters: {}
+	});
 
-	// console.log("CountriesData", countries?.data?.data)
+	// Extract countries and pagination info from response
+	const countries = useMemo(() => countriesResponse?.data?.countries || [], [countriesResponse]);
+	const totalCount = useMemo(() => countriesResponse?.data?.pagination?.total || countries.length, [countriesResponse, countries.length]);
+	const pagination = useMemo(() => countriesResponse?.data?.pagination, [countriesResponse]);
+
+	// Pagination handlers
+	const handlePageChange = useCallback((newPage) => {
+		setPage(newPage);
+	}, []);
+
+	const handleRowsPerPageChange = useCallback((newRowsPerPage) => {
+		setRowsPerPage(newRowsPerPage);
+		setPage(0);
+	}, []);
+
+	const handleGlobalFilterChange = useCallback((value) => {
+		setGlobalFilter(value);
+		setPage(0);
+	}, []);
 
 	const columns = useMemo(
 		() => [
@@ -56,7 +78,7 @@ function CountriesTable() {
 				Cell: ({ row }) => (
 					<Typography
 						component={Link}
-						to={`/administrations/countries/${row.original._id}/${row.original.slug}`}
+						to={`/administrations/countries/${row.original.id}/${row.original.slug}`}
 						className="underline"
 						color="secondary"
 						role="button"
@@ -65,45 +87,7 @@ function CountriesTable() {
 					</Typography>
 				)
 			},
-			// {
-			// 	accessorKey: 'categories',
-			// 	header: 'Category',
-			// 	accessorFn: (row) => (
-			// 		<div className="flex flex-wrap space-x-2">
-			// 			{row.categories.map((item) => (
-			// 				<Chip
-			// 					key={item}
-			// 					className="text-11"
-			// 					size="small"
-			// 					color="default"
-			// 					label={item}
-			// 				/>
-			// 			))}
-			// 		</div>
-			// 	)
-			// },
-			// {
-			// 	accessorKey: 'priceTaxIncl',
-			// 	header: 'Price',
-			// 	accessorFn: (row) => `$${row.priceTaxIncl}`
-			// },
-			// {
-			// 	accessorKey: 'quantity',
-			// 	header: 'Quantity',
-			// 	accessorFn: (row) => (
-			// 		<div className="flex items-center space-x-8">
-			// 			<span>{row.quantity}</span>
-			// 			<i
-			// 				className={clsx(
-			// 					'inline-block w-8 h-8 rounded',
-			// 					row.quantity <= 5 && 'bg-red',
-			// 					row.quantity > 5 && row.quantity <= 25 && 'bg-orange',
-			// 					row.quantity > 25 && 'bg-green'
-			// 				)}
-			// 			/>
-			// 		</div>
-			// 	)
-			// },
+			
 			{
 				accessorKey: 'isInOperation',
 				header: 'Operational Countries',
@@ -131,11 +115,11 @@ function CountriesTable() {
 		[]
 	);
 
-	if (countriesLoading) {
+	if (isLoading && !isFetching) {
 		return <FuseLoading />;
 	}
 
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -146,78 +130,116 @@ function CountriesTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Error retrieving countries!
+					Error retrieving countries!
 				</Typography>
-			
+				<Button
+					className="mt-24"
+					variant="outlined"
+					onClick={() => window.location.reload()}
+					color="secondary"
+				>
+					<FuseSvgIcon size={20}>heroicons-outline:refresh</FuseSvgIcon>
+					<span className="mx-8">Retry</span>
+				</Button>
 			</motion.div>
 		);
 	}
 
-	if (!countries?.data?.data) {
-		return (
-			<motion.div
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1, transition: { delay: 0.1 } }}
-				className="flex flex-col flex-1 items-center justify-center h-full"
-			>
-				<Typography
-					color="text.secondary"
-					variant="h5"
-				>
-					No countries in operation yet!
-				</Typography>
-			
-			</motion.div>
-		);
-	}
 	return (
 		<Paper
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"
 			elevation={0}
 		>
 			<DataTable
-				// data={products}
-				data={countries?.data?.data}
+				data={countries}
 				columns={columns}
-				renderRowActionMenuItems={({ closeMenu, row, table }) => [
-					<MenuItem
-						key={0}
-						onClick={() => {
-							removeProducts([row.original.id]);
-							closeMenu();
-							table.resetRowSelection();
-						}}
-					>
-						<ListItemIcon>
-							<FuseSvgIcon>heroicons-outline:trash</FuseSvgIcon>
-						</ListItemIcon>
-						Delete
-					</MenuItem>
-				]}
-				renderTopToolbarCustomActions={({ table }) => {
-					const { rowSelection } = table.getState();
+				manualPagination
+				rowCount={totalCount}
+				pageCount={pagination?.totalPages || Math.ceil(totalCount / rowsPerPage)}
+				onPaginationChange={(updater) => {
+					const newPagination = typeof updater === 'function'
+						? updater({ pageIndex: page, pageSize: rowsPerPage })
+						: updater;
 
-					if (Object.keys(rowSelection).length === 0) {
-						return null;
+					if (newPagination.pageIndex !== page) {
+						handlePageChange(newPagination.pageIndex);
 					}
-
-					return (
-						<Button
-							variant="contained"
-							size="small"
-							onClick={() => {
-								const selectedRows = table.getSelectedRowModel().rows;
-								removeProducts(selectedRows.map((row) => row.original.id));
-								table.resetRowSelection();
-							}}
-							className="flex shrink min-w-40 ltr:mr-8 rtl:ml-8"
-							color="secondary"
-						>
-							<FuseSvgIcon size={16}>heroicons-outline:trash</FuseSvgIcon>
-							<span className="hidden sm:flex mx-8">Delete selected items</span>
-						</Button>
-					);
+					if (newPagination.pageSize !== rowsPerPage) {
+						handleRowsPerPageChange(newPagination.pageSize);
+					}
 				}}
+				onGlobalFilterChange={handleGlobalFilterChange}
+				state={{
+					pagination: {
+						pageIndex: page,
+						pageSize: rowsPerPage
+					},
+					globalFilter,
+					isLoading: isFetching,
+					showProgressBars: isFetching
+				}}
+				initialState={{
+					density: 'comfortable',
+					showGlobalFilter: true,
+					showColumnFilters: false,
+					pagination: {
+						pageIndex: 0,
+						pageSize: 20
+					}
+				}}
+				muiPaginationProps={{
+					rowsPerPageOptions: [10, 20, 50, 100],
+					showFirstButton: true,
+					showLastButton: true
+				}}
+				renderRowActionMenuItems={({ closeMenu, row }) => {
+					const country = row.original;
+					return [
+						<MenuItem
+							key="view"
+							component={Link}
+							to={`/administrations/countries/${country.id}/${country.slug}`}
+							onClick={closeMenu}
+						>
+							<ListItemIcon>
+								<FuseSvgIcon>heroicons-outline:eye</FuseSvgIcon>
+							</ListItemIcon>
+							View Details
+						</MenuItem>,
+						<MenuItem
+							key="edit"
+							component={Link}
+							to={`/administrations/countries/${country.id}/${country.slug}`}
+							onClick={closeMenu}
+						>
+							<ListItemIcon>
+								<FuseSvgIcon>heroicons-outline:pencil</FuseSvgIcon>
+							</ListItemIcon>
+							Edit
+						</MenuItem>
+					];
+				}}
+				renderEmptyRowsFallback={() => (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1, transition: { delay: 0.1 } }}
+						className="flex flex-col flex-1 items-center justify-center h-full py-48"
+					>
+						<Typography
+							color="text.secondary"
+							variant="h5"
+						>
+							No countries found!
+						</Typography>
+						<Typography
+							color="text.secondary"
+							variant="body1"
+							className="mt-8"
+						>
+							{globalFilter ? 'Try adjusting your search terms' : 'Countries will appear here once added'}
+						</Typography>
+					</motion.div>
+				)}
 			/>
 		</Paper>
 	);

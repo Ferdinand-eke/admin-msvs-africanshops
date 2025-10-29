@@ -10,16 +10,12 @@ import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
 import Button from '@mui/material/Button';
-import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
 import useAdmiManageShop from 'src/app/api/shops/useAdminShops';
 
 function AllVendorsTable() {
 	
-	// const { data: products, isLoading } = useGetECommerceProductsQuery();
-	// const [removeProducts] = useDeleteECommerceProductsMutation();
 
 	const { data:vendors, isLoading, isError } = useAdmiManageShop();
-	console.log("AllVENDORS", vendors?.data)
 
 	const columns = useMemo(
 		() => [
@@ -55,7 +51,7 @@ function AllVendorsTable() {
 				Cell: ({ row }) => (
 					<Typography
 						component={Link}
-						to={`/vendors/listvendors/${row?.original?._id}/${row?.original?.slug}`}
+						to={`/vendors/listvendors/${row?.original?.id}/${row?.original?.slug}`}
 						className="underline"
 						color="secondary"
 						role="button"
@@ -196,7 +192,7 @@ function AllVendorsTable() {
 		);
 	}
 
-	if (!vendors?.data?.data) {
+	if (!vendors?.data?.merchants) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -207,7 +203,7 @@ function AllVendorsTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-					No offices in operation yet!
+					No merchants yet!
 				</Typography>
 			
 			</motion.div>
@@ -222,7 +218,7 @@ function AllVendorsTable() {
 			elevation={0}
 		>
 			<DataTable
-				data={vendors?.data?.data}
+				data={vendors?.data?.merchants}
 				columns={columns}
 				// renderRowActionMenuItems={({ closeMenu, row, table }) => [
 				// 	<MenuItem

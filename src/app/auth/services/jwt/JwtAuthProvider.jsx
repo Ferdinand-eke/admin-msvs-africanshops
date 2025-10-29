@@ -231,7 +231,7 @@ function JwtAuthProvider(props) {
 						role:'admin',
 
 						isAdmin:response?.data?.isAdmin,
-					avatar:response?.data?.avatar,
+						avatar:response?.data?.avatar,
 					}
 					handleSignInSuccess(transFormedUser, accessToken);
 					return true;

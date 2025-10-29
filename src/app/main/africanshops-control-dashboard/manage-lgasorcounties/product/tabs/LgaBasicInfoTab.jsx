@@ -51,18 +51,18 @@ function LgaBasicInfoTab() {
 
   useEffect(() => {
     if (getValues()?.businessCountry?.length > 0) {
-      // const filteredCountry = countries?.data?.data?.filter((county) => county._id === getValues()?.businessCountry )
+      // const filteredCountry = countries?.data?.countries?.filter((county) => county._id === getValues()?.businessCountry )
       setFilteredCountry(
-        countries?.data?.data?.filter(
-          (county) => county._id === getValues()?.businessCountry
+        countries?.data?.countries?.filter(
+          (county) => county.id === getValues()?.businessCountry
         )[0]
       );
     }
     if (getValues()?.businessState?.length > 0) {
       console.log("performFilter");
-      // const filteredCountry = countries?.data?.data?.filter((county) => county._id === getValues()?.businessCountry )
+      // const filteredCountry = countries?.data?.countries?.filter((county) => county._id === getValues()?.businessCountry )
       setFilteredState(
-        bstates?.filter((state) => state._id === getValues()?.businessState)[0]
+        bstates?.filter((state) => state.id === getValues()?.businessState)[0]
       );
     }
 
@@ -92,12 +92,6 @@ function LgaBasicInfoTab() {
     }
 
   },[ getValues()?.name])
-  // console.log("countries", countries?.data?.data)
-  // console.log("filteredCountries_ID", getValues()?.businessCountry);
-  // console.log("filteredCountry", filteredCountry);
-  // console.log("======================================================");
-  // console.log("filteredStates_ID", getValues()?.businessState);
-  // console.log("filteredState", filteredState);
 
   async function getStateDFromCountryId(pid) {
     setLoading(true);
@@ -105,7 +99,7 @@ function LgaBasicInfoTab() {
     const responseData = await getStateByCountryId(pid);
 
     if (responseData) {
-      setBstates(responseData?.data);
+      setBstates(responseData?.data?.states);
       setTimeout(
         function () {
           setLoading(false);
@@ -139,9 +133,9 @@ function LgaBasicInfoTab() {
               helpertext={errors?.businessCountry?.message}
             >
               <MenuItem value="">Select a country</MenuItem>
-              {countries?.data?.data &&
-                countries?.data?.data?.map((option, id) => (
-                  <MenuItem key={option._id} value={option._id}>
+              {countries?.data?.countries &&
+                countries?.data?.countries?.map((option, id) => (
+                  <MenuItem key={option.id} value={option.id}>
                     {option.name}
                   </MenuItem>
                 ))}
@@ -174,7 +168,7 @@ function LgaBasicInfoTab() {
               <MenuItem value="">Select a state</MenuItem>
               {bstates &&
                 bstates?.map((option, id) => (
-                  <MenuItem key={option._id} value={option._id}>
+                  <MenuItem key={option.id} value={option.id}>
                     {option.name}
                   </MenuItem>
                 ))}

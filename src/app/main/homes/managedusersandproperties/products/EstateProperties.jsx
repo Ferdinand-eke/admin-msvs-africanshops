@@ -21,6 +21,7 @@ function EstateProperties() {
 				<ProductsTable />
 				
 				
+				
 			</div>
 		</>
 	);

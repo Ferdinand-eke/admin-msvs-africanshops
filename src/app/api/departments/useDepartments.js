@@ -12,17 +12,22 @@ import {
 
 export const useGetDepartments = () => {
   return useQuery('getDepartmentsQuery', getDepts);
-};
+}; //(Msvs => Done)
 
 /***Get department by ID */
 export function useGetDepartmentById(deptId) {
   if (!deptId || deptId === "new") {
     return "";
   }
-  return useQuery(['getDepartmentsQuery', deptId], () =>
-  getDeptById(deptId)
+  return useQuery(
+    ['getDepartmentsQuery', deptId],
+    () => getDeptById(deptId),
+    {
+      keepPreviousData: true, // Keeps previous data while fetching new data
+      enabled: Boolean(deptId) && deptId !== "new" // Only fetch when we have a valid deptId
+    }
   );
-}
+}// (Msvs => Done)
 
 //creating new Department
 export function useAddDeptMutation() {
@@ -64,14 +69,15 @@ export function useUpdateDepartmentMutation() {
 
     {
       onSuccess: (data) => {
-        if (data) {
-          if(data?.data){
+        console.log("department-Update-success", data)
+        // if (data) {
+          if(data?.data?.success){
             toast.success('Departent updated successfully!');
           queryClient.invalidateQueries(['getDepartmentsQuery']);
           queryClient.refetchQueries('getDepartmentsQuery', { force: true });
           navigate('/departments/list')
           }
-        }
+        // }
       },
     },
     {

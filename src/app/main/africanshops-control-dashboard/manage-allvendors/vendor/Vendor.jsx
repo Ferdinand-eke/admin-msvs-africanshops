@@ -57,10 +57,10 @@ function Vendor() {
 		}
 	}, [productId, reset]);
 	useEffect(() => {
-		if (shopvendor?.data) {
-			reset({ ...shopvendor?.data });
+		if (shopvendor?.data?.merchant) {
+			reset({ ...shopvendor?.data?.merchant });
 		}
-	}, [shopvendor?.data, reset]);
+	}, [shopvendor?.data?.merchant, reset]);
 
 	/**
 	 * Tab Change
@@ -105,7 +105,7 @@ function Vendor() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (shopvendor?.data && routeParams.productId !== shopvendor?.data._id && routeParams.productId !== 'new')) {
+	if (_.isEmpty(form) || (shopvendor?.data?.merchant && routeParams.productId !== shopvendor?.data?.merchant.id && routeParams.productId !== 'new')) {
 		return <FuseLoading />;
 	}
 
@@ -133,18 +133,6 @@ function Vendor() {
 								className="h-64"
 								label="Shop Cover Image"
 							/>
-							{/* <Tab
-								className="h-64"
-								label="Pricing"
-							/>
-							<Tab
-								className="h-64"
-								label="Inventory"
-							/>
-							<Tab
-								className="h-64"
-								label="Shipping"
-							/> */}
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
@@ -155,17 +143,7 @@ function Vendor() {
 								<ProductImagesTab />
 							</div>
 
-							{/* <div className={tabValue !== 2 ? 'hidden' : ''}>
-								<PricingTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 3 ? 'hidden' : ''}>
-								<InventoryTab />
-							</div> */}
-{/* 
-							<div className={tabValue !== 4 ? 'hidden' : ''}>
-								<ShippingTab />
-							</div> */}
+							
 						</div>
 					</>
 				}

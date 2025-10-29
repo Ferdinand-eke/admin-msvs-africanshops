@@ -29,18 +29,7 @@ const ProductCategoriesAppConfig = {
 					path: 'list/:productId/*',
 					element: <ProductCategory />
 				},
-				// {
-				// 	path: 'inventory',
-				// 	element: <Designations />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+				
 			]
 		}
 	]

@@ -41,9 +41,9 @@ function BasicInfoTab() {
               helpertext={errors?.tradehub?.message}
             >
               <MenuItem value="">Select a trading hub</MenuItem>
-              {hubs?.data?.data &&
-                hubs?.data?.data?.map((option, id) => (
-                  <MenuItem key={option._id} value={option._id}>
+              {hubs?.data?.tradehubs &&
+                hubs?.data?.tradehubs?.map((option, id) => (
+                  <MenuItem key={option.id} value={option.id}>
                     {option.hubname}
                   </MenuItem>
                 ))}

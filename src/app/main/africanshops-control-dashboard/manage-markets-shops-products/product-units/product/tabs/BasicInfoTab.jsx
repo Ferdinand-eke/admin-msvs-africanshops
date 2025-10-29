@@ -41,9 +41,9 @@ function BasicInfoTab() {
               helpertext={errors?.tradehub?.message}
             >
               <MenuItem value="">Select a trading hub</MenuItem>
-              {hubs?.data?.data &&
-                hubs?.data?.data?.map((option, id) => (
-                  <MenuItem key={option._id} value={option._id}>
+              {hubs?.data?.tradehubs &&
+                hubs?.data?.tradehubs?.map((option, id) => (
+                  <MenuItem key={option.id} value={option.id}>
                     {option.hubname}
                   </MenuItem>
                 ))}
@@ -74,9 +74,9 @@ function BasicInfoTab() {
               helpertext={errors?.planType?.message}
             >
               <MenuItem value="">Select a plan on which this unit runs</MenuItem>
-              {plans?.data?.data &&
-                plans?.data?.data?.map((option, id) => (
-                  <MenuItem key={option._id} value={option._id}>
+              {plans?.data?.merchantPlans &&
+                plans?.data?.merchantPlans?.map((option, id) => (
+                  <MenuItem key={option.id} value={option.id}>
                     {option.plansname}
                   </MenuItem>
                 ))}

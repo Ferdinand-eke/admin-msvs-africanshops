@@ -2,13 +2,14 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 const MarketsApp = lazy(() => import('./MarketsApp'));
-const Product = lazy(() => import('./product/SingleMarket'));
-const Markets = lazy(() => import('./products/Markets'));
+const Product = lazy(() => import('./market/SingleMarket'));
+const Markets = lazy(() => import('./all-markets/Markets'));
 // const Order = lazy(() => import('./order/Order'));
 // const Orders = lazy(() => import('./orders/Orders'));
 /**
  * The E-Commerce app configuration.
  */
+
 
 const MarketsAppConfig = {
 	settings: {
@@ -32,18 +33,7 @@ const MarketsAppConfig = {
 					element: <Product />
 				},
 				
-				// {
-				// 	path: 'inventory',
-				// 	element: <ShopProducts />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+				
 			]
 		}
 	]

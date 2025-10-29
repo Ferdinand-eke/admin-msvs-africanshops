@@ -15,9 +15,36 @@ import {
 } from "../apiRoutes";
 import { useNavigate } from "react-router";
 
-export default function useCountries() {
-  return useQuery(["__countries"], getCountries);
+export default function useCountries(params = {}) {
+  return useQuery(
+    ["__countries", params],
+    () => getCountries(params),
+    {
+      keepPreviousData: true,
+      staleTime: 30000,
+    }
+  );
+} //(Msvs => Done)
+
+// Paginated hook for countries
+export function useCountriesPaginated({ page = 0, limit = 20, search = '', filters = {} }) {
+  const offset = page * limit;
+
+  return useQuery(
+    ['__countries_paginated', { page, limit, search, filters }],
+    () => getCountries({
+      limit,
+      offset,
+      search,
+      ...filters
+    }),
+    {
+      keepPreviousData: true,
+      staleTime: 30000,
+    }
+  );
 }
+
 //operational
 export function useOperationalCountries() {
   return useQuery(["__operational_countries"], getOperationalCountries);
@@ -34,6 +61,7 @@ export function useSingleCountry(countryId) {
     enabled: Boolean(countryId),
     // staleTime: 5000,
   });
+  
 }
 
 
@@ -75,7 +103,7 @@ export function useCountryUpdateMutation() {
 
   return useMutation(updateCountryById, {
     onSuccess: (data) => {
-      if (data?.data) {
+      if (data?.data?.success) {
         toast.success("country updated successfully!!");
         queryClient.invalidateQueries("__countries");
       }
@@ -84,7 +112,7 @@ export function useCountryUpdateMutation() {
       toast.success("Oops!, an error occured");
     },
   });
-}
+} //(Msvs => Done)
 
 
 

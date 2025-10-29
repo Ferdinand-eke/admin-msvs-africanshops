@@ -9,26 +9,28 @@ import { adminSigin } from "../apiRoutes";
 export function useAdminLogin() {
   return useMutation(adminSigin, {
     onSuccess: (data) => {
-      if (data?.data && data?.data?.accessToken) {
+      if (data?.data?.user && data?.data?.accessToken) {
+
+
+        // console.log("ADMIN_LOGIN_DATA@@__TOKEN", data?.data?.accessToken)
+
+
+        // console.log("ADMIN_LOGIN_DATA@@@__USER", data?.data?.user)
+        // return
         /**============================================================================== */
 
         const transFormedUser = {
-          id: data?.data?._id,
-          name: data?.data?.name,
-          email: data?.data?.email,
+          id:  data?.data?.user._id,
+          name:  data?.data?.user.name,
+          email:  data?.data?.user.email,
           role: "admin",
 
-          isAdmin: data?.data?.isAdmin,
-          avatar: data?.data?.avatar,
+          isAdmin:  data?.data?.user.isAdmin,
+          avatar:  data?.data?.user.avatar,
         };
 
-        // if (data?.data?.accessToken) {
-        //   localStorage.setItem(config.tokenStorageKey, data?.data?.accessToken);
-        //   // axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-        //   axios.defaults.headers.common.accessToken = `${data?.data?.accessToken}`;
-        // }
 
-        if (isTokenValid(data?.data?.accessToken)) {
+        if (isTokenValid( data?.data?.accessToken)) {
 
           console.log("TOKEN__CHECK___2", data?.data?.accessToken);
           localStorage.setItem(config.isAuthenticatedStatus, true);
@@ -49,6 +51,7 @@ export function useAdminLogin() {
         if (isSetAuthorizers && transFormedUser) {
           setUserCredentialsStorage(transFormedUser);
         }
+
       } else if (data) {
         Array.isArray(data?.data?.message)
           ? data?.data?.message?.map((m) => toast.error(m.message))
@@ -73,7 +76,6 @@ export function useAdminLogin() {
 }
 
 const isTokenValid = (accessToken) => {
-  // console.log("TOKEN__VALIDATION__1", accessToken);
 
   if (accessToken) {
     try {
@@ -90,12 +92,6 @@ const isTokenValid = (accessToken) => {
       return false;
     }
   }
-
-  // setTimeout(() => {
-   
-
-  //   return false;
-  // }, "2000");
 };
 
 // const setUserCredentialsStorage = (userCredentials) => {

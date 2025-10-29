@@ -11,6 +11,25 @@ import { useNavigate } from 'react-router';
 
 export default function useMarkets() {
   return useQuery(['__markets'], getMarkets);
+} //(Msvs => Done)
+
+// Paginated hook for Markets
+export function useMarketsPaginated({ page = 0, limit = 20, search = '', filters = {} }) {
+  const offset = page * limit;
+
+  return useQuery(
+    ['markets_paginated', { page, limit, search, filters }],
+    () => getMarkets({
+      limit,
+      offset,
+      search,
+      ...filters
+    }),
+    {
+      keepPreviousData: true,
+      staleTime: 30000,
+    }
+  );
 }
 
 //get single market
@@ -22,7 +41,7 @@ export function useSingleMarket(marketId) {
     enabled: Boolean(marketId),
     // staleTime: 2000,
   });
-}
+} //(Msvs => Done)
 
 //create new  market
 export function useAddMarketMutation() {
@@ -63,7 +82,7 @@ export function useMarketUpdateMutation() {
 
   return useMutation(updateMarketById, {
     onSuccess: (data) => {
-      if (data?.data) {
+      if (data?.data?.success) {
         toast.success('market  updated successfully!!');
         queryClient.invalidateQueries('__markets');
         navigate('/markets/list');
@@ -77,7 +96,7 @@ export function useMarketUpdateMutation() {
       );
     },
   });
-}
+}//(Msvs => Done)
 
 
 /***Delete market-category  */

@@ -9,16 +9,10 @@ import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
 import Button from '@mui/material/Button';
-import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
-import useStates from 'src/app/api/states/useStates';
 import { motion } from 'framer-motion';
-import useDesignations from 'src/app/api/designations/useDesignations';
 import useProductCats from 'src/app/api/product-categories/useProductCategories';
 
 function ProductCategoriesTable() {
-	
-	// const { data: products, isLoading } = useGetECommerceProductsQuery();
-	const [removeProducts] = useDeleteECommerceProductsMutation();
 
 	const { data:productcats, isLoading, refetch, isError } = useProductCats();
 
@@ -30,7 +24,7 @@ function ProductCategoriesTable() {
 				Cell: ({ row }) => (
 					<Typography
 						component={Link}
-						to={`/productcategories/list/${row?.original?._id}/${row?.original?.slug}`}
+						to={`/productcategories/list/${row?.original?.id}/${row?.original?.slug}`}
 						className="underline"
 						color="secondary"
 						role="button"
@@ -89,7 +83,7 @@ function ProductCategoriesTable() {
 		);
 	}
 
-if (!productcats?.data?.data) {
+if (!productcats?.data?.categories) {
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -112,13 +106,13 @@ if (!productcats?.data?.data) {
 			elevation={0}
 		>
 			<DataTable
-				data={productcats?.data?.data}
+				data={productcats?.data?.categories}
 				columns={columns}
 				renderRowActionMenuItems={({ closeMenu, row, table }) => [
 					<MenuItem
 						key={0}
 						onClick={() => {
-							removeProducts([row?.original?.id]);
+							// removeProducts([row?.original?.id]);
 							closeMenu();
 							table.resetRowSelection();
 						}}
@@ -142,7 +136,7 @@ if (!productcats?.data?.data) {
 							size="small"
 							onClick={() => {
 								const selectedRows = table.getSelectedRowModel().rows;
-								removeProducts(selectedRows.map((row) => row?.original?.id));
+								// removeProducts(selectedRows.map((row) => row?.original?.id));
 								table.resetRowSelection();
 							}}
 							className="flex shrink min-w-40 ltr:mr-8 rtl:ml-8"

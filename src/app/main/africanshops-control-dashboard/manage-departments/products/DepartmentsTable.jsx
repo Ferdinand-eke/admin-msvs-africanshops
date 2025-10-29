@@ -57,7 +57,7 @@ function DepartmentsTable() {
 				Cell: ({ row }) => (
 					<Typography
 						component={Link}
-						to={`/departments/list/${row.original._id}/${row.original.slug}`}
+						to={`/departments/list/${row.original.id || row.original._id}/${row.original.slug}`}
 						className="underline"
 						color="secondary"
 						role="button"
@@ -136,7 +136,7 @@ function DepartmentsTable() {
 		return <FuseLoading />;
 	}
 
-	if (!departments?.data?.data) {
+	if (!departments?.data?.departments) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -160,7 +160,7 @@ function DepartmentsTable() {
 		>
 			<DataTable
 				// data={products}
-				data={departments?.data?.data}
+				data={departments?.data?.departments}
 				columns={columns}
 				renderRowActionMenuItems={({ closeMenu, row, table }) => [
 					<MenuItem

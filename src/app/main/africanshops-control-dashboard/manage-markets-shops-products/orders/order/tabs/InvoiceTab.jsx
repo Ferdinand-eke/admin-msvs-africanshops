@@ -51,9 +51,9 @@ function InvoiceTab(props) {
 
 	const routeParams = useParams();
 	const { orderId } = routeParams;
-	const { data: orderItems } = useAdminOrderItems(orderId, {
-		skip: !orderId
-	});
+	// const { data: orderItems } = useAdminOrderItems(orderId, {
+	// 	skip: !orderId
+	// });
 
 
 	return (
@@ -145,8 +145,8 @@ function InvoiceTab(props) {
 									</TableRow>
 								</TableHead>
 								<TableBody>
-									{orderItems?.data?.map((product) => (
-										<TableRow key={product?._id}>
+									{order?.orderItems?.map((product) => (
+										<TableRow key={product?.id}>
 											<TableCell>
 												<Typography variant="subtitle1">{product?.name}</Typography>
 											</TableCell>

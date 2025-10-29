@@ -9,8 +9,34 @@ import {
 } from '../apiRoutes';
 import { useNavigate } from 'react-router';
 
-export default function useStates() {
-  return useQuery(['states'], getBStates);
+export default function useStates(params = {}) {
+  return useQuery(
+    ['states', params],
+    () => getBStates(params),
+    {
+      keepPreviousData: true,
+      staleTime: 30000,
+    }
+  );
+}
+
+// Paginated hook for states
+export function useStatesPaginated({ page = 0, limit = 20, search = '', filters = {} }) {
+  const offset = page * limit;
+
+  return useQuery(
+    ['states_paginated', { page, limit, search, filters }],
+    () => getBStates({
+      limit,
+      offset,
+      search,
+      ...filters
+    }),
+    {
+      keepPreviousData: true,
+      staleTime: 30000,
+    }
+  );
 }
 
 
@@ -63,7 +89,7 @@ export function useStateUpdateMutation() {
 
   return useMutation(updateStateById, {
     onSuccess: (data) => {
-      if (data?.data) {
+      if (data?.data?.success) {
         toast.success('state updated successfully!!');
         queryClient.invalidateQueries('states');
         queryClient.refetchQueries('states', { force: true });
@@ -79,7 +105,7 @@ export function useStateUpdateMutation() {
       );
     },
   });
-}
+} // (Msvs => Done)
 
 
 /***Delete a county */

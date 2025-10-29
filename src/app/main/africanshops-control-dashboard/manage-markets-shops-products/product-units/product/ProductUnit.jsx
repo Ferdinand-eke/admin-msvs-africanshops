@@ -70,10 +70,10 @@ function ProductUnit() {
 		}
 	}, [productId, reset]);
 	useEffect(() => {
-		if (produnit?.data) {
-			reset({ ...produnit?.data });
+		if (produnit?.data?.unitweight) {
+			reset({ ...produnit?.data?.unitweight });
 		}
-	}, [produnit?.data, reset]);
+	}, [produnit?.data?.unitweight, reset]);
 
 	/**
 	 * Tab Change
@@ -121,7 +121,7 @@ function ProductUnit() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (produnit?.data && routeParams.productId !== produnit?.data?._id && routeParams.productId !== 'new')) {
+	if (_.isEmpty(form) || (produnit?.data?.unitweight && routeParams.productId !== produnit?.data?.unitweight?.id && routeParams.productId !== 'new')) {
 		return <FuseLoading />;
 	}
 
@@ -144,43 +144,13 @@ function ProductUnit() {
 								className="h-64"
 								label="Basic Info"
 							/>
-							{/* <Tab
-								className="h-64"
-								label="Product Images"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Pricing"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Inventory"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Shipping"
-							/> */}
+							
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
 								<BasicInfoTab />
 							</div>
 
-							{/* <div className={tabValue !== 1 ? 'hidden' : ''}>
-								<ProductImagesTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 2 ? 'hidden' : ''}>
-								<PricingTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 3 ? 'hidden' : ''}>
-								<InventoryTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 4 ? 'hidden' : ''}>
-								<ShippingTab />
-							</div> */}
 						</div>
 					</>
 				}

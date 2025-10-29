@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router';
 
 export default function useMarketCats() {
   return useQuery(['__marketcats'], getMarketCategories);
-}
+} //(Msvs => Done)
 
 //get single market category
 export function useSingleMarketCategory(marketCatId) {
@@ -27,7 +27,7 @@ export function useSingleMarketCategory(marketCatId) {
       // staleTime: 2000,
     }
   );
-}
+} //(Msvs => Done)
 
 
 //create new  market category
@@ -41,7 +41,7 @@ export function useAddMarketCategoryMutation() {
 
     {
       onSuccess: (data) => {
-        if (data?.data) {
+        if (data?.data?.success) {
           toast.success('market category added successfully!');
           queryClient.invalidateQueries(['__marketcats']);
           queryClient.refetchQueries('__marketcats', { force: true });
@@ -60,7 +60,7 @@ export function useAddMarketCategoryMutation() {
       },
     }
   );
-}
+} //(Msvs => Done)
 
 //update new market category
 export function useMarketCategoryUpdateMutation() {
@@ -69,7 +69,7 @@ export function useMarketCategoryUpdateMutation() {
 
   return useMutation(updateMarketCategoryById, {
     onSuccess: (data) => {
-     if(data?.data){
+     if(data?.data?.success){
       toast.success('market category updated successfully!!');
       queryClient.invalidateQueries('__marketcats');
       navigate('/market-categories/list');
@@ -83,7 +83,7 @@ export function useMarketCategoryUpdateMutation() {
       );
     },
   });
-}
+} //(Msvs => Done)
 
 /***Delete market-category  */
 export function useDeleteMarketCategory() {
@@ -92,7 +92,7 @@ export function useDeleteMarketCategory() {
 
   return useMutation(deleteMarketCategoryById, {
     onSuccess: (data) => {
-      if(data?.data){
+      if(data?.data?.success){
         toast.success("market category deleted successfully!!");
         queryClient.invalidateQueries("__offices");
         navigate('/market-categories/list');
@@ -107,7 +107,7 @@ export function useDeleteMarketCategory() {
       );
     },
   });
-}
+} //(Msvs => Done)
 
 
 

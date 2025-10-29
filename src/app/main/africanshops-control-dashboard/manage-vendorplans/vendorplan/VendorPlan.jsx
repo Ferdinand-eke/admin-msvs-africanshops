@@ -68,10 +68,10 @@ function VendorPlan() {
 		}
 	}, [productId, reset]);
 	useEffect(() => {
-		if (merchantplan?.data) {
-			reset({ ...merchantplan?.data });
+		if (merchantplan?.data?.merchantPlan) {
+			reset({ ...merchantplan?.data?.merchantPlan });
 		}
-	}, [merchantplan?.data, reset]);
+	}, [merchantplan?.data?.merchantPlan, reset]);
 
 
 	/**
@@ -117,7 +117,7 @@ function VendorPlan() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (merchantplan?.data && routeParams.productId !== merchantplan?.data._id && routeParams.productId !== 'new')) {
+	if (_.isEmpty(form) || (merchantplan?.data?.merchantPlan && routeParams.productId !== merchantplan?.data?.merchantPlan.id && routeParams.productId !== 'new')) {
 		return <FuseLoading />;
 	}
 

@@ -143,9 +143,7 @@ function JwtSignInForm() {
 				color="secondary"
 				className=" mt-16 w-full"
 				aria-label="Sign in"
-				disabled={_.isEmpty(dirtyFields) || !isValid || isLoginLoading
-				
-				 }
+				disabled={_.isEmpty(dirtyFields) || !isValid || isLoginLoading }
 				type="submit"
 				size="large"
 			>

@@ -24,10 +24,38 @@ function ContactsApp() {
 	const [rightSidebarOpen, setRightSidebarOpen] = useState(false);
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 
-	const {data:usersData, isLoading:usersIsLoading} = useAdminUsers()
+	// Pagination state
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(20);
+	const [searchName, setSearchName] = useState('');
+
+	// Fetch admin users with pagination and search
+	const {data:usersData, isLoading:usersIsLoading} = useAdminUsers({
+		limit: rowsPerPage,
+		offset: page * rowsPerPage,
+		name: searchName
+	});
+
 	useEffect(() => {
 		setRightSidebarOpen(Boolean(routeParams.id));
 	}, [routeParams]);
+
+	// Handlers for pagination
+	const handleChangePage = (_event, newPage) => {
+		setPage(newPage);
+	};
+
+	const handleChangeRowsPerPage = (value) => {
+		setRowsPerPage(value);
+		setPage(0); // Reset to first page
+	};
+
+	const handleSearchChange = (value) => {
+		setSearchName(value);
+		setPage(0); // Reset to first page when searching
+	};
+
+
 
 
 
@@ -35,15 +63,22 @@ function ContactsApp() {
 
 	return (
 		<Root
-			header={<StaffHeader 
-				usersData={usersData?.data} 
+			header={<StaffHeader
+				usersData={usersData?.data?.admins}
 				usersIsLoading={usersIsLoading}
+				onSearchChange={handleSearchChange}
+				searchValue={searchName}
 			/>}
 
 
-			content={<UsersList 
-				usersData={usersData?.data} 
+			content={<UsersList
+				usersData={usersData?.data?.admins}
 				usersIsLoading={usersIsLoading}
+				totalCount={usersData?.data?.total || 0}
+				page={page}
+				rowsPerPage={rowsPerPage}
+				onPageChange={handleChangePage}
+				onRowsPerPageChange={handleChangeRowsPerPage}
 			/>}
 			ref={pageLayout}
 			rightSidebarContent={<StaffContactsSidebarContent />}

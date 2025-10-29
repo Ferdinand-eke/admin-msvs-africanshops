@@ -47,6 +47,7 @@ function CountryPage() {
 		skip: !productId || productId === 'new'
 	})
 
+
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
@@ -70,9 +71,9 @@ function CountryPage() {
 		}
 	}, [productId, reset]);
 	useEffect(() => {
-		if (singleCountry?.data) {
-			reset({ ...singleCountry?.data, 
-				countrylocation:Country.getCountryByCode(singleCountry?.data?.isoCode)
+		if (singleCountry?.data?.country) {
+			reset({ ...singleCountry?.data?.country, 
+				countrylocation:Country.getCountryByCode(singleCountry?.data?.country?.isoCode)
 			 });
 		}
 	}, [singleCountry?.data, reset]);
@@ -120,7 +121,7 @@ function CountryPage() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (singleCountry?.data && routeParams.productId !== singleCountry?.data._id && routeParams.productId !== 'new')) {
+	if (_.isEmpty(form) || (singleCountry?.data?.country && routeParams.productId !== singleCountry?.data?.country?.id && routeParams.productId !== 'new')) {
 		return <FuseLoading />;
 	}
 

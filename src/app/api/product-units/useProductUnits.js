@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router';
 
 export default function useProductUnits() {
   return useQuery(['__productunits'], getProdUnits);
-}
+} // (Msvs => Done)
 
 //get single product units
 export function useSingleProductUnit(prodUnitId) {
@@ -27,7 +27,7 @@ export function useSingleProductUnit(prodUnitId) {
       // staleTime: 5000,
     }
   );
-}
+}// (Msvs => Done)
 
 //create new product unit
 export function useAddProductUnitMutation() {
@@ -68,7 +68,7 @@ export function useProductUnitUpdateMutation() {
 
   return useMutation(updateProdUnitById, {
     onSuccess: (data) => {
-   if(data?.data){
+   if(data?.data?.success){
     toast.success('product unit updated successfully!!');
     queryClient.invalidateQueries('__productunits');
     navigate('/productunits/list');
@@ -82,7 +82,7 @@ export function useProductUnitUpdateMutation() {
       );
     },
   });
-}
+}// (Msvs => Done)
 
 
 /***Delete Product unit */

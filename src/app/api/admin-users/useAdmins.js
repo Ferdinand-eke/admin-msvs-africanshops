@@ -19,10 +19,19 @@ import {
 import { useNavigate } from 'react-router';
 
 
+
 /***1) Get all admin staff */
-export default function useAdminUsers() {
-  return useQuery(['__admins'], getApiAdminUsers);
-} 
+export default function useAdminUsers(params = {}) {
+  const { limit, offset, name } = params;
+
+  return useQuery(
+    ['__admins', { limit, offset, name }],
+    () => getApiAdminUsers({ limit, offset, name }),
+    {
+      keepPreviousData: true, // Keeps previous data while fetching new page
+    }
+  );
+}  //(Msvs => Done)
 
 /****2) Admin get single admin data" */
 export function useSingleAdminStaff(staffId) {

@@ -2,8 +2,8 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 const MarketCategoriesApp = lazy(() => import('./MarketCategoriesApp'));
-const MarketCategory = lazy(() => import('./product/MarketCategory'));
-const MarketCategories = lazy(() => import('./products/MarketCategories'));
+const MarketCategory = lazy(() => import('./marketcategory/MarketCategory'));
+const MarketCategories = lazy(() => import('./all-marketcategories/MarketCategories'));
 // const Order = lazy(() => import('./order/Order'));
 // const Orders = lazy(() => import('./orders/Orders'));
 /**

@@ -11,8 +11,34 @@ import {
 } from '../apiRoutes';
 import { useNavigate } from 'react-router';
 
-export default function useLgas() {
-  return useQuery(['lgas'], getBLgas);
+export default function useLgas(params = {}) {
+  return useQuery(
+    ['lgas', params],
+    () => getBLgas(params),
+    {
+      keepPreviousData: true,
+      staleTime: 30000,
+    }
+  );
+}
+
+// Paginated hook for LGAs
+export function useLgasPaginated({ page = 0, limit = 20, search = '', filters = {} }) {
+  const offset = page * limit;
+
+  return useQuery(
+    ['lgas_paginated', { page, limit, search, filters }],
+    () => getBLgas({
+      limit,
+      offset,
+      search,
+      ...filters
+    }),
+    {
+      keepPreviousData: true,
+      staleTime: 30000,
+    }
+  );
 }
 
 //get single lga
@@ -67,7 +93,7 @@ export function useLgaUpdateMutation() {
   return useMutation(updateLgaById, {
     
     onSuccess: (data) => {
-      if(data?.data){
+      if(data?.data?.success){
         toast.success('L.G.A updated successfully!!');
         queryClient.invalidateQueries('lgas');
         queryClient.refetchQueries('lgas', { force: true });

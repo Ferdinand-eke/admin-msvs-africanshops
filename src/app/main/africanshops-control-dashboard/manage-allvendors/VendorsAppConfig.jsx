@@ -30,18 +30,7 @@ const VendorsAppConfig = {
 					path: 'listvendors/:productId/*',
 					element: <Vendor />
 				},
-				// {
-				// 	path: 'inventory',
-				// 	element: <AllVendors />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+				
 			]
 		}
 	]

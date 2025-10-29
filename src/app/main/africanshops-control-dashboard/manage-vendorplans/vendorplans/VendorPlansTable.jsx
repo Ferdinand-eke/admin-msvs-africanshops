@@ -10,51 +10,21 @@ import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
 import Button from '@mui/material/Button';
-import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
 import useShopplans from 'src/app/api/shopplans/useShopPlans';
 
 function VendorPlansTable() {
 	
-	// const { data: products, isLoading } = useGetECommerceProductsQuery();
-
 	const { data:vendorplans, isLoading, refetch, isError } = useShopplans();
 
-	const [removeProducts] = useDeleteECommerceProductsMutation();
 	const columns = useMemo(
 		() => [
-			// {
-			// 	accessorFn: (row) => row.featuredImageId,
-			// 	id: 'featuredImageId',
-			// 	header: '',
-			// 	enableColumnFilter: false,
-			// 	enableColumnDragging: false,
-			// 	size: 64,
-			// 	enableSorting: false,
-			// 	Cell: ({ row }) => (
-			// 		<div className="flex items-center justify-center">
-			// 			{row.original?.images?.length > 0 && row.original.featuredImageId ? (
-			// 				<img
-			// 					className="w-full max-h-40 max-w-40 block rounded"
-			// 					src={_.find(row.original.images, { id: row.original.featuredImageId })?.url}
-			// 					alt={row.original.name}
-			// 				/>
-			// 			) : (
-			// 				<img
-			// 					className="w-full max-h-40 max-w-40 block rounded"
-			// 					src="assets/images/apps/ecommerce/product-image-placeholder.png"
-			// 					alt={row.original.name}
-			// 				/>
-			// 			)}
-			// 		</div>
-			// 	)
-			// },
 			{
 				accessorKey: 'plansname',
 				header: 'Name',
 				Cell: ({ row }) => (
 					<Typography
 						component={Link}
-						to={`/vendorplans/packages/${row.original._id}/${row.original.slug}`}
+						to={`/vendorplans/packages/${row.original.id}/${row.original.slug}`}
 						className="underline"
 						color="secondary"
 						role="button"
@@ -63,23 +33,6 @@ function VendorPlansTable() {
 					</Typography>
 				)
 			},
-			// {
-			// 	accessorKey: 'categories',
-			// 	header: 'Category',
-			// 	accessorFn: (row) => (
-			// 		<div className="flex flex-wrap space-x-2">
-			// 			{row.categories.map((item) => (
-			// 				<Chip
-			// 					key={item}
-			// 					className="text-11"
-			// 					size="small"
-			// 					color="default"
-			// 					label={item}
-			// 				/>
-			// 			))}
-			// 		</div>
-			// 	)
-			// }, 
 			{
 				accessorKey: 'support',
 				header: 'Support',
@@ -106,46 +59,6 @@ function VendorPlansTable() {
 				header: 'Price for monthly storage per image',
 				accessorFn: (row) => `NGN${row.price}`
 			},
-			// { 
-			// 	accessorKey: 'quantity',
-			// 	header: 'Quantity',
-			// 	accessorFn: (row) => (
-			// 		<div className="flex items-center space-x-8">
-			// 			<span>{row.quantity}</span>
-			// 			<i
-			// 				className={clsx(
-			// 					'inline-block w-8 h-8 rounded',
-			// 					row.quantity <= 5 && 'bg-red',
-			// 					row.quantity > 5 && row.quantity <= 25 && 'bg-orange',
-			// 					row.quantity > 25 && 'bg-green'
-			// 				)}
-			// 			/>
-			// 		</div>
-			// 	)
-			// },
-			// {
-			// 	accessorKey: 'active',
-			// 	header: 'Active',
-			// 	accessorFn: (row) => (
-			// 		<div className="flex items-center">
-			// 			{row.active ? (
-			// 				<FuseSvgIcon
-			// 					className="text-green"
-			// 					size={20}
-			// 				>
-			// 					heroicons-outline:check-circle
-			// 				</FuseSvgIcon>
-			// 			) : (
-			// 				<FuseSvgIcon
-			// 					className="text-red"
-			// 					size={20}
-			// 				>
-			// 					heroicons-outline:minus-circle
-			// 				</FuseSvgIcon>
-			// 			)}
-			// 		</div>
-			// 	)
-			// }
 		],
 		[]
 	);
@@ -171,8 +84,7 @@ function VendorPlansTable() {
 			</motion.div>
 		);
 	}
-	// console.log("LGAS=DATA", vendorplans?.data?.data)
-	if (!vendorplans?.data?.data) {
+	if (!vendorplans?.data?.merchantPlans) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -197,13 +109,13 @@ function VendorPlansTable() {
 			elevation={0}
 		>
 			<DataTable
-				data={vendorplans?.data?.data}
+				data={vendorplans?.data?.merchantPlans}
 				columns={columns}
 				renderRowActionMenuItems={({ closeMenu, row, table }) => [
 					<MenuItem
 						key={0}
 						onClick={() => {
-							removeProducts([row.original.id]);
+							// removeProducts([row.original.id]);
 							closeMenu();
 							table.resetRowSelection();
 						}}
@@ -227,7 +139,7 @@ function VendorPlansTable() {
 							size="small"
 							onClick={() => {
 								const selectedRows = table.getSelectedRowModel().rows;
-								removeProducts(selectedRows.map((row) => row.original.id));
+								// removeProducts(selectedRows.map((row) => row.original.id));
 								table.resetRowSelection();
 							}}
 							className="flex shrink min-w-40 ltr:mr-8 rtl:ml-8"
