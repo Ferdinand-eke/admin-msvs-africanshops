@@ -81,21 +81,21 @@ const routeConfigs = [
    */
 
   /****Africanshops Admin & Administrative Dashboard Configs Starts Here */
-  VendorPlansAppConfig,
+  VendorPlansAppConfig, /**Msvs Complete CRUD=> Done */
   VendorsAppConfig,
-  CountriesAppConfig,
-  StatesAppConfig,
-  LgasCountiesAppConfig,
-  OfficesAppConfig,
-  DepartmentsAppConfig,
-  DesignationsAppConfig,
+  CountriesAppConfig,  /**Msvs Complete CRUD=> Done */
+  StatesAppConfig,   /**Msvs Complete CRUD=> Done */
+  LgasCountiesAppConfig,  /**Msvs Complete CRUD=> Done */
+  OfficesAppConfig,  /**Msvs Complete CRUD=> Done */
+  DepartmentsAppConfig,  /**Msvs Complete CRUD=> Done */
+  DesignationsAppConfig,  /**Msvs Complete CRUD=> Done */
   /****Africanshops Admin & Administrative Dashboard Configs Ends Here */
 
   
   /****Africanshops Admin Market Management  Configs Starts Here */
-  MarketDashboardAppConfig,
-  MarketsAppConfig,
-  MarketCategoryAppConfig,
+  MarketDashboardAppConfig,   
+  MarketsAppConfig,   /**Msvs Complete CRUD=> Done */
+  MarketCategoryAppConfig, /**Msvs Complete CRUD=> Done */
   PartnerVendorsAppConfig,
   /****Africanshops Admin Market Management  Configs Ends Here */
 

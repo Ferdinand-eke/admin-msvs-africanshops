@@ -6,12 +6,13 @@ import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { useAddStateMutation, useDeleteSingleState, useStateUpdateMutation } from 'src/app/api/states/useStates';
+import { useAddDeptMutation, useDeleteSingleDepartment, useUpdateDepartmentMutation } from 'src/app/api/departments/useDepartments';
 
 /**
  * The product header.
  */
-function SingleStateHeader() {
+function DepartmentHeader() {
+	
 	const routeParams = useParams();
 	const { productId } = routeParams;
 	const methods = useFormContext();
@@ -19,37 +20,29 @@ function SingleStateHeader() {
 	const { isValid, dirtyFields } = formState;
 	const theme = useTheme();
 	const navigate = useNavigate();
-	const { name, images, featuredImageId,  } = watch();
+	const { name, images, featuredImageId } = watch();
 
-  const updateStatesMutation = useStateUpdateMutation();
-  const addNewStates = useAddStateMutation();
-  const deleteState = useDeleteSingleState()
+	const updateDepartments = useUpdateDepartmentMutation();
+	const addNewDepts = useAddDeptMutation();
+	const deleteDepartment = useDeleteSingleDepartment()
 
 	function handleSaveProduct() {
-		// console.log("statePayLoad1", getValues())
 
-		// return
-		updateStatesMutation.mutate(getValues())
-		
-		// saveProduct(getValues());
+		updateDepartments.mutate((getValues()))
 	}
 
 	function handleCreateProduct() {
-// console.log("statePayLoad", getValues())
-
-// 		return
-		addNewStates.mutate(getValues())
-
+		addNewDepts.mutate(getValues())
+	
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm("Comfirm delete of this state?")) {
-			deleteState.mutate(productId)
+
+		if (window.confirm("Comfirm delete of this department?")) {
+			deleteDepartment.mutate(productId)
 		}
 		
 	}
-
-
 
 	return (
 		<div className="flex flex-col sm:flex-row flex-1 w-full items-center justify-between space-y-8 sm:space-y-0 py-24 sm:py-32 px-24 md:px-32">
@@ -62,7 +55,7 @@ function SingleStateHeader() {
 						className="flex items-center sm:mb-12"
 						component={Link}
 						role="button"
-						to="/administrations/states"
+						to="/departments/list"
 						color="inherit"
 					>
 						<FuseSvgIcon size={20}>
@@ -70,7 +63,7 @@ function SingleStateHeader() {
 								? 'heroicons-outline:arrow-sm-left'
 								: 'heroicons-outline:arrow-sm-right'}
 						</FuseSvgIcon>
-						<span className="flex mx-4 font-medium">States</span>
+						<span className="flex mx-4 font-medium">Departments</span>
 					</Typography>
 				</motion.div>
 
@@ -80,7 +73,7 @@ function SingleStateHeader() {
 						initial={{ scale: 0 }}
 						animate={{ scale: 1, transition: { delay: 0.3 } }}
 					>
-						{images && images.length > 0 && featuredImageId ? (
+						{images && images?.length > 0 && featuredImageId ? (
 							<img
 								className="w-32 sm:w-48 rounded"
 								src={_.find(images, { id: featuredImageId })?.url}
@@ -106,7 +99,7 @@ function SingleStateHeader() {
 							variant="caption"
 							className="font-medium"
 						>
-							State Detail
+							Department Detail
 						</Typography>
 					</motion.div>
 				</div>
@@ -124,17 +117,18 @@ function SingleStateHeader() {
 							color="secondary"
 							onClick={handleRemoveProduct}
 							startIcon={<FuseSvgIcon className="hidden sm:flex">heroicons-outline:trash</FuseSvgIcon>}
+							disabled={deleteDepartment?.isLoading}
 						>
-							Remove
+							Remove Department
 						</Button>
 						<Button
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid || updateStatesMutation.isLoading}
+							disabled={_.isEmpty(dirtyFields) || !isValid|| updateDepartments?.isLoading}
 							onClick={handleSaveProduct}
 						>
-							Save State
+							Save Department
 						</Button>
 					</>
 				) : (
@@ -142,10 +136,10 @@ function SingleStateHeader() {
 						className="whitespace-nowrap mx-4"
 						variant="contained"
 						color="secondary"
-						disabled={_.isEmpty(dirtyFields) || !isValid || addNewStates.isLoading}
+						disabled={_.isEmpty(dirtyFields) || !isValid || addNewDepts?.isLoading}
 						onClick={handleCreateProduct}
 					>
-						Add State
+						Add Department
 					</Button>
 				)}
 			</motion.div>
@@ -153,4 +147,4 @@ function SingleStateHeader() {
 	);
 }
 
-export default SingleStateHeader;
+export default DepartmentHeader;

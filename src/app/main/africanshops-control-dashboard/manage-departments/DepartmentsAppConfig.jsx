@@ -2,11 +2,12 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 const DepartmentsApp = lazy(() => import('./DepartmentsApp'));
-const Department = lazy(() => import('./product/Department'));
-const Departments = lazy(() => import('./products/Departments'));
+const Department = lazy(() => import('./departmentPage/Department'));
+const Departments = lazy(() => import('./departments/Departments'));
 /**
  * The E-Commerce app configuration.
  */
+
 
 
 const DepartmentsAppConfig = {
@@ -30,18 +31,7 @@ const DepartmentsAppConfig = {
 					path: 'list/:productId/*',
 					element: <Department />
 				},
-				// {
-				// 	path: 'inventory',
-				// 	element: <Countries />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+				
 			]
 		}
 	]

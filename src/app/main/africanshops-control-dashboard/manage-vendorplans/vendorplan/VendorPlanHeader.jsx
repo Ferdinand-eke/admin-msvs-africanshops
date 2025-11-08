@@ -27,18 +27,33 @@ function VendorPlanHeader() {
 	const addNewShopPlans = useAddShopPlanMutation();
 	const deleteShopPlan = useDeleteShopPlan()
 
+
 	function handleSaveProduct() {
-		updateShopPlans.mutate(getValues());
+
+		const merchantPlanValuesToSave ={
+			...getValues(),
+			price: parseInt(getValues()?.price),
+			percetageCommissionCharge: parseInt(getValues()?.percetageCommissionCharge),
+			numberofproducts: parseInt(getValues()?.numberofproducts),
+			numberoffeaturedimages: parseInt(getValues()?.numberoffeaturedimages)
+		}
+		updateShopPlans.mutate(merchantPlanValuesToSave);
 	}
 
 	function handleCreateProduct() {
-		addNewShopPlans.mutate(getValues())
+
+		// console.log("New___Merchant__Plan", getValues())
+		const merchantPlanValuesToCreate ={
+			...getValues(),
+			price: parseInt(getValues()?.price),
+			percetageCommissionCharge: parseInt(getValues()?.percetageCommissionCharge),
+			numberofproducts: parseInt(getValues()?.numberofproducts),
+			numberoffeaturedimages: parseInt(getValues()?.numberoffeaturedimages)
+		}
+		addNewShopPlans.mutate(merchantPlanValuesToCreate)
 
 
-			// .unwrap()
-			// .then((data) => {
-			// 	navigate(`/vendorplans/packages/${data.id}`);
-			// });
+			
 	}
 
 	function handleRemoveProduct() {

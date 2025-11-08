@@ -5,6 +5,7 @@ import CountriesTable from './CountriesTable';
 /**
  * The products page.
  */
+
 function Countries() {
 	return (
 		<>

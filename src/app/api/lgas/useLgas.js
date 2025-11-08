@@ -120,7 +120,7 @@ export function useDeleteSingleLGA() {
 
   return useMutation(deleteLgaById, {
     onSuccess: (data) => {
-      if(data?.data){
+      if(data?.data?.success){
         toast.success("L.G.A deleted successfully!!");
         queryClient.invalidateQueries("__countries");
         navigate('/administrations/lgas');

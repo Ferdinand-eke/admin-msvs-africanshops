@@ -2,11 +2,12 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 
 const StatesApp = lazy(() => import('./StatesApp'));
-const StatePage = lazy(() => import('./product/StatePage'));
-const ShopProducts = lazy(() => import('./products/States'));
+const StatePage = lazy(() => import('./state/StatePage'));
+const OperationalStates = lazy(() => import('./states/States'));
 /**
  * The E-Commerce app configuration.
  */
+
 
 const StatesAppConfig = {
 	settings: {
@@ -23,7 +24,7 @@ const StatesAppConfig = {
 				},
 				{
 					path: 'states',
-					element: <ShopProducts />
+					element: <OperationalStates />
 				},
 				{
 					path: 'states/:productId/*',
@@ -31,7 +32,7 @@ const StatesAppConfig = {
 				},
 				// {
 				// 	path: 'inventory',
-				// 	element: <ShopProducts />
+				// 	element: <OperationalStates />
 				// },
 				// {
 				// 	path: 'orders',

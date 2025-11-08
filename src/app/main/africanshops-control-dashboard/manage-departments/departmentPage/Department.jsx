@@ -14,11 +14,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import DepartmentHeader from './DepartmentHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
-import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
 import { useGetDepartmentById } from 'src/app/api/departments/useDepartments';
 /**
@@ -104,6 +99,7 @@ function Department() {
 	// 	);
 	// }
 
+
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
@@ -130,43 +126,13 @@ function Department() {
 								className="h-64"
 								label="Basic Info"
 							/>
-							{/* <Tab
-								className="h-64"
-								label="Product Images"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Pricing"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Inventory"
-							/> */}
-							{/* <Tab
-								className="h-64"
-								label="Shipping"
-							/> */}
+							
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
 								<BasicInfoTab />
 							</div>
 
-							{/* <div className={tabValue !== 1 ? 'hidden' : ''}>
-								<ProductImagesTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 2 ? 'hidden' : ''}>
-								<PricingTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 3 ? 'hidden' : ''}>
-								<InventoryTab />
-							</div> */}
-
-							{/* <div className={tabValue !== 4 ? 'hidden' : ''}>
-								<ShippingTab />
-							</div> */}
 						</div>
 					</>
 				}

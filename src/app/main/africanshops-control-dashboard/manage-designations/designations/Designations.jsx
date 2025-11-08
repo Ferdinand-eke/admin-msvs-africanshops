@@ -6,6 +6,7 @@ import DesignationsTable from './DesignationsTable';
  * The products page.
  */
 function Designations() {
+	
 	return (
 		<>
 			<GlobalStyles

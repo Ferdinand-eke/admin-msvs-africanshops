@@ -26,15 +26,43 @@ function LgaCountyHeader() {
    const deleteLGA = useDeleteSingleLGA()
 	function handleSaveProduct() {
 
-		updateLgaMutation.mutate(getValues())
+		 const lgaCountyToUpdate = {
+			id:getValues()?.id,
+            name: getValues().lgalocation?.name,
+            latitude: getValues().lgalocation?.latitude,
+            longitude: getValues().lgalocation?.longitude,
+			 businessCountry: getValues()?.businessCountry,
+			  businessState: getValues()?.businessState,
+            // adminUserCreator: user.id || user._id || user,
+            // slug: slug,
+            isFeatured: getValues().isFeatured || false,
+            isInOperation: getValues().isInOperation || false,
+            isPublished: getValues().isPublished || false,
+            isoCode: getValues().lgalocation?.stateCode || "",
+          };
+
+		updateLgaMutation.mutate(lgaCountyToUpdate)
 
 	}
 
 	function handleCreateProduct() {
 
-		// console.log("LGA_Payload", getValues())
+		console.log("LGA_Payload", getValues())
+		 const lgaCountyToSave = {
+            name: getValues().lgalocation?.name,
+            latitude: getValues().lgalocation?.latitude,
+            longitude: getValues().lgalocation?.longitude,
+			 businessCountry: getValues()?.businessCountry,
+			  businessState: getValues()?.businessState,
+            // adminUserCreator: user.id || user._id || user,
+            // slug: slug,
+            isFeatured: getValues().isFeatured || false,
+            isInOperation: getValues().isInOperation || false,
+            isPublished: getValues().isPublished || false,
+            isoCode: getValues().lgalocation?.stateCode || "",
+          };
 		// return
-		addNewLga.mutate(getValues())
+		addNewLga.mutate(lgaCountyToSave)
 		// createProduct(getValues())
 		// 	.unwrap()
 		// 	.then((data) => {

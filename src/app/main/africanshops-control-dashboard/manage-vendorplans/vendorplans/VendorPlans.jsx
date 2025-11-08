@@ -5,6 +5,7 @@ import VendorPlansTable from './VendorPlansTable';
 /**
  * The products page.
  */
+
 function VendorPlans() {
 	return (
 		<>

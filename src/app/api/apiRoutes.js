@@ -163,6 +163,7 @@ export const getCountries = (params = {}) => {
   return authApi().get(url);
 }; //done //(Msvs => Done)
 
+
 /****operational countries */
 export const getCountriesWithShippinTable = () =>
   Api().get("/buzcountries/with-shipping-table"); //done
@@ -294,7 +295,7 @@ export const updateLgaById = (lgaFormData) => {
 };
 export const createBLga = (stateFormData) =>
   authApi().post("/buz-lgas", stateFormData); //done
-export const deleteLgaById = (id) => authApi().delete(`/buz-lgas/${id}`);
+export const deleteLgaById = (id) => authApi().delete(`/buz-lgas/${id}/delete`);
 /*****
  * ####################################################################
  * LGAs/COUNTIES handling ends here
@@ -485,8 +486,8 @@ export const getShopPlanById = (id) => Api().get(`/merchant-plans/${id}/view`); 
 export const updateShopPlanById = (planFormData) =>
   authApi().put(`/merchant-plans/${planFormData?.id}/update`, planFormData); //done //(Msvs => Done)
 export const createShopPlan = (planFormData) =>
-  authApi().post("/merchant-plans", planFormData); //done
-export const deleteShopPlanById = (id) => authApi().delete(`/merchant-plans/${id}delete`);
+  authApi().post("/merchant-plans/create-plan", planFormData); //done //(Msvs => Done)
+export const deleteShopPlanById = (id) => authApi().delete(`/merchant-plans/delete-plan/${id}/delete`);//done //(Msvs => Done)
 
 /*****
  * ####################################################################

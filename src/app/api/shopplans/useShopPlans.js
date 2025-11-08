@@ -43,23 +43,39 @@ export function useAddShopPlanMutation() {
 
     {
       onSuccess: (data) => {
-        if (data?.data) {
+        if (data?.data?.success) {
           toast.success('shop plan  added successfully!');
           queryClient.invalidateQueries(['shopplans']);
           queryClient.refetchQueries('shopplans', { force: true });
           navigate('/vendorplans/packages');
-        }else{
-          toast.info('an unusual event just occured, hold on a bit please!');
         }
+        
+        // else{
+        //   toast.info('an unusual event just occured, hold on a bit please!');
+        // }
       },
     },
     {
       onError: (error, values, rollback) => {
-        toast.error(
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message
-        );
+        // Handle NestJS error format
+        let errorMessage = 'An error occurred';
+
+        if (error.response?.data) {
+          const { message, error: errorType } = error.response.data;
+
+          // NestJS can return message as string or array
+          if (Array.isArray(message)) {
+            errorMessage = message.join(', ');
+          } else if (message) {
+            errorMessage = message;
+          } else if (errorType) {
+            errorMessage = errorType;
+          }
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+
+        toast.error(errorMessage);
         rollback();
       },
     }
@@ -80,12 +96,26 @@ export function useShopPlanUpdateMutation() {
       }
     
     },
-    onError: (err) => {
-      toast.error(
-        err.response && err.response.data.message
-          ? err.response.data.message
-          : err.message
-      );
+    onError: (error) => {
+      // Handle NestJS error format
+      let errorMessage = 'An error occurred while updating shop plan';
+
+      if (error.response?.data) {
+        const { message, error: errorType } = error.response.data;
+
+        // NestJS can return message as string or array
+        if (Array.isArray(message)) {
+          errorMessage = message.join(', ');
+        } else if (message) {
+          errorMessage = message;
+        } else if (errorType) {
+          errorMessage = errorType;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage);
     },
   });
 } //(Msvs => Done)
@@ -98,8 +128,8 @@ export function useDeleteShopPlan() {
 
   return useMutation(deleteShopPlanById, {
     onSuccess: (data) => {
-      if(data?.data && data?.data?.success){
-        toast.success("market deleted successfully!!");
+      if(data?.data?.success){
+        toast.success("plan deleted successfully!!");
         queryClient.invalidateQueries("shopplans");
         queryClient.refetchQueries('shopplans', { force: true });
         navigate('/vendorplans/packages');
@@ -107,11 +137,25 @@ export function useDeleteShopPlan() {
   
     },
     onError: (error) => {
-      toast.success(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
+      // Handle NestJS error format
+      let errorMessage = 'An error occurred while deleting shop plan';
+
+      if (error.response?.data) {
+        const { message, error: errorType } = error.response.data;
+
+        // NestJS can return message as string or array
+        if (Array.isArray(message)) {
+          errorMessage = message.join(', ');
+        } else if (message) {
+          errorMessage = message;
+        } else if (errorType) {
+          errorMessage = errorType;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage);
     },
   });
 }

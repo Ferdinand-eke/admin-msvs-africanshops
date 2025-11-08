@@ -3,10 +3,11 @@ import { Navigate } from 'react-router-dom';
 
 const StatesApp = lazy(() => import('./DesignationsApp'));
 const Designation = lazy(() => import('./product/Designation'));
-const Designations = lazy(() => import('./products/Designations'));
+const Designations = lazy(() => import('./designations/Designations'));
 /**
  * The E-Commerce app configuration.
  */
+
 
 const DesignationsAppConfig = {
 	settings: {
@@ -29,18 +30,7 @@ const DesignationsAppConfig = {
 					path: 'list/:productId/*',
 					element: <Designation />
 				},
-				// {
-				// 	path: 'inventory',
-				// 	element: <Designations />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+				
 			]
 		}
 	]

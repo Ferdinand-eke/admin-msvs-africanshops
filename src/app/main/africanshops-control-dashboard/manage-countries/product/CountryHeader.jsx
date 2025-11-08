@@ -7,11 +7,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import _ from "@lodash";
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import {
-  useCreateECommerceProductMutation,
-  useDeleteECommerceProductMutation,
-  useUpdateECommerceProductMutation,
-} from "../ECommerceApi";
-import {
   getStorage,
   ref,
   deleteObject,
@@ -33,12 +28,10 @@ import { useEffect } from "react";
 /**
  * The product header.
  */
+
 function CountryHeader() {
   const routeParams = useParams();
   const { productId } = routeParams;
-  //   const [createProduct] = useCreateECommerceProductMutation();
-  //   const [saveProduct] = useUpdateECommerceProductMutation();
-  //   const [removeProduct] = useDeleteECommerceProductMutation();
   const methods = useFormContext();
   const { formState, watch, getValues, setValue, reset } = methods;
   const { isValid, dirtyFields } = formState;
@@ -67,6 +60,21 @@ function CountryHeader() {
             uploadTask.then((snapshot) => {
               getDownloadURL(snapshot.ref).then((downloadURL) => {
                 setValue("flag", downloadURL);
+                // const countryToSave = {
+                //   name: getValues().countrylocation?.name,
+                //   latitude: getValues().countrylocation?.latitude,
+                //   longitude: getValues().countrylocation?.longitude,
+                //   phonecode: getValues().countrylocation?.phonecode,
+                //   // adminUserCreator: user.id || user._id || user,
+                //   // slug: slug,
+                //   currency: getValues().countrylocation?.currency || "USD",
+                //   flag: getValues().flag || "",
+                //   flagg: getValues().countrylocation?.flgg || "",
+                //   isFeatured: getValues().isFeatured || false,
+                //   isInOperation: getValues().isInOperation || false,
+                //   isPublished: getValues().isPublished || false,
+                //   isoCode: getValues().countrylocation?.isoCode || "",
+                // };
                 updateCountryMutation.mutate(getValues());
               });
             });
@@ -86,6 +94,21 @@ function CountryHeader() {
             console.log("countryFlag22", downloadURL);
 
             setValue("flag", downloadURL);
+            //  const countryToSave = {
+            //       name: getValues().countrylocation?.name,
+            //       latitude: getValues().countrylocation?.latitude,
+            //       longitude: getValues().countrylocation?.longitude,
+            //       phonecode: getValues().countrylocation?.phonecode,
+            //       // adminUserCreator: user.id || user._id || user,
+            //       // slug: slug,
+            //       currency: getValues().countrylocation?.currency || "USD",
+            //       flag: getValues().flag || "",
+            //       flagg: getValues().countrylocation?.flagg || "",
+            //       isFeatured: getValues().isFeatured || false,
+            //       isInOperation: getValues().isInOperation || false,
+            //       isPublished: getValues().isPublished || false,
+            //       isoCode: getValues().countrylocation?.isoCode || "",
+            //     };
             updateCountryMutation.mutate(getValues());
           });
         });
@@ -111,11 +134,41 @@ function CountryHeader() {
           console.log("countryFlag22", downloadURL);
 
           setValue("flag", downloadURL);
-          addNewcountry.mutate(getValues());
+          const countryToSave = {
+            name: getValues().countrylocation?.name,
+            latitude: getValues().countrylocation?.latitude,
+            longitude: getValues().countrylocation?.longitude,
+            phonecode: getValues().countrylocation?.phonecode,
+            // adminUserCreator: user.id || user._id || user,
+            // slug: slug,
+            currency: getValues().countrylocation?.currency || "USD",
+            flag: getValues().flag || "",
+            flagg: getValues().countrylocation?.flgg || "",
+            isFeatured: getValues().isFeatured || false,
+            isInOperation: getValues().isInOperation || false,
+            isPublished: getValues().isPublished || false,
+            isoCode: getValues().countrylocation?.isoCode || "",
+          };
+          addNewcountry.mutate(countryToSave);
         });
       });
     } else {
-      addNewcountry.mutate(getValues());
+      const countryToSave = {
+        name: getValues().countrylocation?.name,
+        latitude: getValues().countrylocation?.latitude,
+        longitude: getValues().countrylocation?.longitude,
+        phonecode: getValues().countrylocation?.phonecode,
+        // adminUserCreator: user.id || user._id || user,
+        // slug: slug,
+        currency: getValues().countrylocation?.currency ,
+        flag: getValues().flag || "",
+        flagg: getValues().countrylocation?.flgg || "",
+        isFeatured: getValues().isFeatured || false,
+        isInOperation: getValues().isInOperation || false,
+        isPublished: getValues().isPublished || false,
+        isoCode: getValues().countrylocation?.isoCode || "",
+      };
+      addNewcountry.mutate(countryToSave);
     }
   }
 
@@ -235,7 +288,7 @@ function CountryHeader() {
               className="whitespace-nowrap mx-4"
               variant="contained"
               color="secondary"
-              disabled={_.isEmpty(dirtyFields) || !isValid}
+              disabled={_.isEmpty(dirtyFields) || !isValid || updateCountryMutation.isLoading}
               onClick={handleSaveProduct}
             >
               Save County
@@ -246,7 +299,7 @@ function CountryHeader() {
             className="whitespace-nowrap mx-4"
             variant="contained"
             color="secondary"
-            disabled={_.isEmpty(dirtyFields) || !isValid}
+            disabled={_.isEmpty(dirtyFields) || !isValid || addNewcountry.isLoading}
             onClick={handleCreateProduct}
           >
             Add Country

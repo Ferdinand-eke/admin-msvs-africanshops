@@ -24,6 +24,7 @@ function CountriesTable() {
 		filters: {}
 	});
 
+	
 	// Extract countries and pagination info from response
 	const countries = useMemo(() => countriesResponse?.data?.countries || [], [countriesResponse]);
 	const totalCount = useMemo(() => countriesResponse?.data?.pagination?.total || countries.length, [countriesResponse, countries.length]);

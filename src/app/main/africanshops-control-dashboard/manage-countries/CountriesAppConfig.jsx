@@ -8,6 +8,7 @@ const Countries = lazy(() => import('./products/Countries'));
  * The E-Commerce app configuration.
  */
 
+
 const CountriesAppConfig = {
 	settings: {
 		layout: {}

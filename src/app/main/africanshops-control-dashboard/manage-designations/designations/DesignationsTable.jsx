@@ -18,6 +18,7 @@ function DesignationsTable() {
 
 	const { data:designations, isLoading, isError, refetch } = useDesignations();
 
+	
 	const columns = useMemo(
 		() => [
 			{
