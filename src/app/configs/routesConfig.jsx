@@ -48,14 +48,12 @@ import CountryShippingTableAppConfig from "../main/africanshops-control-dashboar
 import ManagedUserListingsAppConfig from "../main/homes/managedusersandproperties/ManagedUserListingsAppConfig";
 import ManagedBookingsUserListingsAppConfig from "../main/bookings-homes/managebookingsusersandproperties/ManagedBookingsUserListingsAppConfig";
 import ManagedRcsListingsAppConfig from "../main/manage-rcses/managercses/ManagedRcsListingsAppConfig";
+import AdminProfileSettingsAppConfig from "../main/africanshops-control-dashboard/manage-admin-settings/AdminProfileSettingsAppConfig";
 // import AfricanshopsMessengerAppConfig from '../main/africanshops-messenger/AfricanshopsMessengerAppConfig';
 
 const routeConfigs = [
-  // SignOutConfig,
   SignInConfig,
-  // SignUpConfig,
   SignAcceptInviteConfig,
-  // DocumentationConfig,
   UsersAppConfig,
   StaffAppConfig,
   // PropertiesAppConfig,
@@ -65,11 +63,6 @@ const routeConfigs = [
   ManagedUserListingsAppConfig,
 
   /****Africanshops Merhcant's Dashboard Configs Starts Here */
-  // ShopDashboardAppConfig,
-  // ShopProductsAppConfig,
-  // ShopOrdersAppConfig,
-
-  
   SupportHelpCenterAppConfig,
   AfricanshopsFinanceDashboardAppConfig,
   AfricanshopsMessengerAppConfig,
@@ -81,6 +74,7 @@ const routeConfigs = [
    */
 
   /****Africanshops Admin & Administrative Dashboard Configs Starts Here */
+  AdminProfileSettingsAppConfig, /**Admin Profile & Referral Links */
   VendorPlansAppConfig, /**Msvs Complete CRUD=> Done */
   VendorsAppConfig,
   CountriesAppConfig,  /**Msvs Complete CRUD=> Done */

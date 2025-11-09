@@ -1040,6 +1040,31 @@ export const adminScheduleInspection = (inspectionData) =>
 export const adminUpdateInspectionStatus = (inspectionId, status, notes) =>
   authApi().put(`/real-estate/inspections/admin/${inspectionId}/status`, { status, notes });
 
+/*****
+ * ###################################################################################################
+ * ADMIN PROFILE & SETTINGS handling starts here
+ * ####################################################################################################
+ */
+// Get current admin profile
+export const getAdminProfile = () => authApi().get('/authadmin/profile');
+
+// Update admin social media handles (self-service)
+export const updateAdminSocialMedia = (socialMediaData) =>
+  authApi().put('/authadmin/profile/social-media', socialMediaData);
+
+// Get admin referral links
+export const getAdminReferralLinks = () => authApi().get('/authadmin/profile');
+
+// Generate admin referral links
+export const generateAdminReferralLinks = () =>
+  authApi().put('/authadmin/referral-links/generate');
+
+/*****
+ * ###################################################################################################
+ * ADMIN PROFILE & SETTINGS handling ends here
+ * ####################################################################################################
+ */
+
 /****
  *
  * LOG OUT HANDLING BELOW

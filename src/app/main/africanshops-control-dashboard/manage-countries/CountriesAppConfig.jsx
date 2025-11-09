@@ -30,18 +30,7 @@ const CountriesAppConfig = {
 					path: 'countries/:productId/*',
 					element: <Country />
 				},
-				// {
-				// 	path: 'inventory',
-				// 	element: <Countries />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
+				
 			]
 		}
 	]

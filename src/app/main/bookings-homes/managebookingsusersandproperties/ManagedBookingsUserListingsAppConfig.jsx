@@ -14,6 +14,7 @@ const ReservationsOnBookingsProperties = lazy(() => import('./reservations/Reser
  * The E-Commerce app configuration.
  */
 
+
 const ManagedBookingsUserListingsAppConfig = {
 
 	

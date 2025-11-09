@@ -112,7 +112,7 @@ function UserMenu() {
 					<>
 						<MenuItem
 							component={Link}
-							to="/apps/profile"
+							to="/admin-settings/profile"
 							onClick={userMenuClose}
 							role="button"
 						>
@@ -123,7 +123,7 @@ function UserMenu() {
 						</MenuItem>
 						<MenuItem
 							component={Link}
-							to="/apps/mailbox"
+							to="/admin-settings/mailbox"
 							onClick={userMenuClose}
 							role="button"
 						>
@@ -134,7 +134,7 @@ function UserMenu() {
 						</MenuItem>
 						<MenuItem
 							component={Link}
-							to="/apps/mailbox"
+							to="/admin-settings/profile"
 							onClick={userMenuClose}
 							role="button"
 						>
