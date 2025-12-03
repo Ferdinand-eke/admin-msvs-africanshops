@@ -3,25 +3,20 @@ import { useMemo } from 'react';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
 import Button from '@mui/material/Button';
-import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
-// import useGetAllListings from 'src/app/aaqueryhooks/listingssHandlingQuery';
 import useMyShopEstateProperties from 'src/app/api/admin-handle-estateproperties/useAdminHandleEstateProperties';
+import { useDeleteECommerceProductsMutation } from '../ECommerceApi';
+// import useGetAllListings from 'src/app/aaqueryhooks/listingssHandlingQuery';
 
 function ProductsTable() {
-	
 	const [removeProducts] = useDeleteECommerceProductsMutation();
 
-	const {data:listingData, isLoading:listingIsLoading} = useMyShopEstateProperties()
-
+	const { data: listingData, isLoading: listingIsLoading } = useMyShopEstateProperties();
 
 	// console.log('Listing-MANAGED', listingData?.data?.data)
-	
 
 	const columns = useMemo(
 		() => [
@@ -71,14 +66,13 @@ function ProductsTable() {
 				header: 'Category',
 				accessorFn: (row) => (
 					<div className="flex flex-wrap space-x-2">
-					
-						 <Chip
-								// key={item}
-								className="text-11"
-								size="small"
-								color="default"
-								label={row?.category}
-							/>
+						<Chip
+							// key={item}
+							className="text-11"
+							size="small"
+							color="default"
+							label={row?.category}
+						/>
 					</div>
 				)
 			},
@@ -93,7 +87,7 @@ function ProductsTable() {
 			// 	accessorFn: (row) => (
 			// 		<div className="flex items-center space-x-8">
 			// 			<span>{row?.roomCount} rooms</span>
-					
+
 			// 		</div>
 			// 	)
 			// },
@@ -126,22 +120,21 @@ function ProductsTable() {
 				header: 'Management Console',
 				Cell: ({ row }) => (
 					<div className="flex flex-wrap space-x-2">
-					
-						 <Chip
-								// key={item}
-								component={Link}
-						to={`/property/managed-listings/${row.original._id}/manage`}
-								className="text-11 cursor-pointer"
-								size="small"
-								color="default"
-								label="Manage this listing"
-							/>
+						<Chip
+							// key={item}
+							component={Link}
+							to={`/property/managed-listings/${row.original._id}/manage`}
+							className="text-11 cursor-pointer"
+							size="small"
+							color="default"
+							label="Manage this listing"
+						/>
 					</div>
 				)
 
 				// accessorFn: (row) => (
 				// 	<div className="flex flex-wrap space-x-2">
-					
+
 				// 		 <Chip
 				// 				// key={item}
 				// 				component={Link}
@@ -153,7 +146,7 @@ function ProductsTable() {
 				// 			/>
 				// 	</div>
 				// )
-			},
+			}
 		],
 		[]
 	);

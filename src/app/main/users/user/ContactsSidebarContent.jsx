@@ -19,7 +19,6 @@ function ContactsSidebarContent() {
 				<FuseSvgIcon>heroicons-outline:x</FuseSvgIcon>
 			</IconButton>
 
-
 			<Outlet />
 		</div>
 	);

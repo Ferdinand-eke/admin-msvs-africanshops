@@ -3,25 +3,20 @@ import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
+import { Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
-import Button from '@mui/material/Button';
-import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
 import useAdmiManageShop from 'src/app/api/shops/useAdminShops';
+import { useDeleteECommerceProductsMutation } from '../ECommerceApi';
 
 function AllVendorsTable() {
-	
 	// const { data: products, isLoading } = useGetECommerceProductsQuery();
 	const [removeProducts] = useDeleteECommerceProductsMutation();
 
-	const { data:vendors, isLoading, isError } = useAdmiManageShop();
+	const { data: vendors, isLoading, isError } = useAdmiManageShop();
 
-	console.log("MERCHANTS", vendors?.data)
-
+	console.log('MERCHANTS', vendors?.data);
 
 	const columns = useMemo(
 		() => [
@@ -66,7 +61,7 @@ function AllVendorsTable() {
 					</Typography>
 				)
 			},
-		
+
 			{
 				accessorKey: 'active',
 				header: 'Active',
@@ -96,26 +91,20 @@ function AllVendorsTable() {
 				header: 'Shop Compliance',
 				accessorFn: (row) => (
 					<div className="flex items-center">
-						{row.isSuspended ||
-                row.isBlocked ||
-                (row.isSuspended && row.isBlocked) ? (
-
-					<FuseSvgIcon
+						{row.isSuspended || row.isBlocked || (row.isSuspended && row.isBlocked) ? (
+							<FuseSvgIcon
 								className="text-red"
 								size={20}
 							>
 								heroicons-outline:minus-circle
 							</FuseSvgIcon>
-							
 						) : (
-							<>
 							<FuseSvgIcon
 								className="text-green"
 								size={20}
 							>
 								heroicons-outline:check-circle
 							</FuseSvgIcon>
-							</>
 						)}
 					</div>
 				)
@@ -128,7 +117,7 @@ function AllVendorsTable() {
 		return <FuseLoading />;
 	}
 
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -139,9 +128,8 @@ function AllVendorsTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Error occured retrieving vendor plans!
+					Error occured retrieving vendor plans!
 				</Typography>
-				
 			</motion.div>
 		);
 	}
@@ -159,7 +147,6 @@ function AllVendorsTable() {
 				>
 					No offices in operation yet!
 				</Typography>
-			
 			</motion.div>
 		);
 	}

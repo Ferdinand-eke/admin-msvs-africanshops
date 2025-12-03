@@ -3,10 +3,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
+import useAdminUsers from 'src/app/api/admin-users/useAdmins';
 import StaffHeader from './StaffHeader';
 import UsersList from './StaffUsersList';
 import StaffContactsSidebarContent from './StaffContactsSidebarContent';
-import useAdminUsers from 'src/app/api/admin-users/useAdmins';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
 	'& .FusePageSimple-header': {
@@ -30,7 +30,7 @@ function ContactsApp() {
 	const [searchName, setSearchName] = useState('');
 
 	// Fetch admin users with pagination and search
-	const {data:usersData, isLoading:usersIsLoading} = useAdminUsers({
+	const { data: usersData, isLoading: usersIsLoading } = useAdminUsers({
 		limit: rowsPerPage,
 		offset: page * rowsPerPage,
 		name: searchName
@@ -55,31 +55,27 @@ function ContactsApp() {
 		setPage(0); // Reset to first page when searching
 	};
 
-
-
-
-
-	
-
 	return (
 		<Root
-			header={<StaffHeader
-				usersData={usersData?.data?.admins}
-				usersIsLoading={usersIsLoading}
-				onSearchChange={handleSearchChange}
-				searchValue={searchName}
-			/>}
-
-
-			content={<UsersList
-				usersData={usersData?.data?.admins}
-				usersIsLoading={usersIsLoading}
-				totalCount={usersData?.data?.total || 0}
-				page={page}
-				rowsPerPage={rowsPerPage}
-				onPageChange={handleChangePage}
-				onRowsPerPageChange={handleChangeRowsPerPage}
-			/>}
+			header={
+				<StaffHeader
+					usersData={usersData?.data?.admins}
+					usersIsLoading={usersIsLoading}
+					onSearchChange={handleSearchChange}
+					searchValue={searchName}
+				/>
+			}
+			content={
+				<UsersList
+					usersData={usersData?.data?.admins}
+					usersIsLoading={usersIsLoading}
+					totalCount={usersData?.data?.total || 0}
+					page={page}
+					rowsPerPage={rowsPerPage}
+					onPageChange={handleChangePage}
+					onRowsPerPageChange={handleChangeRowsPerPage}
+				/>
+			}
 			ref={pageLayout}
 			rightSidebarContent={<StaffContactsSidebarContent />}
 			rightSidebarOpen={rightSidebarOpen}

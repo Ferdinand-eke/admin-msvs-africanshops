@@ -7,7 +7,6 @@ import NavbarToggleButton from 'app/theme-layouts/shared-components/navbar/Navba
 import Logo from '../../../../shared-components/Logo';
 import UserNavbarHeader from '../../../../shared-components/UserNavbarHeader';
 
-
 const Root = styled('div')(({ theme }) => ({
 	backgroundColor: theme.palette.background.default,
 	color: theme.palette.text.primary,
@@ -49,7 +48,6 @@ function NavbarStyle1Content(props) {
 			>
 				<UserNavbarHeader />
 
-
 				<Navigation layout="vertical" />
 
 				<div className="flex-0 flex items-center justify-center py-48 opacity-10">
@@ -62,7 +60,6 @@ function NavbarStyle1Content(props) {
 				</div>
 			</StyledContent>
 		</Root>
-
 	);
 }
 

@@ -50,11 +50,11 @@ function ProductImagesTab() {
 	const { control, watch, getValues } = methods;
 	const images = watch('images');
 
-	console.log("Images-DEFAULT", images)
+	console.log('Images-DEFAULT', images);
 	return (
 		<Root>
 			<div className="flex justify-center sm:justify-start flex-wrap -mx-16">
-			<Controller
+				<Controller
 					name="images"
 					control={control}
 					render={({ field: { onChange, value } }) => (
@@ -97,8 +97,8 @@ function ProductImagesTab() {
 									}
 
 									const newImage = await readFileAsync();
-									console.log("DEFAULT=VALUE", value)
-									console.log("ADDED=VALUE", newImage)
+									console.log('DEFAULT=VALUE', value);
+									console.log('ADDED=VALUE', newImage);
 									onChange([newImage, ...value]);
 								}}
 							/>
@@ -144,22 +144,20 @@ function ProductImagesTab() {
 						);
 					}}
 				/>
-
-				
 			</div>
 
-			<Divider/>
+			<Divider />
 
-				<Controller
-					name="flag"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => {
-						return (
-							<>
-								{
+			<Controller
+				name="flag"
+				control={control}
+				defaultValue=""
+				render={({ field: { onChange, value } }) => {
+					return (
+						<>
+							{
 								// images?.map((media) => (
-									getValues()?.flag &&
+								getValues()?.flag && (
 									<div
 										onClick={() => onChange(getValues()?._id)}
 										onKeyDown={() => onChange(getValues()?._id)}
@@ -180,13 +178,14 @@ function ProductImagesTab() {
 											alt="product"
 										/>
 									</div>
+								)
 								// )
 								// )
-								}
-							</>
-						);
-					}}
-				/>
+							}
+						</>
+					);
+				}}
+			/>
 		</Root>
 	);
 }

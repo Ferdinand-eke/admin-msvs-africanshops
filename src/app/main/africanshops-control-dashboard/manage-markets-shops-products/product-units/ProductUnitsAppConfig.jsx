@@ -29,10 +29,10 @@ const ProductUnitsAppConfig = {
 				{
 					path: 'list/:productId/*',
 					element: <ProductUnit />
-				},
-				
+				}
 			]
 		}
 	]
 };
+
 export default ProductUnitsAppConfig;

@@ -8,7 +8,6 @@ const PostCategories = lazy(() => import('./posts/Posts'));
  * The E-Commerce app configuration.
  */
 
-
 const PostsAppConfig = {
 	settings: {
 		layout: {}
@@ -29,8 +28,7 @@ const PostsAppConfig = {
 				{
 					path: 'list/:productId/*',
 					element: <ProductCategory />
-				},
-				
+				}
 			]
 		}
 	]

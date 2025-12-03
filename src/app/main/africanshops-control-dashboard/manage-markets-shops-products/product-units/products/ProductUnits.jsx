@@ -5,6 +5,7 @@ import ProductProductUnitsTable from './ProductProductUnitsTable';
 /**
  * The products page.
  */
+
 function ProductUnits() {
 	return (
 		<>
@@ -18,7 +19,6 @@ function ProductUnits() {
 			<div className="w-full h-full container flex flex-col">
 				<ProductUnitsHeader />
 				<ProductProductUnitsTable />
-				
 			</div>
 		</>
 	);

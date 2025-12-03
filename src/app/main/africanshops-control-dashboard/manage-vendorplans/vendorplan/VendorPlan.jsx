@@ -12,15 +12,18 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleShopplans } from 'src/app/api/shopplans/useShopPlans';
 import VendorPlanHeader from './VendorPlanHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
 import ProductModel from './models/ProductModel';
-import { useSingleShopplans } from 'src/app/api/shopplans/useShopPlans';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
-	plansname: z.string().nonempty('You must enter a product name').min(3, 'The product name must be at least 5 characters')
+	plansname: z
+		.string()
+		.nonempty('You must enter a product name')
+		.min(3, 'The product name must be at least 5 characters')
 });
 
 /**
@@ -50,8 +53,8 @@ function VendorPlan() {
 			numberofproducts: '',
 			dashboardandanalytics: '',
 			numberoffeaturedimages: '',
-			planinfo:'',
-			plankey:'',
+			planinfo: '',
+			plankey: ''
 		},
 		resolver: zodResolver(schema)
 	});
@@ -67,8 +70,6 @@ function VendorPlan() {
 			reset({ ...merchantplan?.data?.merchantPlan });
 		}
 	}, [merchantplan?.data?.merchantPlan, reset]);
-
-
 
 	/**
 	 * Tab Change
@@ -113,7 +114,12 @@ function VendorPlan() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (merchantplan?.data?.merchantPlan && routeParams.productId !== merchantplan?.data?.merchantPlan.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(merchantplan?.data?.merchantPlan &&
+			routeParams.productId !== merchantplan?.data?.merchantPlan.id &&
+			routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 
@@ -141,7 +147,6 @@ function VendorPlan() {
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
 								<BasicInfoTab />
 							</div>
-
 						</div>
 					</>
 				}

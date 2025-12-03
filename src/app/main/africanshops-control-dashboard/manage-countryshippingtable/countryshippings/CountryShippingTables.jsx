@@ -20,9 +20,7 @@ function CountryShippingTables() {
 				<CountryShippingTablesHeader />
 
 				<CountryShippingTable />
-				
 			</div>
-
 		</>
 	);
 }

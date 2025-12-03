@@ -17,15 +17,11 @@ function BookingsProperties() {
 			/>
 			<div className="w-full h-full container flex flex-col">
 				<BookingsPropertiesHeader />
-				
+
 				<ShopOnBookingsPropertiesTable />
-				
-				
 			</div>
 		</>
 	);
-
-	
 }
 
 export default BookingsProperties;

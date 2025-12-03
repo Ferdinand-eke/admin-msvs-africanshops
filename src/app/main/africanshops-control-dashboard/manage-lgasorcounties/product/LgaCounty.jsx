@@ -12,11 +12,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleLga } from 'src/app/api/lgas/useLgas';
+import { City } from 'country-state-city';
 import LgaCountyHeader from './LgaCountyHeader';
 import BasicInfoTab from './tabs/LgaBasicInfoTab';
 import ProductModel from './models/ProductModel';
-import { useSingleLga } from 'src/app/api/lgas/useLgas';
-import { City } from 'country-state-city';
 /**
  * Form Validation Schema
  */
@@ -46,12 +46,13 @@ function LgaCounty() {
 	// } = useGetECommerceProductQuery(productId, {
 	// 	skip: !productId || productId === 'new'
 	// });
-	const {data:lgacounty,
+	const {
+		data: lgacounty,
 		isLoading,
 		isError
 	} = useSingleLga(productId, {
 		skip: !productId || productId === 'new'
-	})
+	});
 
 	// console.log("Single LGA", lgacounty?.data?.lga)
 
@@ -59,20 +60,20 @@ function LgaCounty() {
 	const methods = useForm({
 		mode: 'onChange',
 		defaultValues: {
-		name: '',
-		businessCountry: '',
-		businessState: '',
-		images: [],
+			name: '',
+			businessCountry: '',
+			businessState: '',
+			images: [],
 
-		countryCode: '',
-		stateCode: '',
-		isoCode: '',
-		latitude: '',
-		longitude: '',
+			countryCode: '',
+			stateCode: '',
+			isoCode: '',
+			latitude: '',
+			longitude: '',
 
-		isFeatured: "",
-		isInOperation: "",
-		isPublished: "",
+			isFeatured: '',
+			isInOperation: '',
+			isPublished: ''
 		},
 		resolver: zodResolver(schema)
 	});
@@ -89,10 +90,11 @@ function LgaCounty() {
 		}
 
 		if (lgacounty?.data?.lga) {
-			reset({ ...lgacounty?.data?.lga, 
+			reset({
+				...lgacounty?.data?.lga,
 				// lgalocation: State.getStateByCodeAndCountry(lgacounty?.data?.lga?.isoCode, lgacounty?.data?.lga?.countryCode)
-				lgalocation:City.getCitiesOfState(lgacounty?.data?.lga?.countryCode, lgacounty?.data?.lga?.stateCode)
-			 });
+				lgalocation: City.getCitiesOfState(lgacounty?.data?.lga?.countryCode, lgacounty?.data?.lga?.stateCode)
+			});
 		}
 	}, [lgacounty?.data, reset]);
 
@@ -139,7 +141,10 @@ function LgaCounty() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (lgacounty?.data?.lga && routeParams.productId !== lgacounty?.data?.lga.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(lgacounty?.data?.lga && routeParams.productId !== lgacounty?.data?.lga.id && routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 
@@ -167,8 +172,6 @@ function LgaCounty() {
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
 								<BasicInfoTab />
 							</div>
-
-							
 						</div>
 					</>
 				}

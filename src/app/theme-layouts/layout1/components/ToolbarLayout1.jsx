@@ -5,19 +5,13 @@ import Toolbar from '@mui/material/Toolbar';
 import clsx from 'clsx';
 import { memo } from 'react';
 import { selectFuseCurrentLayoutConfig, selectToolbarTheme } from '@fuse/core/FuseSettings/fuseSettingsSlice';
-import NotificationPanelToggleButton from 'src/app/main/apps/notifications/NotificationPanelToggleButton';
 import NavbarToggleButton from 'app/theme-layouts/shared-components/navbar/NavbarToggleButton';
 import { selectFuseNavbar } from 'app/theme-layouts/shared-components/navbar/navbarSlice';
 import { useAppSelector } from 'app/store/hooks';
-import AdjustFontSize from '../../shared-components/AdjustFontSize';
-import FullScreenToggle from '../../shared-components/FullScreenToggle';
-import LanguageSwitcher from '../../shared-components/LanguageSwitcher';
-import NavigationShortcuts from '../../shared-components/navigation/NavigationShortcuts';
-import NavigationSearch from '../../shared-components/navigation/NavigationSearch';
-import UserMenu from '../../shared-components/UserMenu';
-import QuickPanelToggleButton from '../../shared-components/quickPanel/QuickPanelToggleButton';
 import { selectUser } from 'src/app/auth/user/store/userSlice';
 import LogoHome from 'app/theme-layouts/shared-components/LogoHome';
+import LanguageSwitcher from '../../shared-components/LanguageSwitcher';
+import UserMenu from '../../shared-components/UserMenu';
 
 /**
  * The toolbar layout 1.
@@ -69,10 +63,7 @@ function ToolbarLayout1(props) {
 						{user?.email && <LogoHome />}
 
 						{/* <Hidden lgDown> */}
-						{(!user?.role ||
-							(Array.isArray(user?.role) && user?.role?.length === 0)) && (
-							<LogoHome />
-						)}
+						{(!user?.role || (Array.isArray(user?.role) && user?.role?.length === 0)) && <LogoHome />}
 						{/* </Hidden> */}
 					</div>
 
@@ -84,7 +75,6 @@ function ToolbarLayout1(props) {
 						{/* <QuickPanelToggleButton /> */}
 						{/* <NotificationPanelToggleButton /> */}
 						<UserMenu />
-						
 					</div>
 
 					{config.navbar.display && config.navbar.position === 'right' && (
@@ -103,6 +93,5 @@ function ToolbarLayout1(props) {
 		</ThemeProvider>
 	);
 }
-
 
 export default memo(ToolbarLayout1);

@@ -1,53 +1,43 @@
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import { Controller, useFormContext } from "react-hook-form";
-import { MenuItem, Select, Typography } from "@mui/material";
-import CountrySelect from "src/app/apselects/countryselect";
-import { useEffect } from "react";
-import { 
-  // Country, 
-  State, 
-  // City 
-}  from 'country-state-city';
+import { Controller, useFormContext } from 'react-hook-form';
+import { MenuItem, Select, Typography } from '@mui/material';
+import CountrySelect from 'src/app/apselects/countryselect';
+
 // import CountrySelect from "src/app/main/documentation/material-ui-components/components/autocomplete/CountrySelect";
 
 /**
  * The basic info tab.
  */
 function CountryBasicInfoTab() {
-  const methods = useFormContext();
-  const { control, formState, setValue, watch, } = methods;
-  const { errors  } = formState;
+	const methods = useFormContext();
+	const { control, formState, setValue, watch } = methods;
+	const { errors } = formState;
 
-  const countrylocation = watch("countrylocation");
+	const countrylocation = watch('countrylocation');
 
-  const setCustomValue = (id, value) => {
-    setValue(id, value, {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    });
-  };
+	const setCustomValue = (id, value) => {
+		setValue(id, value, {
+			shouldDirty: true,
+			shouldTouch: true,
+			shouldValidate: true
+		});
+	};
 
-  // console.log("CountySelect", countrylocation)
+	// console.log("CountySelect", countrylocation)
 
-//   useEffect(()=>{
-// if(countrylocation?.isoCode){
-//   console.log('StatesOfThisCountry', State.getStatesOfCountry(countrylocation?.isoCode))
-// }
-//   },[countrylocation?.isoCode])
+	//   useEffect(()=>{
+	// if(countrylocation?.isoCode){
+	//   console.log('StatesOfThisCountry', State.getStatesOfCountry(countrylocation?.isoCode))
+	// }
+	//   },[countrylocation?.isoCode])
 
-  return (
-    <div>
+	return (
+		<div>
+			<CountrySelect
+				value={countrylocation}
+				onChange={(value) => setCustomValue('countrylocation', value)}
+			/>
 
-<CountrySelect
-            value={countrylocation}
-            onChange={(value) => setCustomValue("countrylocation", value)}
-          />
-
-          
-    
-      {/* <Controller
+			{/* <Controller
         name="name"
         control={control}
         render={({ field }) => (
@@ -66,96 +56,84 @@ function CountryBasicInfoTab() {
         )}
       /> */}
 
-      <>
-        <Typography style={{ fontSize: "12px", fontWeight: "800" }}>
-          Are we operational in this country?
-        </Typography>
-        <Controller
-          name="isInOperation"
-          control={control}
-          defaultValue={[]}
-          render={({ field: { onChange, value } }) => (
-            <Select
-              className="mt-8 mb-16"
-              id="isInOperation"
-              label="Operational Status"
-              fullWidth
-              defaultValue=""
-              onChange={onChange}
-              value={value === undefined || null ? "" : value}
-              error={!!errors.isInOperation}
-              helpertext={errors?.isInOperation?.message}
-            >
-              <MenuItem value="">Select an operations status</MenuItem>
-              <MenuItem value={false}>Not Operational</MenuItem>
+			<Typography style={{ fontSize: '12px', fontWeight: '800' }}>Are we operational in this country?</Typography>
+			<Controller
+				name="isInOperation"
+				control={control}
+				defaultValue={[]}
+				render={({ field: { onChange, value } }) => (
+					<Select
+						className="mt-8 mb-16"
+						id="isInOperation"
+						label="Operational Status"
+						fullWidth
+						defaultValue=""
+						onChange={onChange}
+						value={value === undefined || null ? '' : value}
+						error={!!errors.isInOperation}
+						helpertext={errors?.isInOperation?.message}
+					>
+						<MenuItem value="">Select an operations status</MenuItem>
+						<MenuItem value={false}>Not Operational</MenuItem>
 
-              <MenuItem value={true}>Operational</MenuItem>
-            </Select>
-          )}
-        />
-      </>
+						<MenuItem value>Operational</MenuItem>
+					</Select>
+				)}
+			/>
 
-      <>
-        <Typography style={{ fontSize: "12px", fontWeight: "800" }}>
-          Publish this country?
-        </Typography>
+			<Typography style={{ fontSize: '12px', fontWeight: '800' }}>Publish this country?</Typography>
 
-        <Controller
-          name="isPublished"
-          control={control}
-          defaultValue={[]}
-          render={({ field: { onChange, value } }) => (
-            <Select
-              className="mt-8 mb-16"
-              id="isPublished"
-              label="Operational Status"
-              fullWidth
-              defaultValue=""
-              onChange={onChange}
-              value={value === undefined || null ? "" : value}
-              error={!!errors.isPublished}
-              helpertext={errors?.isPublished?.message}
-            >
-              <MenuItem value="">Select a publish status</MenuItem>
-              <MenuItem value={false}>Not Published</MenuItem>
+			<Controller
+				name="isPublished"
+				control={control}
+				defaultValue={[]}
+				render={({ field: { onChange, value } }) => (
+					<Select
+						className="mt-8 mb-16"
+						id="isPublished"
+						label="Operational Status"
+						fullWidth
+						defaultValue=""
+						onChange={onChange}
+						value={value === undefined || null ? '' : value}
+						error={!!errors.isPublished}
+						helpertext={errors?.isPublished?.message}
+					>
+						<MenuItem value="">Select a publish status</MenuItem>
+						<MenuItem value={false}>Not Published</MenuItem>
 
-              <MenuItem value={true}>Published</MenuItem>
-            </Select>
-          )}
-        />
-      </>
+						<MenuItem value>Published</MenuItem>
+					</Select>
+				)}
+			/>
 
-      <>
-        <Typography style={{ fontSize: "12px", fontWeight: "800" }}>
-          Feature this country?
-        </Typography>
+			<Typography style={{ fontSize: '12px', fontWeight: '800' }}>Feature this country?</Typography>
 
-        <Controller
-          name="isFeatured"
-          control={control}
-          defaultValue={[]}
-          render={({ field: { onChange, value } }) => (
-            <Select
-              className="mt-8 mb-16"
-              id="isFeatured"
-              label="Operational Status"
-              fullWidth
-              defaultValue=""
-              onChange={onChange}
-              value={value === undefined || null ? "" : value}
-              error={!!errors.isFeatured}
-              helpertext={errors?.isFeatured?.message}
-            >
-              <MenuItem value="">Select an fetaured status</MenuItem>
-              <MenuItem value={false}>Not Featured</MenuItem>
+			<Controller
+				name="isFeatured"
+				control={control}
+				defaultValue={[]}
+				render={({ field: { onChange, value } }) => (
+					<Select
+						className="mt-8 mb-16"
+						id="isFeatured"
+						label="Operational Status"
+						fullWidth
+						defaultValue=""
+						onChange={onChange}
+						value={value === undefined || null ? '' : value}
+						error={!!errors.isFeatured}
+						helpertext={errors?.isFeatured?.message}
+					>
+						<MenuItem value="">Select an fetaured status</MenuItem>
+						<MenuItem value={false}>Not Featured</MenuItem>
 
-              <MenuItem value={true}>Featured</MenuItem>
-            </Select>
-          )}
-        />
-      </>
-    </div>
-  );
+						<MenuItem value>Featured</MenuItem>
+					</Select>
+				)}
+			/>
+		</div>
+	);
 }
 
 export default CountryBasicInfoTab;

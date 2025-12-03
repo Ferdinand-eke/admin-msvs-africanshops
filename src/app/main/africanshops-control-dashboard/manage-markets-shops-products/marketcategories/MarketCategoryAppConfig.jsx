@@ -30,8 +30,8 @@ const MarketCategoryAppConfig = {
 				{
 					path: 'list/:productId/*',
 					element: <MarketCategory />
-				},
-				
+				}
+
 				// {
 				// 	path: 'inventory',
 				// 	element: <ShopProducts />

@@ -4,21 +4,19 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { useAppSelector } from 'app/store/hooks';
+import useOurPlatformUsers from 'src/app/api/users/useUsers';
 import ContactListItem from './ContactListItem';
 import { selectFilteredContactList, selectGroupedFilteredContacts } from './ContactsApi';
-import useOurPlatformUsers from 'src/app/api/users/useUsers';
 
 /**
  * The contacts list.
  */
 function UsersList() {
-
-	const {data:usresData, isLoading:usersIsLoading} = useOurPlatformUsers()
+	const { data: usresData, isLoading: usersIsLoading } = useOurPlatformUsers();
 	const filteredData = useAppSelector(selectFilteredContactList(usresData?.data?.filteredUsers));
 
 	const groupedFilteredContacts = useAppSelector(selectGroupedFilteredContacts(filteredData));
 
-	
 	if (usersIsLoading) {
 		return <FuseLoading />;
 	}
@@ -42,7 +40,6 @@ function UsersList() {
 			animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}
 			className="flex flex-col flex-auto w-full max-h-full"
 		>
-
 			{Object.entries(groupedFilteredContacts).map(([key, group]) => {
 				return (
 					<div
@@ -69,7 +66,6 @@ function UsersList() {
 			})}
 		</motion.div>
 	);
-
 }
 
 export default UsersList;

@@ -15,17 +15,17 @@ const ManagedListingsAppConfig = {
 	settings: {
 		layout: {}
 	},
-	
+
 	routes: [
 		{
-			///property/managed-listings
+			/// property/managed-listings
 			path: 'property',
 			element: <ManagedListingApp />,
 			children: [
 				{
 					path: '',
 					element: <Navigate to="managed-listings" />
-				},
+				}
 				// {
 				// 	path: 'managed-listings',
 				// 	element: <Products />
@@ -38,7 +38,6 @@ const ManagedListingsAppConfig = {
 				// 	path: 'managed-listings/:productId/manage',
 				// 	element: <ProfileApp />
 				// },
-			
 			]
 		}
 	]

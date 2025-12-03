@@ -10,7 +10,6 @@ const CountryShipmentFormPage = lazy(() => import('./product/CountryShipmentForm
  * The E-Commerce app configuration.
  */
 
-
 const CountryShippingTableAppConfig = {
 	settings: {
 		layout: {}
@@ -30,15 +29,12 @@ const CountryShippingTableAppConfig = {
 				},
 				{
 					path: 'routes/:productId/*',
-					element: <CountryShipping />,
-				
-				},
+					element: <CountryShipping />
+				}
 				// {
 				// 	path: 'countryorigin/:productId/manage/:destinationId/*',
 				// 	element: <CountryShipmentFormPage />
 				// }
-
-				
 			]
 		}
 	]

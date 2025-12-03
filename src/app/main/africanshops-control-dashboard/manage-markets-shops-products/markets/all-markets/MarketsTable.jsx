@@ -17,7 +17,12 @@ function MarketsTable() {
 	const [globalFilter, setGlobalFilter] = useState('');
 
 	// Fetch markets with pagination
-	const { data: marketsResponse, isLoading, isError, isFetching } = useMarketsPaginated({
+	const {
+		data: marketsResponse,
+		isLoading,
+		isError,
+		isFetching
+	} = useMarketsPaginated({
 		page,
 		limit: rowsPerPage,
 		search: globalFilter,
@@ -26,7 +31,10 @@ function MarketsTable() {
 
 	// Extract markets and pagination info from response
 	const markets = useMemo(() => marketsResponse?.data?.markets || [], [marketsResponse]);
-	const totalCount = useMemo(() => marketsResponse?.data?.pagination?.total || markets.length, [marketsResponse, markets.length]);
+	const totalCount = useMemo(
+		() => marketsResponse?.data?.pagination?.total || markets.length,
+		[marketsResponse, markets.length]
+	);
 	const pagination = useMemo(() => marketsResponse?.data?.pagination, [marketsResponse]);
 
 	// Pagination handlers
@@ -66,31 +74,19 @@ function MarketsTable() {
 				accessorKey: 'localityaddress',
 				header: 'Market Address',
 				size: 250,
-				Cell: ({ row }) => (
-					<Typography className="text-13">
-						{row.original?.localityaddress || 'N/A'}
-					</Typography>
-				)
+				Cell: ({ row }) => <Typography className="text-13">{row.original?.localityaddress || 'N/A'}</Typography>
 			},
 			{
 				accessorKey: 'lga',
 				header: 'LGA/County',
 				size: 150,
-				Cell: ({ row }) => (
-					<Typography className="text-13">
-						{row.original?.lga?.name || 'N/A'}
-					</Typography>
-				)
+				Cell: ({ row }) => <Typography className="text-13">{row.original?.lga?.name || 'N/A'}</Typography>
 			},
 			{
 				accessorKey: 'state',
 				header: 'State/Province',
 				size: 150,
-				Cell: ({ row }) => (
-					<Typography className="text-13">
-						{row.original?.state?.name || 'N/A'}
-					</Typography>
-				)
+				Cell: ({ row }) => <Typography className="text-13">{row.original?.state?.name || 'N/A'}</Typography>
 			},
 			{
 				accessorKey: 'isInOperation',
@@ -122,11 +118,13 @@ function MarketsTable() {
 				size: 140,
 				Cell: ({ row }) => (
 					<Typography className="text-13">
-						{row.original?.createdAt ? new Date(row.original.createdAt).toLocaleDateString('en-US', {
-							year: 'numeric',
-							month: 'short',
-							day: 'numeric'
-						}) : 'N/A'}
+						{row.original?.createdAt
+							? new Date(row.original.createdAt).toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'short',
+									day: 'numeric'
+								})
+							: 'N/A'}
 					</Typography>
 				)
 			}
@@ -176,13 +174,13 @@ function MarketsTable() {
 				rowCount={totalCount}
 				pageCount={pagination?.totalPages || Math.ceil(totalCount / rowsPerPage)}
 				onPaginationChange={(updater) => {
-					const newPagination = typeof updater === 'function'
-						? updater({ pageIndex: page, pageSize: rowsPerPage })
-						: updater;
+					const newPagination =
+						typeof updater === 'function' ? updater({ pageIndex: page, pageSize: rowsPerPage }) : updater;
 
 					if (newPagination.pageIndex !== page) {
 						handlePageChange(newPagination.pageIndex);
 					}
+
 					if (newPagination.pageSize !== rowsPerPage) {
 						handleRowsPerPageChange(newPagination.pageSize);
 					}

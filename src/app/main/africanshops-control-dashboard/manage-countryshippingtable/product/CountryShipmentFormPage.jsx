@@ -1,34 +1,21 @@
-import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import Button from '@mui/material/Button';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import Typography from '@mui/material/Typography';
-import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import _ from '@lodash';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { FormProvider } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import CountryHeader from './CountryShipmentFormPageHeader';
 // import InventoryTab from './tabs/InventoryTab';
 // import PricingTab from './tabs/PricingTab';
-import ProductImagesTab from './tabs/ProductImagesTab';
 // import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
-import ProductModel from './models/ProductModel';
-import { useSingleCountry } from 'src/app/api/countries/useCountries';
-import { Country, State, City }  from 'country-state-city';
-import CountryShipmentForm from '../countryshipment/tabs/CountryShipmentForm';
 import CountryShipmentPagedForm from '../countryshipment/tabs/CountryShipmentPagedForm';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
 	countrylocation: z.object({
-		name: z.string(),
+		name: z.string()
 	})
 });
 
@@ -40,9 +27,8 @@ function CountryShipmentFormPage() {
 	// const routeParams = useParams();
 	// const { productId } = routeParams;
 
-
 	const [tabValue, setTabValue] = useState(0);
-	
+
 	/**
 	 * Tab Change
 	 */
@@ -50,11 +36,8 @@ function CountryShipmentFormPage() {
 		setTabValue(value);
 	}
 
-
-	
 	return (
-		<FormProvider 
-		>
+		<FormProvider>
 			<FusePageCarded
 				header={<CountryHeader />}
 				content={
@@ -98,8 +81,6 @@ function CountryShipmentFormPage() {
 							{/* <div className={tabValue !== 1 ? 'hidden' : ''}>
 								<ProductImagesTab />
 							</div> */}
-
-
 						</div>
 					</>
 				}

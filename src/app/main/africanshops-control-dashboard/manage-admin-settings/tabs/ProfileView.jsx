@@ -26,7 +26,7 @@ function ProfileView() {
 	const { data: profile, isLoading, error } = useAdminProfile();
 	const updateSocialMedia = useUpdateAdminSocialMedia();
 
-	console.log("Profile\__ON__COMPONENT", profile)
+	console.log('Profile__ON__COMPONENT', profile);
 
 	const { control, handleSubmit, reset } = useForm({
 		defaultValues: {
@@ -70,6 +70,7 @@ function ProfileView() {
 				whatsapp: profile?.admin?.whatsapp || ''
 			});
 		}
+
 		setIsEditing(false);
 	};
 
@@ -125,10 +126,17 @@ function ProfileView() {
 									{profile?.admin?.name?.charAt(0)?.toUpperCase() || 'A'}
 								</Avatar>
 								<Box className="flex-1 text-center sm:text-left">
-									<Typography variant="h4" className="font-bold mb-8">
+									<Typography
+										variant="h4"
+										className="font-bold mb-8"
+									>
 										{profile?.admin?.name || 'Admin User'}
 									</Typography>
-									<Typography variant="subtitle1" color="text.secondary" className="mb-16">
+									<Typography
+										variant="subtitle1"
+										color="text.secondary"
+										className="mb-16"
+									>
 										{profile?.admin?.email || 'admin@example.com'}
 									</Typography>
 									<Box className="flex flex-wrap gap-8 justify-center sm:justify-start">
@@ -163,7 +171,10 @@ function ProfileView() {
 					<Card className="mb-32">
 						<CardContent className="p-32">
 							<Box className="flex items-center justify-between mb-24">
-								<Typography variant="h6" className="font-semibold">
+								<Typography
+									variant="h6"
+									className="font-semibold"
+								>
 									Personal Information
 								</Typography>
 								<Chip
@@ -173,66 +184,139 @@ function ProfileView() {
 									color="warning"
 								/>
 							</Box>
-							<Alert severity="info" className="mb-24">
-								Changes to personal information (name, email, phone) require HR approval. Please contact HR department for such updates.
+							<Alert
+								severity="info"
+								className="mb-24"
+							>
+								Changes to personal information (name, email, phone) require HR approval. Please contact
+								HR department for such updates.
 							</Alert>
-							<Grid container spacing={3}>
-								<Grid item xs={12} sm={6}>
+							<Grid
+								container
+								spacing={3}
+							>
+								<Grid
+									item
+									xs={12}
+									sm={6}
+								>
 									<Box>
-										<Typography variant="caption" color="text.secondary" className="mb-4">
+										<Typography
+											variant="caption"
+											color="text.secondary"
+											className="mb-4"
+										>
 											Full Name
 										</Typography>
-										<Typography variant="body1" className="font-medium">
+										<Typography
+											variant="body1"
+											className="font-medium"
+										>
 											{profile?.admin?.name || 'N/A'}
 										</Typography>
 									</Box>
 								</Grid>
-								<Grid item xs={12} sm={6}>
+								<Grid
+									item
+									xs={12}
+									sm={6}
+								>
 									<Box>
-										<Typography variant="caption" color="text.secondary" className="mb-4">
+										<Typography
+											variant="caption"
+											color="text.secondary"
+											className="mb-4"
+										>
 											Email Address
 										</Typography>
-										<Typography variant="body1" className="font-medium">
+										<Typography
+											variant="body1"
+											className="font-medium"
+										>
 											{profile?.admin?.email || 'N/A'}
 										</Typography>
 									</Box>
 								</Grid>
-								<Grid item xs={12} sm={6}>
+								<Grid
+									item
+									xs={12}
+									sm={6}
+								>
 									<Box>
-										<Typography variant="caption" color="text.secondary" className="mb-4">
+										<Typography
+											variant="caption"
+											color="text.secondary"
+											className="mb-4"
+										>
 											Phone Number
 										</Typography>
-										<Typography variant="body1" className="font-medium">
+										<Typography
+											variant="body1"
+											className="font-medium"
+										>
 											{profile?.admin?.phone || 'Not provided'}
 										</Typography>
 									</Box>
 								</Grid>
-								<Grid item xs={12} sm={6}>
+								<Grid
+									item
+									xs={12}
+									sm={6}
+								>
 									<Box>
-										<Typography variant="caption" color="text.secondary" className="mb-4">
+										<Typography
+											variant="caption"
+											color="text.secondary"
+											className="mb-4"
+										>
 											Employee ID
 										</Typography>
-										<Typography variant="body1" className="font-medium">
+										<Typography
+											variant="body1"
+											className="font-medium"
+										>
 											{profile?.admin?.employeeId || 'N/A'}
 										</Typography>
 									</Box>
 								</Grid>
-								<Grid item xs={12} sm={6}>
+								<Grid
+									item
+									xs={12}
+									sm={6}
+								>
 									<Box>
-										<Typography variant="caption" color="text.secondary" className="mb-4">
+										<Typography
+											variant="caption"
+											color="text.secondary"
+											className="mb-4"
+										>
 											Department
 										</Typography>
-										<Typography variant="body1" className="font-medium">
+										<Typography
+											variant="body1"
+											className="font-medium"
+										>
 											{profile?.admin?.department?.name || 'Not assigned'}
 										</Typography>
 									</Box>
 								</Grid>
-								<Grid item xs={12} sm={6}>
+								<Grid
+									item
+									xs={12}
+									sm={6}
+								>
 									<Box>
-										<Typography variant="caption" color="text.secondary" className="mb-4">
+										<Typography
+											variant="caption"
+											color="text.secondary"
+											className="mb-4"
+										>
 											Designation
 										</Typography>
-										<Typography variant="body1" className="font-medium">
+										<Typography
+											variant="body1"
+											className="font-medium"
+										>
 											{profile?.admin?.designation?.name || 'Not assigned'}
 										</Typography>
 									</Box>
@@ -247,7 +331,10 @@ function ProfileView() {
 					<Card>
 						<CardContent className="p-32">
 							<Box className="flex items-center justify-between mb-24">
-								<Typography variant="h6" className="font-semibold">
+								<Typography
+									variant="h6"
+									className="font-semibold"
+								>
 									Social Media Handles
 								</Typography>
 								{!isEditing && (
@@ -264,8 +351,15 @@ function ProfileView() {
 
 							{isEditing ? (
 								<form onSubmit={handleSubmit(onSubmit)}>
-									<Grid container spacing={3}>
-										<Grid item xs={12} sm={6}>
+									<Grid
+										container
+										spacing={3}
+									>
+										<Grid
+											item
+											xs={12}
+											sm={6}
+										>
 											<Controller
 												name="facebook"
 												control={control}
@@ -277,7 +371,10 @@ function ProfileView() {
 														fullWidth
 														InputProps={{
 															startAdornment: (
-																<FuseSvgIcon size={20} className="mr-8">
+																<FuseSvgIcon
+																	size={20}
+																	className="mr-8"
+																>
 																	heroicons-outline:globe-alt
 																</FuseSvgIcon>
 															)
@@ -286,7 +383,11 @@ function ProfileView() {
 												)}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={6}>
+										<Grid
+											item
+											xs={12}
+											sm={6}
+										>
 											<Controller
 												name="twitter"
 												control={control}
@@ -298,7 +399,10 @@ function ProfileView() {
 														fullWidth
 														InputProps={{
 															startAdornment: (
-																<FuseSvgIcon size={20} className="mr-8">
+																<FuseSvgIcon
+																	size={20}
+																	className="mr-8"
+																>
 																	heroicons-outline:globe-alt
 																</FuseSvgIcon>
 															)
@@ -307,7 +411,11 @@ function ProfileView() {
 												)}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={6}>
+										<Grid
+											item
+											xs={12}
+											sm={6}
+										>
 											<Controller
 												name="linkedin"
 												control={control}
@@ -319,7 +427,10 @@ function ProfileView() {
 														fullWidth
 														InputProps={{
 															startAdornment: (
-																<FuseSvgIcon size={20} className="mr-8">
+																<FuseSvgIcon
+																	size={20}
+																	className="mr-8"
+																>
 																	heroicons-outline:globe-alt
 																</FuseSvgIcon>
 															)
@@ -328,7 +439,11 @@ function ProfileView() {
 												)}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={6}>
+										<Grid
+											item
+											xs={12}
+											sm={6}
+										>
 											<Controller
 												name="instagram"
 												control={control}
@@ -340,7 +455,10 @@ function ProfileView() {
 														fullWidth
 														InputProps={{
 															startAdornment: (
-																<FuseSvgIcon size={20} className="mr-8">
+																<FuseSvgIcon
+																	size={20}
+																	className="mr-8"
+																>
 																	heroicons-outline:globe-alt
 																</FuseSvgIcon>
 															)
@@ -349,7 +467,11 @@ function ProfileView() {
 												)}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={6}>
+										<Grid
+											item
+											xs={12}
+											sm={6}
+										>
 											<Controller
 												name="whatsapp"
 												control={control}
@@ -361,7 +483,10 @@ function ProfileView() {
 														fullWidth
 														InputProps={{
 															startAdornment: (
-																<FuseSvgIcon size={20} className="mr-8">
+																<FuseSvgIcon
+																	size={20}
+																	className="mr-8"
+																>
 																	heroicons-outline:phone
 																</FuseSvgIcon>
 															)
@@ -398,24 +523,61 @@ function ProfileView() {
 									</Box>
 								</form>
 							) : (
-								<Grid container spacing={3}>
+								<Grid
+									container
+									spacing={3}
+								>
 									{[
-										{ label: 'Facebook', value: profile?.admin?.socialMedia?.facebook, icon: 'heroicons-outline:globe-alt' },
-										{ label: 'Twitter/X', value: profile?.admin?.socialMedia?.twitter, icon: 'heroicons-outline:globe-alt' },
-										{ label: 'LinkedIn', value: profile?.admin?.socialMedia?.linkedin, icon: 'heroicons-outline:globe-alt' },
-										{ label: 'Instagram', value: profile?.admin?.socialMedia?.instagram, icon: 'heroicons-outline:globe-alt' },
-										{ label: 'WhatsApp', value: profile?.admin?.socialMedia?.whatsapp, icon: 'heroicons-outline:phone' }
+										{
+											label: 'Facebook',
+											value: profile?.admin?.socialMedia?.facebook,
+											icon: 'heroicons-outline:globe-alt'
+										},
+										{
+											label: 'Twitter/X',
+											value: profile?.admin?.socialMedia?.twitter,
+											icon: 'heroicons-outline:globe-alt'
+										},
+										{
+											label: 'LinkedIn',
+											value: profile?.admin?.socialMedia?.linkedin,
+											icon: 'heroicons-outline:globe-alt'
+										},
+										{
+											label: 'Instagram',
+											value: profile?.admin?.socialMedia?.instagram,
+											icon: 'heroicons-outline:globe-alt'
+										},
+										{
+											label: 'WhatsApp',
+											value: profile?.admin?.socialMedia?.whatsapp,
+											icon: 'heroicons-outline:phone'
+										}
 									].map((social) => (
-										<Grid item xs={12} sm={6} key={social.label}>
+										<Grid
+											item
+											xs={12}
+											sm={6}
+											key={social.label}
+										>
 											<Box className="flex items-center gap-12">
-												<FuseSvgIcon size={20} color="action">
+												<FuseSvgIcon
+													size={20}
+													color="action"
+												>
 													{social.icon}
 												</FuseSvgIcon>
 												<Box className="flex-1">
-													<Typography variant="caption" color="text.secondary">
+													<Typography
+														variant="caption"
+														color="text.secondary"
+													>
 														{social.label}
 													</Typography>
-													<Typography variant="body2" className="font-medium">
+													<Typography
+														variant="body2"
+														className="font-medium"
+													>
 														{social.value || 'Not provided'}
 													</Typography>
 												</Box>

@@ -19,7 +19,12 @@ function OrdersTable() {
 	const [globalFilter, setGlobalFilter] = useState('');
 
 	// Fetch orders with pagination
-	const { data: ordersResponse, isLoading, isError, isFetching } = useAdminGetOrdersPaginated({
+	const {
+		data: ordersResponse,
+		isLoading,
+		isError,
+		isFetching
+	} = useAdminGetOrdersPaginated({
 		page,
 		limit: rowsPerPage,
 		search: globalFilter,
@@ -82,9 +87,7 @@ function OrdersTable() {
 				header: 'Order Ref',
 				size: 140,
 				Cell: ({ row }) => (
-					<Typography className="text-13 font-mono">
-						{row.original?.refOrderId || 'N/A'}
-					</Typography>
+					<Typography className="text-13 font-mono">{row.original?.refOrderId || 'N/A'}</Typography>
 				)
 			},
 			{
@@ -125,6 +128,7 @@ function OrdersTable() {
 							/>
 						);
 					}
+
 					if (isShipped) {
 						return (
 							<Chip
@@ -135,6 +139,7 @@ function OrdersTable() {
 							/>
 						);
 					}
+
 					if (isPacked) {
 						return (
 							<Chip
@@ -145,6 +150,7 @@ function OrdersTable() {
 							/>
 						);
 					}
+
 					return (
 						<Chip
 							label="Pending"
@@ -215,13 +221,13 @@ function OrdersTable() {
 				rowCount={totalCount}
 				pageCount={pagination?.totalPages || Math.ceil(totalCount / rowsPerPage)}
 				onPaginationChange={(updater) => {
-					const newPagination = typeof updater === 'function'
-						? updater({ pageIndex: page, pageSize: rowsPerPage })
-						: updater;
+					const newPagination =
+						typeof updater === 'function' ? updater({ pageIndex: page, pageSize: rowsPerPage }) : updater;
 
 					if (newPagination.pageIndex !== page) {
 						handlePageChange(newPagination.pageIndex);
 					}
+
 					if (newPagination.pageSize !== rowsPerPage) {
 						handleRowsPerPageChange(newPagination.pageSize);
 					}
@@ -283,7 +289,9 @@ function OrdersTable() {
 							variant="body1"
 							className="mt-8"
 						>
-							{globalFilter ? 'Try adjusting your search terms' : 'Orders will appear here once customers place them'}
+							{globalFilter
+								? 'Try adjusting your search terms'
+								: 'Orders will appear here once customers place them'}
 						</Typography>
 					</motion.div>
 				)}

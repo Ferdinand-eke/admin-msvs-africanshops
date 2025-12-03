@@ -7,10 +7,10 @@ import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'app/store/hooks';
 import { useEffect } from 'react';
+import useOurPlatformUsers from 'src/app/api/users/useUsers';
 import { setSearchText, resetSearchText, selectSearchText } from './contactsAppSlice';
 import { selectFilteredContactList, useGetContactsListQuery } from './ContactsApi';
 // import useGetAllUsers from 'src/app/aaqueryhooks/usersHandlingQuery';
-import useOurPlatformUsers from 'src/app/api/users/useUsers';
 
 /**
  * The contacts header.
@@ -19,10 +19,9 @@ function UsersHeader() {
 	const dispatch = useAppDispatch();
 	const searchText = useAppSelector(selectSearchText);
 	const { data, isLoading } = useGetContactsListQuery();
-	
 
 	// const filteredData = useAppSelector(selectFilteredContactList(data));
-	const {data:usresData, isLoading:usersIsLoading} = useOurPlatformUsers()
+	const { data: usresData, isLoading: usersIsLoading } = useOurPlatformUsers();
 
 	const filteredData = useAppSelector(selectFilteredContactList(usresData?.data?.filteredUsers));
 	useEffect(() => {
@@ -89,7 +88,7 @@ function UsersHeader() {
 						onChange={(ev) => dispatch(setSearchText(ev))}
 					/>
 				</Box>
-				
+
 				<Button
 					className="mx-8"
 					variant="contained"
@@ -104,6 +103,5 @@ function UsersHeader() {
 		</div>
 	);
 }
-
 
 export default UsersHeader;

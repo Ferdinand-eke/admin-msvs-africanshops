@@ -18,7 +18,6 @@ function MarketCategories() {
 			<div className="w-full h-full container flex flex-col">
 				<MarketCategoriesHeader />
 				<MarketCategoriesTable />
-				
 			</div>
 		</>
 	);

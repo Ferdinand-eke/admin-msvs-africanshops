@@ -12,28 +12,26 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleOfficeLocation } from 'src/app/api/offices/useAdminOffices';
 import OfficeHeader from './OfficeHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleOfficeLocation } from 'src/app/api/offices/useAdminOffices';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
-	officeName: z.string().nonempty('You must enter an office name').min(5, 'The office name must be at least 5 characters'),
+	officeName: z
+		.string()
+		.nonempty('You must enter an office name')
+		.min(5, 'The office name must be at least 5 characters'),
 	officeCountry: z.string().nonempty('You must enter an office name'),
 	officeState: z.string().nonempty('You must enter an office name'),
 	officeLga: z.string().nonempty('You must enter an office name'),
 	officePhone: z.string().nonempty('You must enter an office name'),
 	address: z.string().nonempty('You must enter an office name'),
-	officeMail: z.string().nonempty('You must enter an office name'),
+	officeMail: z.string().nonempty('You must enter an office name')
 });
-
 
 /**
  * The product page.
@@ -43,7 +41,6 @@ function Office() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
 
-
 	const {
 		data: office,
 		isLoading,
@@ -52,22 +49,21 @@ function Office() {
 		skip: !productId || productId === 'new'
 	});
 
-
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			officeName:'',
+			officeName: '',
 
-		officeMail: '',
-		address: '',
-		officeCountry: '',
-		officeState: '',
-		officeLga: '',
-		// market: '',
-		coverimage: '',
-		officePhone: '',
-		images: [],
+			officeMail: '',
+			address: '',
+			officeCountry: '',
+			officeState: '',
+			officeLga: '',
+			// market: '',
+			coverimage: '',
+			officePhone: '',
+			images: []
 		},
 		resolver: zodResolver(schema)
 	});
@@ -129,7 +125,10 @@ function Office() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (office?.data && routeParams.productId !== office?.data?._id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(office?.data && routeParams.productId !== office?.data?._id && routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 

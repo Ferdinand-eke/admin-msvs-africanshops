@@ -18,7 +18,6 @@ function PostCategories() {
 			<div className="w-full h-full container flex flex-col">
 				<PostCategoriesHeader />
 				<PostCategoriesTable />
-				
 			</div>
 		</>
 	);

@@ -26,7 +26,7 @@ function VendorHeader() {
 	const { isValid, dirtyFields } = formState;
 	const theme = useTheme();
 	const navigate = useNavigate();
-	const {shopname, name, images, featuredImageId } = watch();
+	const { shopname, name, images, featuredImageId } = watch();
 
 	function handleSaveProduct() {
 		saveProduct(getValues());

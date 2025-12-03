@@ -12,22 +12,21 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleCountry } from 'src/app/api/countries/useCountries';
+import { Country } from 'country-state-city';
 import CountryHeader from './CountryHeader';
 import CountryBasicInfoTab from './tabs/CountryBasicInfoTab';
 // import InventoryTab from './tabs/InventoryTab';
 // import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
 // import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleCountry } from 'src/app/api/countries/useCountries';
-import { Country, State, City }  from 'country-state-city';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
 	countrylocation: z.object({
-		name: z.string(),
+		name: z.string()
 	})
 });
 
@@ -39,28 +38,26 @@ function CountryPage() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
 
-
-	const {data:singleCountry,
+	const {
+		data: singleCountry,
 		isLoading,
 		isError
 	} = useSingleCountry(productId, {
 		skip: !productId || productId === 'new'
-	})
+	});
 
-
-	
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			name: "",
-			flag: "",
-			isFeatured: "",
-			isInOperation: "",
-			isPublished: "",
+			name: '',
+			flag: '',
+			isFeatured: '',
+			isInOperation: '',
+			isPublished: '',
 
 			images: [],
-			countrylocation:{},
+			countrylocation: {}
 		},
 		resolver: zodResolver(schema)
 	});
@@ -73,9 +70,10 @@ function CountryPage() {
 	}, [productId, reset]);
 	useEffect(() => {
 		if (singleCountry?.data?.country) {
-			reset({ ...singleCountry?.data?.country, 
-				countrylocation:Country.getCountryByCode(singleCountry?.data?.country?.isoCode)
-			 });
+			reset({
+				...singleCountry?.data?.country,
+				countrylocation: Country.getCountryByCode(singleCountry?.data?.country?.isoCode)
+			});
 		}
 	}, [singleCountry?.data, reset]);
 
@@ -122,11 +120,15 @@ function CountryPage() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (singleCountry?.data?.country && routeParams.productId !== singleCountry?.data?.country?.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(singleCountry?.data?.country &&
+			routeParams.productId !== singleCountry?.data?.country?.id &&
+			routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 
-	
 	return (
 		<FormProvider {...methods}>
 			<FusePageCarded
@@ -171,7 +173,6 @@ function CountryPage() {
 							<div className={tabValue !== 1 ? 'hidden' : ''}>
 								<ProductImagesTab />
 							</div>
-
 
 							{/* <div className={tabValue !== 2 ? 'hidden' : ''}>
 								<PricingTab />

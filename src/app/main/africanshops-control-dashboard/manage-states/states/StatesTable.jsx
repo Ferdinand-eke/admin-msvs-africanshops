@@ -17,7 +17,12 @@ function StatesTable() {
 	const [globalFilter, setGlobalFilter] = useState('');
 
 	// Fetch states with pagination
-	const { data: statesResponse, isLoading, isError, isFetching } = useStatesPaginated({
+	const {
+		data: statesResponse,
+		isLoading,
+		isError,
+		isFetching
+	} = useStatesPaginated({
 		page,
 		limit: rowsPerPage,
 		search: globalFilter,
@@ -26,7 +31,10 @@ function StatesTable() {
 
 	// Extract states and pagination info from response
 	const states = useMemo(() => statesResponse?.data?.states || [], [statesResponse]);
-	const totalCount = useMemo(() => statesResponse?.data?.pagination?.total || states.length, [statesResponse, states.length]);
+	const totalCount = useMemo(
+		() => statesResponse?.data?.pagination?.total || states.length,
+		[statesResponse, states.length]
+	);
 	const pagination = useMemo(() => statesResponse?.data?.pagination, [statesResponse]);
 
 	// Pagination handlers
@@ -66,11 +74,7 @@ function StatesTable() {
 				accessorKey: 'country',
 				header: 'Country',
 				size: 180,
-				Cell: ({ row }) => (
-					<Typography className="text-13">
-						{row.original?.country?.name || 'N/A'}
-					</Typography>
-				)
+				Cell: ({ row }) => <Typography className="text-13">{row.original?.country?.name || 'N/A'}</Typography>
 			},
 			{
 				accessorKey: 'isInOperation',
@@ -102,11 +106,13 @@ function StatesTable() {
 				size: 140,
 				Cell: ({ row }) => (
 					<Typography className="text-13">
-						{row.original?.createdAt ? new Date(row.original.createdAt).toLocaleDateString('en-US', {
-							year: 'numeric',
-							month: 'short',
-							day: 'numeric'
-						}) : 'N/A'}
+						{row.original?.createdAt
+							? new Date(row.original.createdAt).toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'short',
+									day: 'numeric'
+								})
+							: 'N/A'}
 					</Typography>
 				)
 			}
@@ -156,13 +162,13 @@ function StatesTable() {
 				rowCount={totalCount}
 				pageCount={pagination?.totalPages || Math.ceil(totalCount / rowsPerPage)}
 				onPaginationChange={(updater) => {
-					const newPagination = typeof updater === 'function'
-						? updater({ pageIndex: page, pageSize: rowsPerPage })
-						: updater;
+					const newPagination =
+						typeof updater === 'function' ? updater({ pageIndex: page, pageSize: rowsPerPage }) : updater;
 
 					if (newPagination.pageIndex !== page) {
 						handlePageChange(newPagination.pageIndex);
 					}
+
 					if (newPagination.pageSize !== rowsPerPage) {
 						handleRowsPerPageChange(newPagination.pageSize);
 					}

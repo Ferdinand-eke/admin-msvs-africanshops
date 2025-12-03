@@ -17,16 +17,11 @@ function RcsMerchants() {
 			/>
 			<div className="w-full h-full container flex flex-col">
 				<RcsHeader />
-				
+
 				<ShopOnRcsTable />
-				
-				
-				
 			</div>
 		</>
 	);
-
-	
 }
 
 export default RcsMerchants;

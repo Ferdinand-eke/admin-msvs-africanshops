@@ -7,12 +7,15 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import {
+	useDeleteDesignation,
+	useDesigUpdateMutation,
+	useDesigtMutation
+} from 'src/app/api/designations/useDesignations';
+import {
 	useCreateECommerceProductMutation,
 	useDeleteECommerceProductMutation,
 	useUpdateECommerceProductMutation
 } from '../ECommerceApi';
-import { useDeleteDesignation, useDesigUpdateMutation, useDesigtMutation } from 'src/app/api/designations/useDesignations';
-import { getValue } from '@mui/system';
 
 /**
  * The product header.
@@ -32,22 +35,19 @@ function SingleDesignationHeader() {
 
 	const updateDesignation = useDesigUpdateMutation();
 	const addNewDesignations = useDesigtMutation();
-	const deleteDesig = useDeleteDesignation()
+	const deleteDesig = useDeleteDesignation();
 
 	function handleSaveProduct() {
-		updateDesignation.mutate(getValues())
-
+		updateDesignation.mutate(getValues());
 	}
 
 	function handleCreateProduct() {
-
-		addNewDesignations.mutate(getValues())
+		addNewDesignations.mutate(getValues());
 	}
 
 	function handleRemoveProduct() {
-
-		if (window.confirm("Comfirm delete of this designation?")) {
-			deleteDesig.mutate(productId)
+		if (window.confirm('Comfirm delete of this designation?')) {
+			deleteDesig.mutate(productId);
 		}
 	}
 

@@ -12,15 +12,10 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleMarketCategory } from 'src/app/api/market-category/useMarketCats';
 import ProductHeader from './MarketCategoryHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
-import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleMarketCategory } from 'src/app/api/market-category/useMarketCats';
 /**
  * Form Validation Schema
  */
@@ -72,7 +67,6 @@ function MarketCategory() {
 		return <FuseLoading />;
 	}
 
-	
 	/**
 	 * Show Message if the requested products is not exists
 	 */
@@ -105,7 +99,11 @@ function MarketCategory() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (category?.data?.marketCat && routeParams.productId !== category?.data?.marketCat.id || category?.data?.marketCat._id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(category?.data?.marketCat && routeParams.productId !== category?.data?.marketCat.id) ||
+		(category?.data?.marketCat._id && routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 

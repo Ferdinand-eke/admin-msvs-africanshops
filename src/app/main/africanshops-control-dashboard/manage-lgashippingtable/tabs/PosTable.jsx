@@ -1,10 +1,9 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { useMemo, useState } from 'react';
-import {motion} from "framer-motion"
+import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
+import { ListItemIcon, MenuItem } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
@@ -15,31 +14,29 @@ import useMyShopProducts from 'app/configs/data/server-calls/products/useShopPro
 import useEcomerce from '../UsePos';
 
 function PosTable() {
+	const { data: myshop_products, isLoading: shopProductdIsLoading, isError } = useMyShopProducts();
 
-	const { data: myshop_products, isLoading: shopProductdIsLoading, isError } =
-    useMyShopProducts();
+	const { addItem, cartItems, removeItem } = useEcomerce();
+	const [qty, setQty] = useState(1);
 
-    const { addItem, cartItems, removeItem } = useEcomerce();
-    const [qty, setQty] = useState(1);
-  
-    const addItemToInvoice = (cartItem) => {
-        // console.log("AddClicked", cartItem)
+	const addItemToInvoice = (cartItem) => {
+		// console.log("AddClicked", cartItem)
 
-        // return
-      addItem(
-        {
-          id: cartItem._id,
-          quantity: 1,
-          // quantity : +qty,
-          price: cartItem.price,
-          name: cartItem.name,
-          image: cartItem.images[0]?.url,
-        },
-        cartItems,
-        'cart'
-      );
-    };
-	
+		// return
+		addItem(
+			{
+				id: cartItem._id,
+				quantity: 1,
+				// quantity : +qty,
+				price: cartItem.price,
+				name: cartItem.name,
+				image: cartItem.images[0]?.url
+			},
+			cartItems,
+			'cart'
+		);
+	};
+
 	// const { data: products, isLoading } = useGetECommerceProductsQuery();
 	// const [removeProducts] = useDeleteECommerceProductsMutation();
 	// const columns = useMemo(
@@ -153,17 +150,17 @@ function PosTable() {
 
 	const columns = useMemo(
 		() => [
-		  {
-			accessorFn: (row) => row.featuredImageId,
-			id: "featuredImageId",
-			header: "",
-			enableColumnFilter: false,
-			enableColumnDragging: false,
-			size: 64,
-			enableSorting: false,
-			Cell: ({ row }) => (
-			  <div className="flex items-center justify-center">
-				{/* {row?.original?.images?.length > 0 && row?.original?.featuredImageId ? (
+			{
+				accessorFn: (row) => row.featuredImageId,
+				id: 'featuredImageId',
+				header: '',
+				enableColumnFilter: false,
+				enableColumnDragging: false,
+				size: 64,
+				enableSorting: false,
+				Cell: ({ row }) => (
+					<div className="flex items-center justify-center">
+						{/* {row?.original?.images?.length > 0 && row?.original?.featuredImageId ? (
 								<img
 									className="w-full max-h-40 max-w-40 block rounded"
 									src={_.find(row?.original.images, { id: row?.original?.featuredImageId })?.url}
@@ -176,118 +173,122 @@ function PosTable() {
 									alt={row.original.name}
 								/>
 							)} */}
-	
-				{row?.original?.images?.length ? (
-				  <img
-					className="w-full max-h-40 max-w-40 block rounded"
-					src={row?.original.images[0]?.url}
-					alt={row?.original?.name}
-				  />
-				) : (
-				  <img
-					className="w-full max-h-40 max-w-40 block rounded"
-					src="assets/images/apps/ecommerce/product-image-placeholder.png"
-					alt={row.original.name}
-				  />
-				)}
-			  </div>
-			),
-		  },
-		  {
-			accessorKey: "name",
-			header: "Name",
-			Cell: ({ row }) => (
-			  <Typography
-				component={Link}
-				to={`/shopproducts-list/products/${row?.original?.slug}/${row?.original?.slug}`}
-				className="underline"
-				color="secondary"
-				role="button"
-			  >
-				{row?.original?.name}
-			  </Typography>
-			),
-		  },
-		  
-		  {
-			accessorKey: "quantity",
-			header: "Quantity",
-			accessorFn: (row) => (
-			  <div className="flex items-center space-x-8">
-				<span>{row?.quantityInStock}</span>
-				<i
-				  className={clsx(
-					"inline-block w-8 h-8 rounded",
-					row.quantityInStock <= 5 && "bg-red",
-					row.quantityInStock > 5 &&
-					  row.quantityInStock <= 25 &&
-					  "bg-orange",
-					row.quantityInStock > 25 && "bg-green"
-				  )}
-				/>
-			  </div>
-			),
-		  },
-	
-		  {
-			accessorKey: "price",
-			header: "Price",
-			// accessorFn: (row) => `$${row?.priceTaxIncl}`
-			accessorFn: (row) => {
-			  // console.log("row-DATA", row?.price)
-			  return `NGN ${row?.price}`;
+
+						{row?.original?.images?.length ? (
+							<img
+								className="w-full max-h-40 max-w-40 block rounded"
+								src={row?.original.images[0]?.url}
+								alt={row?.original?.name}
+							/>
+						) : (
+							<img
+								className="w-full max-h-40 max-w-40 block rounded"
+								src="assets/images/apps/ecommerce/product-image-placeholder.png"
+								alt={row.original.name}
+							/>
+						)}
+					</div>
+				)
 			},
-		  },
-		  // {
-		  // 	accessorKey: 'active',
-		  // 	header: 'Active',
-		  // 	accessorFn: (row) => (
-		  // 		<div className="flex items-center">
-		  // 			{row.active ? (
-		  // 				<FuseSvgIcon
-		  // 					className="text-green"
-		  // 					size={20}
-		  // 				>
-		  // 					heroicons-outline:check-circle
-		  // 				</FuseSvgIcon>
-		  // 			) : (
-		  // 				<FuseSvgIcon
-		  // 					className="text-red"
-		  // 					size={20}
-		  // 				>
-		  // 					heroicons-outline:minus-circle
-		  // 				</FuseSvgIcon>
-		  // 			)}
-		  // 		</div>
-		  // 	)
-		  // }
-	
-		  {
-			accessorKey: "active",
-			header: "Action",
-			accessorFn: (row) => (
-			  <div className="flex items-center">
-				{!row?.isBlocked || !row?.isSuspended ? (
-				  <FuseSvgIcon className="text-green" size={20}>
-					heroicons-outline:check-circle
-				  </FuseSvgIcon>
-				) : (
-				  <FuseSvgIcon className="text-red" size={20}>
-					heroicons-outline:minus-circle
-				  </FuseSvgIcon>
-				)}
-			  </div>
-			),
-		  },
+			{
+				accessorKey: 'name',
+				header: 'Name',
+				Cell: ({ row }) => (
+					<Typography
+						component={Link}
+						to={`/shopproducts-list/products/${row?.original?.slug}/${row?.original?.slug}`}
+						className="underline"
+						color="secondary"
+						role="button"
+					>
+						{row?.original?.name}
+					</Typography>
+				)
+			},
+
+			{
+				accessorKey: 'quantity',
+				header: 'Quantity',
+				accessorFn: (row) => (
+					<div className="flex items-center space-x-8">
+						<span>{row?.quantityInStock}</span>
+						<i
+							className={clsx(
+								'inline-block w-8 h-8 rounded',
+								row.quantityInStock <= 5 && 'bg-red',
+								row.quantityInStock > 5 && row.quantityInStock <= 25 && 'bg-orange',
+								row.quantityInStock > 25 && 'bg-green'
+							)}
+						/>
+					</div>
+				)
+			},
+
+			{
+				accessorKey: 'price',
+				header: 'Price',
+				// accessorFn: (row) => `$${row?.priceTaxIncl}`
+				accessorFn: (row) => {
+					// console.log("row-DATA", row?.price)
+					return `NGN ${row?.price}`;
+				}
+			},
+			// {
+			// 	accessorKey: 'active',
+			// 	header: 'Active',
+			// 	accessorFn: (row) => (
+			// 		<div className="flex items-center">
+			// 			{row.active ? (
+			// 				<FuseSvgIcon
+			// 					className="text-green"
+			// 					size={20}
+			// 				>
+			// 					heroicons-outline:check-circle
+			// 				</FuseSvgIcon>
+			// 			) : (
+			// 				<FuseSvgIcon
+			// 					className="text-red"
+			// 					size={20}
+			// 				>
+			// 					heroicons-outline:minus-circle
+			// 				</FuseSvgIcon>
+			// 			)}
+			// 		</div>
+			// 	)
+			// }
+
+			{
+				accessorKey: 'active',
+				header: 'Action',
+				accessorFn: (row) => (
+					<div className="flex items-center">
+						{!row?.isBlocked || !row?.isSuspended ? (
+							<FuseSvgIcon
+								className="text-green"
+								size={20}
+							>
+								heroicons-outline:check-circle
+							</FuseSvgIcon>
+						) : (
+							<FuseSvgIcon
+								className="text-red"
+								size={20}
+							>
+								heroicons-outline:minus-circle
+							</FuseSvgIcon>
+						)}
+					</div>
+				)
+			}
 		],
 		[]
-	  );
+	);
 
-	  if (shopProductdIsLoading) {
+	if (shopProductdIsLoading) {
 		return <FuseLoading />;
-	  }
+	}
 
-	  if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -298,9 +299,8 @@ function PosTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Nework Error While Retrieving products!
+					Nework Error While Retrieving products!
 				</Typography>
-			
 			</motion.div>
 		);
 	}
@@ -318,40 +318,33 @@ function PosTable() {
 				>
 					No products found!
 				</Typography>
-			
 			</motion.div>
 		);
 	}
-	
-
 
 	return (
-        <div className="w-full max-w-3xl">
-		 {/* <Paper
+		<div className="w-full max-w-3xl">
+			{/* <Paper
 		 	className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"
 		 	elevation={0}
 		 > */}
 
-      
 			<DataTable
 				data={myshop_products?.data?.data}
 				columns={columns}
 				renderRowActionMenuItems={({ closeMenu, row, table }) => [
 					<MenuItem
 						key={0}
-						onClick={() => {;
+						onClick={() => {
 							closeMenu();
 							table.resetRowSelection();
 						}}
 					>
-						 <ListItemIcon
-                         onClick={()=> addItemToInvoice(row?.original) }
-                         >
-						 	<FuseSvgIcon>heroicons-outline:plus</FuseSvgIcon>
-                             Add To Invoice
-						 </ListItemIcon>
-						
-					 </MenuItem>
+						<ListItemIcon onClick={() => addItemToInvoice(row?.original)}>
+							<FuseSvgIcon>heroicons-outline:plus</FuseSvgIcon>
+							Add To Invoice
+						</ListItemIcon>
+					</MenuItem>
 				]}
 				renderTopToolbarCustomActions={({ table }) => {
 					const { rowSelection } = table.getState();
@@ -377,11 +370,10 @@ function PosTable() {
 					);
 				}}
 			/>
-          
-		{/* </Paper> */}
-        </div>
+
+			{/* </Paper> */}
+		</div>
 	);
 }
 
 export default PosTable;
-

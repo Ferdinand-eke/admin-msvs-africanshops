@@ -1,11 +1,10 @@
 import { createContext, useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-import config from './jwtAuthConfig';
-import {  useSnackbar } from 'notistack';
-import Cookie from 'js-cookie'
+import Cookie from 'js-cookie';
 import { toast } from 'react-toastify';
 import { useAdminLogin } from 'src/app/api/auth/admin-auth';
+import config from './jwtAuthConfig';
 
 const defaultAuthContext = {
 	isAuthenticated: false,
@@ -20,29 +19,27 @@ const defaultAuthContext = {
 	setIsLoading: () => {},
 	// authStatus: 'configuring'
 	authStatus: 'unauthenticated'
-	
 };
 export const JwtAuthContext = createContext(defaultAuthContext);
 
-
 function JwtAuthProvider(props) {
-/**
+	/**
 	 * Handle set authenticated boolean status starts
 	========================================================= */
-		// Set IsAuthenticated
-		const setIsAthenticatedStorage = useCallback((accessToken) => {
-			// if (accessToken) {
-			// 	localStorage.setItem(config.isAuthenticatedStatus, true);
-			
-			// }
-			if (isTokenValid(accessToken)) {
-				localStorage.setItem(config.isAuthenticatedStatus, true);
-			}else{
-				localStorage.setItem(config.isAuthenticatedStatus, false);
-			}
-		}, []);
+	// Set IsAuthenticated
+	const setIsAthenticatedStorage = useCallback((accessToken) => {
+		// if (accessToken) {
+		// 	localStorage.setItem(config.isAuthenticatedStatus, true);
 
-		// Reset IsAuthenticated
+		// }
+		if (isTokenValid(accessToken)) {
+			localStorage.setItem(config.isAuthenticatedStatus, true);
+		} else {
+			localStorage.setItem(config.isAuthenticatedStatus, false);
+		}
+	}, []);
+
+	// Reset IsAuthenticated
 	const removeIsAthenticatedStorage = useCallback(() => {
 		localStorage?.removeItem(config.isAuthenticatedStatus);
 	}, []);
@@ -50,96 +47,91 @@ function JwtAuthProvider(props) {
 	const getIsAuthenticatedStatus = useCallback(() => {
 		return localStorage.getItem(config.isAuthenticatedStatus);
 	}, []);
-	/**===================================================
+	/** ===================================================
 	 * Handle set authenticated boolean status ends
 	 */
-
 
 	/**
 	 * Handle set authenticated boolean status starts
 	========================================================= */
-		// Set IsAuthenticated
-		const setAuthStatusStorage = useCallback((accessToken) => {
-			// if (accessToken) {
-			// 	localStorage.setItem(config.isAuthenticatedStatus, true); 'authenticated' : 'unauthenticated'
-			// authStatus
-			// }
-			if (isTokenValid(accessToken)) {
-				localStorage.setItem(config.authStatus, 'authenticated');
-			}else{
-				localStorage.setItem(config.authStatus, 'unauthenticated');
-			}
-		}, []);
+	// Set IsAuthenticated
+	const setAuthStatusStorage = useCallback((accessToken) => {
+		// if (accessToken) {
+		// 	localStorage.setItem(config.isAuthenticatedStatus, true); 'authenticated' : 'unauthenticated'
+		// authStatus
+		// }
+		if (isTokenValid(accessToken)) {
+			localStorage.setItem(config.authStatus, 'authenticated');
+		} else {
+			localStorage.setItem(config.authStatus, 'unauthenticated');
+		}
+	}, []);
 
-		// Reset IsAuthenticated
+	// Reset IsAuthenticated
 	const resetAuthStatusStorage = useCallback(() => {
 		// localStorage.removeItem(config.authStatus);
 		// localStorage.setItem(config.authStatus, 'configuring');
 
 		localStorage.setItem(config.authStatus, 'unauthenticated');
-
-		
 	}, []);
 
 	const getIsAuthStatusStorage = useCallback(() => {
 		return localStorage.getItem(config.authStatus);
 	}, []);
-	/**===================================================
-	 * Handle set authenticated boolean status ends 
+	/** ===================================================
+	 * Handle set authenticated boolean status ends
 	 */
 
-	/*****
+	/** ***
 	 * HANDLE USER DAT STORAGE
 	 */
 	const setUserCredentialsStorage = useCallback((userCredentials) => {
-		console.log("UserCredentials TO-SET", userCredentials)
+		console.log('UserCredentials TO-SET', userCredentials);
 		// localStorage.setItem(config.adminCredentials, JSON.stringify({ userCredentials }))
-		Cookie.set(config.adminCredentials, JSON.stringify({ userCredentials }))
-		
-		
+		Cookie.set(config.adminCredentials, JSON.stringify({ userCredentials }));
 	}, []);
 
-	/**Get User credentials */
-	const getUserCredentialsStorage  = useCallback(() => {
-	 let userCredentail
+	/** Get User credentials */
+	const getUserCredentialsStorage = useCallback(() => {
+		let userCredentail;
 
-		  const {userCredentials} = Cookie.get('jwt_auth_credentials') ? JSON.parse(Cookie.get('jwt_auth_credentials')) : ''
-		  if(userCredentials){
-			return userCredentail = userCredentials
-		  }
+		const { userCredentials } = Cookie.get('jwt_auth_credentials')
+			? JSON.parse(Cookie.get('jwt_auth_credentials'))
+			: '';
+
+		if (userCredentials) {
+			return (userCredentail = userCredentials);
+		}
 
 		//   return userCredentials
 		// return JSON.parse();
 	}, []);
 
-	/***Remove user credentials */
-		const removeUserCredentialsStorage = useCallback(() => {
-			// localStorage.removeItem(config.userCredentials);
-			Cookie.remove(config.userCredentials);
-			Cookie.remove('jwt_auth_credentials');
-		}, []);
+	/** *Remove user credentials */
+	const removeUserCredentialsStorage = useCallback(() => {
+		// localStorage.removeItem(config.userCredentials);
+		Cookie.remove(config.userCredentials);
+		Cookie.remove('jwt_auth_credentials');
+	}, []);
 
 	const [user, setUser] = useState(getUserCredentialsStorage());
 	const [isLoading, setIsLoading] = useState(true);
 	const [isLoginLoading, setLoginIsLoading] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(getIsAuthenticatedStatus());
-	const [authStatus, setAuthStatus] = useState(getIsAuthStatusStorage()); //'configuring'
+	const [authStatus, setAuthStatus] = useState(getIsAuthStatusStorage()); // 'configuring'
 	const { children } = props;
-
-
 
 	/**
 	 * Handle sign-in success
 	 */
 	const handleSignInSuccess = useCallback((userData, accessToken) => {
-
 		setSession(accessToken);
 		// setIsAuthenticated(true);
 		setIsAuthenticated(setIsAthenticatedStorage(accessToken));
-		
+
 		// setUser(userData);
-		setUserCredentialsStorage(userData)
-		window.location.reload()
+		setUserCredentialsStorage(userData);
+		window.location.reload();
 	}, []);
 	/**
 	 * Handle sign-up success
@@ -149,7 +141,7 @@ function JwtAuthProvider(props) {
 		// setIsAuthenticated(true);
 		setIsAuthenticated(setIsAthenticatedStorage(accessToken));
 		// setUser(userData);
-		setUserCredentialsStorage(userData)
+		setUserCredentialsStorage(userData);
 	}, []);
 	/**
 	 * Handle sign-in failure
@@ -198,7 +190,6 @@ function JwtAuthProvider(props) {
 	// Check if the access token is valid
 	const isTokenValid = useCallback((accessToken) => {
 		if (accessToken) {
-
 			try {
 				const decoded = jwtDecode(accessToken);
 				const currentTime = Date.now() / 1000;
@@ -213,7 +204,6 @@ function JwtAuthProvider(props) {
 	// Check if the access token exist and is valid on mount
 	useEffect(() => {
 		const attemptAutoLogin = async () => {
-
 			const accessToken = getAccessToken();
 
 			if (isTokenValid(accessToken)) {
@@ -223,23 +213,25 @@ function JwtAuthProvider(props) {
 						headers: { accessToken: `${accessToken}` }
 					});
 
-					console.log("RETURN-ATTEMPTCHECKUSER", response?.data)
+					console.log('RETURN-ATTEMPTCHECKUSER', response?.data);
 					const transFormedUser = {
-						id:response?.data?.user?.id,
-						name:response?.data?.user?.name,
-						email:response?.data?.user?.email,
-						role:'admin',
+						id: response?.data?.user?.id,
+						name: response?.data?.user?.name,
+						email: response?.data?.user?.email,
+						role: 'admin',
 
-						isAdmin:response?.data?.isAdmin,
-						avatar:response?.data?.avatar,
-					}
+						isAdmin: response?.data?.isAdmin,
+						avatar: response?.data?.avatar
+					};
 					handleSignInSuccess(transFormedUser, accessToken);
 					return true;
 				} catch (error) {
 					const axiosError = error;
-					toast.error(error?.response && error?.response?.data?.message
-						? error?.response?.data?.message
-						: error?.message)
+					toast.error(
+						error?.response && error?.response?.data?.message
+							? error?.response?.data?.message
+							: error?.message
+					);
 					handleSignInFailure(axiosError);
 					return false;
 				}
@@ -250,15 +242,14 @@ function JwtAuthProvider(props) {
 			}
 		};
 
-		if (!isAuthenticated || isAuthenticated === null)  {
-			console.log("isAUTHENTICATED?", isAuthenticated)
+		if (!isAuthenticated || isAuthenticated === null) {
+			console.log('isAUTHENTICATED?', isAuthenticated);
 			attemptAutoLogin().then((signedIn) => {
-				console.log("signedInSTATUS", signedIn)
+				console.log('signedInSTATUS', signedIn);
 				setIsLoading(false);
-				setAuthStatus(signedIn  ? 'authenticated' : 'unauthenticated');
+				setAuthStatus(signedIn ? 'authenticated' : 'unauthenticated');
 			});
 		}
-
 	}, [
 		isTokenValid,
 		setSession,
@@ -269,27 +260,26 @@ function JwtAuthProvider(props) {
 		isAuthenticated
 	]);
 
-	const adminLogIn = useAdminLogin()
+	const adminLogIn = useAdminLogin();
 
-	const handleRequest = async (url, data,
+	const handleRequest = async (
+		url,
+		data,
 		//  handleSuccess,
-		 handleSignInSuccess,
+		handleSignInSuccess,
 		//  handleFailure,
 		handleSignInFailure
-		 ) => {
+	) => {
 		try {
-
-		
-			setLoginIsLoading(true)
-			adminLogIn.mutate(data)
-			setLoginIsLoading(false)
-			
+			setLoginIsLoading(true);
+			adminLogIn.mutate(data);
+			setLoginIsLoading(false);
 		} catch (error) {
 			const axiosError = error;
-			console.log("Request-Error", error)
-			toast.error(error?.response && error?.response?.data?.message
-                ? error?.response?.data?.message
-                : error?.message)
+			console.log('Request-Error', error);
+			toast.error(
+				error?.response && error?.response?.data?.message ? error?.response?.data?.message : error?.message
+			);
 			handleSignInFailure(axiosError);
 			setLoginIsLoading(false);
 			return axiosError;
@@ -309,14 +299,14 @@ function JwtAuthProvider(props) {
 	 * Sign out
 	 */
 	const signOut = useCallback(() => {
-		resetAuthStatusStorage()
+		resetAuthStatusStorage();
 		resetSession();
-		removeIsAthenticatedStorage()
+		removeIsAthenticatedStorage();
 		// setIsAuthenticated(false);
 		// setUser(null);
-		removeUserCredentialsStorage()
+		removeUserCredentialsStorage();
 
-		window.location.reload()
+		window.location.reload();
 	}, []);
 	/**
 	 * Update user
@@ -387,20 +377,18 @@ function JwtAuthProvider(props) {
 	}, [isAuthenticated]);
 	const storedAccessToken = getAccessToken();
 	useEffect(() => {
-		
 		// if (user ) {
 		// 	setAuthStatus('authenticated');
 		// } else {
 		// 	setAuthStatus('unauthenticated');
 		// }
 
-
-//user && 
+		// user &&
 		if (storedAccessToken) {
-		// 	setAuthStatus('authenticated');
-		// } else {
-		// 	setAuthStatus('unauthenticated');
-		setAuthStatusStorage(storedAccessToken)
+			// 	setAuthStatus('authenticated');
+			// } else {
+			// 	setAuthStatus('unauthenticated');
+			setAuthStatusStorage(storedAccessToken);
 		}
 	}, [user, storedAccessToken]);
 	const authContextValue = useMemo(
@@ -416,12 +404,11 @@ function JwtAuthProvider(props) {
 			updateUser,
 			refreshToken,
 			setIsLoading,
-			setLoginIsLoading,
+			setLoginIsLoading
 		}),
 		[user, isAuthenticated, isLoading, signIn, signUp, signOut, updateUser, refreshToken, setIsLoading]
 	);
 	return <JwtAuthContext.Provider value={authContextValue}>{children}</JwtAuthContext.Provider>;
 }
-
 
 export default JwtAuthProvider;

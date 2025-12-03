@@ -10,7 +10,6 @@ const Markets = lazy(() => import('./all-markets/Markets'));
  * The E-Commerce app configuration.
  */
 
-
 const MarketsAppConfig = {
 	settings: {
 		layout: {}
@@ -31,9 +30,7 @@ const MarketsAppConfig = {
 				{
 					path: 'list/:productId/*',
 					element: <Product />
-				},
-				
-				
+				}
 			]
 		}
 	]

@@ -28,8 +28,8 @@ const PartnerVendorsAppConfig = {
 				{
 					path: 'listpartners/:productId/*',
 					element: <Vendor />
-				},
-				// { 
+				}
+				// {
 				// 	path: 'inventory',
 				// 	element: <AllVendors />
 				// },

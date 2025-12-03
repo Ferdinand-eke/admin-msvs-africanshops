@@ -10,30 +10,20 @@ import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import Autocomplete from '@mui/material/Autocomplete/Autocomplete';
-import Checkbox from '@mui/material/Checkbox/Checkbox';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import history from '@history';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { showMessage } from '@fuse/core/FuseMessage/fuseMessageSlice';
 import { useAppDispatch } from 'app/store/hooks';
-import ContactEmailSelector from './email-selector/ContactEmailSelector';
-import PhoneNumberSelector from './phone-number-selector/PhoneNumberSelector';
-import {
-	useCreateContactsItemMutation,
-	useDeleteContactsItemMutation,
-	useGetContactsItemQuery,
-	useGetContactsTagsQuery,
-	useUpdateContactsItemMutation
-} from '../ContactsApi';
-import ContactModel from '../models/ContactModel';
 import { useGetAdminById } from 'src/app/aaqueryhooks/adminHandlingQuery';
+import ContactEmailSelector from './email-selector/ContactEmailSelector';
+
+import ContactModel from '../models/ContactModel';
 
 function BirtdayIcon() {
 	return <FuseSvgIcon size={20}>heroicons-solid:cake</FuseSvgIcon>;
 }
-
 
 /**
  * Form Validation Schema
@@ -76,7 +66,6 @@ function ContactForm() {
 	// 	skip: !contactId
 	// });
 
-	
 	const {
 		data: admin,
 		isLoading: adminLoading,
@@ -85,34 +74,28 @@ function ContactForm() {
 		skip: !id || id === 'new'
 	});
 
-
-
 	const { control, watch, reset, handleSubmit, formState } = useForm({
 		mode: 'all',
 		resolver: zodResolver(schema)
 	});
 	const { isValid, dirtyFields, errors } = formState;
 	const form = watch();
-	
 
-
-	useEffect(() => {
-	
-		if (id === 'new') {
-			reset(ContactModel({}));
-		}
-	}, 
-	// [contactId, reset]
-	[id, reset]
+	useEffect(
+		() => {
+			if (id === 'new') {
+				reset(ContactModel({}));
+			}
+		},
+		// [contactId, reset]
+		[id, reset]
 	);
 
-	
 	useEffect(() => {
 		if (admin?.data) {
 			reset({ ...admin?.data });
 		}
 	}, [admin?.data, reset]);
-
 
 	/**
 	 * Form Submit
@@ -130,15 +113,12 @@ function ContactForm() {
 		}
 	}, [form]);
 
-
 	function handleRemoveContact() {
 		// if (!contact) {
 		// 	return;
 		// }
 		if (!admin?.data) {
-			return;
 		}
-		
 
 		// deleteContact(admin?.data.id).then(() => {
 		// 	navigate('/users/admin');
@@ -148,9 +128,8 @@ function ContactForm() {
 	const background = watch('background');
 	const name = watch('name');
 
-	
-	if (adminIsError && id !== 'new' ) {
-		//&& id !== 'new'
+	if (adminIsError && id !== 'new') {
+		// && id !== 'new'
 		setTimeout(() => {
 			navigate('/users/admin');
 			dispatch(showMessage({ message: 'NOT FOUND' }));
@@ -165,8 +144,6 @@ function ContactForm() {
 	// 	return <FuseLoading className="min-h-screen" />;
 	// }
 
-
-	
 	return (
 		<>
 			<Box
@@ -183,7 +160,6 @@ function ContactForm() {
 					/>
 				)}
 			</Box>
-
 
 			<div className="relative flex flex-col flex-auto items-center px-24 sm:px-48">
 				<div className="w-full">
@@ -412,7 +388,6 @@ function ContactForm() {
 						/>
 					)}
 				/> */}
-
 
 				<Controller
 					control={control}

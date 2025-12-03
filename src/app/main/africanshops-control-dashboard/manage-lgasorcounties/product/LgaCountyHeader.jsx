@@ -18,51 +18,48 @@ function LgaCountyHeader() {
 	const { formState, watch, getValues } = methods;
 	const { dirtyFields } = formState;
 	const theme = useTheme();
-	const { name, lgalocation} = watch();
+	const { name, lgalocation } = watch();
 
+	const updateLgaMutation = useLgaUpdateMutation();
+	const addNewLga = useAddLgaMutation();
+	const deleteLGA = useDeleteSingleLGA();
 
-   const updateLgaMutation = useLgaUpdateMutation();
-   const addNewLga = useAddLgaMutation();
-   const deleteLGA = useDeleteSingleLGA()
 	function handleSaveProduct() {
+		const lgaCountyToUpdate = {
+			id: getValues()?.id,
+			name: getValues().lgalocation?.name,
+			latitude: getValues().lgalocation?.latitude,
+			longitude: getValues().lgalocation?.longitude,
+			businessCountry: getValues()?.businessCountry,
+			businessState: getValues()?.businessState,
+			// adminUserCreator: user.id || user._id || user,
+			// slug: slug,
+			isFeatured: getValues().isFeatured || false,
+			isInOperation: getValues().isInOperation || false,
+			isPublished: getValues().isPublished || false,
+			isoCode: getValues().lgalocation?.stateCode || ''
+		};
 
-		 const lgaCountyToUpdate = {
-			id:getValues()?.id,
-            name: getValues().lgalocation?.name,
-            latitude: getValues().lgalocation?.latitude,
-            longitude: getValues().lgalocation?.longitude,
-			 businessCountry: getValues()?.businessCountry,
-			  businessState: getValues()?.businessState,
-            // adminUserCreator: user.id || user._id || user,
-            // slug: slug,
-            isFeatured: getValues().isFeatured || false,
-            isInOperation: getValues().isInOperation || false,
-            isPublished: getValues().isPublished || false,
-            isoCode: getValues().lgalocation?.stateCode || "",
-          };
-
-		updateLgaMutation.mutate(lgaCountyToUpdate)
-
+		updateLgaMutation.mutate(lgaCountyToUpdate);
 	}
 
 	function handleCreateProduct() {
-
-		console.log("LGA_Payload", getValues())
-		 const lgaCountyToSave = {
-            name: getValues().lgalocation?.name,
-            latitude: getValues().lgalocation?.latitude,
-            longitude: getValues().lgalocation?.longitude,
-			 businessCountry: getValues()?.businessCountry,
-			  businessState: getValues()?.businessState,
-            // adminUserCreator: user.id || user._id || user,
-            // slug: slug,
-            isFeatured: getValues().isFeatured || false,
-            isInOperation: getValues().isInOperation || false,
-            isPublished: getValues().isPublished || false,
-            isoCode: getValues().lgalocation?.stateCode || "",
-          };
+		console.log('LGA_Payload', getValues());
+		const lgaCountyToSave = {
+			name: getValues().lgalocation?.name,
+			latitude: getValues().lgalocation?.latitude,
+			longitude: getValues().lgalocation?.longitude,
+			businessCountry: getValues()?.businessCountry,
+			businessState: getValues()?.businessState,
+			// adminUserCreator: user.id || user._id || user,
+			// slug: slug,
+			isFeatured: getValues().isFeatured || false,
+			isInOperation: getValues().isInOperation || false,
+			isPublished: getValues().isPublished || false,
+			isoCode: getValues().lgalocation?.stateCode || ''
+		};
 		// return
-		addNewLga.mutate(lgaCountyToSave)
+		addNewLga.mutate(lgaCountyToSave);
 		// createProduct(getValues())
 		// 	.unwrap()
 		// 	.then((data) => {
@@ -71,10 +68,9 @@ function LgaCountyHeader() {
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm("Comfirm delete of this L.G.A/County?")) {
-			deleteLGA.mutate(productId)
+		if (window.confirm('Comfirm delete of this L.G.A/County?')) {
+			deleteLGA.mutate(productId);
 		}
-	
 	}
 
 	return (
@@ -138,17 +134,17 @@ function LgaCountyHeader() {
 						{JSON.stringify(lgalocation)}
 						</Typography> */}
 					</motion.div>
-					
 				</div>
 
-						{lgalocation && <motion.div
-					className="flex flex-col min-w-0 mx-8 sm:mx-16"
-					initial={{ x: -20 }}
-					animate={{ x: 0, transition: { delay: 0.3 } }}
+				{lgalocation && (
+					<motion.div
+						className="flex flex-col min-w-0 mx-8 sm:mx-16"
+						initial={{ x: -20 }}
+						animate={{ x: 0, transition: { delay: 0.3 } }}
 					>
-					{JSON.stringify(lgalocation)}
-					</motion.div>}
-				
+						{JSON.stringify(lgalocation)}
+					</motion.div>
+				)}
 			</div>
 			<motion.div
 				className="flex flex-1 w-full"
@@ -171,7 +167,6 @@ function LgaCountyHeader() {
 							variant="contained"
 							color="secondary"
 							disabled={_.isEmpty(dirtyFields) || updateLgaMutation.isLoading}
-
 							onClick={handleSaveProduct}
 						>
 							Save LGA/County

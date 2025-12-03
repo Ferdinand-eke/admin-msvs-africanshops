@@ -28,8 +28,7 @@ const TradehubsAppConfig = {
 				{
 					path: 'list/:productId/*',
 					element: <SingleTradehub />
-				},
-				
+				}
 			]
 		}
 	]

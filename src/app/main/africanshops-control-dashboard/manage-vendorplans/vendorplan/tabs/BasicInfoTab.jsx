@@ -1,5 +1,4 @@
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import { Controller, useFormContext } from 'react-hook-form';
 import { InputAdornment, MenuItem, Select, Typography } from '@mui/material';
 
@@ -31,7 +30,7 @@ function BasicInfoTab() {
 				)}
 			/>
 
-<Controller
+			<Controller
 				name="price"
 				control={control}
 				render={({ field }) => (
@@ -50,105 +49,86 @@ function BasicInfoTab() {
 				)}
 			/>
 
-<Typography  style={{ fontSize: "12px", fontWeight: "800" }}>Does this plan has support incorporated?</Typography>
-<Controller
-        name="support"
-        control={control}
-        defaultValue={[]}
-        render={({ field: { onChange, value } }) => (
-          <Select
-            className="mt-8 mb-16"
-            id="support"
-            label="Support Incorporation"
-            fullWidth
-            defaultValue=""
-            onChange={onChange}
-            value={value === undefined || null ? "" : value}
-            error={!!errors.support}
-            helpertext={errors?.support?.message}
-          >
-            <MenuItem value="">Select a support status</MenuItem>
-                <MenuItem 
-				 value={'Inclusive'}>
-                  Inclusive
-                </MenuItem>
+			<Typography style={{ fontSize: '12px', fontWeight: '800' }}>
+				Does this plan has support incorporated?
+			</Typography>
+			<Controller
+				name="support"
+				control={control}
+				defaultValue={[]}
+				render={({ field: { onChange, value } }) => (
+					<Select
+						className="mt-8 mb-16"
+						id="support"
+						label="Support Incorporation"
+						fullWidth
+						defaultValue=""
+						onChange={onChange}
+						value={value === undefined || null ? '' : value}
+						error={!!errors.support}
+						helpertext={errors?.support?.message}
+					>
+						<MenuItem value="">Select a support status</MenuItem>
+						<MenuItem value="Inclusive">Inclusive</MenuItem>
 
-				<MenuItem 
-				 value={'Non Inclusive'}>
-                  Non Inclusive
-                </MenuItem>
-       
-          </Select>
-        )}
-      />
+						<MenuItem value="Non Inclusive">Non Inclusive</MenuItem>
+					</Select>
+				)}
+			/>
 
-<Typography style={{ fontSize: "12px", fontWeight: "800" }}>Does this plan have ads boost?</Typography>
-<Controller
-        name="adsbost"
-        control={control}
-        defaultValue={[]}
-        render={({ field: { onChange, value } }) => (
-          <Select
-            className="mt-8 mb-16"
-            id="adsbost"
-            label="Ads Boost Incorporation"
-            fullWidth
-            defaultValue=""
-            onChange={onChange}
-            value={value === undefined || null ? "" : value}
-            error={!!errors.adsbost}
-            helpertext={errors?.adsbost?.message}
-          >
-            <MenuItem value="">Select an ads boost status</MenuItem>
-                <MenuItem 
-				 value={'Inclusive'}>
-                  Inclusive
-                </MenuItem>
+			<Typography style={{ fontSize: '12px', fontWeight: '800' }}>Does this plan have ads boost?</Typography>
+			<Controller
+				name="adsbost"
+				control={control}
+				defaultValue={[]}
+				render={({ field: { onChange, value } }) => (
+					<Select
+						className="mt-8 mb-16"
+						id="adsbost"
+						label="Ads Boost Incorporation"
+						fullWidth
+						defaultValue=""
+						onChange={onChange}
+						value={value === undefined || null ? '' : value}
+						error={!!errors.adsbost}
+						helpertext={errors?.adsbost?.message}
+					>
+						<MenuItem value="">Select an ads boost status</MenuItem>
+						<MenuItem value="Inclusive">Inclusive</MenuItem>
 
-				<MenuItem 
-				 value={'Non Inclusive'}>
-                  Non Inclusive
-                </MenuItem>
-       
-          </Select>
-        )}
-      />
+						<MenuItem value="Non Inclusive">Non Inclusive</MenuItem>
+					</Select>
+				)}
+			/>
 
+			<Typography style={{ fontSize: '12px', fontWeight: '800' }}>
+				Does this plan have an analytican dashboard?
+			</Typography>
+			<Controller
+				name="dashboardandanalytics"
+				control={control}
+				defaultValue={[]}
+				render={({ field: { onChange, value } }) => (
+					<Select
+						className="mt-8 mb-16"
+						id="dashboardandanalytics"
+						label="Analytican Dashboard Incorporation"
+						fullWidth
+						defaultValue=""
+						onChange={onChange}
+						value={value === undefined || null ? '' : value}
+						error={!!errors.dashboardandanalytics}
+						helpertext={errors?.dashboardandanalytics?.message}
+					>
+						<MenuItem value="">Select an ads boost status</MenuItem>
+						<MenuItem value="Inclusive">Inclusive</MenuItem>
 
-<Typography style={{ fontSize: "12px", fontWeight: "800" }}>Does this plan have an analytican dashboard?</Typography>
-<Controller
-        name="dashboardandanalytics"
-        control={control}
-        defaultValue={[]}
-        render={({ field: { onChange, value } }) => (
-          <Select
-            className="mt-8 mb-16"
-            id="dashboardandanalytics"
-            label="Analytican Dashboard Incorporation"
-            fullWidth
-            defaultValue=""
-            onChange={onChange}
-            value={value === undefined || null ? "" : value}
-            error={!!errors.dashboardandanalytics}
-            helpertext={errors?.dashboardandanalytics?.message}
-          >
-            <MenuItem value="">Select an ads boost status</MenuItem>
-                <MenuItem 
-				 value={'Inclusive'}>
-                  Inclusive
-                </MenuItem>
+						<MenuItem value="Non Inclusive">Non Inclusive</MenuItem>
+					</Select>
+				)}
+			/>
 
-				<MenuItem 
-				 value={'Non Inclusive'}>
-                  Non Inclusive
-                </MenuItem>
-       
-          </Select>
-        )}
-      />
-
-
-<Controller
+			<Controller
 				name="numberofproducts"
 				control={control}
 				render={({ field }) => (
@@ -167,7 +147,7 @@ function BasicInfoTab() {
 				)}
 			/>
 
-<Controller
+			<Controller
 				name="numberoffeaturedimages"
 				control={control}
 				render={({ field }) => (
@@ -186,7 +166,7 @@ function BasicInfoTab() {
 				)}
 			/>
 
-<Controller
+			<Controller
 				name="percetageCommissionCharge"
 				control={control}
 				render={({ field }) => (
@@ -206,7 +186,7 @@ function BasicInfoTab() {
 				)}
 			/>
 
-<Controller
+			<Controller
 				name="percetageCommissionChargeConversion"
 				control={control}
 				render={({ field }) => (
@@ -227,8 +207,7 @@ function BasicInfoTab() {
 				)}
 			/>
 
-
-<Controller
+			<Controller
 				name="planinfo"
 				control={control}
 				render={({ field }) => (
@@ -246,7 +225,7 @@ function BasicInfoTab() {
 				)}
 			/>
 
-<Controller
+			<Controller
 				name="plankey"
 				control={control}
 				render={({ field }) => (
@@ -266,35 +245,30 @@ function BasicInfoTab() {
 				)}
 			/>
 
-<>
-        <Typography style={{ fontSize: "12px", fontWeight: "800" }}>
-          Is Account Operational?
-        </Typography>
-        <Controller
-          name="isInOperation"
-          control={control}
-          defaultValue={[]}
-          render={({ field: { onChange, value } }) => (
-            <Select
-              className="mt-8 mb-16"
-              id="isInOperation"
-              label="Operational Status"
-              fullWidth
-              defaultValue=""
-              onChange={onChange}
-              value={value === undefined || null ? "" : value}
-              error={!!errors.isInOperation}
-              helpertext={errors?.isInOperation?.message}
-            >
-              <MenuItem value="">Select an operations status</MenuItem>
-              <MenuItem value={false}>Not Operational</MenuItem>
+			<Typography style={{ fontSize: '12px', fontWeight: '800' }}>Is Account Operational?</Typography>
+			<Controller
+				name="isInOperation"
+				control={control}
+				defaultValue={[]}
+				render={({ field: { onChange, value } }) => (
+					<Select
+						className="mt-8 mb-16"
+						id="isInOperation"
+						label="Operational Status"
+						fullWidth
+						defaultValue=""
+						onChange={onChange}
+						value={value === undefined || null ? '' : value}
+						error={!!errors.isInOperation}
+						helpertext={errors?.isInOperation?.message}
+					>
+						<MenuItem value="">Select an operations status</MenuItem>
+						<MenuItem value={false}>Not Operational</MenuItem>
 
-              <MenuItem value={true}>Operational</MenuItem>
-            </Select>
-          )}
-        />
-      </>
-		
+						<MenuItem value>Operational</MenuItem>
+					</Select>
+				)}
+			/>
 		</div>
 	);
 }

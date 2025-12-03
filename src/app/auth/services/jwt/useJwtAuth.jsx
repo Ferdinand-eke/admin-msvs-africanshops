@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { JwtAuthContext } from './JwtAuthProvider';
 
-
 function UseJwtAuth() {
 	const context = useContext(JwtAuthContext);
 

@@ -26,15 +26,17 @@ function Logo() {
 				className="mt-14 logo-icon h-43 w-43"
 				// src="assets/images/logo/logo.svg"
 				src="assets/images/afslogo/afslogo.png"
-				
 				width={60}
 				height={60}
 				alt="logo"
 			/>
-			<Typography  className="react-text text-16 font-semibold cursor-pointer"
-			    //   component={NavLinkAdapter}
+			<Typography
+				className="react-text text-16 font-semibold cursor-pointer"
+				//   component={NavLinkAdapter}
 				//   to={`/`}
-			>Africanshops</Typography>
+			>
+				Africanshops
+			</Typography>
 			{/* <div className="flex space-x-6 px-8 items-center">
 				<div
 					className="badge flex items-end justify-end rounded-4 w-24 h-24 px-3"
@@ -70,7 +72,6 @@ function Logo() {
 					<span className="react-text text-12 font-semibold">React</span>
 				</div>
 			</div> */}
-
 		</Root>
 	);
 }

@@ -18,7 +18,6 @@ function Departments() {
 			<div className="w-full h-full container flex flex-col">
 				<DepartmentsHeader />
 				<CountriesTable />
-				
 			</div>
 		</>
 	);

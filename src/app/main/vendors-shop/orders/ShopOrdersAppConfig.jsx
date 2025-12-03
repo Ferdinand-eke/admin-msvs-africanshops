@@ -16,7 +16,7 @@ const ShopOrdersAppConfig = {
 	},
 	routes: [
 		{
-			//shoporders-list
+			// shoporders-list
 			path: 'shoporders-list',
 			element: <ECommerceApp />,
 			children: [
@@ -36,7 +36,7 @@ const ShopOrdersAppConfig = {
 				{
 					path: 'pos',
 					element: <Products />
-				},
+				}
 			]
 		}
 	]

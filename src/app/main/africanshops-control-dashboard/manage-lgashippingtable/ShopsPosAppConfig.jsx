@@ -22,7 +22,6 @@ const ShopsPosAppConfig = {
 			path: 'africanshops/shops',
 			element: <SettingsApp />,
 			children: [
-				
 				{
 					path: 'pos',
 					element: <PosTable />

@@ -24,16 +24,16 @@ function SingleTradehubHeader() {
 	const updateHubMutation = useHubUpdateMutation();
 
 	const addNewHubMutation = useAddHubMutation();
-  
+
 	const deletHubMutation = useDeleteHubMutation();
 
 	function handleSaveProduct() {
-		updateHubMutation?.mutate(getValues())
+		updateHubMutation?.mutate(getValues());
 		// saveProduct(getValues());
 	}
 
 	function handleCreateProduct() {
-		addNewHubMutation?.mutate(getValues())
+		addNewHubMutation?.mutate(getValues());
 		// createProduct(getValues())
 		// 	.unwrap()
 		// 	.then((data) => {
@@ -42,8 +42,8 @@ function SingleTradehubHeader() {
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm("Comfirm delete of this trade hub?")) {
-			deletHubMutation?.mutate(productId)
+		if (window.confirm('Comfirm delete of this trade hub?')) {
+			deletHubMutation?.mutate(productId);
 		}
 		// removeProduct(productId);
 		// navigate('/tradehubs/list');

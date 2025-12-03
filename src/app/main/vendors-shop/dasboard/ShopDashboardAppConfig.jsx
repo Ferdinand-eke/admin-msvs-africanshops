@@ -18,4 +18,3 @@ const ShopDashboardAppConfig = {
 	]
 };
 export default ShopDashboardAppConfig;
-

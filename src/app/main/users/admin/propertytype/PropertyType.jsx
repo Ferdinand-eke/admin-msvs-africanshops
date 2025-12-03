@@ -11,21 +11,20 @@ import _ from '@lodash';
 import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 
-import PropertyTypeHeader from './PropertyTypeHeader';
-import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
-import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import ProductModel from './models/ProductModel';
 import { useGetPropertyType } from 'src/app/aaqueryhooks/propertytypeHandlingQuery';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import PropertyTypeHeader from './PropertyTypeHeader';
+import BasicInfoTab from './tabs/BasicInfoTab';
+import ProductModel from './models/ProductModel';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
-	title: z.string().nonempty('You must enter a prperty type tile').min(3, 'The property title must be at least  characters')
+	title: z
+		.string()
+		.nonempty('You must enter a prperty type tile')
+		.min(3, 'The property title must be at least  characters')
 });
 
 /**
@@ -36,20 +35,18 @@ function PropertyType() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
 	const {
-		data:propertyType,
-		isLoading:propertyTypeTypeLoading,
+		data: propertyType,
+		isLoading: propertyTypeTypeLoading,
 		isError: propertyTypeError
-
 	} = useGetPropertyType(productId, {
 		skip: !productId || productId === 'new'
-	})
+	});
 
-	
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			title:'',
+			title: '',
 			description: ''
 		},
 		resolver: zodResolver(schema)
@@ -67,7 +64,7 @@ function PropertyType() {
 		}
 	}, [propertyType?.data, reset]);
 
-	/*** Tab Change*/
+	/** * Tab Change */
 	function handleTabChange(event, value) {
 		setTabValue(value);
 	}
@@ -76,7 +73,7 @@ function PropertyType() {
 		return <FuseLoading />;
 	}
 
-	/*** Show Message if the requested products is not exists*/
+	/** * Show Message if the requested products is not exists */
 
 	if (propertyTypeError && productId !== 'new') {
 		return (
@@ -104,11 +101,15 @@ function PropertyType() {
 		);
 	}
 
-
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (propertyType?.data?.propertytype && routeParams.productId !== propertyType?.data?.propertytype.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(propertyType?.data?.propertytype &&
+			routeParams.productId !== propertyType?.data?.propertytype.id &&
+			routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 

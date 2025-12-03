@@ -12,20 +12,19 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleShop } from 'src/app/api/shops/useAdminShops';
 import VendorHeader from './VendorHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleShop } from 'src/app/api/shops/useAdminShops';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
-	shopname: z.string().nonempty('You must enter a product name').min(5, 'The product name must be at least 5 characters')
+	shopname: z
+		.string()
+		.nonempty('You must enter a product name')
+		.min(5, 'The product name must be at least 5 characters')
 });
 
 /**
@@ -105,10 +104,14 @@ function Vendor() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (shopvendor?.data?.merchant && routeParams.productId !== shopvendor?.data?.merchant.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(shopvendor?.data?.merchant &&
+			routeParams.productId !== shopvendor?.data?.merchant.id &&
+			routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
-
 
 	return (
 		<FormProvider {...methods}>
@@ -136,14 +139,12 @@ function Vendor() {
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
-								<BasicInfoTab vendorId={productId}/>
+								<BasicInfoTab vendorId={productId} />
 							</div>
 
 							<div className={tabValue !== 1 ? 'hidden' : ''}>
 								<ProductImagesTab />
 							</div>
-
-							
 						</div>
 					</>
 				}

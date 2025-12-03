@@ -6,17 +6,14 @@ import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { useAddProductCatMutation, useDeleteProductCategory, useProductCatUpdateMutation } from 'src/app/api/product-categories/useProductCategories';
+import {
+	useAddProductCatMutation,
+	useDeleteProductCategory,
+	useProductCatUpdateMutation
+} from 'src/app/api/product-categories/useProductCategories';
 import { toast } from 'react-toastify';
 import { firebaseApp } from 'src/app/auth/services/firebase/initializeFirebase';
-import {
-	getStorage,
-	ref,
-	deleteObject,
-	uploadBytesResumable,
-	uploadString,
-	getDownloadURL,
-  } from "firebase/storage";
+import { getStorage, ref, deleteObject, uploadString, getDownloadURL } from 'firebase/storage';
 
 /**
  * The product header.
@@ -33,52 +30,46 @@ function SingleProductCategoryHeader() {
 
 	const updateProdCat = useProductCatUpdateMutation();
 	const addNewProdCat = useAddProductCatMutation();
-	const deleteProdCat = useDeleteProductCategory()
-
+	const deleteProdCat = useDeleteProductCategory();
 
 	function handleSaveProduct() {
-
 		if (images?.length > 0) {
 			const fileName = new Date().getTime() + images[0]?.id;
 			const storage = getStorage(firebaseApp);
 			const storageRef = ref(storage, `/productcategories/${fileName}`);
 			//   const uploadTask = uploadBytesResumable(storageRef, images[0]?.url, 'base64');
-			const uploadTask = uploadString(storageRef, images[0]?.url, "data_url");
+			const uploadTask = uploadString(storageRef, images[0]?.url, 'data_url');
 			const desertRef = ref(storage, `${getValues()?.categoryimage}`);
-	  
+
 			// Delete the file
 			if (getValues()?.categoryimage) {
-			  deleteObject(desertRef)
-				.then(() => {
-				  uploadTask.then((snapshot) => {
-					getDownloadURL(snapshot.ref).then((downloadURL) => {
-	  
-					  setValue("categoryimage", downloadURL);
-					  updateProdCat?.mutate(getValues())
+				deleteObject(desertRef)
+					.then(() => {
+						uploadTask.then((snapshot) => {
+							getDownloadURL(snapshot.ref).then((downloadURL) => {
+								setValue('categoryimage', downloadURL);
+								updateProdCat?.mutate(getValues());
+							});
+						});
+					})
+					.catch((error) => {
+						// Uh-oh, an error occurred!
+						console.log(error);
+						toast.error(
+							error.response && error.response.data.message ? error.response.data.message : error.message
+						);
 					});
-				  });
-				})
-				.catch((error) => {
-				  // Uh-oh, an error occurred!
-				  console.log(error);
-				  toast.error(
-					error.response && error.response.data.message
-					  ? error.response.data.message
-					  : error.message
-				  );
-				});
 			} else {
-			  uploadTask.then((snapshot) => {
-				getDownloadURL(snapshot.ref).then((downloadURL) => {
-	  
-				  setValue("categoryimage", downloadURL);
-				  updateProdCat?.mutate(getValues())
+				uploadTask.then((snapshot) => {
+					getDownloadURL(snapshot.ref).then((downloadURL) => {
+						setValue('categoryimage', downloadURL);
+						updateProdCat?.mutate(getValues());
+					});
 				});
-			  });
 			}
-		  } else {
-			updateProdCat?.mutate(getValues())
-		  }
+		} else {
+			updateProdCat?.mutate(getValues());
+		}
 	}
 
 	function handleCreateProduct() {
@@ -87,47 +78,46 @@ function SingleProductCategoryHeader() {
 			const storage = getStorage(firebaseApp);
 			const storageRef = ref(storage, `/productcategories/${fileName}`);
 			//   const uploadTask = uploadBytesResumable(storageRef, images[0]?.url);
-			const uploadTask = uploadString(storageRef, images[0]?.url, "data_url");
-	  
-			uploadTask.then((snapshot) => {
-			  getDownloadURL(snapshot.ref).then((downloadURL) => {
-				setValue("categoryimage", downloadURL);
-				addNewProdCat?.mutate(getValues())
-			  });
-			});
-		  } else {
-			addNewProdCat?.mutate(getValues())
-			reset(ProductModel({}));
-		  }
+			const uploadTask = uploadString(storageRef, images[0]?.url, 'data_url');
 
+			uploadTask.then((snapshot) => {
+				getDownloadURL(snapshot.ref).then((downloadURL) => {
+					setValue('categoryimage', downloadURL);
+					addNewProdCat?.mutate(getValues());
+				});
+			});
+		} else {
+			addNewProdCat?.mutate(getValues());
+		}
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm("Comfirm delete of this category?")) {
+		if (window.confirm('Comfirm delete of this category?')) {
 			// removeProduct(productId);
 			// deleteCountry.mutate(productId)
 			const storage = getStorage(firebaseApp);
 			const desertRef = ref(storage, `${getValues()?.categoryimage}`);
+
 			if (getValues()?.categoryimage) {
-			  deleteObject(desertRef)
-				.then(() => {
-				  deleteProdCat.mutate(productId);
-				})
-				.catch((error) => {
-				  // Uh-oh, an error occurred!
-				  console.log(error);
-				  toast.error(
-					`image delete error: ${
-					  error.response && error.response.data.message
-						? error.response.data.message
-						: error.message
-					}`
-				  );
-				});
+				deleteObject(desertRef)
+					.then(() => {
+						deleteProdCat.mutate(productId);
+					})
+					.catch((error) => {
+						// Uh-oh, an error occurred!
+						console.log(error);
+						toast.error(
+							`image delete error: ${
+								error.response && error.response.data.message
+									? error.response.data.message
+									: error.message
+							}`
+						);
+					});
 			} else {
-			  deleteProdCat.mutate(productId);
+				deleteProdCat.mutate(productId);
 			}
-		  }
+		}
 	}
 
 	return (

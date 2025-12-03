@@ -12,22 +12,25 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleState } from 'src/app/api/states/useStates';
+import {
+	// Country,
+	State
+	// City
+} from 'country-state-city';
 import SingleStateHeader from './SingleStateHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
 import ProductModel from './models/ProductModel';
-import { useSingleState } from 'src/app/api/states/useStates';
-import { 
-	// Country, 
-	State, 
-	// City
-   }  from 'country-state-city';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
-	businessCountry: z.string().nonempty('You must select a county').min(5, 'The product name must be at least 5 characters'),
+	businessCountry: z
+		.string()
+		.nonempty('You must select a county')
+		.min(5, 'The product name must be at least 5 characters'),
 	statelocation: z.object({
-		name: z.string(),
+		name: z.string()
 	})
 });
 
@@ -38,20 +41,20 @@ function StatePage() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	
 
-	const {data:stateData,
+	const {
+		data: stateData,
 		isLoading,
 		isError
 	} = useSingleState(productId, {
 		skip: !productId || productId === 'new'
-	})
+	});
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			businessCountry:'',
-			statelocation: {},
+			businessCountry: '',
+			statelocation: {}
 		},
 		resolver: zodResolver(schema)
 	});
@@ -68,13 +71,16 @@ function StatePage() {
 		// }
 		if (stateData?.data?.state) {
 			// console.log("stateData", stateData?.data?.state)
-			reset({ ...stateData?.data?.state, 
+			reset({
+				...stateData?.data?.state,
 				// statelocation:State.getStatesOfCountry(state?.data?.countryCode),
-				statelocation: State.getStateByCodeAndCountry(stateData?.data?.state?.isoCode, stateData?.data?.state?.countryCode)
-			 });
+				statelocation: State.getStateByCodeAndCountry(
+					stateData?.data?.state?.isoCode,
+					stateData?.data?.state?.countryCode
+				)
+			});
 		}
 	}, [stateData?.data?.state, reset]);
-	
 
 	/**
 	 * Tab Change
@@ -86,7 +92,6 @@ function StatePage() {
 	if (isLoading) {
 		return <FuseLoading />;
 	}
-
 
 	/**
 	 * Show Message if the requested products is not exists
@@ -103,7 +108,7 @@ function StatePage() {
 					color="text.secondary"
 					variant="h5"
 				>
-				{isError}	There is no such state!
+					{isError} There is no such state!
 				</Typography>
 				<Button
 					className="mt-24"
@@ -123,7 +128,12 @@ function StatePage() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (stateData?.data?.state && routeParams.productId !== stateData?.data?.state?.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(stateData?.data?.state &&
+			routeParams.productId !== stateData?.data?.state?.id &&
+			routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 
@@ -146,13 +156,11 @@ function StatePage() {
 								className="h-64"
 								label="Basic Info"
 							/>
-						
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
 								<BasicInfoTab />
 							</div>
-
 						</div>
 					</>
 				}

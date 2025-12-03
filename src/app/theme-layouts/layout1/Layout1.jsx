@@ -7,10 +7,8 @@ import { selectFuseCurrentLayoutConfig } from '@fuse/core/FuseSettings/fuseSetti
 // import Configurator from 'app/theme-layouts/shared-components/configurator/Configurator';
 import FuseSuspense from '@fuse/core/FuseSuspense';
 import { useAppSelector } from 'app/store/hooks';
-import FooterLayout1 from './components/FooterLayout1';
 import LeftSideLayout1 from './components/LeftSideLayout1';
 import NavbarWrapperLayout1 from './components/NavbarWrapperLayout1';
-import RightSideLayout1 from './components/RightSideLayout1';
 import ToolbarLayout1 from './components/ToolbarLayout1';
 
 const FuseDialog = lazy(() => import('@fuse/core/FuseDialog/FuseDialog'));
@@ -29,7 +27,6 @@ const Root = styled('div')(({ config }) => ({
 		}
 	})
 }));
-
 
 /**
  * The layout 1.

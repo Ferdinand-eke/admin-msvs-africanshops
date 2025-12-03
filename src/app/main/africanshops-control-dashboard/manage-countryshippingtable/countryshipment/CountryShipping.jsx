@@ -1,11 +1,10 @@
-
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
 import Button from '@mui/material/Button';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
-import { motion, useAnimation } from "framer-motion";
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import _ from '@lodash';
@@ -13,20 +12,21 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleCountry } from 'src/app/api/countries/useCountries';
 import VendorPlanHeader from './CountryShippingHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
 
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleShopplans } from 'src/app/api/shopplans/useShopPlans';
-import { useSingleCountry } from 'src/app/api/countries/useCountries';
 
 // import CountryShipmentForm from "./CountryShipmentForm";
 /**
  * Form Validation Schema
  */
 const schema = z.object({
-	plansname: z.string().nonempty('You must enter a product name').min(3, 'The product name must be at least 5 characters')
+	plansname: z
+		.string()
+		.nonempty('You must enter a product name')
+		.min(3, 'The product name must be at least 5 characters')
 });
 
 /**
@@ -59,7 +59,7 @@ function CountryShipping() {
 			support: '',
 			numberofproducts: '',
 			dashboardandanalytics: '',
-			numberoffeaturedimages: '',
+			numberoffeaturedimages: ''
 		},
 		resolver: zodResolver(schema)
 	});
@@ -76,7 +76,6 @@ function CountryShipping() {
 		}
 	}, [countryshipping?.data, reset]);
 
-
 	/**
 	 * Tab Change
 	 */
@@ -88,7 +87,7 @@ function CountryShipping() {
 		return <FuseLoading />;
 	}
 
-// 
+	//
 
 	/**
 	 * Show Message if the requested products is not exists
@@ -122,15 +121,19 @@ function CountryShipping() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (countryshipping?.data && routeParams.productId !== countryshipping?.data._id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(countryshipping?.data &&
+			routeParams.productId !== countryshipping?.data._id &&
+			routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 
 	return (
 		<FormProvider {...methods}>
 			<FusePageCarded
-				header={<VendorPlanHeader 
-				/>}
+				header={<VendorPlanHeader />}
 				content={
 					<>
 						<Tabs
@@ -146,18 +149,12 @@ function CountryShipping() {
 								className="h-64"
 								label="Basic Info"
 							/>
-							
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-auto">
-						{/* max-w-3xl */}
+							{/* max-w-3xl */}
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
-								<BasicInfoTab 
-								shipmentTable={countryshipping?.data?.shippingTable}
-							
-								/>
+								<BasicInfoTab shipmentTable={countryshipping?.data?.shippingTable} />
 							</div>
-
-							
 						</div>
 					</>
 				}

@@ -8,7 +8,6 @@ const LgaCounties = lazy(() => import('./products/LgaCounties'));
  * The E-Commerce app configuration.
  */
 
-
 const LgasCountiesAppConfig = {
 	settings: {
 		layout: {}
@@ -29,8 +28,7 @@ const LgasCountiesAppConfig = {
 				{
 					path: 'lgas/:productId/*',
 					element: <LgaCounty />
-				},
-			
+				}
 			]
 		}
 	]

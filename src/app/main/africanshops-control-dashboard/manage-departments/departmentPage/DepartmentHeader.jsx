@@ -6,13 +6,16 @@ import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { useAddDeptMutation, useDeleteSingleDepartment, useUpdateDepartmentMutation } from 'src/app/api/departments/useDepartments';
+import {
+	useAddDeptMutation,
+	useDeleteSingleDepartment,
+	useUpdateDepartmentMutation
+} from 'src/app/api/departments/useDepartments';
 
 /**
  * The product header.
  */
 function DepartmentHeader() {
-	
 	const routeParams = useParams();
 	const { productId } = routeParams;
 	const methods = useFormContext();
@@ -24,24 +27,20 @@ function DepartmentHeader() {
 
 	const updateDepartments = useUpdateDepartmentMutation();
 	const addNewDepts = useAddDeptMutation();
-	const deleteDepartment = useDeleteSingleDepartment()
+	const deleteDepartment = useDeleteSingleDepartment();
 
 	function handleSaveProduct() {
-
-		updateDepartments.mutate((getValues()))
+		updateDepartments.mutate(getValues());
 	}
 
 	function handleCreateProduct() {
-		addNewDepts.mutate(getValues())
-	
+		addNewDepts.mutate(getValues());
 	}
 
 	function handleRemoveProduct() {
-
-		if (window.confirm("Comfirm delete of this department?")) {
-			deleteDepartment.mutate(productId)
+		if (window.confirm('Comfirm delete of this department?')) {
+			deleteDepartment.mutate(productId);
 		}
-		
 	}
 
 	return (
@@ -125,7 +124,7 @@ function DepartmentHeader() {
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid|| updateDepartments?.isLoading}
+							disabled={_.isEmpty(dirtyFields) || !isValid || updateDepartments?.isLoading}
 							onClick={handleSaveProduct}
 						>
 							Save Department

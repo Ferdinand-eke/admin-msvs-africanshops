@@ -18,7 +18,6 @@ function States() {
 			<div className="w-full h-full container flex flex-col">
 				<StatesHeader />
 				<StatesTable />
-				
 			</div>
 		</>
 	);

@@ -8,7 +8,6 @@ const OperationalStates = lazy(() => import('./states/States'));
  * The E-Commerce app configuration.
  */
 
-
 const StatesAppConfig = {
 	settings: {
 		layout: {}
@@ -29,7 +28,7 @@ const StatesAppConfig = {
 				{
 					path: 'states/:productId/*',
 					element: <StatePage />
-				},
+				}
 				// {
 				// 	path: 'inventory',
 				// 	element: <OperationalStates />

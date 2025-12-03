@@ -16,7 +16,9 @@ function DepartmentsHeader() {
 				initial={{ x: -20 }}
 				animate={{ x: 0, transition: { delay: 0.2 } }}
 			>
-				<Typography className="text-24 md:text-32 font-extrabold tracking-tight">Departements in our organization</Typography>
+				<Typography className="text-24 md:text-32 font-extrabold tracking-tight">
+					Departements in our organization
+				</Typography>
 			</motion.span>
 
 			<div className="flex flex-1 items-center justify-end space-x-8">

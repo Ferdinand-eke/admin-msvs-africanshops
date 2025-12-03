@@ -11,7 +11,6 @@ import { darken } from '@mui/material/styles';
 import { selectUser } from 'src/app/auth/user/store/userSlice';
 import { useAppSelector } from 'app/store/hooks';
 import { useGetProjectDashboardProjectsQuery } from './ProjectDashboardApi';
-import { getAdminAccessToken } from 'src/app/aaqueryhooks/utils/opsUtils';
 
 /**
  * The ProjectDashboardAppHeader page.

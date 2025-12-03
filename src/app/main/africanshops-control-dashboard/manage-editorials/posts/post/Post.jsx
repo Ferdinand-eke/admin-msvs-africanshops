@@ -1,30 +1,21 @@
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import Button from '@mui/material/Button';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import _ from '@lodash';
 import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSinglePost } from 'src/app/api/posts/usePosts';
 import SingleDesignationHeader from './SinglePostHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleState } from 'src/app/api/states/useStates';
-import { useSingleDesignation } from 'src/app/api/designations/useDesignations';
-import { useSingleProductCat } from 'src/app/api/product-categories/useProductCategories';
-import { useSinglePostCategory } from 'src/app/api/post-category/usePostCats';
-import { useSinglePost } from 'src/app/api/posts/usePosts';
 /**
  * Form Validation Schema
  */
@@ -40,12 +31,13 @@ function Post() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
 
-	const {data:post,
+	const {
+		data: post,
 		isLoading,
 		isError
 	} = useSinglePost(productId, {
 		skip: !productId || productId === 'new'
-	})
+	});
 
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
@@ -92,9 +84,8 @@ function Post() {
 					color="text.secondary"
 					variant="h5"
 				>
-				{isError && 'An error occured while retrieving this post category!'}	
+					{isError && 'An error occured while retrieving this post category!'}
 				</Typography>
-			
 			</motion.div>
 		);
 	}
@@ -104,7 +95,10 @@ function Post() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (post?.data && routeParams.productId !== post?.data?._id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(post?.data && routeParams.productId !== post?.data?._id && routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 

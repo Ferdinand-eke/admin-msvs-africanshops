@@ -10,15 +10,15 @@ import FuseLoading from '@fuse/core/FuseLoading';
 import { darken } from '@mui/material/styles';
 import { selectUser } from 'src/app/auth/user/store/userSlice';
 import { useAppSelector } from 'app/store/hooks';
-import { useGetProjectDashboardProjectsQuery } from './ProjectDashboardApi';
 import { getAdminAccessToken } from 'src/app/aaqueryhooks/utils/opsUtils';
+import { useGetProjectDashboardProjectsQuery } from './ProjectDashboardApi';
 
 /**
  * The ProjectDashboardAppHeader page.
  */
 function ShopDashboardAppHeader() {
-	const  token  = getAdminAccessToken();
-	console.log("AUTH-TOKEN", token)
+	const token = getAdminAccessToken();
+	console.log('AUTH-TOKEN', token);
 	const { data: projects, isLoading } = useGetProjectDashboardProjectsQuery();
 	const user = useAppSelector(selectUser);
 	const [selectedProject, setSelectedProject] = useState({

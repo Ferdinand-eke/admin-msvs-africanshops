@@ -5,7 +5,7 @@ import _ from '@lodash';
 const ProductModel = (data) =>
 	_.defaults(data || {}, {
 		id: _.uniqueId('product-'),
-		shopname:'',
+		shopname: '',
 		name: '',
 		handle: '',
 		description: '',

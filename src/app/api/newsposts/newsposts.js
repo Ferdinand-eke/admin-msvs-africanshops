@@ -1,21 +1,16 @@
-import qs from 'qs';
-import reqApi, { fristGuestSeqApi, guestSeqApi } from '../utils';
+import { fristGuestSeqApi } from '../utils';
 
 export const getNewsPosts = async () => {
- 
+	const res = await fristGuestSeqApi().get(`/posts`);
 
-  const res = await fristGuestSeqApi().get(`/posts`);
+	const postsData = res.data.data;
 
-
-  const postsData = res.data.data;
-
-  return postsData;
+	return postsData;
 };
 
 export const getNewsPost = async (slug) => {
-  const res = await fristGuestSeqApi().get(`/posts/by/${slug}`);
+	const res = await fristGuestSeqApi().get(`/posts/by/${slug}`);
 
-  const postsData = res.data;
-  return postsData;
+	const postsData = res.data;
+	return postsData;
 };
-

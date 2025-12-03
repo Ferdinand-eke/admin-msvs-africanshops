@@ -52,7 +52,7 @@ function ProductImagesTab() {
 	return (
 		<Root>
 			<div className="flex justify-center sm:justify-start flex-wrap -mx-16">
-			<Controller
+				<Controller
 					name="images"
 					control={control}
 					render={({ field: { onChange, value } }) => (
@@ -87,7 +87,7 @@ function ProductImagesTab() {
 													id: FuseUtils.generateGUID(),
 													url: `data:${file.type};base64,${btoa(reader.result)}`,
 													type: 'image',
-													name:FuseUtils.generateGUID()
+													name: FuseUtils.generateGUID()
 												});
 											};
 											reader.onerror = reject;
@@ -97,7 +97,7 @@ function ProductImagesTab() {
 
 									const newImage = await readFileAsync();
 									// console.log("DEFAULT=VALUE", value)
-									console.log("ADDED=VALUE", newImage)
+									console.log('ADDED=VALUE', newImage);
 									onChange([newImage, ...value]);
 								}}
 							/>
@@ -143,21 +143,19 @@ function ProductImagesTab() {
 						);
 					}}
 				/>
-
-				
 			</div>
 
-			<Divider/>
+			<Divider />
 
-				<Controller
-					name="coverimage"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => {
-						return (
-							<>
-								{
-									getValues()?.coverimage &&
+			<Controller
+				name="coverimage"
+				control={control}
+				defaultValue=""
+				render={({ field: { onChange, value } }) => {
+					return (
+						<>
+							{
+								getValues()?.coverimage && (
 									<div
 										onClick={() => onChange(getValues()?._id)}
 										onKeyDown={() => onChange(getValues()?._id)}
@@ -178,13 +176,14 @@ function ProductImagesTab() {
 											alt="product"
 										/>
 									</div>
+								)
 								// )
 								// )
-								}
-							</>
-						);
-					}}
-				/>
+							}
+						</>
+					);
+				}}
+			/>
 		</Root>
 	);
 }

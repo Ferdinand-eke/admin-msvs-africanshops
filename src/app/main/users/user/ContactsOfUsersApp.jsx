@@ -14,7 +14,6 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 	}
 }));
 
-
 /**
  * The ContactsOfUsersApp page.
  */
@@ -29,8 +28,6 @@ function ContactsOfUsersApp() {
 	useEffect(() => {
 		setRightSidebarOpen(Boolean(routeParams.id));
 	}, [routeParams]);
-
-
 
 	return (
 		<Root

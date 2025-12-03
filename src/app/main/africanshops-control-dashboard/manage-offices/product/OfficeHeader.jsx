@@ -7,20 +7,17 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import {
+	useAdminCreateOffice,
+	useAdminUpdateOfficeOtlet,
+	useDeleteSingleOfficeOutlet
+} from 'src/app/api/offices/useAdminOffices';
+import { firebaseApp } from 'src/app/auth/services/firebase/initializeFirebase';
+import { getStorage, ref, deleteObject, uploadString, getDownloadURL } from 'firebase/storage';
+import {
 	useCreateECommerceProductMutation,
 	useDeleteECommerceProductMutation,
 	useUpdateECommerceProductMutation
 } from '../ECommerceApi';
-import { useAdminCreateOffice, useAdminUpdateOfficeOtlet, useDeleteSingleOfficeOutlet } from 'src/app/api/offices/useAdminOffices';
-import { firebaseApp } from 'src/app/auth/services/firebase/initializeFirebase';
-import {
-	getStorage,
-	ref,
-	deleteObject,
-	uploadBytesResumable,
-	uploadString,
-	getDownloadURL,
-  } from "firebase/storage";
 import ProductModel from './models/ProductModel';
 
 /**
@@ -41,74 +38,70 @@ function OfficeHeader() {
 
 	const newOfficeReg = useAdminCreateOffice();
 	const updateOfficeReg = useAdminUpdateOfficeOtlet();
-	const deleteOffice = useDeleteSingleOfficeOutlet()
+	const deleteOffice = useDeleteSingleOfficeOutlet();
 
 	function handleSaveProduct() {
 		// saveProduct(getValues());
-		
 
 		if (images?.length > 0) {
 			const fileName = new Date().getTime() + images[0]?.id;
 			const storage = getStorage(firebaseApp);
 			const storageRef = ref(storage, `/officebanners/${fileName}`);
 			//   const uploadTask = uploadBytesResumable(storageRef, images[0]?.url, 'base64');
-			const uploadTask = uploadString(storageRef, images[0]?.url, "data_url");
+			const uploadTask = uploadString(storageRef, images[0]?.url, 'data_url');
 			const desertRef = ref(storage, `${getValues()?.coverimage}`);
-	  
+
 			// Delete the file
 			if (getValues()?.coverimage) {
-			  deleteObject(desertRef)
-				.then(() => {
-				  uploadTask.then((snapshot) => {
-					getDownloadURL(snapshot.ref).then((downloadURL) => {
-					  setValue("coverimage", downloadURL);
-					  updateOfficeReg.mutate(getValues())
+				deleteObject(desertRef)
+					.then(() => {
+						uploadTask.then((snapshot) => {
+							getDownloadURL(snapshot.ref).then((downloadURL) => {
+								setValue('coverimage', downloadURL);
+								updateOfficeReg.mutate(getValues());
+							});
+						});
+					})
+					.catch((error) => {
+						// Uh-oh, an error occurred!
+						console.log(error);
 					});
-				  });
-				})
-				.catch((error) => {
-				  // Uh-oh, an error occurred!
-				  console.log(error);
-				});
 			} else {
-			  uploadTask.then((snapshot) => {
-				getDownloadURL(snapshot.ref).then((downloadURL) => {
-	  
-				  setValue("coverimage", downloadURL);
-				  updateOfficeReg.mutate(getValues())
+				uploadTask.then((snapshot) => {
+					getDownloadURL(snapshot.ref).then((downloadURL) => {
+						setValue('coverimage', downloadURL);
+						updateOfficeReg.mutate(getValues());
+					});
 				});
-			  });
 			}
-		  } else {
-			updateOfficeReg.mutate(getValues())
-		  }
+		} else {
+			updateOfficeReg.mutate(getValues());
+		}
 	}
 
 	function handleCreateProduct() {
-
 		if (images?.length > 0) {
 			const fileName = new Date().getTime() + images[0]?.id;
 			const storage = getStorage(firebaseApp);
 			const storageRef = ref(storage, `/officebanners/${fileName}`);
 			//   const uploadTask = uploadBytesResumable(storageRef, images[0]?.url);
-			const uploadTask = uploadString(storageRef, images[0]?.url, "data_url");
-	  
-			uploadTask.then((snapshot) => {
-			//   console.log("uploadSnaps11", snapshot);
-			  getDownloadURL(snapshot.ref).then((downloadURL) => {
-				// console.log("countryFlag22", downloadURL);
-	  
-				setValue("coverimage", downloadURL);
-				// addNewcountry.mutate(getValues());
-				newOfficeReg.mutate(getValues())
-			  });
-			});
-		  } else {
-			newOfficeReg.mutate(getValues())
-			reset(ProductModel({}));
-		  }
+			const uploadTask = uploadString(storageRef, images[0]?.url, 'data_url');
 
-		
+			uploadTask.then((snapshot) => {
+				//   console.log("uploadSnaps11", snapshot);
+				getDownloadURL(snapshot.ref).then((downloadURL) => {
+					// console.log("countryFlag22", downloadURL);
+
+					setValue('coverimage', downloadURL);
+					// addNewcountry.mutate(getValues());
+					newOfficeReg.mutate(getValues());
+				});
+			});
+		} else {
+			newOfficeReg.mutate(getValues());
+			reset(ProductModel({}));
+		}
+
 		// createProduct(getValues())
 		// 	.unwrap()
 		// 	.then((data) => {
@@ -117,8 +110,8 @@ function OfficeHeader() {
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm("Comfirm delete of this office?")) {
-			deleteOffice.mutate(productId)
+		if (window.confirm('Comfirm delete of this office?')) {
+			deleteOffice.mutate(productId);
 		}
 		// removeProduct(productId);
 		// navigate('/administrations/offices');

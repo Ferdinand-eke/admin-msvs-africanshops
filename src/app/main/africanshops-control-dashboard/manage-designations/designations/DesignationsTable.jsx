@@ -2,23 +2,17 @@
 import { useMemo } from 'react';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
+import { ListItemIcon, MenuItem, Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
 import Button from '@mui/material/Button';
-import useStates from 'src/app/api/states/useStates';
 import { motion } from 'framer-motion';
 import useDesignations from 'src/app/api/designations/useDesignations';
 
 function DesignationsTable() {
-	
+	const { data: designations, isLoading, isError, refetch } = useDesignations();
 
-	const { data:designations, isLoading, isError, refetch } = useDesignations();
-
-	
 	const columns = useMemo(
 		() => [
 			{
@@ -67,8 +61,7 @@ function DesignationsTable() {
 		return <FuseLoading />;
 	}
 
-
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -79,30 +72,29 @@ function DesignationsTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Error retrieving designations!
+					Error retrieving designations!
 				</Typography>
-				
 			</motion.div>
 		);
 	}
 
-if (!designations?.data?.designations) {
-	return (
-		<motion.div
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1, transition: { delay: 0.1 } }}
-			className="flex flex-col flex-1 items-center justify-center h-full"
-		>
-			<Typography
-				color="text.secondary"
-				variant="h5"
+	if (!designations?.data?.designations) {
+		return (
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1, transition: { delay: 0.1 } }}
+				className="flex flex-col flex-1 items-center justify-center h-full"
 			>
-				No designations found!
-			</Typography>
-		
-		</motion.div>
-	);
-}
+				<Typography
+					color="text.secondary"
+					variant="h5"
+				>
+					No designations found!
+				</Typography>
+			</motion.div>
+		);
+	}
+
 	return (
 		<Paper
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"

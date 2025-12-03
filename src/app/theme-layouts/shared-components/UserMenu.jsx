@@ -20,7 +20,7 @@ import Divider from '@mui/material/Divider';
 
 function UserMenu() {
 	const user = useAppSelector(selectUser);
-	
+
 	const { signOut } = useAuth();
 	const [userMenu, setUserMenu] = useState(null);
 	const userMenuClick = (event) => {
@@ -29,8 +29,6 @@ function UserMenu() {
 	const userMenuClose = () => {
 		setUserMenu(null);
 	};
-
-	
 
 	return (
 		<>
@@ -95,19 +93,16 @@ function UserMenu() {
 				}}
 			>
 				{!user.role || user.role.length === 0 ? (
-					<>
-						<MenuItem
-							component={Link}
-							to="/sign-in"
-							role="button"
-						>
-							<ListItemIcon className="min-w-40">
-								<FuseSvgIcon>heroicons-outline:lock-closed</FuseSvgIcon>
-							</ListItemIcon>
-							<ListItemText primary="Sign In" />
-						</MenuItem>
-						
-					</>
+					<MenuItem
+						component={Link}
+						to="/sign-in"
+						role="button"
+					>
+						<ListItemIcon className="min-w-40">
+							<FuseSvgIcon>heroicons-outline:lock-closed</FuseSvgIcon>
+						</ListItemIcon>
+						<ListItemText primary="Sign In" />
+					</MenuItem>
 				) : (
 					<>
 						<MenuItem
@@ -144,7 +139,7 @@ function UserMenu() {
 							<ListItemText primary="Settings" />
 						</MenuItem>
 
-						<Divider variant="middle"  />
+						<Divider variant="middle" />
 						<MenuItem
 							onClick={() => {
 								signOut();

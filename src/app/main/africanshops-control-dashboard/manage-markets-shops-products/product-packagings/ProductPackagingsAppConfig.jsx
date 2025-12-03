@@ -28,7 +28,7 @@ const ProductPackagingsAppConfig = {
 				{
 					path: 'list/:productId/*',
 					element: <Designation />
-				},
+				}
 				// {
 				// 	path: 'inventory',
 				// 	element: <Designations />

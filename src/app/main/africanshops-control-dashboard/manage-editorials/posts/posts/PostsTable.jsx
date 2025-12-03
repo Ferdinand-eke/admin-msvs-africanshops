@@ -2,29 +2,22 @@
 import { useMemo } from 'react';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
+import { ListItemIcon, MenuItem, Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
 import Button from '@mui/material/Button';
-import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
-import useStates from 'src/app/api/states/useStates';
 import { motion } from 'framer-motion';
-import useDesignations from 'src/app/api/designations/useDesignations';
-import useProductCats from 'src/app/api/product-categories/useProductCategories';
-import usePostCats from 'src/app/api/post-category/usePostCats';
 import useAdminPosts from 'src/app/api/posts/usePosts';
+import { useDeleteECommerceProductsMutation } from '../ECommerceApi';
 
 function PostsTable() {
-	
 	// const { data: products, isLoading } = useGetECommerceProductsQuery();
 	const [removeProducts] = useDeleteECommerceProductsMutation();
 
 	// const { data:states, isLoading, refetch, isError  } = useStates();
 	// const { data:designations, isLoading, isError, refetch } = useDesignations();
-	const { data:posts, isLoading, refetch, isError } = useAdminPosts();
+	const { data: posts, isLoading, refetch, isError } = useAdminPosts();
 
 	const columns = useMemo(
 		() => [
@@ -102,7 +95,7 @@ function PostsTable() {
 
 	// console.log("Getting State error", isError)
 
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -113,30 +106,29 @@ function PostsTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Error retrieving posts!
+					Error retrieving posts!
 				</Typography>
-				
 			</motion.div>
 		);
 	}
 
-if (!posts?.data?.data) {
-	return (
-		<motion.div
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1, transition: { delay: 0.1 } }}
-			className="flex flex-col flex-1 items-center justify-center h-full"
-		>
-			<Typography
-				color="text.secondary"
-				variant="h5"
+	if (!posts?.data?.data) {
+		return (
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1, transition: { delay: 0.1 } }}
+				className="flex flex-col flex-1 items-center justify-center h-full"
 			>
-				No posts found!
-			</Typography>
-		
-		</motion.div>
-	);
-}
+				<Typography
+					color="text.secondary"
+					variant="h5"
+				>
+					No posts found!
+				</Typography>
+			</motion.div>
+		);
+	}
+
 	return (
 		<Paper
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"

@@ -5,9 +5,9 @@ const ManagedRcsListingApp = lazy(() => import('./ManagedRcsListingApp'));
 // const RcsListing = lazy(() => import('./product/RcsListing'));
 const RcsMerchants = lazy(() => import('./products/RcsMerchants'));
 // const ProfileApp = lazy(() => import('./rcsmanageprofile/ProfileApp'));
-const RcsProfileApp = lazy(() => import('./rcsmanageuserpropertyprofile/RcsProfileApp'))
+const RcsProfileApp = lazy(() => import('./rcsmanageuserpropertyprofile/RcsProfileApp'));
 
-const ReservationsMenuOrders = lazy(() => import('./reservations_menuorders/ReservationsMenuOrders'))
+const ReservationsMenuOrders = lazy(() => import('./reservations_menuorders/ReservationsMenuOrders'));
 // const Order = lazy(() => import('./order/Order'));
 // const Orders = lazy(() => import('./orders/Orders'));
 /**
@@ -15,13 +15,9 @@ const ReservationsMenuOrders = lazy(() => import('./reservations_menuorders/Rese
  */
 
 const ManagedRcsListingsAppConfig = {
-
-	
 	settings: {
 		layout: {}
 	},
-
-
 
 	routes: [
 		{
@@ -36,7 +32,7 @@ const ManagedRcsListingsAppConfig = {
 					path: 'rcs-listings',
 					element: <RcsMerchants />
 				},
-				
+
 				// {
 				// 	path: 'rcs-listings/:productId/*',
 				// 	element: <RcsListing />
@@ -51,11 +47,10 @@ const ManagedRcsListingsAppConfig = {
 					element: <RcsProfileApp />
 				},
 
-
-				{ 
+				{
 					path: 'rcs-reservations-menuorders',
 					element: <ReservationsMenuOrders />
-				},
+				}
 			]
 		}
 	]

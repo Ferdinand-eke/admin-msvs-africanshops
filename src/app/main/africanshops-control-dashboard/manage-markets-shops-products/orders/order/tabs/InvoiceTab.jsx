@@ -7,9 +7,16 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import { memo } from 'react';
-import { useAdminOrderItems } from 'src/app/api/orders/useAdminGetShopOrders';
+import { memo, useState, useEffect } from 'react';
 import { useParams } from 'react-router';
+import Box from '@mui/material/Box';
+import Skeleton from '@mui/material/Skeleton';
+import Fade from '@mui/material/Fade';
+import Paper from '@mui/material/Paper';
+import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
+import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 
 const Root = styled('div')(({ theme }) => ({
 	'& table ': {
@@ -39,10 +46,89 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 /**
- * The invoice tab.
+ * Professional loading skeleton for invoice
+ */
+function InvoiceSkeleton() {
+	return (
+		<Card
+			elevation={3}
+			sx={{ maxWidth: 900, mx: 'auto', borderRadius: 3 }}
+		>
+			<CardContent sx={{ p: 6 }}>
+				<Box
+					display="flex"
+					justifyContent="space-between"
+					mb={4}
+				>
+					<Box width="40%">
+						<Skeleton
+							variant="text"
+							width="60%"
+							height={30}
+						/>
+						<Skeleton
+							variant="text"
+							width="80%"
+							height={25}
+							sx={{ mt: 2 }}
+						/>
+						<Skeleton
+							variant="text"
+							width="70%"
+							height={20}
+							sx={{ mt: 1 }}
+						/>
+					</Box>
+					<Skeleton
+						variant="rectangular"
+						width="35%"
+						height={100}
+						sx={{ borderRadius: 2 }}
+					/>
+				</Box>
+				<Skeleton
+					variant="rectangular"
+					width="100%"
+					height={200}
+					sx={{ my: 4, borderRadius: 2 }}
+				/>
+				<Box
+					display="flex"
+					gap={2}
+					mb={3}
+				>
+					<Skeleton
+						variant="rectangular"
+						width="48%"
+						height={60}
+						sx={{ borderRadius: 2 }}
+					/>
+					<Skeleton
+						variant="rectangular"
+						width="48%"
+						height={60}
+						sx={{ borderRadius: 2 }}
+					/>
+				</Box>
+				<Skeleton
+					variant="rectangular"
+					width="100%"
+					height={150}
+					sx={{ borderRadius: 2 }}
+				/>
+			</CardContent>
+		</Card>
+	);
+}
+
+/**
+ * The invoice tab - Enhanced with professional design and loading states
  */
 function InvoiceTab(props) {
 	const { order } = props;
+	const [isLoading, setIsLoading] = useState(true);
+	const [showInvoice, setShowInvoice] = useState(false);
+
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency: 'NGN',
@@ -51,239 +137,558 @@ function InvoiceTab(props) {
 
 	const routeParams = useParams();
 	const { orderId } = routeParams;
-	// const { data: orderItems } = useAdminOrderItems(orderId, {
-	// 	skip: !orderId
-	// });
 
+	// Simulate loading state for better UX
+	useEffect(() => {
+		if (order) {
+			const timer = setTimeout(() => {
+				setIsLoading(false);
+				setShowInvoice(true);
+			}, 800);
+			return () => clearTimeout(timer);
+		}
+	}, [order]);
+
+	const handlePrint = () => {
+		window.print();
+	};
+
+	if (isLoading) {
+		return (
+			<Root className="grow shrink-0 p-0">
+				<InvoiceSkeleton />
+			</Root>
+		);
+	}
+
+	if (!order) {
+		return (
+			<Root className="grow shrink-0 p-0">
+				<Paper
+					elevation={0}
+					sx={{
+						p: 8,
+						textAlign: 'center',
+						borderRadius: 3,
+						bgcolor: 'background.default',
+						maxWidth: 600,
+						mx: 'auto'
+					}}
+				>
+					<FuseSvgIcon
+						size={64}
+						color="disabled"
+					>
+						heroicons-outline:document-report
+					</FuseSvgIcon>
+					<Typography
+						variant="h6"
+						color="text.secondary"
+						mt={2}
+					>
+						Invoice Not Available
+					</Typography>
+					<Typography
+						variant="body2"
+						color="text.disabled"
+						mt={1}
+					>
+						Unable to load invoice data. Please try again later.
+					</Typography>
+				</Paper>
+			</Root>
+		);
+	}
 
 	return (
 		<Root className="grow shrink-0 p-0">
-			{order && (
-				<Card className="w-xl mx-auto shadow-0">
-					<CardContent className="p-88 print:p-0">
-						<Typography
-							color="text.secondary"
-							className="mb-32"
+			<Fade
+				in={showInvoice}
+				timeout={600}
+			>
+				<Card
+					elevation={3}
+					sx={{
+						maxWidth: 900,
+						mx: 'auto',
+						borderRadius: 3,
+						overflow: 'hidden'
+					}}
+				>
+					{/* Print Action Bar */}
+					<Box
+						sx={{
+							p: 2,
+							bgcolor: 'primary.main',
+							display: 'flex',
+							justifyContent: 'space-between',
+							alignItems: 'center',
+							'@media print': {
+								display: 'none'
+							}
+						}}
+					>
+						<Box
+							display="flex"
+							alignItems="center"
+							gap={1}
 						>
-							{order?.createdAT}
-						</Typography>
+							<FuseSvgIcon
+								size={24}
+								sx={{ color: 'primary.contrastText' }}
+							>
+								heroicons-outline:document-text
+							</FuseSvgIcon>
+							<Typography
+								variant="h6"
+								sx={{ color: 'primary.contrastText', fontWeight: 600 }}
+							>
+								Order Invoice
+							</Typography>
+						</Box>
+						<Button
+							variant="contained"
+							color="secondary"
+							startIcon={<FuseSvgIcon size={18}>heroicons-outline:printer</FuseSvgIcon>}
+							onClick={handlePrint}
+							sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 600 }}
+						>
+							Print Invoice
+						</Button>
+					</Box>
 
-						<div className="flex justify-between">
-							<div>
-								<table className="mb-16">
-									<tbody>
-										<tr>
-											<td className="pb-4">
-												<Typography
-													className="font-light"
-													variant="h6"
-													color="text.secondary"
-												>
-													INVOICE
-												</Typography>
-											</td>
-											<td className="pb-4 px-8">
-												<Typography
-													className="font-light"
-													variant="h6"
-													color="inherit"
-												>
-											 {order?._id}
-												</Typography>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-
-								<Typography color="text.secondary">
-									{/* {`${order?.customer?.firstName} ${order?.customer?.lastName}`} */}
-									{`${order?.shippingAddress?.fullName} `}
+					<CardContent sx={{ p: { xs: 3, md: 6 } }}>
+						{/* Invoice Header */}
+						<Box
+							display="flex"
+							justifyContent="space-between"
+							alignItems="flex-start"
+							mb={4}
+						>
+							<Box>
+								<Chip
+									label={`Invoice Date: ${order?.createdAt}`}
+									color="primary"
+									size="small"
+									sx={{ mb: 2, fontWeight: 600, borderRadius: 1 }}
+								/>
+								<Typography
+									variant="h5"
+									fontWeight={700}
+									gutterBottom
+								>
+									INVOICE #{order?._id?.slice(-8).toUpperCase()}
 								</Typography>
 
-								{order?.shippingAddress?.address && (
-									<Typography color="text.secondary">
-										{order?.shippingAddress?.address}
+								{/* Customer Information */}
+								<Paper
+									elevation={0}
+									sx={{ p: 2, bgcolor: 'action.hover', borderRadius: 2, mt: 2 }}
+								>
+									<Typography
+										variant="subtitle2"
+										color="text.secondary"
+										gutterBottom
+									>
+										BILL TO
 									</Typography>
-								)}
-								{order?.shippingAddress?.phone && (
-									<Typography color="text.secondary">{order?.shippingAddress?.phone}</Typography>
-								)}
-								{order?.shippingAddress?.prefContact && (
-									<Typography color="text.secondary">{order?.shippingAddress?.prefContact}</Typography>
-								)}
-							</div>
+									<Typography
+										variant="body1"
+										fontWeight={600}
+									>
+										{order?.shippingAddress?.fullName}
+									</Typography>
+									{order?.shippingAddress?.address && (
+										<Typography
+											variant="body2"
+											color="text.secondary"
+											mt={0.5}
+										>
+											{order?.shippingAddress?.address}
+										</Typography>
+									)}
+									<Box
+										display="flex"
+										gap={2}
+										mt={1}
+									>
+										{order?.shippingAddress?.phone && (
+											<Chip
+												icon={<FuseSvgIcon size={14}>heroicons-outline:phone</FuseSvgIcon>}
+												label={order?.shippingAddress?.phone}
+												size="small"
+												variant="outlined"
+												sx={{ borderRadius: 1 }}
+											/>
+										)}
+										{order?.shippingAddress?.prefContact && (
+											<Chip
+												icon={<FuseSvgIcon size={14}>heroicons-outline:mail</FuseSvgIcon>}
+												label={order?.shippingAddress?.prefContact}
+												size="small"
+												variant="outlined"
+												sx={{ borderRadius: 1 }}
+											/>
+										)}
+									</Box>
+								</Paper>
+							</Box>
 
-							<div className="seller flex items-center p-16">
-								<img
-									className="w-80"
-									// src="assets/images/logo/logo.svg"
-									src="assets/images/afslogo/afLogo.svg"
-									alt="logo"
-								/>
+							{/* Company Information */}
+							<Paper
+								elevation={2}
+								sx={{
+									p: 3,
+									bgcolor: 'primary.main',
+									color: 'primary.contrastText',
+									borderRadius: 2,
+									minWidth: 280
+								}}
+							>
+								<Box
+									display="flex"
+									alignItems="center"
+									gap={2}
+									mb={2}
+								>
+									<Box
+										component="img"
+										src="assets/images/afslogo/afLogo.svg"
+										alt="AfricanShops Logo"
+										sx={{ width: 60, height: 60 }}
+									/>
+									<Box>
+										<Typography
+											variant="h5"
+											fontWeight={700}
+										>
+											AFRICANSHOPS
+										</Typography>
+										<Typography variant="caption">Your Trusted Marketplace</Typography>
+									</Box>
+								</Box>
+								<Divider sx={{ my: 2, bgcolor: 'primary.light', opacity: 0.3 }} />
+								<Box sx={{ '& > *': { mb: 0.5 } }}>
+									<Box
+										display="flex"
+										alignItems="center"
+										gap={1}
+									>
+										<FuseSvgIcon size={14}>heroicons-outline:location-marker</FuseSvgIcon>
+										<Typography variant="body2">The Paradise Court, Idu, Abuja, 900288</Typography>
+									</Box>
+									<Box
+										display="flex"
+										alignItems="center"
+										gap={1}
+									>
+										<FuseSvgIcon size={14}>heroicons-outline:phone</FuseSvgIcon>
+										<Typography variant="body2">+234 803 586 8983</Typography>
+									</Box>
+									<Box
+										display="flex"
+										alignItems="center"
+										gap={1}
+									>
+										<FuseSvgIcon size={14}>heroicons-outline:globe</FuseSvgIcon>
+										<Typography variant="body2">www.africanshops.org</Typography>
+									</Box>
+								</Box>
+							</Paper>
+						</Box>
 
-								<div className="divider mx-8 h-96" />
-
-								<div className="px-8">
-									<Typography color="inherit">AFRICANSHOPS.</Typography>
-
-									<Typography color="inherit">The Paradise Court, Idu, Abuja, 900288</Typography>
-									<Typography color="inherit">+234 803 586 8983</Typography>
-									<Typography color="inherit">africanshops.africanshops.org</Typography>
-									<Typography color="inherit">www.africanshops.org</Typography>
-								</div>
-							</div>
-						</div>
-
-						<div className="mt-64">
-							<Table className="simple">
-								<TableHead>
-									<TableRow>
-										<TableCell>PRODUCT</TableCell>
-										<TableCell>PRICE</TableCell>
-										<TableCell align="right">QUANTITY</TableCell>
-										<TableCell align="right">TOTAL</TableCell>
-									</TableRow>
-								</TableHead>
-								<TableBody>
-									{order?.orderItems?.map((product) => (
-										<TableRow key={product?.id}>
+						{/* Products Table */}
+						<Box sx={{ mt: 5 }}>
+							<Paper
+								elevation={1}
+								sx={{ borderRadius: 2, overflow: 'hidden' }}
+							>
+								<Box sx={{ p: 2, bgcolor: 'action.hover' }}>
+									<Typography
+										variant="subtitle1"
+										fontWeight={600}
+									>
+										Order Items
+									</Typography>
+								</Box>
+								<Table>
+									<TableHead>
+										<TableRow sx={{ bgcolor: 'background.default' }}>
 											<TableCell>
-												<Typography variant="subtitle1">{product?.name}</Typography>
+												<Typography fontWeight={600}>PRODUCT</Typography>
 											</TableCell>
 											<TableCell align="right">
-												{product?.price && formatter.format(+product?.price)}
+												<Typography fontWeight={600}>PRICE</Typography>
 											</TableCell>
-											<TableCell align="right">{product?.quantity}</TableCell>
+											<TableCell align="center">
+												<Typography fontWeight={600}>QTY</Typography>
+											</TableCell>
 											<TableCell align="right">
-												{product?.price &&
-													product?.quantity &&
-													formatter.format(+product?.price * product?.quantity)}
+												<Typography fontWeight={600}>TOTAL</Typography>
 											</TableCell>
 										</TableRow>
-									))}
-								</TableBody>
-							</Table>
+									</TableHead>
+									<TableBody>
+										{order?.orderItems?.map((product) => (
+											<TableRow
+												key={product?.id}
+												hover
+											>
+												<TableCell>
+													<Typography
+														variant="body1"
+														fontWeight={500}
+													>
+														{product?.name}
+													</Typography>
+												</TableCell>
+												<TableCell align="right">
+													<Typography
+														variant="body2"
+														color="primary.main"
+														fontWeight={600}
+													>
+														{product?.price && formatter.format(+product?.price)}
+													</Typography>
+												</TableCell>
+												<TableCell align="center">
+													<Chip
+														label={product?.quantity}
+														size="small"
+														color="default"
+														sx={{ fontWeight: 600, minWidth: 50 }}
+													/>
+												</TableCell>
+												<TableCell align="right">
+													<Typography
+														variant="body1"
+														fontWeight={700}
+													>
+														{product?.price &&
+															product?.quantity &&
+															formatter.format(+product?.price * product?.quantity)}
+													</Typography>
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							</Paper>
+						</Box>
 
-							<Table className="simple mt-32">
-								<TableBody>
-									<TableRow>
-										<TableCell>
-											<Typography
-												className="font-normal"
-												variant="subtitle1"
-												color="text.secondary"
-											>
-												SUBTOTAL
-											</Typography>
-										</TableCell>
-										<TableCell align="right">
-											<Typography
-												className="font-normal"
-												variant="subtitle1"
-												color="text.secondary"
-											>
-												{formatter.format(+order?.itemsPrice)}
-											</Typography>
-										</TableCell>
-									</TableRow>
-									<TableRow>
-										<TableCell>
-											<Typography
-												className="font-normal"
-												variant="subtitle1"
-												color="text.secondary"
-											>
-												TAX
-											</Typography>
-										</TableCell>
-										<TableCell align="right">
-											<Typography
-												className="font-normal"
-												variant="subtitle1"
-												color="text.secondary"
-											>
-												{formatter.format(+order?.taxPrice)}
-											</Typography>
-										</TableCell>
-									</TableRow>
-									<TableRow>
-										<TableCell>
-											<Typography
-												className="font-normal"
-												variant="subtitle1"
-												color="text.secondary"
-											>
-												DISCOUNT
-											</Typography>
-										</TableCell>
-										<TableCell align="right">
-											<Typography
-												className="font-normal"
-												variant="subtitle1"
-												color="text.secondary"
-											>
-												{formatter.format(+order?.discount || 0)}
-											</Typography>
-										</TableCell>
-									</TableRow>
-									<TableRow>
-										<TableCell>
-											<Typography
-												className="font-light"
-												variant="h4"
-												color="text.secondary"
-											>
-												TOTAL
-											</Typography>
-										</TableCell>
-										<TableCell align="right">
-											<Typography
-												className="font-light"
-												variant="h4"
-												color="text.secondary"
-											>
-												{formatter.format(+order?.totalPrice)}
-											</Typography>
-										</TableCell>
-									</TableRow>
-								</TableBody>
-							</Table>
-						</div>
-
-						<div className="mt-96">
-							<Typography
-								className="mb-24 print:mb-12"
-								variant="body1"
+						{/* Summary Section */}
+						<Box sx={{ mt: 4 }}>
+							<Paper
+								elevation={2}
+								sx={{ p: 3, borderRadius: 2, bgcolor: 'background.default' }}
 							>
-								Please pay within 15 days. Thank you for your business.
-							</Typography>
+								<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+									<Box
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+									>
+										<Typography
+											variant="body1"
+											color="text.secondary"
+										>
+											Subtotal
+										</Typography>
+										<Typography
+											variant="body1"
+											fontWeight={600}
+										>
+											{formatter.format(+order?.itemsPrice)}
+										</Typography>
+									</Box>
+									<Divider />
+									<Box
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+									>
+										<Typography
+											variant="body1"
+											color="text.secondary"
+										>
+											Tax
+										</Typography>
+										<Typography
+											variant="body1"
+											fontWeight={600}
+										>
+											{formatter.format(+order?.taxPrice)}
+										</Typography>
+									</Box>
+									<Divider />
+									<Box
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+									>
+										<Typography
+											variant="body1"
+											color="text.secondary"
+										>
+											Shipping Fee
+										</Typography>
+										<Typography
+											variant="body1"
+											fontWeight={600}
+										>
+											{formatter.format(+order?.shippingPrice || 0)}
+										</Typography>
+									</Box>
+									{order?.discount > 0 && (
+										<>
+											<Divider />
+											<Box
+												display="flex"
+												justifyContent="space-between"
+												alignItems="center"
+											>
+												<Typography
+													variant="body1"
+													color="success.main"
+												>
+													Discount
+												</Typography>
+												<Typography
+													variant="body1"
+													fontWeight={600}
+													color="success.main"
+												>
+													-{formatter.format(+order?.discount)}
+												</Typography>
+											</Box>
+										</>
+									)}
+									<Divider sx={{ borderWidth: 2 }} />
+									<Box
+										display="flex"
+										justifyContent="space-between"
+										alignItems="center"
+										sx={{
+											p: 2,
+											bgcolor: 'primary.main',
+											borderRadius: 1.5,
+											mt: 1
+										}}
+									>
+										<Typography
+											variant="h5"
+											fontWeight={700}
+											sx={{ color: 'primary.contrastText' }}
+										>
+											TOTAL
+										</Typography>
+										<Typography
+											variant="h4"
+											fontWeight={700}
+											sx={{ color: 'primary.contrastText' }}
+										>
+											{formatter.format(+order?.totalPrice)}
+										</Typography>
+									</Box>
+								</Box>
+							</Paper>
+						</Box>
 
-							<div className="flex">
-								<div className="shrink-0">
-									<img
-										className="w-32"
-										// src="assets/images/logo/logo.svg"
-										src="assets/images/afslogo/afLogo.svg"
-										alt="logo"
-									/>
-								</div>
-
+						{/* Footer */}
+						<Box sx={{ mt: 6, pt: 4, borderTop: 1, borderColor: 'divider' }}>
+							<Paper
+								elevation={0}
+								sx={{
+									p: 3,
+									bgcolor: 'info.lighter',
+									borderRadius: 2,
+									borderLeft: 4,
+									borderColor: 'info.main'
+								}}
+							>
+								<Box
+									display="flex"
+									alignItems="center"
+									gap={1}
+									mb={1}
+								>
+									<FuseSvgIcon
+										size={20}
+										color="info"
+									>
+										heroicons-outline:information-circle
+									</FuseSvgIcon>
+									<Typography
+										variant="subtitle1"
+										fontWeight={600}
+										color="info.dark"
+									>
+										Payment Terms
+									</Typography>
+								</Box>
 								<Typography
-									className="font-normal mb-64 px-24"
-									variant="caption"
+									variant="body2"
 									color="text.secondary"
 								>
-									In condimentum malesuada efficitur. Mauris volutpat placerat auctor. Ut ac congue
-									dolor. Quisque scelerisque lacus sed feugiat fermentum. Cras aliquet facilisis
-									pellentesque. Nunc hendrerit quam at leo commodo, a suscipit tellus dapibus. Etiam
-									at felis volutpat est mollis lacinia. Mauris placerat sem sit amet velit mollis, in
-									porttitor ex finibus. Proin eu nibh id libero tincidunt lacinia et eget eros.
+									Payment is due within 15 days of invoice date. Thank you for your business with
+									AfricanShops. We appreciate your trust in our platform and look forward to serving
+									you again.
 								</Typography>
-							</div>
-						</div>
+							</Paper>
+
+							<Box
+								display="flex"
+								justifyContent="space-between"
+								alignItems="center"
+								mt={4}
+							>
+								<Box
+									display="flex"
+									alignItems="center"
+									gap={2}
+								>
+									<Box
+										component="img"
+										src="assets/images/afslogo/afLogo.svg"
+										alt="AfricanShops"
+										sx={{ width: 40, height: 40 }}
+									/>
+									<Box>
+										<Typography
+											variant="caption"
+											color="text.secondary"
+											display="block"
+										>
+											Powered by AfricanShops
+										</Typography>
+										<Typography
+											variant="caption"
+											color="text.disabled"
+										>
+											Your Trusted African Marketplace
+										</Typography>
+									</Box>
+								</Box>
+								<Box textAlign="right">
+									<Typography
+										variant="caption"
+										color="text.disabled"
+										display="block"
+									>
+										For inquiries: support@africanshops.org
+									</Typography>
+									<Typography
+										variant="caption"
+										color="text.disabled"
+									>
+										www.africanshops.org
+									</Typography>
+								</Box>
+							</Box>
+						</Box>
 					</CardContent>
 				</Card>
-			)}
+			</Fade>
 		</Root>
 	);
 }

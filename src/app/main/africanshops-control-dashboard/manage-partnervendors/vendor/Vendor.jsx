@@ -12,15 +12,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleShop } from 'src/app/api/shops/useAdminShops';
 import VendorHeader from './VendorHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleShop } from 'src/app/api/shops/useAdminShops';
 /**
  * Form Validation Schema
  */
@@ -105,7 +101,10 @@ function Vendor() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (shopvendor?.data && routeParams.productId !== shopvendor?.data._id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(shopvendor?.data && routeParams.productId !== shopvendor?.data._id && routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 
@@ -147,7 +146,7 @@ function Vendor() {
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
-								<BasicInfoTab vendorId={productId}/>
+								<BasicInfoTab vendorId={productId} />
 							</div>
 
 							<div className={tabValue !== 1 ? 'hidden' : ''}>
@@ -161,7 +160,7 @@ function Vendor() {
 							{/* <div className={tabValue !== 3 ? 'hidden' : ''}>
 								<InventoryTab />
 							</div> */}
-{/* 
+							{/* 
 							<div className={tabValue !== 4 ? 'hidden' : ''}>
 								<ShippingTab />
 							</div> */}

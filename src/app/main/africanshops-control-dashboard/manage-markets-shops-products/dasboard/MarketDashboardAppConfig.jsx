@@ -18,4 +18,3 @@ const MarketDashboardAppConfig = {
 	]
 };
 export default MarketDashboardAppConfig;
-

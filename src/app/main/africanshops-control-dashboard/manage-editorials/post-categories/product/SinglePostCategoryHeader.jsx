@@ -7,11 +7,15 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import {
+	useAddPostCategoryMutation,
+	useDeletePostCategory,
+	usePostCategoryUpdateMutation
+} from 'src/app/api/post-category/usePostCats';
+import {
 	useCreateECommerceProductMutation,
 	useDeleteECommerceProductMutation,
 	useUpdateECommerceProductMutation
 } from '../ECommerceApi';
-import { useAddPostCategoryMutation, useDeletePostCategory, usePostCategoryUpdateMutation } from 'src/app/api/post-category/usePostCats';
 
 /**
  * The product header.
@@ -30,17 +34,16 @@ function SinglePostCategoryHeader() {
 	const { name, images, featuredImageId } = watch();
 
 	const updatePostCat = usePostCategoryUpdateMutation();
-  const addNewPostCat = useAddPostCategoryMutation();
-  const deletePostCat = useDeletePostCategory()
+	const addNewPostCat = useAddPostCategoryMutation();
+	const deletePostCat = useDeletePostCategory();
 
 	function handleSaveProduct() {
-
 		updatePostCat?.mutate(getValues());
 		// saveProduct(getValues());
 	}
 
 	function handleCreateProduct() {
-		addNewPostCat?.mutate(getValues())
+		addNewPostCat?.mutate(getValues());
 		// createProduct(getValues())
 		// 	.unwrap()
 		// 	.then((data) => {
@@ -49,9 +52,8 @@ function SinglePostCategoryHeader() {
 	}
 
 	function handleRemoveProduct() {
-
-		if (window.confirm("Comfirm delete of this category?")) {
-			deletePostCat.mutate(productId)
+		if (window.confirm('Comfirm delete of this category?')) {
+			deletePostCat.mutate(productId);
 		}
 
 		// removeProduct(productId);

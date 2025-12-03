@@ -2,25 +2,21 @@
 import { useMemo } from 'react';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
+import { ListItemIcon, MenuItem, Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
 import Button from '@mui/material/Button';
-import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
-import useStates from 'src/app/api/states/useStates';
 import { motion } from 'framer-motion';
 import useDesignations from 'src/app/api/designations/useDesignations';
+import { useDeleteECommerceProductsMutation } from '../ECommerceApi';
 
 function ProductCategoriesTable() {
-	
 	// const { data: products, isLoading } = useGetECommerceProductsQuery();
 	const [removeProducts] = useDeleteECommerceProductsMutation();
 
 	// const { data:states, isLoading, refetch, isError  } = useStates();
-	const { data:designations, isLoading, isError, refetch } = useDesignations();
+	const { data: designations, isLoading, isError, refetch } = useDesignations();
 
 	const columns = useMemo(
 		() => [
@@ -137,7 +133,7 @@ function ProductCategoriesTable() {
 
 	// console.log("Getting State error", isError)
 
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -148,7 +144,7 @@ function ProductCategoriesTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Error retrieving designations!
+					Error retrieving designations!
 				</Typography>
 				{/* <Button
 					className="mt-24"
@@ -163,24 +159,24 @@ function ProductCategoriesTable() {
 		);
 	}
 
-// console.log("Designations", designations?.data?.data)
-if (!designations?.data?.data) {
-	return (
-		<motion.div
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1, transition: { delay: 0.1 } }}
-			className="flex flex-col flex-1 items-center justify-center h-full"
-		>
-			<Typography
-				color="text.secondary"
-				variant="h5"
+	// console.log("Designations", designations?.data?.data)
+	if (!designations?.data?.data) {
+		return (
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1, transition: { delay: 0.1 } }}
+				className="flex flex-col flex-1 items-center justify-center h-full"
 			>
-				No designations found!
-			</Typography>
-		
-		</motion.div>
-	);
-}
+				<Typography
+					color="text.secondary"
+					variant="h5"
+				>
+					No designations found!
+				</Typography>
+			</motion.div>
+		);
+	}
+
 	return (
 		<Paper
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"

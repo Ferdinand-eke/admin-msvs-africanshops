@@ -5,7 +5,7 @@ import _ from '@lodash';
 const ProductModel = (data) =>
 	_.defaults(data || {}, {
 		id: _.uniqueId('product-'),
-		officeName:'',
+		officeName: '',
 
 		officeMail: '',
 		address: '',
@@ -15,16 +15,15 @@ const ProductModel = (data) =>
 		// market: '',
 		coverimage: '',
 		officePhone: '',
-		password:'',
+		password: '',
 		images: [],
-
 
 		// name: '',
 		// handle: '',
 		// description: '',
 		// categories: [],
 		// tags: [],
-		featuredImageId: '',
+		featuredImageId: ''
 		// priceTaxExcl: 0,
 		// priceTaxIncl: 0,
 		// taxRate: 0,

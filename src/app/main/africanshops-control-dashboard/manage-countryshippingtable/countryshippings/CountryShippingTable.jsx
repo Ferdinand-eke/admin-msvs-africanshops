@@ -1,24 +1,15 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { useMemo } from 'react';
-import {motion} from 'framer-motion';
+import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import { Chip, Paper } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
-import Button from '@mui/material/Button';
-import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
-import useShopplans from 'src/app/api/shopplans/useShopPlans';
 import { useCountriesWithShippingTable } from 'src/app/api/countries/useCountries';
 
-
 function CountryShippingTable() {
-	const { data: countryShippingDatas, isLoading: countriesLoading, isError } =
-    useCountriesWithShippingTable();
-
+	const { data: countryShippingDatas, isLoading: countriesLoading, isError } = useCountriesWithShippingTable();
 
 	const columns = useMemo(
 		() => [
@@ -32,7 +23,7 @@ function CountryShippingTable() {
 				enableSorting: false,
 				Cell: ({ row }) => (
 					<div className="flex items-center justify-center">
-						{row?.original?.flag?.length > 0  ? (
+						{row?.original?.flag?.length > 0 ? (
 							<img
 								className="w-full max-h-40 max-w-40 block rounded"
 								src={row?.original?.flag}
@@ -78,24 +69,19 @@ function CountryShippingTable() {
 				header: 'Country Code',
 				accessorFn: (row) => `${row?.isoCode}`
 			},
-			
+
 			{
 				accessorKey: 'action',
 				header: 'Country Name',
 				Cell: ({ row }) => (
-					<>
 					<Chip
 						component={Link}
 						to={`/countryshipping/routes/${row?.original?._id}/${row?.original?.slug}`}
 						className="underline cursor-pointer"
-					
-						label='Manage This Shipping Route'
+						label="Manage This Shipping Route"
 					/>
-					</>
-						
 				)
-			},
-			
+			}
 		],
 		[]
 	);
@@ -104,7 +90,7 @@ function CountryShippingTable() {
 		return <FuseLoading />;
 	}
 
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -115,13 +101,12 @@ function CountryShippingTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Error occured retrieving vendor plans!
+					Error occured retrieving vendor plans!
 				</Typography>
-				
 			</motion.div>
 		);
 	}
-	
+
 	if (!countryShippingDatas?.data?.data) {
 		return (
 			<motion.div
@@ -135,11 +120,9 @@ function CountryShippingTable() {
 				>
 					No vendor plan yet!
 				</Typography>
-			
 			</motion.div>
 		);
 	}
-
 
 	return (
 		<Paper
@@ -149,7 +132,6 @@ function CountryShippingTable() {
 			<DataTable
 				data={countryShippingDatas?.data?.data}
 				columns={columns}
-				
 			/>
 		</Paper>
 	);

@@ -74,7 +74,7 @@ function PropertyListing() {
 	/**
 	 * Show Message if the requested products is not exists
 	 */
-	
+
 	if (isError && productId !== 'new') {
 		return (
 			<motion.div
@@ -144,7 +144,7 @@ function PropertyListing() {
 								label="Shipping"
 							/>
 						</Tabs>
-						
+
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
 								<BasicInfoTab />
@@ -171,7 +171,6 @@ function PropertyListing() {
 				scroll={isMobile ? 'normal' : 'content'}
 			/>
 		</FormProvider>
-		
 	);
 }
 

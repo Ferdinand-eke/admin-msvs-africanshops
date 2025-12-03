@@ -18,7 +18,6 @@ function OurOffices() {
 			<div className="w-full h-full container flex flex-col">
 				<OurOfficesHeader />
 				<ShopProductsTable />
-				
 			</div>
 		</>
 	);

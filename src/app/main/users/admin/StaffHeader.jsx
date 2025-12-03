@@ -8,13 +8,13 @@ import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'app/store/hooks';
 import { useEffect } from 'react';
 import { setSearchText, resetSearchText, selectSearchText } from './contactsAppSlice';
-import { selectFilteredContactList, useGetContactsListQuery } from './ContactsApi';
+import { selectFilteredContactList } from './ContactsApi';
 
 /**
  * The contacts header.
  */
 function StaffHeader(props) {
-	const {usersData, usersIsLoading, onSearchChange, searchValue} = props
+	const { usersData, usersIsLoading, onSearchChange, searchValue } = props;
 	const dispatch = useAppDispatch();
 	const searchText = useAppSelector(selectSearchText);
 
@@ -24,7 +24,6 @@ function StaffHeader(props) {
 			dispatch(resetSearchText());
 		};
 	}, []);
-
 
 	if (usersIsLoading) {
 		return null;
@@ -97,17 +96,13 @@ function StaffHeader(props) {
 					color="secondary"
 					component={NavLinkAdapter}
 					to="new/create"
-
 				>
 					<FuseSvgIcon size={20}>heroicons-outline:plus</FuseSvgIcon>
 					<span className="hidden sm:flex mx-8">Add Admin Staff</span>
 				</Button>
-
-				
 			</div>
 		</div>
 	);
 }
-
 
 export default StaffHeader;

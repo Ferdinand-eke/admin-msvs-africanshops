@@ -11,13 +11,12 @@ const ProductModel = (data) =>
 		businessState: '',
 		images: [],
 
-
 		// handle: '',
 		// description: '',
 		// categories: [],
 		// tags: [],
 		// featuredImageId: '',
-		
+
 		// priceTaxExcl: 0,
 		// priceTaxIncl: 0,
 		// taxRate: 0,
@@ -33,14 +32,14 @@ const ProductModel = (data) =>
 		// active: true,
 		// image: '',
 		// total: ''
-		countryCode: "",
-		stateCode: "",
+		countryCode: '',
+		stateCode: '',
 		// isoCode: '',
-		latitude: "",
-		longitude: "",
+		latitude: '',
+		longitude: '',
 
-		isFeatured: "",
-		isInOperation: "",
-		isPublished: "",
+		isFeatured: '',
+		isInOperation: '',
+		isPublished: ''
 	});
 export default ProductModel;

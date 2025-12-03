@@ -1,161 +1,141 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { adminBlockDisciplineUser, adminSuspendDisciplineUser, adminUnBlockDisciplineUser,
-   adminUnSuspendDisciplineUser, getApiPopuplatedUserById, getApiUserById, getApiUsers, 
-   updateApiUserById } from '../apiRoutes';
 import { toast } from 'react-toastify';
+import {
+	adminBlockDisciplineUser,
+	adminSuspendDisciplineUser,
+	adminUnBlockDisciplineUser,
+	adminUnSuspendDisciplineUser,
+	getApiPopuplatedUserById,
+	getApiUserById,
+	getApiUsers,
+	updateApiUserById
+} from '../apiRoutes';
 
-
-/***1) Admin get all users */
+/** *1) Admin get all users */
 export default function useOurPlatformUsers() {
-  return useQuery(['__our_users'], getApiUsers);
+	return useQuery(['__our_users'], getApiUsers);
 }
 
-
-
-/***2) Admin get single User Details */
+/** *2) Admin get single User Details */
 export function useSingleUser(userId) {
-  if (!userId || userId === "new") {
-    return "";
-  }
-  return useQuery(['__our_userById', userId], () => getApiUserById(userId), {
-    enabled: Boolean(userId),
-    staleTime: 2000,
-  });
+	if (!userId || userId === 'new') {
+		return '';
+	}
+
+	return useQuery(['__our_userById', userId], () => getApiUserById(userId), {
+		enabled: Boolean(userId),
+		staleTime: 2000
+	});
 }
 
-/***3) Admin get poplulated single User Details */
+/** *3) Admin get poplulated single User Details */
 export function usePopulatedSingleUser(userId) {
-  if (!userId || userId === "new") {
-    return "";
-  }
-  return useQuery(['__our_populatedUserBId', userId], () => getApiPopuplatedUserById(userId), {
-    enabled: Boolean(userId),
-    staleTime: 2000,
-  });
+	if (!userId || userId === 'new') {
+		return '';
+	}
+
+	return useQuery(['__our_populatedUserBId', userId], () => getApiPopuplatedUserById(userId), {
+		enabled: Boolean(userId),
+		staleTime: 2000
+	});
 }
 
-/**** 4) Admin Disciplinary: Suspend existing  User  */
+/** ** 4) Admin Disciplinary: Suspend existing  User  */
 export function useAdminSuspendUserMutation() {
-  const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
-  return useMutation(adminSuspendDisciplineUser, {
-    onSuccess: (data) => {
-      if (data?.data?.success) {
-        toast.success(`${data?.data?.message ? data?.data?.message : "User suspended successfully!!"}`,{
-          position: "top-left"
-        });
-        queryClient.invalidateQueries('__our_populatedUserBId');
-        queryClient.refetchQueries('__our_populatedUserBId', { force: true });
-      }
-    },
-    onError: (err) => {
-      toast.error(
-        err.response && err.response.data.message
-          ? err.response.data.message
-          : err.message
-      );
-    },
-  });
+	return useMutation(adminSuspendDisciplineUser, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(`${data?.data?.message ? data?.data?.message : 'User suspended successfully!!'}`, {
+					position: 'top-left'
+				});
+				queryClient.invalidateQueries('__our_populatedUserBId');
+				queryClient.refetchQueries('__our_populatedUserBId', { force: true });
+			}
+		},
+		onError: (err) => {
+			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
+		}
+	});
 }
 
-
-/**** 5) Admin Disciplinary: Un-Suspend existing user  */
+/** ** 5) Admin Disciplinary: Un-Suspend existing user  */
 export function useAdminUnSuspendUserMutation() {
-  const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
-  return useMutation(adminUnSuspendDisciplineUser, {
-    onSuccess: (data) => {
-     if(data?.data?.success){
-      toast.success(`${data?.data?.message ? data?.data?.message : "Suspension lifted successfully!!"}`,{
-        position: "top-left"
-      });
-      queryClient.invalidateQueries('__our_populatedUserBId');
-      queryClient.refetchQueries('__our_populatedUserBId', { force: true });
-
-     }
-    },
-    onError: (err) => {
-      toast.error(
-        err.response && err.response.data.message
-          ? err.response.data.message
-          : err.message
-      );
-    },
-  });
+	return useMutation(adminUnSuspendDisciplineUser, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(`${data?.data?.message ? data?.data?.message : 'Suspension lifted successfully!!'}`, {
+					position: 'top-left'
+				});
+				queryClient.invalidateQueries('__our_populatedUserBId');
+				queryClient.refetchQueries('__our_populatedUserBId', { force: true });
+			}
+		},
+		onError: (err) => {
+			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
+		}
+	});
 }
 
-/**** 6) Admin Disciplinary: Block existing  User  */
+/** ** 6) Admin Disciplinary: Block existing  User  */
 export function useAdminBlockUserMutation() {
-  const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
-  return useMutation(adminBlockDisciplineUser, {
-    onSuccess: (data) => {
-      if (data?.data?.success) {
-        toast.success(`${data?.data?.message ? data?.data?.message : "User blocked successfully!!"}`,{
-          position: "top-left"
-        });
-        queryClient.invalidateQueries('__our_populatedUserBId');
-        queryClient.refetchQueries('__our_populatedUserBId', { force: true });
-      }
-    },
-    onError: (err) => {
-      toast.error(
-        err.response && err.response.data.message
-          ? err.response.data.message
-          : err.message
-      );
-    },
-  });
+	return useMutation(adminBlockDisciplineUser, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(`${data?.data?.message ? data?.data?.message : 'User blocked successfully!!'}`, {
+					position: 'top-left'
+				});
+				queryClient.invalidateQueries('__our_populatedUserBId');
+				queryClient.refetchQueries('__our_populatedUserBId', { force: true });
+			}
+		},
+		onError: (err) => {
+			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
+		}
+	});
 }
 
-/**** 7) Admin Disciplinary: Un-Block existing user  */
+/** ** 7) Admin Disciplinary: Un-Block existing user  */
 export function useAdminUnBlockUserMutation() {
-  const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
-  return useMutation(adminUnBlockDisciplineUser, {
-    onSuccess: (data) => {
-     if(data?.data?.success){
-      toast.success(`${data?.data?.message ? data?.data?.message : "Suspension lifted successfully!!"}`,{
-        position: "top-left"
-      });
-      queryClient.invalidateQueries('__our_populatedUserBId');
-      queryClient.refetchQueries('__our_populatedUserBId', { force: true });
-
-     }
-    },
-    onError: (err) => {
-      toast.error(
-        err.response && err.response.data.message
-          ? err.response.data.message
-          : err.message
-      );
-    },
-  });
+	return useMutation(adminUnBlockDisciplineUser, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(`${data?.data?.message ? data?.data?.message : 'Suspension lifted successfully!!'}`, {
+					position: 'top-left'
+				});
+				queryClient.invalidateQueries('__our_populatedUserBId');
+				queryClient.refetchQueries('__our_populatedUserBId', { force: true });
+			}
+		},
+		onError: (err) => {
+			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
+		}
+	});
 }
 
-/**** 8) Admin update  User data" */
+/** ** 8) Admin update  User data" */
 export function useAdminUpdateUserDetailMutation() {
-  const queryClient = useQueryClient();
+	const queryClient = useQueryClient();
 
-
-  return useMutation(updateApiUserById, {
-    onSuccess: (data) => {
-
-      if (data?.data?.success) {
-        toast.success(`${data?.data?.message ? data?.data?.message : "User details  updated successfully!!"}`,{
-          position: "top-left"
-        });
-        queryClient.invalidateQueries('__our_populatedUserBId');
-        queryClient.refetchQueries('__our_populatedUserBId', { force: true });
-      }
-
-    },
-    onError: (err) => {
-      toast.error(
-        err.response && err.response.data.message
-          ? err.response.data.message
-          : err.message
-      );
-    },
-  });
+	return useMutation(updateApiUserById, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(`${data?.data?.message ? data?.data?.message : 'User details  updated successfully!!'}`, {
+					position: 'top-left'
+				});
+				queryClient.invalidateQueries('__our_populatedUserBId');
+				queryClient.refetchQueries('__our_populatedUserBId', { force: true });
+			}
+		},
+		onError: (err) => {
+			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
+		}
+	});
 }

@@ -1,7 +1,5 @@
-import NavLinkAdapter from '@fuse/core/NavLinkAdapter';
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
 
 const Root = styled('div')(({ theme }) => ({
 	'& > .logo-icon': {
@@ -28,21 +26,23 @@ function LogoHome() {
 			{/* <Link to={`/`}> */}
 			<img
 				className="mt-14 logo-icon cursor-pointer"
-				// src="assets/images/logo/logo.svg" 
+				// src="assets/images/logo/logo.svg"
 				// src="assets/images/afslogo/afLogo.svg"
 				src="assets/images/afslogo/afslogo.png"
 				width={40}
 				height={40}
 				alt="logo"
 			/>
-			
+
 			{/* </Link> */}
-			<Typography  className="react-text text-16 font-semibold cursor-pointer"
-			    //   component={NavLinkAdapter}
+			<Typography
+				className="react-text text-16 font-semibold cursor-pointer"
+				//   component={NavLinkAdapter}
 				//   to={`/`}
-			>Africanshops</Typography>
-			
-			
+			>
+				Africanshops
+			</Typography>
+
 			{/* <div className="flex space-x-6 px-8 items-center">
 				<div
 					className="badge flex items-end justify-end rounded-4 w-24 h-24 px-3"
@@ -78,7 +78,6 @@ function LogoHome() {
 					<span className="react-text text-12 font-semibold">React</span>
 				</div>
 			</div> */}
-
 		</Root>
 	);
 }

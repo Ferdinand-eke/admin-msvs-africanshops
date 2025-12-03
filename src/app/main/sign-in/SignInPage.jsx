@@ -1,14 +1,8 @@
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { useState } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import CardContent from '@mui/material/CardContent';
-import _ from '@lodash';
 import Alert from '@mui/material/Alert';
 import JwtLoginTab from './tabs/JwtSignInTab';
 // import FirebaseSignInTab from './tabs/FirebaseSignInTab';
@@ -73,14 +67,11 @@ function SignInPage() {
 						severity="info"
 						className="mt-24 px-16 text-13 leading-relaxed"
 					>
-						You are on  <b>africanshops admin platform</b>. Click on the "Sign in" button to access statutory tasks related
-						portal. By clicking this you agree to our <b>terms and conditions</b>
+						You are on <b>africanshops admin platform</b>. Click on the "Sign in" button to access statutory
+						tasks related portal. By clicking this you agree to our <b>terms and conditions</b>
 					</Alert>
 
-					
-
 					{selectedTabId === 'jwt' && <JwtLoginTab />}
-				
 				</CardContent>
 			</Paper>
 			<Box
@@ -155,8 +146,9 @@ function SignInPage() {
 						<div>africanshops admin</div>
 					</div>
 					<div className="mt-24 text-lg leading-6 tracking-tight text-gray-400">
-						This platform helps africanshops administrative users to cordinate, monitor and execute operational
-						tasks that power the day to day runnings and activities in our organization. Welcome onboard!
+						This platform helps africanshops administrative users to cordinate, monitor and execute
+						operational tasks that power the day to day runnings and activities in our organization. Welcome
+						onboard!
 					</div>
 					{/* <div className="mt-32 flex items-center">
 						<AvatarGroup

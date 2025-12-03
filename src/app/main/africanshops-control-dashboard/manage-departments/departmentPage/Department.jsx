@@ -1,21 +1,18 @@
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import Button from '@mui/material/Button';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import Typography from '@mui/material/Typography';
-import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import _ from '@lodash';
 import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useGetDepartmentById } from 'src/app/api/departments/useDepartments';
 import DepartmentHeader from './DepartmentHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
 import ProductModel from './models/ProductModel';
-import { useGetDepartmentById } from 'src/app/api/departments/useDepartments';
 /**
  * Form Validation Schema
  */
@@ -30,19 +27,20 @@ function Department() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	
-	const {data:singleDepartment,
+
+	const {
+		data: singleDepartment,
 		isLoading,
 		isError
 	} = useGetDepartmentById(productId, {
 		skip: !productId || productId === 'new'
-	})
+	});
 
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
 		defaultValues: {
-			name: "",
+			name: ''
 		},
 		resolver: zodResolver(schema)
 	});
@@ -99,11 +97,15 @@ function Department() {
 	// 	);
 	// }
 
-
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (singleDepartment?.data?.department && routeParams.productId !== singleDepartment?.data?.department.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(singleDepartment?.data?.department &&
+			routeParams.productId !== singleDepartment?.data?.department.id &&
+			routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 
@@ -126,13 +128,11 @@ function Department() {
 								className="h-64"
 								label="Basic Info"
 							/>
-							
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
 								<BasicInfoTab />
 							</div>
-
 						</div>
 					</>
 				}

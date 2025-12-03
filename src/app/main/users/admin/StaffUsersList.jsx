@@ -22,15 +22,7 @@ import {
  * The admin staff table.
  */
 function StaffUsersList(props) {
-	const {
-		usersData,
-		usersIsLoading,
-		totalCount,
-		page,
-		rowsPerPage,
-		onPageChange,
-		onRowsPerPageChange
-	} = props;
+	const { usersData, usersIsLoading, totalCount, page, rowsPerPage, onPageChange, onRowsPerPageChange } = props;
 
 	// Mutations
 	const blockMutation = useAdminStaffBlockMutation();
@@ -79,11 +71,7 @@ function StaffUsersList(props) {
 			{
 				accessorKey: 'email',
 				header: 'Email',
-				Cell: ({ row }) => (
-					<Typography className="text-13">
-						{row.original?.email}
-					</Typography>
-				)
+				Cell: ({ row }) => <Typography className="text-13">{row.original?.email}</Typography>
 			},
 			{
 				accessorKey: 'role',
@@ -100,28 +88,20 @@ function StaffUsersList(props) {
 			{
 				accessorKey: 'phone',
 				header: 'Phone',
-				Cell: ({ row }) => (
-					<Typography className="text-13">
-						{row.original?.phone || 'N/A'}
-					</Typography>
-				)
+				Cell: ({ row }) => <Typography className="text-13">{row.original?.phone || 'N/A'}</Typography>
 			},
 			{
 				accessorKey: 'department',
 				header: 'Department',
 				Cell: ({ row }) => (
-					<Typography className="text-13">
-						{row.original?.department?.name || 'N/A'}
-					</Typography>
+					<Typography className="text-13">{row.original?.department?.name || 'N/A'}</Typography>
 				)
 			},
 			{
 				accessorKey: 'designation',
 				header: 'Designation',
 				Cell: ({ row }) => (
-					<Typography className="text-13">
-						{row.original?.designation?.name || 'N/A'}
-					</Typography>
+					<Typography className="text-13">{row.original?.designation?.name || 'N/A'}</Typography>
 				)
 			},
 			{
@@ -153,6 +133,7 @@ function StaffUsersList(props) {
 				header: 'Status',
 				Cell: ({ row }) => {
 					const { isBlocked, isSuspended } = row.original;
+
 					if (isBlocked) {
 						return (
 							<Chip
@@ -163,6 +144,7 @@ function StaffUsersList(props) {
 							/>
 						);
 					}
+
 					if (isSuspended) {
 						return (
 							<Chip
@@ -173,6 +155,7 @@ function StaffUsersList(props) {
 							/>
 						);
 					}
+
 					return (
 						<Chip
 							label="Active"
@@ -229,13 +212,13 @@ function StaffUsersList(props) {
 				manualPagination
 				rowCount={totalCount}
 				onPaginationChange={(updater) => {
-					const newPagination = typeof updater === 'function'
-						? updater({ pageIndex: page, pageSize: rowsPerPage })
-						: updater;
+					const newPagination =
+						typeof updater === 'function' ? updater({ pageIndex: page, pageSize: rowsPerPage }) : updater;
 
 					if (newPagination.pageIndex !== page) {
 						onPageChange(null, newPagination.pageIndex);
 					}
+
 					if (newPagination.pageSize !== rowsPerPage) {
 						onRowsPerPageChange(newPagination.pageSize);
 					}
@@ -413,7 +396,12 @@ function StaffUsersList(props) {
 							size="small"
 							onClick={() => {
 								const selectedRows = table.getSelectedRowModel().rows;
-								if (window.confirm(`Are you sure you want to delete ${selectedRows.length} selected staff member(s)?`)) {
+
+								if (
+									window.confirm(
+										`Are you sure you want to delete ${selectedRows.length} selected staff member(s)?`
+									)
+								) {
 									selectedRows.forEach((row) => {
 										deleteMutation.mutate(row.original.id);
 									});

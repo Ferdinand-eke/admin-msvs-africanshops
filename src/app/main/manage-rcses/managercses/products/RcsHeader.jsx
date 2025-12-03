@@ -1,8 +1,6 @@
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import NavLinkAdapter from '@fuse/core/NavLinkAdapter';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 
 /**
@@ -16,7 +14,9 @@ function RcsHeader() {
 				initial={{ x: -20 }}
 				animate={{ x: 0, transition: { delay: 0.2 } }}
 			>
-				<Typography className="text-16 md:text-24 font-extrabold tracking-tight">Manage RCS Listsings And Orders</Typography>
+				<Typography className="text-16 md:text-24 font-extrabold tracking-tight">
+					Manage RCS Listsings And Orders
+				</Typography>
 			</motion.span>
 
 			<div className="flex flex-1 items-center justify-end space-x-8">
@@ -33,8 +33,19 @@ function RcsHeader() {
 						// to="/property/managed-listings/new"
 						size={isMobile ? 'small' : 'small'}
 					>
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-24">
-						<path strokeLinecap="round" strokeLinejoin="round" d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3" />
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							strokeWidth={1.5}
+							stroke="currentColor"
+							className="size-24"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3"
+							/>
 						</svg>
 
 						{/* <FuseSvgIcon size={20}>heroicons-outline:wallet</FuseSvgIcon> */}

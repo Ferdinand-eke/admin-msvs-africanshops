@@ -6,7 +6,11 @@ import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { useAddProductUnitMutation, useDeleteProductUnit, useProductUnitUpdateMutation } from 'src/app/api/product-units/useProductUnits';
+import {
+	useAddProductUnitMutation,
+	useDeleteProductUnit,
+	useProductUnitUpdateMutation
+} from 'src/app/api/product-units/useProductUnits';
 
 /**
  * The product header.
@@ -19,28 +23,32 @@ function SingleProductUnitHeader() {
 	const { isValid, dirtyFields } = formState;
 	const theme = useTheme();
 	const navigate = useNavigate();
-	const {unitname, name, images, featuredImageId } = watch();
+
+	const { unitname, name, images, featuredImageId } = watch();
 
 	const updateProductUnit = useProductUnitUpdateMutation();
 	const addNewProductUnit = useAddProductUnitMutation();
-	const deleteProductUnit = useDeleteProductUnit()
-
+	const deleteProductUnit = useDeleteProductUnit();
 
 	function handleSaveProduct() {
-		updateProductUnit?.mutate(getValues());
+		const formInputs = {
+			...getValues(),
+			leastPermissibleCount: parseInt(getValues('leastPermissibleCount'), 10)
+		};
+		updateProductUnit?.mutate(formInputs);
 	}
 
 	function handleCreateProduct() {
-		addNewProductUnit?.mutate(getValues())
-			// .unwrap()
-			// .then((data) => {
-			// 	navigate(`/productunits/list/${data.id}`);
-			// });
+		const formInputs = {
+			...getValues(),
+			leastPermissibleCount: parseInt(getValues('leastPermissibleCount'), 10)
+		};
+		addNewProductUnit?.mutate(formInputs);
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm("Comfirm delete of this unit?")) {
-			deleteProductUnit.mutate(productId)
+		if (window.confirm('Comfirm delete of this unit?')) {
+			deleteProductUnit.mutate(productId);
 		}
 		// removeProduct(productId);
 		// navigate('/productunits/list');
@@ -119,7 +127,7 @@ function SingleProductUnitHeader() {
 							color="secondary"
 							onClick={handleRemoveProduct}
 							startIcon={<FuseSvgIcon className="hidden sm:flex">heroicons-outline:trash</FuseSvgIcon>}
-						    disabled={deleteProductUnit?.isLoading}
+							disabled={deleteProductUnit?.isLoading}
 						>
 							Remove
 						</Button>

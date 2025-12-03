@@ -6,7 +6,11 @@ import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { useAddShopPlanMutation, useDeleteShopPlan, useShopPlanUpdateMutation, useSingleShopplans } from 'src/app/api/shopplans/useShopPlans';
+import {
+	useAddShopPlanMutation,
+	useDeleteShopPlan,
+	useShopPlanUpdateMutation
+} from 'src/app/api/shopplans/useShopPlans';
 
 /**
  * The product header.
@@ -25,42 +29,35 @@ function VendorPlanHeader() {
 	// const getSingleShopPlan = useSingleShopplans(transferData?.id);
 	const updateShopPlans = useShopPlanUpdateMutation();
 	const addNewShopPlans = useAddShopPlanMutation();
-	const deleteShopPlan = useDeleteShopPlan()
-
+	const deleteShopPlan = useDeleteShopPlan();
 
 	function handleSaveProduct() {
-
-		const merchantPlanValuesToSave ={
+		const merchantPlanValuesToSave = {
 			...getValues(),
 			price: parseInt(getValues()?.price),
 			percetageCommissionCharge: parseInt(getValues()?.percetageCommissionCharge),
 			numberofproducts: parseInt(getValues()?.numberofproducts),
 			numberoffeaturedimages: parseInt(getValues()?.numberoffeaturedimages)
-		}
+		};
 		updateShopPlans.mutate(merchantPlanValuesToSave);
 	}
 
 	function handleCreateProduct() {
-
 		// console.log("New___Merchant__Plan", getValues())
-		const merchantPlanValuesToCreate ={
+		const merchantPlanValuesToCreate = {
 			...getValues(),
 			price: parseInt(getValues()?.price),
 			percetageCommissionCharge: parseInt(getValues()?.percetageCommissionCharge),
 			numberofproducts: parseInt(getValues()?.numberofproducts),
 			numberoffeaturedimages: parseInt(getValues()?.numberoffeaturedimages)
-		}
-		addNewShopPlans.mutate(merchantPlanValuesToCreate)
-
-
-			
+		};
+		addNewShopPlans.mutate(merchantPlanValuesToCreate);
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm("Comfirm delete of this shop plan?")) {
-			deleteShopPlan.mutate(productId)
+		if (window.confirm('Comfirm delete of this shop plan?')) {
+			deleteShopPlan.mutate(productId);
 		}
-
 	}
 
 	return (

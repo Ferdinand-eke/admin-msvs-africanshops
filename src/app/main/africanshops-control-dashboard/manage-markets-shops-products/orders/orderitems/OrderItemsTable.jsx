@@ -1,16 +1,12 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { useMemo } from 'react';
-import {motion} from 'framer-motion' 
+import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
-import { ListItemIcon, MenuItem, Paper } from '@mui/material';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import Button from '@mui/material/Button';
+import { Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
 import FuseLoading from '@fuse/core/FuseLoading';
-import OrdersStatus from '../order/OrdersStatus';
-import  { useAdminGetOrderItems } from 'src/app/api/orders/useAdminGetShopOrders';
-import OrdersCreatedAndPaymentStatus from '../order/OrdersCreatedAndPaymentStatus';
+import { useAdminGetOrderItems } from 'src/app/api/orders/useAdminGetShopOrders';
 import { formatCurrency } from '../../../manage-lgashippingtable/PosUtils';
 import OrderItemsCancellationStatus from '../order/OrderItemsCancellationStatus';
 
@@ -31,7 +27,9 @@ function OrderItemsTable() {
 						color="secondary"
 						role="button"
 					>
-						{row?.original?.paymentResult?.reference ? row?.original?.paymentResult?.reference : row?.original?._id}
+						{row?.original?.paymentResult?.reference
+							? row?.original?.paymentResult?.reference
+							: row?.original?._id}
 					</Typography>
 				)
 			},
@@ -48,7 +46,7 @@ function OrderItemsTable() {
 			},
 			{
 				id: 'quantity',
-				accessorFn: (row) => ` ${(row?.quantity)}`,
+				accessorFn: (row) => ` ${row?.quantity}`,
 				header: 'Quantity',
 				size: 64
 			},
@@ -59,21 +57,20 @@ function OrderItemsTable() {
 				header: 'Total',
 				size: 64
 			},
-			
+
 			{
 				id: 'id',
 				accessorKey: 'isCanceled',
 				header: 'Cancellation Status',
-				
-				accessorFn: (row) => <OrderItemsCancellationStatus 
-				orderItemId={row?._id}
-				isCanceled={row?.isCanceled}
-				isRefundRequested={row?.isRefundRequested} 
-				isApprovedAndRefundedByAfricanshops={row?.isApprovedAndRefundedByAfricanshops} 
-				
-				/>,
-				
-				
+
+				accessorFn: (row) => (
+					<OrderItemsCancellationStatus
+						orderItemId={row?._id}
+						isCanceled={row?.isCanceled}
+						isRefundRequested={row?.isRefundRequested}
+						isApprovedAndRefundedByAfricanshops={row?.isApprovedAndRefundedByAfricanshops}
+					/>
+				)
 			},
 
 			{
@@ -92,29 +89,27 @@ function OrderItemsTable() {
 		[]
 	);
 
-
 	const rows = [];
-	 orderItems?.data &&
-     orderItems?.data?.forEach((item) => {
-      rows.push({
-        id: item?._id,
-        name: item?.name,
+	orderItems?.data &&
+		orderItems?.data?.forEach((item) => {
+			rows.push({
+				id: item?._id,
+				name: item?.name,
 
-        quantity: item?.quantity,
-        price: item?.Price,
-        isCanceled: item.isCanceled,
-        isRefundRequested: item.isRefundRequested,
-		isApprovedAndRefundedByAfricanshops: item.isApprovedAndRefundedByAfricanshops,
-        createdAt: item?.createdAt.slice(0, 10),
-      });
-    });
-
+				quantity: item?.quantity,
+				price: item?.Price,
+				isCanceled: item.isCanceled,
+				isRefundRequested: item.isRefundRequested,
+				isApprovedAndRefundedByAfricanshops: item.isApprovedAndRefundedByAfricanshops,
+				createdAt: item?.createdAt.slice(0, 10)
+			});
+		});
 
 	if (isLoading) {
 		return <FuseLoading />;
 	}
 
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -125,31 +120,28 @@ function OrderItemsTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Nework Error While Retrieving orders!
+					Nework Error While Retrieving orders!
 				</Typography>
-			
 			</motion.div>
 		);
-		
 	}
 
-if (! orderItems?.data) {
-	return (
-		<motion.div
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1, transition: { delay: 0.1 } }}
-			className="flex flex-col flex-1 items-center justify-center h-full"
-		>
-			<Typography
-				color="text.secondary"
-				variant="h5"
+	if (!orderItems?.data) {
+		return (
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1, transition: { delay: 0.1 } }}
+				className="flex flex-col flex-1 items-center justify-center h-full"
 			>
-				No orders found!
-			</Typography>
-		
-		</motion.div>
-	);
-}
+				<Typography
+					color="text.secondary"
+					variant="h5"
+				>
+					No orders found!
+				</Typography>
+			</motion.div>
+		);
+	}
 
 	return (
 		<Paper
@@ -171,9 +163,8 @@ if (! orderItems?.data) {
 					}
 				}}
 				rows={rows}
-				data={ orderItems?.data}
+				data={orderItems?.data}
 				columns={columns}
-				
 			/>
 		</Paper>
 	);

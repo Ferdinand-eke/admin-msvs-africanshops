@@ -1,7 +1,6 @@
 import { lazy } from 'react';
 import UserContactView from './contact/UserContactView';
 // import { authRoles } from 'src/app/auth';
-import authRoles from '../../../auth/authRoles';
 import AddUserForm from './contact/AddUserForm';
 
 const ContactsOfUsersApp = lazy(() => import('./ContactsOfUsersApp'));
@@ -15,10 +14,8 @@ const UsersAppConfig = {
 		}
 	},
 	// auth: authRoles.admin,
-	
-	
-	routes: [
 
+	routes: [
 		{
 			path: 'users/list',
 			element: <ContactsOfUsersApp />,
@@ -33,7 +30,7 @@ const UsersAppConfig = {
 				},
 				{
 					path: ':id/edit',
-					element:<AddUserForm />
+					element: <AddUserForm />
 				}
 			]
 		}

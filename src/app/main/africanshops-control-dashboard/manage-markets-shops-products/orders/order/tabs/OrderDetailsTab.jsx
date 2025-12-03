@@ -1,14 +1,10 @@
-import _ from '@lodash';
-import clsx from 'clsx';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import GoogleMap from 'google-map-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { useParams } from 'react-router-dom';
 import TableBody from '@mui/material/TableBody';
@@ -16,561 +12,1039 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
-import { useGetECommerceOrderQuery } from '../../ECommerceApi';
-import OrdersStatus from '../OrdersStatus';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
+import Paper from '@mui/material/Paper';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useQueryClient } from 'react-query';
+import { format, formatDistance, parseISO, isValid } from 'date-fns';
+import {
+	useDeliverOrder,
+	useHandleOrderArrival,
+	usePackOrder,
+	useShipOrder
+} from 'src/app/api/orders/useAdminGetShopOrders';
 import OrdersPackedStatus from '../OrdersPackedStatus';
 import OrdersShipmentStatus from '../OrdersShipmentStatus';
 import OrdersArrivalStatus from '../OrdersArrivalStatus';
 import OrdersDeliveryStatus from '../OrdersDeliveryStatus';
 import OrdersCreatedAndPaymentStatus from '../OrdersCreatedAndPaymentStatus';
-import { useDeliverOrder, useHandleOrderArrival, usePackOrder, useShipOrder } from 'src/app/api/orders/useAdminGetShopOrders';
-
-const mapKey = import.meta.env.VITE_MAP_KEY;
 
 /**
- * The marker.
+ * Format date to human-readable format
+ * @param {string|Date} dateString - The date to format
+ * @param {string} formatType - The format type ('full', 'short', 'relative', 'time')
+ * @returns {string} Formatted date string
  */
-function Marker(props) {
-	const { text, lat, lng } = props;
+const formatHumanDate = (dateString, formatType = 'full') => {
+	if (!dateString) return 'N/A';
+
+	try {
+		// Parse the date
+		const date = typeof dateString === 'string' ? parseISO(dateString) : dateString;
+
+		// Check if date is valid
+		if (!isValid(date)) return dateString;
+
+		switch (formatType) {
+			case 'full':
+				// e.g., "January 15, 2024 at 3:45 PM"
+				return format(date, "MMMM dd, yyyy 'at' h:mm a");
+			case 'short':
+				// e.g., "Jan 15, 2024"
+				return format(date, 'MMM dd, yyyy');
+			case 'relative':
+				// e.g., "2 hours ago"
+				return formatDistance(date, new Date(), { addSuffix: true });
+			case 'time':
+				// e.g., "3:45 PM"
+				return format(date, 'h:mm a');
+			case 'datetime':
+				// e.g., "15/01/2024 15:45"
+				return format(date, 'dd/MM/yyyy HH:mm');
+			default:
+				return format(date, "MMMM dd, yyyy 'at' h:mm a");
+		}
+	} catch (error) {
+		console.error('Date formatting error:', error);
+		return dateString;
+	}
+};
+
+/**
+ * Professional Confirmation Dialog Component
+ */
+function ConfirmationDialog({ open, onClose, onConfirm, title, message, actionLabel, isLoading }) {
 	return (
-		<Tooltip
-			title={
-				<div>
-					{text}
-					<br />
-					{lat}, {lng}
-				</div>
-			}
-			placement="top"
+		<Dialog
+			open={open}
+			onClose={onClose}
+			aria-labelledby="confirmation-dialog-title"
+			PaperProps={{
+				sx: {
+					borderRadius: 2,
+					minWidth: 400
+				}
+			}}
 		>
-			<FuseSvgIcon className="text-red">heroicons-outline:location-marker</FuseSvgIcon>
-		</Tooltip>
+			<DialogTitle
+				id="confirmation-dialog-title"
+				sx={{ pb: 1 }}
+			>
+				<Box
+					display="flex"
+					alignItems="center"
+					gap={1}
+				>
+					<FuseSvgIcon
+						color="primary"
+						size={24}
+					>
+						heroicons-outline:exclamation-circle
+					</FuseSvgIcon>
+					<Typography
+						variant="h6"
+						component="span"
+					>
+						{title}
+					</Typography>
+				</Box>
+			</DialogTitle>
+			<Divider />
+			<DialogContent sx={{ pt: 3 }}>
+				<DialogContentText>{message}</DialogContentText>
+			</DialogContent>
+			<DialogActions sx={{ px: 3, pb: 2 }}>
+				<Button
+					onClick={onClose}
+					variant="outlined"
+					disabled={isLoading}
+					sx={{ borderRadius: 1.5 }}
+				>
+					Cancel
+				</Button>
+				<Button
+					onClick={onConfirm}
+					variant="contained"
+					color="primary"
+					disabled={isLoading}
+					autoFocus
+					sx={{ borderRadius: 1.5, minWidth: 100 }}
+				>
+					{isLoading ? 'Processing...' : actionLabel}
+				</Button>
+			</DialogActions>
+		</Dialog>
 	);
 }
 
 /**
- * The order details tab.
+ * The order details tab - Enhanced with auto-refresh and date formatting
  */
-function OrderDetailsTab({order, isError}) {
+function OrderDetailsTab({ order, isError }) {
 	const routeParams = useParams();
 	const { orderId } = routeParams;
+	const queryClient = useQueryClient();
 
 	const [map, setMap] = useState('shipping');
+	const [confirmDialog, setConfirmDialog] = useState({
+		open: false,
+		type: null,
+		title: '',
+		message: '',
+		actionLabel: ''
+	});
+	const [isRefreshing, setIsRefreshing] = useState(false);
+
 	const packOrder = usePackOrder();
-  const shipOrder = useShipOrder();
-  const handleOrderArrival = useHandleOrderArrival();
-  const deliverOrder = useDeliverOrder();
+	const shipOrder = useShipOrder();
+	const handleOrderArrival = useHandleOrderArrival();
+	const deliverOrder = useDeliverOrder();
 
+	// Auto-refresh order data when mutations succeed
+	useEffect(() => {
+		if (packOrder.isSuccess || shipOrder.isSuccess || handleOrderArrival.isSuccess || deliverOrder.isSuccess) {
+			setIsRefreshing(true);
+			// Invalidate and refetch order queries
+			queryClient.invalidateQueries(['orders_adminrole', orderId]);
+			queryClient.invalidateQueries('orders_adminrole');
 
+			// Reset refreshing state after a delay
+			const timer = setTimeout(() => {
+				setIsRefreshing(false);
+			}, 1000);
 
+			return () => clearTimeout(timer);
+		}
+	}, [
+		packOrder.isSuccess,
+		shipOrder.isSuccess,
+		handleOrderArrival.isSuccess,
+		deliverOrder.isSuccess,
+		queryClient,
+		orderId
+	]);
 
-  const handlePack = async () => {
-    if (window.confirm('Pack Order?')) {
-      try {
-        packOrder.mutate(order?._id);
-      } catch (error) {
-        console.log({ error: packOrder?.error });
-        console.log({ error: JSON.stringify(error) });
-      }
-    }
-  };
+	const openConfirmDialog = (type, title, message, actionLabel) => {
+		setConfirmDialog({
+			open: true,
+			type,
+			title,
+			message,
+			actionLabel
+		});
+	};
 
-  const handleShip = async () => {
-    
-    if (window.confirm('Ship Order?')) {
-      try {
-        shipOrder.mutate(order?._id);
-      } catch (error) {
-        console.log({ error: shipOrder?.error });
-      }
-    }
-  };
+	const closeConfirmDialog = () => {
+		setConfirmDialog((prev) => ({ ...prev, open: false }));
+	};
 
-  const handleArrival = async () => {
-    
-    if (window.confirm('Comfirm Order Arrival to warehouse?')) {
-      try {
-        handleOrderArrival.mutate(order?._id);
-      } catch (error) {
-        console.log({ error: handleOrderArrival?.error });
-      }
-    }
-  };
+	const handleConfirm = async () => {
+		try {
+			switch (confirmDialog.type) {
+				case 'pack':
+					await packOrder.mutateAsync(order?.id || order?._id);
+					break;
+				case 'ship':
+					await shipOrder.mutateAsync(order?.id || order?._id);
+					break;
+				case 'arrival':
+					await handleOrderArrival.mutateAsync(order?.id || order?._id);
+					break;
+				case 'delivery':
+					await deliverOrder.mutateAsync(order?.id || order?._id);
+					break;
+				default:
+					break;
+			}
+			closeConfirmDialog();
+		} catch (error) {
+			console.error('Order action failed:', error);
+		}
+	};
 
-  const handleDelivery = async () => {
-    
+	const handlePack = () => {
+		openConfirmDialog(
+			'pack',
+			'Confirm Order Packaging',
+			'Are you sure you want to mark this order as packed? This action will move the order to the next stage in the fulfillment process.',
+			'Pack Order'
+		);
+	};
 
-    if (window.confirm('Deliver Order?')) {
-      try {
-        deliverOrder.mutate(order?._id);
-      } catch (error) {
-        console.log({ error: JSON.stringify(error) });
-      }
-    }
-  };
+	const handleShip = () => {
+		openConfirmDialog(
+			'ship',
+			'Confirm Order Shipment',
+			'Are you sure you want to mark this order as shipped? Please ensure all items are properly packaged and ready for dispatch.',
+			'Ship Order'
+		);
+	};
 
+	const handleArrival = () => {
+		openConfirmDialog(
+			'arrival',
+			'Confirm Warehouse Arrival',
+			'Are you sure you want to confirm that this order has arrived at the destination warehouse? This will notify the relevant parties.',
+			'Confirm Arrival'
+		);
+	};
 
+	const handleDelivery = () => {
+		openConfirmDialog(
+			'delivery',
+			'Confirm Order Delivery',
+			'Are you sure you want to mark this order as delivered? This action indicates the customer has received their order.',
+			'Confirm Delivery'
+		);
+	};
 
+	const getCurrentLoadingState = () => {
+		switch (confirmDialog.type) {
+			case 'pack':
+				return packOrder.isLoading;
+			case 'ship':
+				return shipOrder.isLoading;
+			case 'arrival':
+				return handleOrderArrival.isLoading;
+			case 'delivery':
+				return deliverOrder.isLoading;
+			default:
+				return false;
+		}
+	};
 
-  /****
-   * Handle states below
-   */
 	if (!isError && !order) {
 		return null;
 	}
 
 	return (
 		<div>
-			<div className="pb-48">
-				<div className="pb-16 flex items-center">
-					<FuseSvgIcon color="action">heroicons-outline:user-circle</FuseSvgIcon>
+			<ConfirmationDialog
+				open={confirmDialog.open}
+				onClose={closeConfirmDialog}
+				onConfirm={handleConfirm}
+				title={confirmDialog.title}
+				message={confirmDialog.message}
+				actionLabel={confirmDialog.actionLabel}
+				isLoading={getCurrentLoadingState()}
+			/>
+
+			{/* Refreshing Indicator */}
+			{isRefreshing && (
+				<Paper
+					elevation={2}
+					sx={{
+						p: 2,
+						mb: 3,
+						borderRadius: 2,
+						bgcolor: 'info.lighter',
+						borderLeft: 4,
+						borderColor: 'info.main',
+						display: 'flex',
+						alignItems: 'center',
+						gap: 2
+					}}
+				>
+					<CircularProgress
+						size={20}
+						color="info"
+					/>
 					<Typography
-						className="h2 mx-12 font-medium"
+						variant="body2"
+						color="info.dark"
+						fontWeight={600}
+					>
+						Refreshing order details...
+					</Typography>
+				</Paper>
+			)}
+
+			<Paper
+				elevation={0}
+				sx={{ p: 3, mb: 4, borderRadius: 2, bgcolor: 'background.default' }}
+			>
+				<Box
+					display="flex"
+					alignItems="center"
+					gap={1}
+					mb={3}
+				>
+					<FuseSvgIcon
+						color="action"
+						size={24}
+					>
+						heroicons-outline:user-circle
+					</FuseSvgIcon>
+					<Typography
+						variant="h6"
+						fontWeight={600}
 						color="text.secondary"
 					>
-						Customer
+						Customer Information
 					</Typography>
-				</div>
+				</Box>
 
-				<div className="mb-24">
-					<div className="table-responsive mb-48">
-						<table className="simple">
-							<thead>
-								<tr>
-									<th>
-										<Typography className="font-semibold">Name</Typography>
-									</th>
-									<th>
-										<Typography className="font-semibold">Email</Typography>
-									</th>
-									<th>
-										<Typography className="font-semibold">Phone</Typography>
-									</th>
-								
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<div className="flex items-center">
-											{/* <Avatar src={order?.customer?.avatar} /> */}
-											<Avatar
-                        src={order?.shippingAddress?.fullName.charAt(
-                          0
-                        )}
-                      />
-											<Typography className="truncate mx-8">
-												{`${order?.shippingAddress?.fullName}`}
+				<Box sx={{ mb: 3 }}>
+					<Paper
+						elevation={1}
+						sx={{ p: 2, borderRadius: 2 }}
+					>
+						<Box
+							display="flex"
+							alignItems="center"
+							gap={2}
+							mb={2}
+						>
+							<Avatar
+								sx={{
+									bgcolor: 'primary.main',
+									width: 56,
+									height: 56,
+									fontSize: '1.5rem',
+									fontWeight: 600
+								}}
+							>
+								{order?.shippingAddress?.fullName?.charAt(0)?.toUpperCase()}
+							</Avatar>
+							<Box>
+								<Typography
+									variant="h6"
+									fontWeight={600}
+								>
+									{order?.shippingAddress?.fullName}
+								</Typography>
+								<Box
+									display="flex"
+									gap={1}
+									mt={0.5}
+								>
+									<Chip
+										label={order?.shippingAddress?.prefContact}
+										size="small"
+										icon={<FuseSvgIcon size={16}>heroicons-outline:mail</FuseSvgIcon>}
+										sx={{ borderRadius: 1 }}
+									/>
+									<Chip
+										label={order?.shippingAddress?.phone}
+										size="small"
+										icon={<FuseSvgIcon size={16}>heroicons-outline:phone</FuseSvgIcon>}
+										sx={{ borderRadius: 1 }}
+									/>
+								</Box>
+							</Box>
+						</Box>
+					</Paper>
+				</Box>
+
+				<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+					<Accordion
+						elevation={1}
+						expanded={map === 'shipping'}
+						onChange={() => setMap(map !== 'shipping' ? 'shipping' : '')}
+						sx={{ borderRadius: '12px!important', '&:before': { display: 'none' } }}
+					>
+						<AccordionSummary expandIcon={<ExpandMoreIcon />}>
+							<Box
+								display="flex"
+								alignItems="center"
+								gap={1}
+							>
+								<FuseSvgIcon
+									size={20}
+									color="action"
+								>
+									heroicons-outline:location-marker
+								</FuseSvgIcon>
+								<Typography fontWeight={600}>Shipping Address</Typography>
+							</Box>
+						</AccordionSummary>
+						<AccordionDetails>
+							<Paper
+								elevation={0}
+								sx={{ p: 2, bgcolor: 'background.default', borderRadius: 1 }}
+							>
+								<Typography
+									variant="body1"
+									color="text.secondary"
+								>
+									{order?.shippingAddress?.address}
+								</Typography>
+							</Paper>
+						</AccordionDetails>
+					</Accordion>
+
+					<Accordion
+						elevation={1}
+						expanded={map === 'invoice'}
+						onChange={() => setMap(map !== 'invoice' ? 'invoice' : '')}
+						sx={{ borderRadius: '12px!important', '&:before': { display: 'none' } }}
+					>
+						<AccordionSummary expandIcon={<ExpandMoreIcon />}>
+							<Box
+								display="flex"
+								alignItems="center"
+								gap={1}
+							>
+								<FuseSvgIcon
+									size={20}
+									color="action"
+								>
+									heroicons-outline:document-text
+								</FuseSvgIcon>
+								<Typography fontWeight={600}>Invoice Address</Typography>
+							</Box>
+						</AccordionSummary>
+						<AccordionDetails>
+							<Paper
+								elevation={0}
+								sx={{ p: 2, bgcolor: 'background.default', borderRadius: 1 }}
+							>
+								<Typography
+									variant="body1"
+									color="text.secondary"
+								>
+									{order?.shippingAddress?.address}
+								</Typography>
+							</Paper>
+						</AccordionDetails>
+					</Accordion>
+				</Box>
+			</Paper>
+
+			<Paper
+				elevation={0}
+				sx={{ p: 3, mb: 4, borderRadius: 2, bgcolor: 'background.default' }}
+			>
+				<Box
+					display="flex"
+					alignItems="center"
+					gap={1}
+					mb={3}
+				>
+					<FuseSvgIcon
+						color="action"
+						size={24}
+					>
+						heroicons-outline:truck
+					</FuseSvgIcon>
+					<Typography
+						variant="h6"
+						fontWeight={600}
+						color="text.secondary"
+					>
+						Shipping Information
+					</Typography>
+				</Box>
+
+				<Paper
+					elevation={1}
+					sx={{ overflow: 'hidden', borderRadius: 2 }}
+				>
+					<Table>
+						<TableHead>
+							<TableRow sx={{ bgcolor: 'action.hover' }}>
+								<TableCell>
+									<Typography fontWeight={600}>Tracking Code</Typography>
+								</TableCell>
+								<TableCell>
+									<Typography fontWeight={600}>Carrier</Typography>
+								</TableCell>
+								<TableCell>
+									<Typography fontWeight={600}>Weight</Typography>
+								</TableCell>
+								<TableCell>
+									<Typography fontWeight={600}>Fee</Typography>
+								</TableCell>
+								<TableCell>
+									<Typography fontWeight={600}>Date</Typography>
+								</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							<TableRow hover>
+								<TableCell>
+									<Box
+										display="flex"
+										alignItems="center"
+										gap={1}
+									>
+										<FuseSvgIcon
+											size={16}
+											color="action"
+										>
+											heroicons-outline:hashtag
+										</FuseSvgIcon>
+										<Typography
+											variant="body2"
+											fontFamily="monospace"
+										>
+											{order?.id || order?._id?.slice(-8)}
+										</Typography>
+									</Box>
+								</TableCell>
+								<TableCell>
+									<Chip
+										label={`AfricanShops Express - ${order?.shippingMethod}`}
+										size="small"
+										color="primary"
+										variant="outlined"
+										sx={{ borderRadius: 1 }}
+									/>
+								</TableCell>
+								<TableCell>
+									<Typography variant="body2">{order?.shipmentWeight || 'N/A'}</Typography>
+								</TableCell>
+								<TableCell>
+									<Typography
+										variant="body2"
+										fontWeight={600}
+										color="success.main"
+									>
+										NGN {order?.shippingfee || 2000}
+									</Typography>
+								</TableCell>
+								<TableCell>
+									<Box>
+										<Typography
+											variant="body2"
+											fontWeight={600}
+										>
+											{formatHumanDate(order?.shippedAt, 'short')}
+										</Typography>
+										{order?.shippedAt && (
+											<Typography
+												variant="caption"
+												color="text.disabled"
+											>
+												{formatHumanDate(order?.shippedAt, 'relative')}
 											</Typography>
-										</div>
-									</td>
-									<td>
-										<Typography className="truncate">{order?.shippingAddress?.prefContact}</Typography>
-									</td>
-									<td>
-										<Typography className="truncate">{order?.shippingAddress?.phone}</Typography>
-									</td>
-								
-								</tr>
-							</tbody>
-						</table>
-					</div>
+										)}
+									</Box>
+								</TableCell>
+							</TableRow>
+						</TableBody>
+					</Table>
+				</Paper>
+			</Paper>
 
-					<div className="space-y-12">
-						<Accordion
-							className="border-0 shadow-0 overflow-hidden"
-							expanded={map === 'shipping'}
-							onChange={() => setMap(map !== 'shipping' ? 'shipping' : '')}
-							sx={{ backgroundColor: 'background.default', borderRadius: '12px!important' }}
+			<Paper
+				elevation={0}
+				sx={{ p: 3, mb: 4, borderRadius: 2, bgcolor: 'background.default' }}
+			>
+				<Box
+					display="flex"
+					alignItems="center"
+					gap={1}
+					mb={3}
+				>
+					<FuseSvgIcon
+						color="action"
+						size={24}
+					>
+						heroicons-outline:clock
+					</FuseSvgIcon>
+					<Typography
+						variant="h6"
+						fontWeight={600}
+						color="text.secondary"
+					>
+						Order Status Timeline
+					</Typography>
+				</Box>
+
+				<Paper
+					elevation={1}
+					sx={{ overflow: 'hidden', borderRadius: 2 }}
+				>
+					<Table>
+						<TableHead>
+							<TableRow sx={{ bgcolor: 'action.hover' }}>
+								<TableCell width="40%">
+									<Typography fontWeight={600}>Status</Typography>
+								</TableCell>
+								<TableCell width="60%">
+									<Typography fontWeight={600}>Action / Date</Typography>
+								</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							<TableRow hover>
+								<TableCell>
+									<OrdersCreatedAndPaymentStatus
+										createdAt={order?.createdAt}
+										isPaid={order?.isPaid}
+									/>
+								</TableCell>
+								<TableCell>
+									<Box>
+										<Typography
+											variant="body2"
+											fontWeight={600}
+										>
+											{formatHumanDate(order?.createdAt, 'full')}
+										</Typography>
+										<Typography
+											variant="caption"
+											color="text.disabled"
+										>
+											{formatHumanDate(order?.createdAt, 'relative')}
+										</Typography>
+									</Box>
+								</TableCell>
+							</TableRow>
+
+							{order?.isPaid && (
+								<>
+									<TableRow hover>
+										<TableCell>
+											<OrdersPackedStatus isPacked={order?.isPacked} />
+										</TableCell>
+										<TableCell>
+											{order?.isPacked ? (
+												<Box>
+													<Chip
+														label={formatHumanDate(order?.packedAt, 'short')}
+														color="success"
+														size="small"
+														icon={
+															<FuseSvgIcon size={16}>
+																heroicons-outline:check-circle
+															</FuseSvgIcon>
+														}
+														sx={{ borderRadius: 1, fontWeight: 600 }}
+													/>
+													<Typography
+														variant="caption"
+														color="text.disabled"
+														display="block"
+														mt={0.5}
+													>
+														{formatHumanDate(order?.packedAt, 'relative')}
+													</Typography>
+												</Box>
+											) : (
+												<Button
+													variant="contained"
+													color="warning"
+													size="small"
+													onClick={handlePack}
+													disabled={packOrder.isLoading}
+													startIcon={
+														<FuseSvgIcon size={16}>heroicons-outline:cube</FuseSvgIcon>
+													}
+													sx={{ borderRadius: 1.5, textTransform: 'none' }}
+												>
+													{packOrder.isLoading ? 'Processing...' : 'Process Packaging'}
+												</Button>
+											)}
+										</TableCell>
+									</TableRow>
+
+									<TableRow hover>
+										<TableCell>
+											<OrdersShipmentStatus isShipped={order?.isShipped} />
+										</TableCell>
+										<TableCell>
+											{order?.isShipped ? (
+												<Box>
+													<Chip
+														label={formatHumanDate(order?.shippedAt, 'short')}
+														color="success"
+														size="small"
+														icon={
+															<FuseSvgIcon size={16}>
+																heroicons-outline:check-circle
+															</FuseSvgIcon>
+														}
+														sx={{ borderRadius: 1, fontWeight: 600 }}
+													/>
+													<Typography
+														variant="caption"
+														color="text.disabled"
+														display="block"
+														mt={0.5}
+													>
+														{formatHumanDate(order?.shippedAt, 'relative')}
+													</Typography>
+												</Box>
+											) : order?.isPacked ? (
+												<Button
+													variant="contained"
+													color="warning"
+													size="small"
+													onClick={handleShip}
+													disabled={shipOrder.isLoading}
+													startIcon={
+														<FuseSvgIcon size={16}>heroicons-outline:truck</FuseSvgIcon>
+													}
+													sx={{ borderRadius: 1.5, textTransform: 'none' }}
+												>
+													{shipOrder.isLoading ? 'Processing...' : 'Process Shipping'}
+												</Button>
+											) : (
+												<Typography
+													variant="body2"
+													color="text.disabled"
+												>
+													Awaiting packaging
+												</Typography>
+											)}
+										</TableCell>
+									</TableRow>
+
+									<TableRow hover>
+										<TableCell>
+											<OrdersArrivalStatus hasArrivedWarehouse={order?.hasArrivedWarehouse} />
+										</TableCell>
+										<TableCell>
+											{order?.hasArrivedWarehouse ? (
+												// hasArrivedWarehouse
+												<Box>
+													<Chip
+														label={formatHumanDate(order?.arrivedWarehouseAt, 'short')}
+														color="success"
+														size="small"
+														icon={
+															<FuseSvgIcon size={16}>
+																heroicons-outline:check-circle
+															</FuseSvgIcon>
+														}
+														sx={{ borderRadius: 1, fontWeight: 600 }}
+													/>
+													<Typography
+														variant="caption"
+														color="text.disabled"
+														display="block"
+														mt={0.5}
+													>
+														{formatHumanDate(order?.arrivedWarehouseAt, 'relative')}
+													</Typography>
+												</Box>
+											) : order?.isShipped ? (
+												<Button
+													variant="contained"
+													color="warning"
+													size="small"
+													onClick={handleArrival}
+													disabled={handleOrderArrival.isLoading}
+													startIcon={
+														<FuseSvgIcon size={16}>
+															heroicons-outline:office-building
+														</FuseSvgIcon>
+													}
+													sx={{ borderRadius: 1.5, textTransform: 'none' }}
+												>
+													{handleOrderArrival.isLoading ? 'Processing...' : 'Confirm Arrival'}
+												</Button>
+											) : (
+												<Typography
+													variant="body2"
+													color="text.disabled"
+												>
+													Awaiting shipment
+												</Typography>
+											)}
+										</TableCell>
+									</TableRow>
+
+									<TableRow hover>
+										<TableCell>
+											<OrdersDeliveryStatus isDelivered={order?.isDelivered} />
+										</TableCell>
+										<TableCell>
+											{order?.isDelivered ? (
+												<Box>
+													<Chip
+														label={formatHumanDate(order?.deliveredAt, 'short')}
+														color="success"
+														size="small"
+														icon={
+															<FuseSvgIcon size={16}>
+																heroicons-outline:check-circle
+															</FuseSvgIcon>
+														}
+														sx={{ borderRadius: 1, fontWeight: 600 }}
+													/>
+													<Typography
+														variant="caption"
+														color="text.disabled"
+														display="block"
+														mt={0.5}
+													>
+														{formatHumanDate(order?.deliveredAt, 'relative')}
+													</Typography>
+												</Box>
+											) : order?.isPacked && order?.isShipped && order?.hasArrivedWarehouse ? (
+												<Button
+													variant="contained"
+													// color="gray"
+													size="small"
+													onClick={handleDelivery}
+													disabled={deliverOrder.isLoading}
+													startIcon={
+														<FuseSvgIcon size={16}>
+															heroicons-outline:badge-check
+														</FuseSvgIcon>
+													}
+													sx={{ borderRadius: 1.5, textTransform: 'none' }}
+												>
+													{deliverOrder.isLoading ? 'Processing...' : 'Confirm Delivery'}
+												</Button>
+											) : (
+												<Typography
+													variant="body2"
+													color="text.disabled"
+												>
+													Awaiting warehouse arrival
+												</Typography>
+											)}
+										</TableCell>
+									</TableRow>
+								</>
+							)}
+						</TableBody>
+					</Table>
+				</Paper>
+			</Paper>
+
+			<Paper
+				elevation={0}
+				sx={{ p: 3, mb: 4, borderRadius: 2, bgcolor: 'background.default' }}
+			>
+				<Box
+					display="flex"
+					alignItems="center"
+					gap={1}
+					mb={3}
+				>
+					<FuseSvgIcon
+						color="action"
+						size={24}
+					>
+						heroicons-outline:currency-dollar
+					</FuseSvgIcon>
+					<Typography
+						variant="h6"
+						fontWeight={600}
+						color="text.secondary"
+					>
+						Payment Details
+					</Typography>
+				</Box>
+
+				<Paper
+					elevation={1}
+					sx={{ overflow: 'hidden', borderRadius: 2 }}
+				>
+					<Box sx={{ p: 3 }}>
+						<Box
+							display="flex"
+							justifyContent="space-between"
+							alignItems="center"
+							mb={2}
 						>
-							<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-								<Typography className="font-semibold">Shipping Address</Typography>
-							</AccordionSummary>
-							<AccordionDetails className="flex flex-col md:flex-row">
-								<Typography className="w-full md:max-w-256 mb-16 md:mb-0 mx-8 text-16">
-									{order?.shippingAddress?.address}
+							<Box>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+									gutterBottom
+								>
+									Transaction ID
 								</Typography>
-								<div className="w-full h-320 rounded-16 overflow-hidden mx-8">
-									{/* <GoogleMap
-										bootstrapURLKeys={{
-											key: mapKey
-										}}
-										defaultZoom={15}
-										defaultCenter={{
-											lng: order?.customer?.shippingAddress?.lng,
-											lat: order?.customer?.shippingAddress?.lat
-										}}
-									>
-										<Marker
-											text={order?.customer?.shippingAddress?.address}
-											lat={order?.customer?.shippingAddress?.lat}
-											lng={order?.customer?.shippingAddress?.lng}
-										/>
-									</GoogleMap> */}
-								</div>
-							</AccordionDetails>
-						</Accordion>
-
-						<Accordion
-							className="border-0 shadow-0 overflow-hidden"
-							expanded={map === 'invoice'}
-							onChange={() => setMap(map !== 'invoice' ? 'invoice' : '')}
-							sx={{ backgroundColor: 'background.default', borderRadius: '12px!important' }}
-						>
-							<AccordionSummary expandIcon={<ExpandMoreIcon />}>
-								<Typography className="font-semibold">Invoice Address</Typography>
-							</AccordionSummary>
-							<AccordionDetails className="flex flex-col md:flex-row -mx-8">
-								<Typography className="w-full md:max-w-256 mb-16 md:mb-0 mx-8 text-16">
-								
-									{order?.shippingAddress?.address}
+								<Typography
+									variant="body1"
+									fontFamily="monospace"
+									fontWeight={500}
+								>
+									{order?.id || order?._id?.slice(-12)}
 								</Typography>
-								<div className="w-full h-320 rounded-16 overflow-hidden mx-8">
-									{/* <GoogleMap
-										bootstrapURLKeys={{
-											key: mapKey
-										}}
-										defaultZoom={15}
-										defaultCenter={{
-											lng: order?.customer?.invoiceAddress?.lng,
-											lat: order?.customer?.invoiceAddress?.lat
-										}}
+							</Box>
+							<Chip
+								label={order?.paymentMethod}
+								color="primary"
+								variant="outlined"
+								icon={<FuseSvgIcon size={16}>heroicons-outline:credit-card</FuseSvgIcon>}
+								sx={{ borderRadius: 1, fontWeight: 600 }}
+							/>
+						</Box>
+
+						<Divider sx={{ my: 2 }} />
+
+						<Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+							<Box
+								display="flex"
+								justifyContent="space-between"
+							>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+								>
+									Item Price
+								</Typography>
+								<Typography
+									variant="body2"
+									fontWeight={600}
+								>
+									NGN {order?.itemsPrice?.toLocaleString()}
+								</Typography>
+							</Box>
+							<Box
+								display="flex"
+								justifyContent="space-between"
+							>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+								>
+									Shipping Fee
+								</Typography>
+								<Typography
+									variant="body2"
+									fontWeight={600}
+								>
+									NGN {order?.shippingPrice?.toLocaleString()}
+								</Typography>
+							</Box>
+							<Box
+								display="flex"
+								justifyContent="space-between"
+							>
+								<Typography
+									variant="body2"
+									color="text.secondary"
+								>
+									Tax
+								</Typography>
+								<Typography
+									variant="body2"
+									fontWeight={600}
+								>
+									NGN {order?.taxPrice?.toLocaleString()}
+								</Typography>
+							</Box>
+
+							<Divider sx={{ my: 1 }} />
+
+							<Box
+								display="flex"
+								justifyContent="space-between"
+								alignItems="center"
+							>
+								<Typography
+									variant="h6"
+									fontWeight={700}
+								>
+									Total Amount
+								</Typography>
+								<Typography
+									variant="h6"
+									fontWeight={700}
+									color="primary.main"
+								>
+									NGN {order?.totalPrice?.toLocaleString()}
+								</Typography>
+							</Box>
+
+							<Box
+								display="flex"
+								justifyContent="space-between"
+								mt={1}
+							>
+								<Typography
+									variant="caption"
+									color="text.secondary"
+								>
+									Payment Date
+								</Typography>
+								<Box textAlign="right">
+									<Typography
+										variant="caption"
+										color="text.secondary"
+										display="block"
 									>
-										<Marker
-											text={order?.customer?.invoiceAddress?.address}
-											lat={order?.customer?.invoiceAddress?.lat}
-											lng={order?.customer?.invoiceAddress?.lng}
-										/>
-									</GoogleMap> */}
-								</div>
-							</AccordionDetails>
-						</Accordion>
-					</div>
-				</div>
-			</div>
-
-			<div className="pb-48">
-        <div className="pb-16 flex items-center">
-          <FuseSvgIcon color="action">heroicons-outline:truck</FuseSvgIcon>
-          <Typography className="h2 mx-12 font-medium" color="text.secondary">
-            Shipping
-          </Typography>
-        </div>
-
-        <div className="table-responsive">
-          <table className="simple">
-            <thead>
-              <tr>
-                <th>
-                  <Typography className="font-semibold">
-                    Tracking Code
-                  </Typography>
-                </th>
-                <th>
-                  <Typography className="font-semibold">Carrier</Typography>
-                </th>
-                <th>
-                  <Typography className="font-semibold">Weight</Typography>
-                </th>
-                <th>
-                  <Typography className="font-semibold">Fee</Typography>
-                </th>
-                <th>
-                  <Typography className="font-semibold">Date</Typography>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-                <tr>
-                  <td>
-                    <span className="truncate">{order?._id}</span>
-                  </td>
-                  <td>
-                    <span className="truncate">Africanshops Express,{order?.shippingMethod}</span>
-                  </td>
-                  <td>
-                    <span className="truncate">{order?.shipmentWeight}</span>
-                  </td>
-                  <td>
-                    <span className="truncate">{order?.shippingfee || 2000}</span>
-                  </td>
-                  <td>
-                    <span className="truncate">{order?.shippedAt}</span>
-                  </td>
-                </tr>
-             
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-
-<div className="pb-48">
-        <div className="pb-16 flex items-center">
-          <FuseSvgIcon color="action">heroicons-outline:clock</FuseSvgIcon>
-          <Typography className="h2 mx-12 font-medium" color="text.secondary">
-            Order Status
-          </Typography>
-        </div>
-
-        <div className="table-responsive">
-          <Table className="simple">
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Typography className="font-semibold">Status</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography className="font-semibold">Updated On</Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            {/* OrdersPackedStatus */}
-            <TableBody>
-              <TableRow>
-                <TableCell>
-                  <OrdersCreatedAndPaymentStatus
-                    createdAt={order?.createdAt}
-                    isPaid={order?.isPaid}
-                  />
-                </TableCell>
-                <TableCell>{order?.createdAt}</TableCell>
-              </TableRow>
-            
-
-              {order?.isPaid && (
-                <>
-                  <TableRow>
-                    <TableCell>
-                      <OrdersPackedStatus isPacked={order?.isPacked} />
-                    </TableCell>
-                    <TableCell>
-						
-						{
-							order?.isPacked ?  <div
-							className={clsx(
-								'inline text-12 font-semibold py-4 px-12 rounded-full truncate',
-								'bg-green text-white'
-							)}
-						>
-							{order?.packedAt}
-						</div>  : <div
-						   onClick={() => handlePack()}
-							className={clsx(
-								'cursor-pointer inline text-12 font-semibold py-4 px-12 rounded-full truncate',
-								'bg-orange text-black'
-							)}
-						>
-							{packOrder.isLoading ? 'Processing Packaging ' : 'Process Packaging '}
-						</div>
-						}
-						</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell>
-                      <OrdersShipmentStatus
-                        isShipped={order?.isShipped}
-                      />
-                    </TableCell>
-                    <TableCell>
-					{
-							order?.isShipped ?  <div
-							className={clsx(
-								'inline text-12 font-semibold py-4 px-12 rounded-full truncate',
-								'bg-green text-white'
-							)}
-						>
-							{order?.shippedAt}
-						</div>  :  
-						
-						<>
-						{
-							order?.isPacked && (<div
-								onClick={() => handleShip()}
-		
-								
-									className={clsx(
-										'cursor-pointer inline text-12 font-semibold py-4 px-12 rounded-full truncate',
-										'bg-orange text-black'
-									)}
-								>
-									{shipOrder.isLoading ? 'Processing Shipping ' : 'Process Shipping '}
-								</div>)
-						}
-						</>
-						
-						}
-					</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell>
-                      <OrdersArrivalStatus
-                        hasArrivedWarehouse={
-                          order?.hasArrivedWarehouse
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-					{
-							order?.hasArrivedWarehouse ?  <div
-							className={clsx(
-								'inline text-12 font-semibold py-4 px-12 rounded-full truncate',
-								'bg-green text-white'
-							)}
-						>
-							{order?.arrivedWarehouseAt}
-						</div>  :  
-						
-						<>
-						{
-							order?.isShipped && (<div
-								onClick={() => handleArrival()}
-		
-								
-									className={clsx(
-										'cursor-pointer inline text-12 font-semibold py-4 px-12 rounded-full truncate',
-										'bg-orange text-black'
-									)}
-								>
-									{handleOrderArrival.isLoading ? 'Processing Order Arrival ' : 'Process Order Arrival '}
-								</div>)
-						}
-						</>
-						
-						}
-					</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell>
-                      <OrdersDeliveryStatus
-                        isDelivered={order?.isDelivered}
-                      />
-                    </TableCell>
-                    <TableCell>
-
-						{
-							order?.isPacked &&
-							order?.isShipped &&
-							order?.hasArrivedWarehouse && <>
-
-						{
-							order?.isDelivered ?  <div
-							className={clsx(
-								'inline text-12 font-semibold py-4 px-12 rounded-full truncate',
-								'bg-green text-white'
-							)}
-						>
-							{order?.deliveredAt}
-						</div>  :  
-						
-						<>
-						{
-							<div
-								onClick={() => handleDelivery()}
-		
-								
-									className={clsx(
-										'cursor-pointer inline text-12 font-semibold py-4 px-12 rounded-full truncate',
-										'bg-orange text-black'
-									)}
-								>
-									{deliverOrder.isLoading ? 'Processing Order Delivery ' : 'Process Order Delivery '}
-								</div>
-						}
-						</>
-						
-						}
-							
-							</>
-						}
-						
-						
-						</TableCell>
-                  </TableRow>
-                </>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
-
-	  <div className="pb-48">
-        <div className="pb-16 flex items-center">
-          <FuseSvgIcon color="action">
-            heroicons-outline:currency-dollar
-          </FuseSvgIcon>
-          <Typography className="h2 mx-12 font-medium" color="text.secondary">
-            Payment
-          </Typography>
-        </div>
-
-        <div className="table-responsive">
-          <table className="simple">
-            <thead>
-              <tr>
-                <th>
-                  <Typography className="font-semibold">
-                    TransactionID
-                  </Typography>
-                </th>
-                <th>
-                  <Typography className="font-semibold">
-                    Payment Method
-                  </Typography>
-                </th>
-				<th>
-                  <Typography className="font-semibold">Item Price</Typography>
-                </th>
-                <th>
-                  <Typography className="font-semibold">Shipping</Typography>
-                </th>
-				<th>
-                  <Typography className="font-semibold">Tax</Typography>
-                </th>
-				<th>
-                  <Typography className="font-semibold">Totak Amount</Typography>
-                </th>
-                <th>
-                  <Typography className="font-semibold">Date</Typography>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <span className="truncate">
-                    {order?._id}
-                  </span>
-                </td>
-                <td>
-                  <span className="truncate">{order?.paymentMethod}</span>
-                </td>
-				<td>
-                  <span className="truncate">NGN {order?.itemsPrice}</span>
-                </td>
-                <td>
-                  <span className="truncate">NGN {order?.shippingPrice}</span>
-                </td>
-				<td>
-                  <span className="truncate">NGN {order?.taxPrice}</span>
-                </td>
-
-				<td>
-                  <span className="truncate">NGN {order?.totalPrice}</span>
-                </td>
-                <td>
-                  <span className="truncate">{order?.createdAt}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-			
+										{formatHumanDate(order?.createdAt, 'full')}
+									</Typography>
+									<Typography
+										variant="caption"
+										color="text.disabled"
+										display="block"
+									>
+										{formatHumanDate(order?.createdAt, 'relative')}
+									</Typography>
+								</Box>
+							</Box>
+						</Box>
+					</Box>
+				</Paper>
+			</Paper>
 		</div>
 	);
 }

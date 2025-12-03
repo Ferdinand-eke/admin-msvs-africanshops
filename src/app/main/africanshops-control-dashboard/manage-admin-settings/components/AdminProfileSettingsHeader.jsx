@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
@@ -20,7 +19,9 @@ function AdminProfileSettingsHeader() {
 	// Determine active tab based on current route
 	const getActiveTab = () => {
 		if (location.pathname.includes('/profile')) return 0;
+
 		if (location.pathname.includes('/referral-links')) return 1;
+
 		return 0;
 	};
 
@@ -39,7 +40,11 @@ function AdminProfileSettingsHeader() {
 				animate={{ x: 0, transition: { delay: 0.2 } }}
 			>
 				<div className="flex items-center">
-					<FuseSvgIcon className="text-48" size={24} color="action">
+					<FuseSvgIcon
+						className="text-48"
+						size={24}
+						color="action"
+					>
 						heroicons-outline:user-circle
 					</FuseSvgIcon>
 					<Typography className="text-24 md:text-32 font-extrabold tracking-tight leading-none ml-12">

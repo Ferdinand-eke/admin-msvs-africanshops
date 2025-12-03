@@ -5,14 +5,18 @@ import { getAdminProfile, updateAdminSocialMedia } from 'src/app/api/apiRoutes';
  * Hook to fetch admin profile data
  */
 export function useAdminProfile() {
-	return useQuery(['adminProfile'], async () => {
-		const response = await getAdminProfile();
-		return response.data;
-	}, {
-		staleTime: 5 * 60 * 1000, // 5 minutes
-		cacheTime: 10 * 60 * 1000, // 10 minutes
-		retry: 2
-	});
+	return useQuery(
+		['adminProfile'],
+		async () => {
+			const response = await getAdminProfile();
+			return response.data;
+		},
+		{
+			staleTime: 5 * 60 * 1000, // 5 minutes
+			cacheTime: 10 * 60 * 1000, // 10 minutes
+			retry: 2
+		}
+	);
 }
 
 /**

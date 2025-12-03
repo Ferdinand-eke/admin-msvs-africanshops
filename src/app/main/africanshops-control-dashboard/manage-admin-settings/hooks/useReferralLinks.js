@@ -5,14 +5,18 @@ import { getAdminReferralLinks, generateAdminReferralLinks } from 'src/app/api/a
  * Hook to fetch admin referral links
  */
 export function useReferralLinks() {
-	return useQuery(['adminReferralLinks'], async () => {
-		const response = await getAdminReferralLinks();
-		return response.data;
-	}, {
-		staleTime: 5 * 60 * 1000, // 5 minutes
-		cacheTime: 10 * 60 * 1000, // 10 minutes
-		retry: 2
-	});
+	return useQuery(
+		['adminReferralLinks'],
+		async () => {
+			const response = await getAdminReferralLinks();
+			return response.data;
+		},
+		{
+			staleTime: 5 * 60 * 1000, // 5 minutes
+			cacheTime: 10 * 60 * 1000, // 10 minutes
+			retry: 2
+		}
+	);
 }
 
 /**

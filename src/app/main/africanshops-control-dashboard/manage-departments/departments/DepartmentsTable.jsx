@@ -3,23 +3,19 @@ import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
+import { ListItemIcon, MenuItem, Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
 import Button from '@mui/material/Button';
-import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
-import useCountries from 'src/app/api/countries/useCountries';
 import { useGetDepartments } from 'src/app/api/departments/useDepartments';
+import { useDeleteECommerceProductsMutation, useGetECommerceProductsQuery } from '../ECommerceApi';
 
 function DepartmentsTable() {
-	
 	const { data: products, isLoading } = useGetECommerceProductsQuery();
 	const [removeProducts] = useDeleteECommerceProductsMutation();
 
-	const { data:departments, isLoading:departmentsLoading, refetch } = useGetDepartments();
+	const { data: departments, isLoading: departmentsLoading, refetch } = useGetDepartments();
 
 	// console.log("DepartmentsData", departments?.data?.data)
 
@@ -149,10 +145,10 @@ function DepartmentsTable() {
 				>
 					No departments in operation yet!
 				</Typography>
-			
 			</motion.div>
 		);
 	}
+
 	return (
 		<Paper
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"

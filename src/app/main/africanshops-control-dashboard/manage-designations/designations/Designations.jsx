@@ -6,7 +6,6 @@ import DesignationsTable from './DesignationsTable';
  * The products page.
  */
 function Designations() {
-	
 	return (
 		<>
 			<GlobalStyles
@@ -19,7 +18,6 @@ function Designations() {
 			<div className="w-full h-full container flex flex-col">
 				<DesignationsHeader />
 				<DesignationsTable />
-				
 			</div>
 		</>
 	);

@@ -3,7 +3,7 @@ import { useMemo, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
+import { ListItemIcon, MenuItem, Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
@@ -17,17 +17,24 @@ function CountriesTable() {
 	const [globalFilter, setGlobalFilter] = useState('');
 
 	// Fetch countries with pagination
-	const { data: countriesResponse, isLoading, isError, isFetching } = useCountriesPaginated({
+	const {
+		data: countriesResponse,
+		isLoading,
+		isError,
+		isFetching
+	} = useCountriesPaginated({
 		page,
 		limit: rowsPerPage,
 		search: globalFilter,
 		filters: {}
 	});
 
-	
 	// Extract countries and pagination info from response
 	const countries = useMemo(() => countriesResponse?.data?.countries || [], [countriesResponse]);
-	const totalCount = useMemo(() => countriesResponse?.data?.pagination?.total || countries.length, [countriesResponse, countries.length]);
+	const totalCount = useMemo(
+		() => countriesResponse?.data?.pagination?.total || countries.length,
+		[countriesResponse, countries.length]
+	);
 	const pagination = useMemo(() => countriesResponse?.data?.pagination, [countriesResponse]);
 
 	// Pagination handlers
@@ -57,7 +64,7 @@ function CountriesTable() {
 				enableSorting: false,
 				Cell: ({ row }) => (
 					<div className="flex items-center justify-center">
-						{row.original?.flag  ? (
+						{row.original?.flag ? (
 							<img
 								className="w-full max-h-40 max-w-40 block rounded"
 								src={row?.original?.flag}
@@ -88,7 +95,7 @@ function CountriesTable() {
 					</Typography>
 				)
 			},
-			
+
 			{
 				accessorKey: 'isInOperation',
 				header: 'Operational Countries',
@@ -158,13 +165,13 @@ function CountriesTable() {
 				rowCount={totalCount}
 				pageCount={pagination?.totalPages || Math.ceil(totalCount / rowsPerPage)}
 				onPaginationChange={(updater) => {
-					const newPagination = typeof updater === 'function'
-						? updater({ pageIndex: page, pageSize: rowsPerPage })
-						: updater;
+					const newPagination =
+						typeof updater === 'function' ? updater({ pageIndex: page, pageSize: rowsPerPage }) : updater;
 
 					if (newPagination.pageIndex !== page) {
 						handlePageChange(newPagination.pageIndex);
 					}
+
 					if (newPagination.pageSize !== rowsPerPage) {
 						handleRowsPerPageChange(newPagination.pageSize);
 					}

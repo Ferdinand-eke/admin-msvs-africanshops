@@ -2,8 +2,6 @@ import i18next from 'i18next';
 import ar from './navigation-i18n/ar';
 import en from './navigation-i18n/en';
 import tr from './navigation-i18n/tr';
-import { authRoles } from '../auth';
-import DocumentationNavigation from '../main/documentation/DocumentationNavigation';
 
 i18next.addResourceBundle('en', 'navigation', en);
 i18next.addResourceBundle('tr', 'navigation', tr);
@@ -12,10 +10,8 @@ i18next.addResourceBundle('ar', 'navigation', ar);
  * The navigationConfig object is an array of navigation items for the Fuse application.
  */
 
-
 const navigationConfig = [
-
-	/***Dashboard pane */
+	/** *Dashboard pane */
 	{
 		id: 'dashboards',
 		title: 'Dashboards',
@@ -30,12 +26,11 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-check',
 				url: '/dashboards/project'
-			},
-			
+			}
 		]
 	},
 
-	/***Manage users and roles */
+	/** *Manage users and roles */
 	{
 		id: 'users',
 		title: 'Users Management',
@@ -57,7 +52,7 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:user-group',
 				url: '/users/list'
-			},
+			}
 			// {
 			// 	id: 'users.shopstaff',
 			// 	title: 'Shop Staff',
@@ -65,11 +60,10 @@ const navigationConfig = [
 			// 	icon: 'heroicons-outline:user-group',
 			// 	url: '/users/shopstaff'
 			// },
-			
 		]
 	},
 
-	/***Admistrative activities & management pane */
+	/** *Admistrative activities & management pane */
 	{
 		id: 'administrations',
 		title: 'Administrative Tasks',
@@ -122,13 +116,11 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/designations/list'
-			},
-
-						
+			}
 		]
 	},
 
-	/***Market management pane */
+	/** *Market management pane */
 	{
 		id: 'markets',
 		title: 'Markets',
@@ -150,15 +142,11 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/markets/list'
-			},
-
-
-
-			
+			}
 		]
 	},
 
-	/***Vendor-Plan management pane */
+	/** *Vendor-Plan management pane */
 	{
 		id: 'vendorplans',
 		title: 'Vendor Plans & Vendors',
@@ -189,12 +177,11 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/partnervendors/listpartners'
-			},
-			
+			}
 		]
 	},
 
-	/***Products management pane */
+	/** *Products management pane */
 	{
 		id: 'shopproducts',
 		title: 'Products',
@@ -210,7 +197,7 @@ const navigationConfig = [
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/tradehubs/list'
 			},
-			
+
 			{
 				id: 'productcategories.list',
 				title: 'Product Categories',
@@ -231,7 +218,7 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/productunits/list'
-			},
+			}
 
 			// {
 			// 	//NAVIGATION:SHOP PRODUCTS
@@ -248,11 +235,10 @@ const navigationConfig = [
 			// 	icon: 'heroicons-outline:shopping-cart',
 			// 	url: '/shopproducts-list/inventory'
 			// },
-			
 		]
 	},
 
-	/***Admin ManageShop-orders  pane */
+	/** *Admin ManageShop-orders  pane */
 	{
 		id: 'adminmanageorders',
 		title: 'Orders-&-Pos',
@@ -282,13 +268,11 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/admin-manage/orderitems'
-			},
-		
+			}
 		]
 	},
 
-
-	/***Admin Manage-Bookings-Providers and Reservations  pane */
+	/** *Admin Manage-Bookings-Providers and Reservations  pane */
 	{
 		id: 'adminmanagebookings',
 		title: 'Bookings-&-Reservations',
@@ -310,12 +294,11 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/bookings-hospitality/reservations'
-			},
-		
+			}
 		]
 	},
 
-	/***Admin Manage-Restaurants,Bars&Spots-Providers and orders  pane */
+	/** *Admin Manage-Restaurants,Bars&Spots-Providers and orders  pane */
 	{
 		id: 'adminmanageRCS',
 		title: 'Restaurants-Clubs-&-Spots',
@@ -337,13 +320,11 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/rcs-management/rcs-reservations-menuorders'
-			},
-		
+			}
 		]
 	},
 
-
-/***shop-orders orders pane */
+	/** *shop-orders orders pane */
 	// {
 	// 	id: 'shoporders',
 	// 	title: 'Orders-&-Pos',
@@ -366,11 +347,11 @@ const navigationConfig = [
 	// 			icon: 'heroicons-outline:shopping-cart',
 	// 			url: '/shoporders-list/pos'
 	// 		},
-		
+
 	// 	]
 	// },
 
-	/***Estate Properties management pane */
+	/** *Estate Properties management pane */
 	{
 		id: 'estateproperties',
 		title: 'Manage prperties',
@@ -401,71 +382,65 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-check',
 				url: '/userlistings/managed-user-listings'
-			},
-			
+			}
 		]
 	},
 
-		/***Editorial management pane */
-		{
-			id: 'Editorials',
-			title: 'Manage Editorials',
-			subtitle: 'Editorials on africanshops',
-			type: 'group',
-			icon: 'heroicons-outline:home',
-			translate: 'Editorials',
-			children: [
-				
-				{
-					id: 'postcategories.list',
-					title: 'post categories',
-					type: 'item',
-					icon: 'heroicons-outline:clipboard-check',
-					url: '/postcategories/list'
-				},
+	/** *Editorial management pane */
+	{
+		id: 'Editorials',
+		title: 'Manage Editorials',
+		subtitle: 'Editorials on africanshops',
+		type: 'group',
+		icon: 'heroicons-outline:home',
+		translate: 'Editorials',
+		children: [
+			{
+				id: 'postcategories.list',
+				title: 'post categories',
+				type: 'item',
+				icon: 'heroicons-outline:clipboard-check',
+				url: '/postcategories/list'
+			},
 
-				{
-					id: 'posts.list',
-					title: 'posts',
-					type: 'item',
-					icon: 'heroicons-outline:clipboard-check',
-					url: '/posts/list'
-				},
-	
-				// {
-				// 	id: 'withdrawals.list',
-				// 	title: 'Property Withdrawals',
-				// 	type: 'item',
-				// 	icon: 'heroicons-outline:clipboard-check',
-				// 	url: '/finance/withdrawals'
-				// },
-			
-				
-			]
-		},
+			{
+				id: 'posts.list',
+				title: 'posts',
+				type: 'item',
+				icon: 'heroicons-outline:clipboard-check',
+				url: '/posts/list'
+			}
 
-		/***Country Shipping Tables management pane */
-		{
-			id: 'CountryShipping',
-			title: 'Country-Shipping-Table',
-			subtitle: 'Our Country shipping table on africanshops',
-			type: 'group',
-			icon: 'heroicons-outline:home',
-			translate: 'CountryShipping',
-			children: [
-				
-				{
-					id: 'countryshipping.list',
-					title: 'Shipping Tabel(Countries)',
-					type: 'item',
-					icon: 'heroicons-outline:clipboard-check',
-					url: '/countryshipping/list'
-				},
-				
-			]
-		},
+			// {
+			// 	id: 'withdrawals.list',
+			// 	title: 'Property Withdrawals',
+			// 	type: 'item',
+			// 	icon: 'heroicons-outline:clipboard-check',
+			// 	url: '/finance/withdrawals'
+			// },
+		]
+	},
 
-	/***Finance management pane */
+	/** *Country Shipping Tables management pane */
+	{
+		id: 'CountryShipping',
+		title: 'Country-Shipping-Table',
+		subtitle: 'Our Country shipping table on africanshops',
+		type: 'group',
+		icon: 'heroicons-outline:home',
+		translate: 'CountryShipping',
+		children: [
+			{
+				id: 'countryshipping.list',
+				title: 'Shipping Tabel(Countries)',
+				type: 'item',
+				icon: 'heroicons-outline:clipboard-check',
+				url: '/countryshipping/list'
+			}
+		]
+	},
+
+	/** *Finance management pane */
 	{
 		id: 'FInance',
 		title: 'Manage Finance',
@@ -474,22 +449,17 @@ const navigationConfig = [
 		icon: 'heroicons-outline:home',
 		translate: 'FINANCE',
 		children: [
-			
 			{
 				id: 'property.earnings',
 				title: 'Wallet',
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-check',
 				url: '/africanshops/finance'
-			},
-
-			
+			}
 		]
 	},
 
-
-
-	/***Support management pane */
+	/** *Support management pane */
 	{
 		id: 'Support.Helpcenter',
 		title: 'Get Support',
@@ -498,22 +468,17 @@ const navigationConfig = [
 		icon: 'heroicons-outline:home',
 		translate: 'SUPPORT',
 		children: [
-			
 			{
 				id: 'support.earnings',
 				title: 'Suppport',
 				type: 'item',
 				icon: 'heroicons-outline:support',
 				url: '/support'
-			},
-
-			
-		
-			
+			}
 		]
 	},
 
-	/***Messanger pane */
+	/** *Messanger pane */
 	{
 		id: 'Africanshops.Messanger',
 		title: 'Messanger',
@@ -522,7 +487,6 @@ const navigationConfig = [
 		icon: 'heroicons-outline:chat-alt',
 		translate: 'MESSANGER',
 		children: [
-			
 			{
 				id: 'apps.messenger',
 				title: 'Messenger',
@@ -530,16 +494,8 @@ const navigationConfig = [
 				icon: 'heroicons-outline:chat-alt',
 				url: '/africanshops/messenger',
 				translate: 'MESSENGER'
-			},
-
-			
-		
-			
+			}
 		]
-	},
-
-	
-
-
+	}
 ];
 export default navigationConfig;

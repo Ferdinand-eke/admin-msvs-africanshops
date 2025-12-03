@@ -29,7 +29,7 @@ const Root = styled('div')(({ theme }) => ({
  */
 function UserNavbarHeader() {
 	const user = useAppSelector(selectUser);
-	
+
 	return (
 		<Root className="user relative flex flex-col items-center justify-center p-16 pb-14 shadow-0">
 			<div className="mb-24 flex items-center justify-center">
@@ -47,9 +47,7 @@ function UserNavbarHeader() {
 					{user?.name?.charAt(0)}
 				</Avatar>
 			</div>
-			<Typography className="username whitespace-nowrap text-14 font-medium">
-				{user?.name}
-			</Typography>
+			<Typography className="username whitespace-nowrap text-14 font-medium">{user?.name}</Typography>
 			{/* <Typography
 				className="email whitespace-nowrap text-13 font-medium"
 				color="text.secondary"

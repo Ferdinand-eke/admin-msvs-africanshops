@@ -8,8 +8,6 @@ const Departments = lazy(() => import('./departments/Departments'));
  * The E-Commerce app configuration.
  */
 
-
-
 const DepartmentsAppConfig = {
 	settings: {
 		layout: {}
@@ -30,8 +28,7 @@ const DepartmentsAppConfig = {
 				{
 					path: 'list/:productId/*',
 					element: <Department />
-				},
-				
+				}
 			]
 		}
 	]

@@ -18,7 +18,6 @@ function LgaCounties() {
 			<div className="w-full h-full container flex flex-col">
 				<LgaCountiesHeader />
 				<LgaCountiesTable />
-				
 			</div>
 		</>
 	);

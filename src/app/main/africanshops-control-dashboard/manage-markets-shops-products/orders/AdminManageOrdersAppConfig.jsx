@@ -11,14 +11,13 @@ const OrderItems = lazy(() => import('./orderitems/OrderItems'));
  * The E-Commerce app configuration.
  */
 
-
 const AdminManageOrdersAppConfig = {
 	settings: {
 		layout: {}
 	},
 	routes: [
 		{
-			//shoporders-list
+			// shoporders-list
 			path: 'admin-manage',
 			element: <AdminManageECommerceApp />,
 			children: [
@@ -30,7 +29,7 @@ const AdminManageOrdersAppConfig = {
 					path: 'orders',
 					element: <Orders />
 				},
-				
+
 				{
 					path: 'orders/:orderId',
 					element: <Order />
@@ -44,7 +43,7 @@ const AdminManageOrdersAppConfig = {
 				{
 					path: 'orderitems',
 					element: <OrderItems />
-				},
+				}
 			]
 		}
 	]

@@ -1,36 +1,30 @@
-import qs from 'qs';
-import axios from 'axios';
-import { getCompanyNews } from '../apiRoutes';
-import StrapiApi, { bannerReducer } from '../utils';
+import StrapiApi from '../utils';
 
 export const getDesignationsByPublished = async () => {
+	const res = await StrapiApi().get(`/designations`);
+	const designationsData = res.data;
 
-  const res = await StrapiApi().get(`/designations`);
-  const designationsData = res.data;
-
-  return designationsData;
+	return designationsData;
 };
 
 export const createDesignation = async (values) => {
-  const res = await StrapiApi().post(`/designations`, values);
-  const postResult = res.data;
+	const res = await StrapiApi().post(`/designations`, values);
+	const postResult = res.data;
 
-  return postResult;
+	return postResult;
 };
 
 export const getDesignation = async (id) => {
-  const res = await StrapiApi().get(`/designations/${id}`);
+	const res = await StrapiApi().get(`/designations/${id}`);
 
-  const payloadResult = res.data;
-  return payloadResult;
+	const payloadResult = res.data;
+	return payloadResult;
 };
 
 export const updateDesignation = async (values) => {
+	const res = await StrapiApi().put(`/designations/${values._id}`, values);
 
-  const res = await StrapiApi().put(`/designations/${values._id}`, values);
+	const payloadResult = res.data;
 
-
-  const payloadResult = res.data;
-
-  return payloadResult;
+	return payloadResult;
 };

@@ -7,11 +7,10 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import {
-	useCreateECommerceProductMutation,
-	useDeleteECommerceProductMutation,
-	useUpdateECommerceProductMutation
-} from '../ECommerceApi';
-import { useAddMarketCategoryMutation, useDeleteMarketCategory, useMarketCategoryUpdateMutation } from 'src/app/api/market-category/useMarketCats';
+	useAddMarketCategoryMutation,
+	useDeleteMarketCategory,
+	useMarketCategoryUpdateMutation
+} from 'src/app/api/market-category/useMarketCats';
 
 /**
  * The product header.
@@ -28,17 +27,15 @@ function MarketCategoryHeader() {
 
 	const updateMarketCat = useMarketCategoryUpdateMutation();
 	const addNewMarketCat = useAddMarketCategoryMutation();
-	const deletMarketCat = useDeleteMarketCategory()
+	const deletMarketCat = useDeleteMarketCategory();
 
 	function handleSaveProduct() {
-
-		updateMarketCat.mutate(getValues())
+		updateMarketCat.mutate(getValues());
 		// saveProduct(getValues());
 	}
 
 	function handleCreateProduct() {
-
-		addNewMarketCat.mutate(getValues())
+		addNewMarketCat.mutate(getValues());
 		// createProduct(getValues())
 		// 	.unwrap()
 		// 	.then((data) => {
@@ -47,8 +44,8 @@ function MarketCategoryHeader() {
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm("Comfirm delete of this markert category?")) {
-			deletMarketCat.mutate(productId)
+		if (window.confirm('Comfirm delete of this markert category?')) {
+			deletMarketCat.mutate(productId);
 		}
 		// removeProduct(productId);
 		// navigate('/market-categories/list');
@@ -109,7 +106,7 @@ function MarketCategoryHeader() {
 							variant="caption"
 							className="font-medium"
 						>
-							 Detail
+							Detail
 						</Typography>
 					</motion.div>
 				</div>

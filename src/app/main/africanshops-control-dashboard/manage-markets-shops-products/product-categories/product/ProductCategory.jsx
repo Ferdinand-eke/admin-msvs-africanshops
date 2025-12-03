@@ -1,29 +1,27 @@
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import Button from '@mui/material/Button';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import _ from '@lodash';
 import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleProductCat } from 'src/app/api/product-categories/useProductCategories';
 import SingleDesignationHeader from './SingleProductCategoryHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
 import ProductModel from './models/ProductModel';
-import { useSingleProductCat } from 'src/app/api/product-categories/useProductCategories';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
 	name: z.string().nonempty('You must enter a product name').min(5, 'The product name must be at least 5 characters')
 });
-
 
 /**
  * The product page.
@@ -33,13 +31,13 @@ function ProductCategory() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
 
-
-	const {data:productcat,
+	const {
+		data: productcat,
 		isLoading,
 		isError
 	} = useSingleProductCat(productId, {
 		skip: !productId || productId === 'new'
-	})
+	});
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
@@ -59,7 +57,6 @@ function ProductCategory() {
 		}
 	}, [productcat?.data?.category, reset]);
 
-
 	/**
 	 * Tab Change
 	 */
@@ -71,7 +68,7 @@ function ProductCategory() {
 		return <FuseLoading />;
 	}
 
-	/*** Show Message if the requested products is not exists*/
+	/** * Show Message if the requested products is not exists */
 	if (isError && productId !== 'new') {
 		return (
 			<motion.div
@@ -83,7 +80,7 @@ function ProductCategory() {
 					color="text.secondary"
 					variant="h5"
 				>
-				{isError && 'An error occured while retrieving this product!'}	
+					{isError && 'An error occured while retrieving this product!'}
 				</Typography>
 				{/* <Button
 					className="mt-24"
@@ -101,7 +98,12 @@ function ProductCategory() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (productcat?.data?.category && routeParams.productId !== productcat?.data?.category?.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(productcat?.data?.category &&
+			routeParams.productId !== productcat?.data?.category?.id &&
+			routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 
@@ -137,8 +139,6 @@ function ProductCategory() {
 							<div className={tabValue !== 1 ? 'hidden' : ''}>
 								<ProductImagesTab />
 							</div>
-
-							
 						</div>
 					</>
 				}

@@ -1,33 +1,28 @@
 import FuseLoading from '@fuse/core/FuseLoading';
 import FusePageCarded from '@fuse/core/FusePageCarded';
-import Button from '@mui/material/Button';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import _ from '@lodash';
 import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleProductUnit } from 'src/app/api/product-units/useProductUnits';
 import SingleDesignationHeader from './SingleProductUnitHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
-import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleState } from 'src/app/api/states/useStates';
-import { useSingleDesignation } from 'src/app/api/designations/useDesignations';
-import { useSingleProductUnit } from 'src/app/api/product-units/useProductUnits';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
-	unitname: z.string().nonempty('You must enter a product name').min(4, 'The product name must be at least 5 characters')
+	unitname: z
+		.string()
+		.nonempty('You must enter a product name')
+		.min(4, 'The product name must be at least 5 characters')
 });
 
 /**
@@ -37,20 +32,14 @@ function ProductUnit() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	// const {
-	// 	data: product,
-	// 	isLoading,
-	// 	isError
-	// } = useGetECommerceProductQuery(productId, {
-	// 	skip: !productId || productId === 'new'
-	// });
 
-	const {data:produnit,
+	const {
+		data: produnit,
 		isLoading,
 		isError
 	} = useSingleProductUnit(productId, {
 		skip: !productId || productId === 'new'
-	})
+	});
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
@@ -58,7 +47,7 @@ function ProductUnit() {
 			tradehub: '',
 			unitname: '',
 			planType: '',
-			leastPermissibleCount: '',
+			leastPermissibleCount: ''
 		},
 		resolver: zodResolver(schema)
 	});
@@ -89,7 +78,6 @@ function ProductUnit() {
 	/**
 	 * Show Message if the requested products is not exists
 	 */
-	// console.log("Getting State error", isError)
 	if (isError && productId !== 'new') {
 		return (
 			<motion.div
@@ -101,7 +89,7 @@ function ProductUnit() {
 					color="text.secondary"
 					variant="h5"
 				>
-				{isError && 'Error occured while retrieving product unit!'}	
+					{isError && 'Error occured while retrieving product unit!'}
 				</Typography>
 				{/* <Button
 					className="mt-24"
@@ -110,7 +98,7 @@ function ProductUnit() {
 					to="/productunit/list"
 					color="inherit"
 				>
-					Go to Designations Page
+					Go to Units Page
 				</Button> */}
 			</motion.div>
 		);
@@ -121,7 +109,12 @@ function ProductUnit() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (produnit?.data?.unitweight && routeParams.productId !== produnit?.data?.unitweight?.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(produnit?.data?.unitweight &&
+			routeParams.productId !== produnit?.data?.unitweight?.id &&
+			routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 
@@ -144,13 +137,11 @@ function ProductUnit() {
 								className="h-64"
 								label="Basic Info"
 							/>
-							
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
 								<BasicInfoTab />
 							</div>
-
 						</div>
 					</>
 				}

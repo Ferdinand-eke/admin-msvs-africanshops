@@ -2,20 +2,16 @@
 import { useMemo } from 'react';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
+import { ListItemIcon, MenuItem, Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
 import Button from '@mui/material/Button';
-import useStates from 'src/app/api/states/useStates';
 import { motion } from 'framer-motion';
 import useProductUnits from 'src/app/api/product-units/useProductUnits';
 
 function ProductProductUnitsTable() {
-
-	const { data:productunit, isLoading, isError, refetch } = useProductUnits();
+	const { data: productunit, isLoading, isError, refetch } = useProductUnits();
 
 	const columns = useMemo(
 		() => [
@@ -34,7 +30,7 @@ function ProductProductUnitsTable() {
 					</Typography>
 				)
 			},
-			
+
 			{
 				accessorKey: 'isPublished',
 				header: 'Published Status',
@@ -66,7 +62,7 @@ function ProductProductUnitsTable() {
 		return <FuseLoading />;
 	}
 
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -77,29 +73,29 @@ function ProductProductUnitsTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Error retrieving product units!
+					Error retrieving product units!
 				</Typography>
-			
 			</motion.div>
 		);
 	}
-if (!productunit?.data?.unitweights) {
-	return (
-		<motion.div
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1, transition: { delay: 0.1 } }}
-			className="flex flex-col flex-1 items-center justify-center h-full"
-		>
-			<Typography
-				color="text.secondary"
-				variant="h5"
+
+	if (!productunit?.data?.unitweights) {
+		return (
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1, transition: { delay: 0.1 } }}
+				className="flex flex-col flex-1 items-center justify-center h-full"
 			>
-				No product units found!
-			</Typography>
-		
-		</motion.div>
-	);
-}
+				<Typography
+					color="text.secondary"
+					variant="h5"
+				>
+					No product units found!
+				</Typography>
+			</motion.div>
+		);
+	}
+
 	return (
 		<Paper
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"

@@ -19,7 +19,6 @@ function VendorPlans() {
 			<div className="w-full h-full container flex flex-col">
 				<VendorPlansHeader />
 				<VendorPlansTable />
-				
 			</div>
 		</>
 	);

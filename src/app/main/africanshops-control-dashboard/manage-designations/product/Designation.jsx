@@ -12,16 +12,10 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleDesignation } from 'src/app/api/designations/useDesignations';
 import SingleDesignationHeader from './SingleDesignationHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
-import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleState } from 'src/app/api/states/useStates';
-import { useSingleDesignation } from 'src/app/api/designations/useDesignations';
 /**
  * Form Validation Schema
  */
@@ -37,12 +31,13 @@ function Designation() {
 	const routeParams = useParams();
 	const { productId } = routeParams;
 
-	const {data:designation,
+	const {
+		data: designation,
 		isLoading,
 		isError
 	} = useSingleDesignation(productId, {
 		skip: !productId || productId === 'new'
-	})
+	});
 	const [tabValue, setTabValue] = useState(0);
 	const methods = useForm({
 		mode: 'onChange',
@@ -87,7 +82,7 @@ function Designation() {
 					color="text.secondary"
 					variant="h5"
 				>
-				{isError}	There is no such designation!
+					{isError} There is no such designation!
 				</Typography>
 				<Button
 					className="mt-24"
@@ -107,7 +102,12 @@ function Designation() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (designation?.data?.designation && routeParams.productId !== designation?.data?.designation?.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(designation?.data?.designation &&
+			routeParams.productId !== designation?.data?.designation?.id &&
+			routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 

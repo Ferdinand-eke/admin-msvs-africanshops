@@ -12,7 +12,7 @@ const VendorsAppConfig = {
 	settings: {
 		layout: {}
 	},
-	
+
 	routes: [
 		{
 			path: 'vendors',
@@ -29,8 +29,7 @@ const VendorsAppConfig = {
 				{
 					path: 'listvendors/:productId/*',
 					element: <Vendor />
-				},
-				
+				}
 			]
 		}
 	]

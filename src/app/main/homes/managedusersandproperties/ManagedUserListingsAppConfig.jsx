@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 const ManagedUserListingApp = lazy(() => import('./ManagedUserListingApp'));
 const PropertyListing = lazy(() => import('./product/PropertyListing'));
 const EstateProperties = lazy(() => import('./products/EstateProperties'));
-const PropertyProfileApp = lazy(() => import('./manageuserpropertyprofile/PropertyProfileApp'))
+const PropertyProfileApp = lazy(() => import('./manageuserpropertyprofile/PropertyProfileApp'));
 // const Order = lazy(() => import('./order/Order'));
 // const Orders = lazy(() => import('./orders/Orders'));
 /**
@@ -12,12 +12,9 @@ const PropertyProfileApp = lazy(() => import('./manageuserpropertyprofile/Proper
  */
 
 const ManagedUserListingsAppConfig = {
-
-	
 	settings: {
 		layout: {}
 	},
-
 
 	routes: [
 		{
@@ -37,13 +34,12 @@ const ManagedUserListingsAppConfig = {
 					element: <PropertyProfileApp />
 				},
 
-				
 				{
 					path: 'managed-user-listings/:productId/*',
 					element: <PropertyListing />
-				},
+				}
 
-				// { 
+				// {
 				// 	path: 'orders',
 				// 	element: <Orders />
 				// },

@@ -12,15 +12,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleMarket } from 'src/app/api/markets/useMarkets';
 import ProductHeader from './SingleMarketHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleMarket } from 'src/app/api/markets/useMarkets';
 /**
  * Form Validation Schema
  */
@@ -57,8 +53,8 @@ function SingleMarket() {
 			lng: '',
 			makeWarehouse: null,
 			warehouseCategory: '',
-	  
-			isInOperation: '',
+
+			isInOperation: ''
 		},
 		resolver: zodResolver(schema)
 	});
@@ -118,7 +114,11 @@ function SingleMarket() {
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (market?.data?.market && routeParams.productId !== market?.data?.market.id || market?.data?.market._id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(market?.data?.market && routeParams.productId !== market?.data?.market.id) ||
+		(market?.data?.market._id && routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 
@@ -145,7 +145,6 @@ function SingleMarket() {
 								className="h-64"
 								label="Product Images"
 							/>
-					
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
@@ -155,7 +154,6 @@ function SingleMarket() {
 							<div className={tabValue !== 1 ? 'hidden' : ''}>
 								<ProductImagesTab />
 							</div>
-
 						</div>
 					</>
 				}

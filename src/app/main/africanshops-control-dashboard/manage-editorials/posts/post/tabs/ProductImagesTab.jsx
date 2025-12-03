@@ -95,7 +95,7 @@ function ProductImagesTab() {
 									}
 
 									const newImage = await readFileAsync();
-									//, ...value
+									// , ...value
 									// console.log("imageValue", value)
 									onChange([newImage]);
 									// onChange(setValue('images', [newImage, ...value]))
@@ -145,18 +145,18 @@ function ProductImagesTab() {
 				/>
 			</div>
 
-			<Divider/>
+			<Divider />
 
-				<Controller
-					name="featuredImage"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => {
-						return (
-							<>
-								{
+			<Controller
+				name="featuredImage"
+				control={control}
+				defaultValue=""
+				render={({ field: { onChange, value } }) => {
+					return (
+						<>
+							{
 								// images?.map((media) => (
-									getValues()?.featuredImage &&
+								getValues()?.featuredImage && (
 									<div
 										onClick={() => onChange(getValues()?._id)}
 										onKeyDown={() => onChange(getValues()?._id)}
@@ -177,14 +177,14 @@ function ProductImagesTab() {
 											alt="product"
 										/>
 									</div>
+								)
 								// )
 								// )
-								}
-							</>
-						);
-					}}
-				/>
-
+							}
+						</>
+					);
+				}}
+			/>
 		</Root>
 	);
 }

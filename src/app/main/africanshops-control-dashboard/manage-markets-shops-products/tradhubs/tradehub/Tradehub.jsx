@@ -12,20 +12,18 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useSingleHub } from 'src/app/api/tradehubs/useTradeHubs';
 import SingleDesignationHeader from './SingleTradehubHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
-import InventoryTab from './tabs/InventoryTab';
-import PricingTab from './tabs/PricingTab';
-import ProductImagesTab from './tabs/ProductImagesTab';
-import ShippingTab from './tabs/ShippingTab';
-import { useGetECommerceProductQuery } from '../ECommerceApi';
 import ProductModel from './models/ProductModel';
-import { useSingleHub } from 'src/app/api/tradehubs/useTradeHubs';
 /**
  * Form Validation Schema
  */
 const schema = z.object({
-	hubname: z.string().nonempty('You must enter a trade huv name').min(4, 'The product name must be at least 5 characters')
+	hubname: z
+		.string()
+		.nonempty('You must enter a trade huv name')
+		.min(4, 'The product name must be at least 5 characters')
 });
 
 /**
@@ -35,14 +33,14 @@ function Tradehub() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
 	const { productId } = routeParams;
-	
 
-	const {data:hub,
+	const {
+		data: hub,
 		isLoading,
 		isError
 	} = useSingleHub(productId, {
 		skip: !productId || productId === 'new'
-	})
+	});
 	// console.log("HUB-Data", hub?.data?.tradehub)
 
 	const [tabValue, setTabValue] = useState(0);
@@ -64,7 +62,6 @@ function Tradehub() {
 		}
 	}, [hub?.data?.tradehub, reset]);
 
-
 	/**
 	 * Tab Change
 	 */
@@ -79,7 +76,8 @@ function Tradehub() {
 	/**
 	 * Show Message if the requested products is not exists
 	 */
-	console.log("Getting State error", isError)
+	console.log('Getting State error', isError);
+
 	if (isError && productId !== 'new') {
 		return (
 			<motion.div
@@ -91,7 +89,7 @@ function Tradehub() {
 					color="text.secondary"
 					variant="h5"
 				>
-				{isError}	There is no such trade hub!
+					{isError} There is no such trade hub!
 				</Typography>
 				<Button
 					className="mt-24"
@@ -106,11 +104,13 @@ function Tradehub() {
 		);
 	}
 
-
 	/**
 	 * Wait while product data is loading and form is setted
 	 */
-	if (_.isEmpty(form) || (hub?.data?.tradehub && routeParams.productId !== hub?.data?.tradehub?.id && routeParams.productId !== 'new')) {
+	if (
+		_.isEmpty(form) ||
+		(hub?.data?.tradehub && routeParams.productId !== hub?.data?.tradehub?.id && routeParams.productId !== 'new')
+	) {
 		return <FuseLoading />;
 	}
 

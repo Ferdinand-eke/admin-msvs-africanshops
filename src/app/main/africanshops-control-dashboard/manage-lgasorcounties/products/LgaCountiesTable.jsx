@@ -17,7 +17,12 @@ function LgaCountiesTable() {
 	const [globalFilter, setGlobalFilter] = useState('');
 
 	// Fetch LGAs with pagination
-	const { data: lgasResponse, isLoading, isError, isFetching } = useLgasPaginated({
+	const {
+		data: lgasResponse,
+		isLoading,
+		isError,
+		isFetching
+	} = useLgasPaginated({
 		page,
 		limit: rowsPerPage,
 		search: globalFilter,
@@ -66,21 +71,13 @@ function LgaCountiesTable() {
 				accessorKey: 'state',
 				header: 'State/Province',
 				size: 180,
-				Cell: ({ row }) => (
-					<Typography className="text-13">
-						{row.original?.state?.name || 'N/A'}
-					</Typography>
-				)
+				Cell: ({ row }) => <Typography className="text-13">{row.original?.state?.name || 'N/A'}</Typography>
 			},
 			{
 				accessorKey: 'country',
 				header: 'Country',
 				size: 150,
-				Cell: ({ row }) => (
-					<Typography className="text-13">
-						{row.original?.country?.name || 'N/A'}
-					</Typography>
-				)
+				Cell: ({ row }) => <Typography className="text-13">{row.original?.country?.name || 'N/A'}</Typography>
 			},
 			{
 				accessorKey: 'isInOperation',
@@ -112,11 +109,13 @@ function LgaCountiesTable() {
 				size: 140,
 				Cell: ({ row }) => (
 					<Typography className="text-13">
-						{row.original?.createdAt ? new Date(row.original.createdAt).toLocaleDateString('en-US', {
-							year: 'numeric',
-							month: 'short',
-							day: 'numeric'
-						}) : 'N/A'}
+						{row.original?.createdAt
+							? new Date(row.original.createdAt).toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'short',
+									day: 'numeric'
+								})
+							: 'N/A'}
 					</Typography>
 				)
 			}
@@ -166,13 +165,13 @@ function LgaCountiesTable() {
 				rowCount={totalCount}
 				pageCount={pagination?.totalPages || Math.ceil(totalCount / rowsPerPage)}
 				onPaginationChange={(updater) => {
-					const newPagination = typeof updater === 'function'
-						? updater({ pageIndex: page, pageSize: rowsPerPage })
-						: updater;
+					const newPagination =
+						typeof updater === 'function' ? updater({ pageIndex: page, pageSize: rowsPerPage }) : updater;
 
 					if (newPagination.pageIndex !== page) {
 						handlePageChange(newPagination.pageIndex);
 					}
+
 					if (newPagination.pageSize !== rowsPerPage) {
 						handleRowsPerPageChange(newPagination.pageSize);
 					}
@@ -245,7 +244,9 @@ function LgaCountiesTable() {
 							variant="body1"
 							className="mt-8"
 						>
-							{globalFilter ? 'Try adjusting your search terms' : 'LGAs/Counties will appear here once added'}
+							{globalFilter
+								? 'Try adjusting your search terms'
+								: 'LGAs/Counties will appear here once added'}
 						</Typography>
 					</motion.div>
 				)}

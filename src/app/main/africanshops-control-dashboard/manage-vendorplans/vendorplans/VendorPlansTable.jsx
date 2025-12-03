@@ -1,20 +1,17 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { useMemo } from 'react';
-import {motion} from 'framer-motion';
+import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
+import { ListItemIcon, MenuItem, Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
 import Button from '@mui/material/Button';
 import useShopplans from 'src/app/api/shopplans/useShopPlans';
 
 function VendorPlansTable() {
-	
-	const { data:vendorplans, isLoading, refetch, isError } = useShopplans();
+	const { data: vendorplans, isLoading, refetch, isError } = useShopplans();
 
 	const columns = useMemo(
 		() => [
@@ -58,7 +55,7 @@ function VendorPlansTable() {
 				accessorKey: 'price',
 				header: 'Price for monthly storage per image',
 				accessorFn: (row) => `NGN${row.price}`
-			},
+			}
 		],
 		[]
 	);
@@ -67,7 +64,7 @@ function VendorPlansTable() {
 		return <FuseLoading />;
 	}
 
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -78,12 +75,12 @@ function VendorPlansTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Error occured retrieving vendor plans!
+					Error occured retrieving vendor plans!
 				</Typography>
-				
 			</motion.div>
 		);
 	}
+
 	if (!vendorplans?.data?.merchantPlans) {
 		return (
 			<motion.div
@@ -97,11 +94,9 @@ function VendorPlansTable() {
 				>
 					No vendor plan yet!
 				</Typography>
-			
 			</motion.div>
 		);
 	}
-
 
 	return (
 		<Paper

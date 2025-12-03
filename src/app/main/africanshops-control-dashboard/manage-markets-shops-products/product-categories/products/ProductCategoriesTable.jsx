@@ -2,19 +2,16 @@
 import { useMemo } from 'react';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
+import { ListItemIcon, MenuItem, Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
 import Button from '@mui/material/Button';
 import { motion } from 'framer-motion';
 import useProductCats from 'src/app/api/product-categories/useProductCategories';
 
 function ProductCategoriesTable() {
-
-	const { data:productcats, isLoading, refetch, isError } = useProductCats();
+	const { data: productcats, isLoading, refetch, isError } = useProductCats();
 
 	const columns = useMemo(
 		() => [
@@ -64,8 +61,7 @@ function ProductCategoriesTable() {
 		return <FuseLoading />;
 	}
 
-
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -76,30 +72,29 @@ function ProductCategoriesTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Error retrieving designations!
+					Error retrieving product categories!
 				</Typography>
-		
 			</motion.div>
 		);
 	}
 
-if (!productcats?.data?.categories) {
-	return (
-		<motion.div
-			initial={{ opacity: 0 }}
-			animate={{ opacity: 1, transition: { delay: 0.1 } }}
-			className="flex flex-col flex-1 items-center justify-center h-full"
-		>
-			<Typography
-				color="text.secondary"
-				variant="h5"
+	if (!productcats?.data?.categories) {
+		return (
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1, transition: { delay: 0.1 } }}
+				className="flex flex-col flex-1 items-center justify-center h-full"
 			>
-				No designations found!
-			</Typography>
-		
-		</motion.div>
-	);
-}
+				<Typography
+					color="text.secondary"
+					variant="h5"
+				>
+					No designations found!
+				</Typography>
+			</motion.div>
+		);
+	}
+
 	return (
 		<Paper
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"

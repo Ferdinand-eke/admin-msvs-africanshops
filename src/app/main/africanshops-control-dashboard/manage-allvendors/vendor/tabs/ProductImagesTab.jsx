@@ -147,10 +147,7 @@
 
 // export default ProductImagesTab;
 
-
-
-
-/*****Below to review */
+/** ***Below to review */
 
 import { orange } from '@mui/material/colors';
 import { lighten, styled } from '@mui/material/styles';
@@ -200,17 +197,16 @@ const Root = styled('div')(({ theme }) => ({
  * The product images tab.
  */
 function ProductImagesTab() {
-
 	const methods = useFormContext();
 	const { control, watch, getValues } = methods;
 	const images = watch('images');
 
 	// console.log("Images-DEFAULT", images)
-// console.log("fetchedImages", getValues()?.flag)
+	// console.log("fetchedImages", getValues()?.flag)
 	return (
 		<Root>
 			<div className="flex justify-center sm:justify-start flex-wrap -mx-16">
-			<Controller
+				<Controller
 					name="images"
 					control={control}
 					render={({ field: { onChange, value } }) => (
@@ -246,7 +242,7 @@ function ProductImagesTab() {
 													id: FuseUtils.generateGUID(),
 													url: `data:${file.type};base64,${btoa(reader.result)}`,
 													type: 'image',
-													name:FuseUtils.generateGUID()
+													name: FuseUtils.generateGUID()
 												});
 											};
 											reader.onerror = reject;
@@ -302,22 +298,20 @@ function ProductImagesTab() {
 						);
 					}}
 				/>
-
-				
 			</div>
 
-			<Divider/>
+			<Divider />
 
-				<Controller
-					name="coverimage"
-					control={control}
-					defaultValue=""
-					render={({ field: { onChange, value } }) => {
-						return (
-							<>
-								{
+			<Controller
+				name="coverimage"
+				control={control}
+				defaultValue=""
+				render={({ field: { onChange, value } }) => {
+					return (
+						<>
+							{
 								// images?.map((media) => (
-									getValues()?.coverimage &&
+								getValues()?.coverimage && (
 									<div
 										onClick={() => onChange(getValues()?._id)}
 										onKeyDown={() => onChange(getValues()?._id)}
@@ -338,13 +332,14 @@ function ProductImagesTab() {
 											alt="product"
 										/>
 									</div>
+								)
 								// )
 								// )
-								}
-							</>
-						);
-					}}
-				/>
+							}
+						</>
+					);
+				}}
+			/>
 		</Root>
 	);
 }

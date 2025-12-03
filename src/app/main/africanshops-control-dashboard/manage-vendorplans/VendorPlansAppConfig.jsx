@@ -8,7 +8,6 @@ const VendorPlans = lazy(() => import('./vendorplans/VendorPlans'));
  * The E-Commerce app configuration.
  */
 
-
 const VendorPlansAppConfig = {
 	settings: {
 		layout: {}
@@ -29,8 +28,7 @@ const VendorPlansAppConfig = {
 				{
 					path: 'packages/:productId/*',
 					element: <VendorPlan />
-				},
-			
+				}
 			]
 		}
 	]

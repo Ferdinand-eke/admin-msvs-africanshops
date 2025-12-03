@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import Axios from 'axios';
 
-
 const axiosBaseQuery =
 	() =>
 	async ({ url, method, data, params }) => {

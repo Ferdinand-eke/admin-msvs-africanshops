@@ -34,7 +34,7 @@ const ShopProductsAppConfig = {
 				{
 					path: 'inventory',
 					element: <ShopProducts />
-				},
+				}
 				// {
 				// 	path: 'orders',
 				// 	element: <Orders />

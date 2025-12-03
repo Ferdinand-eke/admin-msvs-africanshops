@@ -1,9 +1,7 @@
 import { lazy } from 'react';
 import ContactView from './contact/ContactView';
-import ContactForm from './contact/ContactForm';
 import AddStaffContactForm from './contact/AddStaffContactForm';
 // import { authRoles } from 'src/app/auth';
-import authRoles from '../../../auth/authRoles';
 
 const ContactsApp = lazy(() => import('./ContactsApp'));
 const PropertyType = lazy(() => import('./propertytype/PropertyType'));
@@ -18,7 +16,7 @@ const StaffAppConfig = {
 		}
 	},
 	// auth: authRoles.admin,
-	
+
 	routes: [
 		{
 			path: 'users/admin',
@@ -36,16 +34,10 @@ const StaffAppConfig = {
 				{
 					path: ':id/edit',
 					element: <AddStaffContactForm />
-		
-				},
-
-			
-
-
+				}
 			]
 		}
 	]
 };
-
 
 export default StaffAppConfig;

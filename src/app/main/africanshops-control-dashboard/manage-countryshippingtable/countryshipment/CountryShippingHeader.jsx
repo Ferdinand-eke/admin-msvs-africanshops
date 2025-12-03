@@ -1,27 +1,26 @@
-import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import {
+	useAddShopPlanMutation,
+	useDeleteShopPlan,
+	useShopPlanUpdateMutation
+} from 'src/app/api/shopplans/useShopPlans';
 import {
 	useCreateECommerceProductMutation,
 	useDeleteECommerceProductMutation,
 	useUpdateECommerceProductMutation
 } from '../ECommerceApi';
-import { useAddShopPlanMutation, useDeleteShopPlan, useShopPlanUpdateMutation, useSingleShopplans } from 'src/app/api/shopplans/useShopPlans';
-import { Chip } from '@mui/material';
-import NavLinkAdapter from '@fuse/core/NavLinkAdapter';
 
 /**
  * The product header.
  */
 
-function CountryShippingHeader(
+function CountryShippingHeader() {
 	// {toggleDrawer}
-	) {
 	const routeParams = useParams();
 	const { productId } = routeParams;
 	const [createProduct] = useCreateECommerceProductMutation();
@@ -32,12 +31,12 @@ function CountryShippingHeader(
 	const { isValid, dirtyFields } = formState;
 	const theme = useTheme();
 	const navigate = useNavigate();
-	const { plansname,  images, featuredImageId, name, flag, _id:countryOrigin } = watch();
+	const { plansname, images, featuredImageId, name, flag, _id: countryOrigin } = watch();
 
 	// const getSingleShopPlan = useSingleShopplans(transferData?.id);
 	const updateShopPlans = useShopPlanUpdateMutation();
 	const addNewShopPlans = useAddShopPlanMutation();
-	const deleteShopPlan = useDeleteShopPlan()
+	const deleteShopPlan = useDeleteShopPlan();
 
 	function handleSaveProduct() {
 		// updateShopPlans.mutate(getValues());
@@ -45,7 +44,6 @@ function CountryShippingHeader(
 
 	function handleCreateProduct() {
 		// addNewShopPlans.mutate(getValues())
-
 	}
 
 	function handleRemoveProduct() {

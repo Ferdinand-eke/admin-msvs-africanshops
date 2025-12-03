@@ -2,25 +2,19 @@
 import { useMemo } from 'react';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
-import _ from '@lodash';
+import { ListItemIcon, MenuItem, Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import clsx from 'clsx';
 import Button from '@mui/material/Button';
 import useMarketCats from 'src/app/api/market-category/useMarketCats';
 import { motion } from 'framer-motion';
 
 function MarketCategoriesTable() {
-	
-
-
-	const { data:marketcats, isLoading, refetch, isError } = useMarketCats();
+	const { data: marketcats, isLoading, refetch, isError } = useMarketCats();
 
 	const columns = useMemo(
 		() => [
-			
 			{
 				accessorKey: 'name',
 				header: 'Name',
@@ -36,7 +30,7 @@ function MarketCategoriesTable() {
 					</Typography>
 				)
 			},
-			
+
 			{
 				accessorKey: 'active',
 				header: 'Active',
@@ -68,7 +62,7 @@ function MarketCategoriesTable() {
 		return <FuseLoading />;
 	}
 
-	if (isError ) {
+	if (isError) {
 		return (
 			<motion.div
 				initial={{ opacity: 0 }}
@@ -79,9 +73,8 @@ function MarketCategoriesTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-				Error retrieving Market Categories!
+					Error retrieving Market Categories!
 				</Typography>
-			
 			</motion.div>
 		);
 	}
@@ -97,9 +90,8 @@ function MarketCategoriesTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-					No  market categories in operation yet!
+					No market categories in operation yet!
 				</Typography>
-			
 			</motion.div>
 		);
 	}

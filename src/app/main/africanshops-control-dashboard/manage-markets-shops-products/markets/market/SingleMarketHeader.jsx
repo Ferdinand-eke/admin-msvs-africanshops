@@ -6,11 +6,6 @@ import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import {
-	useCreateECommerceProductMutation,
-	useDeleteECommerceProductMutation,
-	useUpdateECommerceProductMutation
-} from '../ECommerceApi';
 import { useAddMarketMutation, useDeleteMarket, useMarketUpdateMutation } from 'src/app/api/markets/useMarkets';
 
 /**
@@ -26,33 +21,31 @@ function SingleMarketHeader() {
 	const navigate = useNavigate();
 	const { name, images, featuredImageId } = watch();
 
-
 	const updateMarkets = useMarketUpdateMutation();
 
 	const addNewMarkets = useAddMarketMutation();
-	const deleteMarket = useDeleteMarket()
+	const deleteMarket = useDeleteMarket();
 
 	function handleSaveProduct() {
 		updateMarkets.mutate(getValues());
 	}
 
 	function handleCreateProduct() {
-
-		console.log("MarketPostDATA", getValues())
+		console.log('MarketPostDATA', getValues());
 
 		// return
-		addNewMarkets.mutate(getValues())
-			// .unwrap()
-			// .then((data) => {
-			// 	navigate(`/markets/list/${data.id}`);
-			// });
+		addNewMarkets.mutate(getValues());
+		// .unwrap()
+		// .then((data) => {
+		// 	navigate(`/markets/list/${data.id}`);
+		// });
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm("Comfirm delete of this markert?")) {
-			deleteMarket.mutate(productId)
+		if (window.confirm('Comfirm delete of this markert?')) {
+			deleteMarket.mutate(productId);
 		}
-	
+
 		// removeProduct(productId);
 		// navigate('/markets/list');
 	}
@@ -141,7 +134,7 @@ function SingleMarketHeader() {
 							disabled={_.isEmpty(dirtyFields) || !isValid || updateMarkets?.isLoading}
 							onClick={handleSaveProduct}
 						>
-							{updateMarkets?.isLoading ? 'Saving...' : 'Save'} 
+							{updateMarkets?.isLoading ? 'Saving...' : 'Save'}
 						</Button>
 					</>
 				) : (

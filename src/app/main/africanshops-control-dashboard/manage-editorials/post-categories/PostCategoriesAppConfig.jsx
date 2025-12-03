@@ -28,8 +28,7 @@ const PostCategoriesAppConfig = {
 				{
 					path: 'list/:productId/*',
 					element: <ProductCategory />
-				},
-				
+				}
 			]
 		}
 	]

@@ -13,16 +13,7 @@ import { useAddPostMutation, useDeletePost, usePostUpdateMutation } from 'src/ap
 // 	useUpdateECommerceProductMutation
 // } from '../ECommerceApi';
 import { firebaseApp } from 'src/app/auth/services/firebase/initializeFirebase';
-import {
-	getStorage,
-	ref,
-	deleteObject,
-	uploadBytesResumable,
-	uploadString,
-	getDownloadURL,
-  } from "firebase/storage";
-import { useState } from 'react';
-
+import { getStorage, ref, deleteObject, uploadString, getDownloadURL } from 'firebase/storage';
 
 /**
  * The product header.
@@ -40,113 +31,108 @@ function SinglePostHeader() {
 	const { isValid, dirtyFields } = formState;
 	const theme = useTheme();
 	const navigate = useNavigate();
-	const { title, 
-		name, images, featuredImageId
-	
-	} = watch();
+	const { title, name, images, featuredImageId } = watch();
 
 	const addNewsPost = useAddPostMutation();
-  const updateNewsPost = usePostUpdateMutation();
-  const deleteNewsPost = useDeletePost()
+	const updateNewsPost = usePostUpdateMutation();
+	const deleteNewsPost = useDeletePost();
 
 	function handleSaveProduct() {
-		console.log("Save PostValues", getValues())
+		console.log('Save PostValues', getValues());
+
 		if (images?.length > 0) {
 			// setUpdatePostLoading(true)
 			const fileName = new Date().getTime() + images[0]?.id;
 			const storage = getStorage(firebaseApp);
 			const storageRef = ref(storage, `/posts/${fileName}`);
 			//   const uploadTask = uploadBytesResumable(storageRef, images[0]?.url, 'base64');
-			const uploadTask = uploadString(storageRef, images[0]?.url, "data_url");
+			const uploadTask = uploadString(storageRef, images[0]?.url, 'data_url');
 			const desertRef = ref(storage, `${getValues()?.featuredImage}`);
-	  
+
 			// Delete the file
 			if (getValues()?.featuredImage) {
-			  deleteObject(desertRef)
-				.then(() => {
-				  uploadTask.then((snapshot) => {
-					getDownloadURL(snapshot.ref).then((downloadURL) => {
-	  
-					  setValue("featuredImage", downloadURL);
-					  updateNewsPost?.mutate(getValues())
-					//   setUpdatePostLoading(false)
+				deleteObject(desertRef)
+					.then(() => {
+						uploadTask.then((snapshot) => {
+							getDownloadURL(snapshot.ref).then((downloadURL) => {
+								setValue('featuredImage', downloadURL);
+								updateNewsPost?.mutate(getValues());
+								//   setUpdatePostLoading(false)
+							});
+						});
+					})
+					.catch((error) => {
+						// Uh-oh, an error occurred!
+						console.log(error);
+						toast.error(
+							error.response && error.response.data.message ? error.response.data.message : error.message
+						);
 					});
-				  });
-				})
-				.catch((error) => {
-				  // Uh-oh, an error occurred!
-				  console.log(error);
-				  toast.error(
-					error.response && error.response.data.message
-					  ? error.response.data.message
-					  : error.message
-				  );
-				});
 			} else {
-			  uploadTask.then((snapshot) => {
-				getDownloadURL(snapshot.ref).then((downloadURL) => {
-	  
-				  setValue("featuredImage", downloadURL);
-				  updateNewsPost?.mutate(getValues())
-				//   setUpdatePostLoading(false)
+				uploadTask.then((snapshot) => {
+					getDownloadURL(snapshot.ref).then((downloadURL) => {
+						setValue('featuredImage', downloadURL);
+						updateNewsPost?.mutate(getValues());
+						//   setUpdatePostLoading(false)
+					});
 				});
-			  });
 			}
-		  } else {
-			updateNewsPost?.mutate(getValues())
-		  }
+		} else {
+			updateNewsPost?.mutate(getValues());
+		}
 	}
-	
 
 	function handleCreateProduct() {
-		console.log("PostValues", getValues())
+		console.log('PostValues', getValues());
+
 		// setAddPostLoading(true)
 		if (images?.length > 0) {
 			const fileName = new Date().getTime() + images[0]?.id;
 			const storage = getStorage(firebaseApp);
 			const storageRef = ref(storage, `/posts/${fileName}`);
 			//   const uploadTask = uploadBytesResumable(storageRef, images[0]?.url);
-			const uploadTask = uploadString(storageRef, images[0]?.url, "data_url");
-	  
+			const uploadTask = uploadString(storageRef, images[0]?.url, 'data_url');
+
 			uploadTask.then((snapshot) => {
-			  getDownloadURL(snapshot.ref).then((downloadURL) => {
-				setValue("featuredImage", downloadURL);
-				addNewsPost?.mutate(getValues())
-				// setAddPostLoading(false)
-			  });
+				getDownloadURL(snapshot.ref).then((downloadURL) => {
+					setValue('featuredImage', downloadURL);
+					addNewsPost?.mutate(getValues());
+					// setAddPostLoading(false)
+				});
 			});
-		  } else {
-			addNewsPost?.mutate(getValues())
+		} else {
+			addNewsPost?.mutate(getValues());
 			reset(ProductModel({}));
-		  }
+		}
 	}
 
 	function handleRemovePost() {
-		if (window.confirm("Comfirm delete of this blog post?")) {
+		if (window.confirm('Comfirm delete of this blog post?')) {
 			// removeProduct(productId);
 			// deleteCountry.mutate(productId)
 			const storage = getStorage(firebaseApp);
 			const desertRef = ref(storage, `${getValues()?.featuredImage}`);
+
 			if (getValues()?.featuredImage) {
-			  deleteObject(desertRef)
-				.then(() => {
-				  deleteNewsPost.mutate(productId);
-				})
-				.catch((error) => {
-				  // Uh-oh, an error occurred!
-				  console.log(error);
-				  toast.error(
-					`image delete error: ${
-					  error.response && error.response.data.message
-						? error.response.data.message
-						: error.message
-					}`
-				  );
-				});
+				deleteObject(desertRef)
+					.then(() => {
+						deleteNewsPost.mutate(productId);
+					})
+					.catch((error) => {
+						// Uh-oh, an error occurred!
+						console.log(error);
+						toast.error(
+							`image delete error: ${
+								error.response && error.response.data.message
+									? error.response.data.message
+									: error.message
+							}`
+						);
+					});
 			} else {
-			  deleteNewsPost.mutate(productId);
+				deleteNewsPost.mutate(productId);
 			}
-		  }
+		}
 	}
 
 	return (
@@ -227,12 +213,11 @@ function SinglePostHeader() {
 							Remove
 						</Button>
 
-
 						<Button
 							className="whitespace-nowrap mx-4"
 							variant="contained"
 							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid ||  updateNewsPost?.isLoading}
+							disabled={_.isEmpty(dirtyFields) || !isValid || updateNewsPost?.isLoading}
 							onClick={handleSaveProduct}
 						>
 							Save
@@ -243,7 +228,7 @@ function SinglePostHeader() {
 						className="whitespace-nowrap mx-4"
 						variant="contained"
 						color="secondary"
-						disabled={_.isEmpty(dirtyFields) || !isValid  || addNewsPost?.isLoading}
+						disabled={_.isEmpty(dirtyFields) || !isValid || addNewsPost?.isLoading}
 						onClick={handleCreateProduct}
 					>
 						Add Post

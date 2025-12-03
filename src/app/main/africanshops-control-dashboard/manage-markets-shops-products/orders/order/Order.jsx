@@ -10,11 +10,10 @@ import { Link, useParams } from 'react-router-dom';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import FuseLoading from '@fuse/core/FuseLoading';
+import { useAdminFindSingleOrder } from 'src/app/api/orders/useAdminGetShopOrders';
 import InvoiceTab from './tabs/InvoiceTab';
 import OrderDetailsTab from './tabs/OrderDetailsTab';
 import ProductsTab from './tabs/ProductsTab';
-import { useGetECommerceOrderQuery } from '../ECommerceApi';
-import { useAdminFindSingleOrder } from 'src/app/api/orders/useAdminGetShopOrders';
 
 /**
  * The order.
@@ -29,7 +28,8 @@ function Order() {
 	} = useAdminFindSingleOrder(orderId, {
 		skip: !orderId
 	});
-	
+
+	console.log('Order data:', order);
 
 	const theme = useTheme();
 	const isMobile = useThemeMediaQuery((_theme) => _theme.breakpoints.down('lg'));
@@ -141,10 +141,16 @@ function Order() {
 							label="Invoice"
 						/>
 					</Tabs>
+
 					{orderData && (
 						<div className="p-16 sm:p-24 max-w-3xl w-full">
-							{tabValue === 0 && <OrderDetailsTab order={orderData} isError={isError}/>}
-							{tabValue === 1 && <ProductsTab orderItems={orderItems}/>}
+							{tabValue === 0 && (
+								<OrderDetailsTab
+									order={orderData}
+									isError={isError}
+								/>
+							)}
+							{tabValue === 1 && <ProductsTab orderItems={orderItems} />}
 							{tabValue === 2 && <InvoiceTab order={orderData} />}
 						</div>
 					)}

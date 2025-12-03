@@ -8,7 +8,6 @@ const Designations = lazy(() => import('./designations/Designations'));
  * The E-Commerce app configuration.
  */
 
-
 const DesignationsAppConfig = {
 	settings: {
 		layout: {}
@@ -29,8 +28,7 @@ const DesignationsAppConfig = {
 				{
 					path: 'list/:productId/*',
 					element: <Designation />
-				},
-				
+				}
 			]
 		}
 	]

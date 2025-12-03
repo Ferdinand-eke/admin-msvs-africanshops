@@ -18,7 +18,6 @@ function AllVendors() {
 			<div className="w-full h-full container flex flex-col">
 				<ShopProductsHeader />
 				<AllVendorsTable />
-				
 			</div>
 		</>
 	);

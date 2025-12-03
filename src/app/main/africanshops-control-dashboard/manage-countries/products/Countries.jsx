@@ -19,7 +19,6 @@ function Countries() {
 			<div className="w-full h-full container flex flex-col">
 				<CountriesHeader />
 				<CountriesTable />
-				
 			</div>
 		</>
 	);
