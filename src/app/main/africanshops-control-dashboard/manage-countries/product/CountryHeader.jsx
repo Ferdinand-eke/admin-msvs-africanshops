@@ -6,6 +6,7 @@ import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import _ from '@lodash';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import { getAuth } from 'firebase/auth';
 import { getStorage, ref, deleteObject, uploadString, getDownloadURL } from 'firebase/storage';
 import {
 	useAddCountryMutation,
@@ -22,6 +23,9 @@ import ProductModel from './models/ProductModel';
  */
 
 function CountryHeader() {
+	const firebaseauth = getAuth();
+const firebaseuser = firebaseauth.currentUser;
+
 	const routeParams = useParams();
 	const { productId } = routeParams;
 	const methods = useFormContext();
@@ -47,6 +51,11 @@ function CountryHeader() {
 
 			// Delete the file
 			if (getValues()?.flag) {
+				if (!firebaseuser) {
+						// User needs to sign in first
+						throw new Error('Please sign in to upload images');
+						}
+
 				deleteObject(desertRef)
 					.then(() => {
 						uploadTask.then((snapshot) => {

@@ -1,6 +1,7 @@
 // import { initializeApp } from 'firebase/app';
 // import { getAnalytics } from 'firebase/analytics';
 
+
 const firebaseConfig = {
 	databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
 
@@ -12,6 +13,8 @@ const firebaseConfig = {
 	// messagingSenderId: '248778875159',
 	// appId: '1:248778875159:web:fca2c9daf5f2e7e7679752',
 	// measurementId: 'G-WJH9CH067R'
+
+
 
 // 	# VITE_FIREBASE_API_KEY=your_production_api_key
 // # VITE_FIREBASE_AUTH_DOMAIN=your-production-app.firebaseapp.com
