@@ -87,22 +87,27 @@ export function useAddAdminStaffMutation() {
 
 /** ** 4) Admin update  Admin-Staff data" */
 export function useAdminStaffUpdateMutation() {
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	return useMutation(updateApiAdminUserById, {
 		onSuccess: (data) => {
 			if (data?.data?.success) {
-				toast.success(`${data?.data?.message ? data?.data?.message : 'Admin staff  updated successfully!!'}`, {
+				toast.success(`${data?.data?.message ? data?.data?.message : 'Admin staff updated successfully!!'}`, {
 					position: 'top-left'
 				});
 				queryClient.invalidateQueries('__adminById');
+				queryClient.invalidateQueries('__adminByIdNonPopulated');
 				queryClient.invalidateQueries(['__admins']);
-				queryClient.refetchQueries('__adminById', { force: true });
-				queryClient.refetchQueries('__admins', { force: true });
+
+				// Navigate back to admin list after successful update
+				navigate('/users/admin');
 			}
 		},
 		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
+			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message, {
+				position: 'top-left'
+			});
 		}
 	});
 }
@@ -159,6 +164,8 @@ export function useAdminStaffSuspenMutation() {
 				});
 				queryClient.invalidateQueries('__adminById');
 				queryClient.refetchQueries('__adminById', { force: true });
+				queryClient.invalidateQueries('__admins');
+				queryClient.refetchQueries('__admins', { force: true });
 			}
 		},
 		onError: (err) => {
@@ -179,6 +186,8 @@ export function useAdminStaffUnSuspednMutation() {
 				});
 				queryClient.invalidateQueries('__adminById');
 				queryClient.refetchQueries('__adminById', { force: true });
+				queryClient.invalidateQueries('__admins');
+				queryClient.refetchQueries('__admins', { force: true });
 			}
 		},
 		onError: (err) => {
@@ -197,6 +206,9 @@ export function useAdminStaffMakeLeaderMutation() {
 				position: 'top-left'
 			});
 			queryClient.invalidateQueries('__adminById');
+			queryClient.refetchQueries('__adminById', { force: true });
+			queryClient.invalidateQueries('__admins');
+				queryClient.refetchQueries('__admins', { force: true });
 		},
 		onError: (err) => {
 			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
@@ -212,6 +224,9 @@ export function useAdminStaffUnMakeLeaderMutation() {
 		onSuccess: (data) => {
 			toast.success('Adminstaff leader removed successfully!!');
 			queryClient.invalidateQueries('__adminById');
+				queryClient.refetchQueries('__adminById', { force: true });
+			queryClient.invalidateQueries('__admins');
+				queryClient.refetchQueries('__admins', { force: true });
 		},
 		onError: (err) => {
 			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);

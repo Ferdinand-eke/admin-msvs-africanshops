@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import ContactView from './contact/ContactView';
+import ContactView from './contact/AdminContactView';
 import AddStaffContactForm from './contact/AddStaffContactForm';
 // import { authRoles } from 'src/app/auth';
 

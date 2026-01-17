@@ -8,6 +8,26 @@ export default function useDesignations() {
 	return useQuery(['designations'], getDesigs);
 } // (Msvs => Done)
 
+// Paginated hook for Designations
+export function useDesignationsPaginated({ page = 0, limit = 20, search = '', filters = {} }) {
+	const offset = page * limit;
+
+	return useQuery(
+		['designations_paginated', { page, limit, search, filters }],
+		() =>
+			getDesigs({
+				limit,
+				offset,
+				search,
+				...filters
+			}),
+		{
+			keepPreviousData: true,
+			staleTime: 30000
+		}
+	);
+}
+
 // get single designation
 export function useSingleDesignation(desigId) {
 	if (!desigId || desigId === 'new') {

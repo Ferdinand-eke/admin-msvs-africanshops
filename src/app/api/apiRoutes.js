@@ -21,7 +21,7 @@ export default function Api() {
 export function authApi() {
 	const TOKEN = getAdminAccessToken();
 
-	console.log('AUTH-ADMIN-TOKEN', TOKEN);
+	// console.log('AUTH-ADMIN-TOKEN', TOKEN);
 	const customHeaders = {
 		Accept: 'application/json',
 		withCredentials: true,
@@ -90,7 +90,18 @@ export const adminSigin = (formData) => {
  * ###############################################################################
  */
 /** *Handle departments */
-export const getDepts = () => authApi().get('/departments'); // done //(Msvs => Done)
+export const getDepts = (params = {}) => {
+	const queryParams = new URLSearchParams();
+
+	if (params.limit) queryParams.append('limit', params.limit);
+	if (params.offset) queryParams.append('offset', params.offset);
+	if (params.search) queryParams.append('search', params.search);
+
+	const queryString = queryParams.toString();
+	const url = queryString ? `/departments?${queryString}` : '/departments';
+
+	return authApi().get(url);
+}; // done //(Msvs => Done)
 export const getDeptById = (id) => authApi().get(`/departments/${id}`); // done //(Msvs => Done)
 export const createDepartMent = (deptFormData) => authApi().post('/departments', deptFormData); // done
 
@@ -111,9 +122,20 @@ export const deleteDepartmentById = (id) => authApi().delete(`/departments/${id}
  * Designation handling starts here  (All functional as @ 20th August, 2024)
  * ###############################################################################
  */
-export const getDesigs = () => authApi().get('/designations'); // done //(Msvs => Done)
+export const getDesigs = (params = {}) => {
+	const queryParams = new URLSearchParams();
+
+	if (params.limit) queryParams.append('limit', params.limit);
+	if (params.offset) queryParams.append('offset', params.offset);
+	if (params.search) queryParams.append('search', params.search);
+
+	const queryString = queryParams.toString();
+	const url = queryString ? `/designations?${queryString}` : '/designations';
+
+	return authApi().get(url);
+}; // done //(Msvs => Done)
 export const getDesigById = (id) => authApi().get(`/designations/${id}`); // done //(Msvs => Done)
-export const getDesigByDepartmentId = (id) => Api().get(`/designations/bydept/${id}`); // done
+export const getDesigByDepartmentId = (id) => authApi().get(`/designations/by-department/${id}`); // done //(Msvs => Done)
 export const updateDesigById = (desigFormData) => {
 	return authApi().put(`/designations/${desigFormData?.id || desigFormData?._id}`, desigFormData); // done //(Msvs => Done)
 };
@@ -375,7 +397,18 @@ export const getMarketWarehouseCategories = () => Api().get('/waerehousecategori
  * ####################################################################
  */
 // Market Categories
-export const getMarketCategories = () => authApi().get('/market-categories'); // done //(Msvs => Done)
+export const getMarketCategories = (params = {}) => {
+	const queryParams = new URLSearchParams();
+
+	if (params.limit) queryParams.append('limit', params.limit);
+	if (params.offset) queryParams.append('offset', params.offset);
+	if (params.search) queryParams.append('search', params.search);
+
+	const queryString = queryParams.toString();
+	const url = queryString ? `/market-categories?${queryString}` : '/market-categories';
+
+	return authApi().get(url);
+}; // done //(Msvs => Done)
 export const getMarketCategoryById = (id) => authApi().get(`/market-categories/${id}`); // done //(Msvs => Done)
 export const updateMarketCategoryById = (marketCategoryFormData) =>
 	authApi().put(
@@ -464,7 +497,18 @@ export const deleteShopPlanById = (id) => authApi().delete(`/merchant-plans/dele
  * ####################################################################
  */
 // SHops Routes
-export const getShops = () => authApi().get('/auth-merchant/admin/merchants'); // (Msvs => Done)
+export const getShops = (params = {}) => {
+	const queryParams = new URLSearchParams();
+
+	if (params.limit) queryParams.append('limit', params.limit);
+	if (params.offset) queryParams.append('offset', params.offset);
+	if (params.search) queryParams.append('search', params.search);
+
+	const queryString = queryParams.toString();
+	const url = queryString ? `/auth-merchant/admin/merchants?${queryString}` : '/auth-merchant/admin/merchants';
+
+	return authApi().get(url);
+}; // (Msvs => Done)
 export const getShopById = (id) => authApi().get(`/auth-merchant/admin/merchants/${id}`); // (Msvs => Done)
 
 export const updateShopById = (id, shopFormData) => authApi().put(`/auth-merchant/${id}`, shopFormData);
@@ -694,21 +738,24 @@ export const adminFinancePayoutWithdrawals = (id) => authApi().put(`/handlewithd
 // shop product handling ends
 
 // Users/Customers Routes users
-export const getApiUsers = () => authApi().get('/users'); // new Dashboard ***Done
-export const getApiUserById = (id) => authApi().get(`/users/${id}`);
-export const getApiPopuplatedUserById = (id) => authApi().get(`/users/${id}/populated-user`);
+export const getApiUsers = () => authApi().get('/auth-user/admin/users'); // new Dashboard ***Done
+export const getApiUserById = (id) => authApi().get(`/auth-user/admin/users/${id}`);
+export const getApiPopuplatedUserById = (id) =>  {
+	console.log("API CALL FOR POPULATED USER BY ID:", id);
+	return authApi().get(`/auth-user/admin/users/${id}/populated-user`)
+}
 
-export const updateApiUserById = (usersFormData) => authApi().put(`/users/${usersFormData?._id}`, usersFormData);
+export const updateApiUserById = (usersFormData) => authApi().put(`/auth-user/admin/users/${usersFormData?.id}`, usersFormData);
 
-export const createApiUser = (usersFormData) => authApi().post('/users', usersFormData);
+export const createApiUser = (usersFormData) => authApi().post('/auth-user/admin/users', usersFormData);
 
-export const adminSuspendDisciplineUser = (id) => authApi().put(`/users/suspenduser/${id}`);
+export const adminSuspendDisciplineUser = (id) => authApi().put(`/auth-user/admin/users/suspenduser/${id}`);
 
-export const adminUnSuspendDisciplineUser = (id) => authApi().put(`/users/unsuspenduser/${id}`);
+export const adminUnSuspendDisciplineUser = (id) => authApi().put(`/auth-user/admin/users/unsuspenduser/${id}`);
 
-export const adminBlockDisciplineUser = (id) => authApi().put(`/users/blockuser/${id}`);
+export const adminBlockDisciplineUser = (id) => authApi().put(`/auth-user/admin/users/blockuser/${id}`);
 /// blockuser/
-export const adminUnBlockDisciplineUser = (id) => authApi().put(`/users/unblockuser/${id}`);
+export const adminUnBlockDisciplineUser = (id) => authApi().put(`/auth-user/admin/users/unblockuser/${id}`);
 
 // Users/Customers and discipinary Routes ends here
 
@@ -729,17 +776,22 @@ export const getApiAdminUsers = (params = {}) => {
 
 	return authApi().get(url);
 }; // new Dashboard done //(Msvs => Done)
-export const getApiAdminUserById = (id) => authApi().get(`/authadmin/get-admin/${id}`); // (Msvs => Do)
-export const getApiAdminUserByIdNotPopulated = (id) => authApi().get(`/admin/${id}/not-populated`);
+export const getApiAdminUserById = (id) => authApi().get(`/authadmin/get-admin/${id}/not-populated`); // (Msvs => Do)
+export const getApiAdminUserByIdNotPopulated = (id) => authApi().get(`/authadmin/get-admin/${id}/not-populated`);
 
-/// blockuser/
-export const adminBlockDisciplineStaff = (id) => authApi().put(`/admin/blockuser/${id}`);
+/// Updated disciplinary endpoints - using unified routes with action payload
+export const adminBlockDisciplineStaff = (staffId) =>
+	authApi().put(`/authadmin/disciplinary/block/${staffId}`, { action: 'block' });
 
-export const adminUnBlockDisciplineStaff = (id) => authApi().put(`/admin/unblockuser/${id}`);
-/// suspend/unsuspend admin control panel user/
-export const adminSuspendDisciplineStaff = (id) => authApi().put(`/admin/suspenduser/${id}`);
+export const adminUnBlockDisciplineStaff = (staffId) =>
+	authApi().put(`/authadmin/disciplinary/block/${staffId}`, { action: 'unblock' });
 
-export const adminUnSuspendDisciplineStaff = (id) => authApi().put(`/admin/unsuspenduser/${id}`);
+/// suspend/unsuspend admin control panel user - using unified routes with action payload
+export const adminSuspendDisciplineStaff = (staffId) =>
+	authApi().put(`/authadmin/disciplinary/suspend/${staffId}`, { action: 'suspend' });
+
+export const adminUnSuspendDisciplineStaff = (staffId) =>
+	authApi().put(`/authadmin/disciplinary/suspend/${staffId}`, { action: 'unsuspend' });
 
 /// User Leadership Status user/
 export const adminMakeLeader = (id) => authApi().put(`/admin/makeceo/${id}`);
@@ -748,14 +800,14 @@ export const adminUnMakeLeader = (id) => authApi().put(`/admin/unmakeceo/${id}`)
 
 // Admin/ControlPanel AdminUsers Routes adminusers starts
 
-export const updateApiAdminUserById = (adminFormData) => authApi().put(`/admin/${adminFormData?._id}`, adminFormData);
+export const updateApiAdminUserById = (adminFormData) => authApi().put(`/authadmin/update-profile/${adminFormData?._id || adminFormData?.id}`, adminFormData);
 
 export const createApiAdminUser = (adminFormData) => authApi().post('/admin', adminFormData);
 
 export const createRecruitAdminUserApi = (adminFormData) => authApi().post('/authadmin/recruit-staff', adminFormData); // (Msvs => Done)
 
 export const newAdminUserInviteAcceptanceEndpoint = (adminFormData) =>
-	authApi().post('/admin/accept-invite', adminFormData);
+	authApi().post('/authadmin/accept-invite', adminFormData);
 
 export const adminDeleteAdminStaff = (id) => authApi().delete(`/admin/${id}/delete-admin`);
 

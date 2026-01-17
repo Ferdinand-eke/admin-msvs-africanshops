@@ -123,10 +123,6 @@ function CountriesTable() {
 		[]
 	);
 
-	if (isLoading && !isFetching) {
-		return <FuseLoading />;
-	}
-
 	if (isError) {
 		return (
 			<motion.div
@@ -250,6 +246,7 @@ function CountriesTable() {
 				)}
 			/>
 		</Paper>
+		
 	);
 }
 

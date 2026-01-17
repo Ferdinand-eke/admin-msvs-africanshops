@@ -13,7 +13,8 @@ import { selectFilteredContactList, selectGroupedFilteredContacts } from './Cont
  */
 function UsersList() {
 	const { data: usresData, isLoading: usersIsLoading } = useOurPlatformUsers();
-	const filteredData = useAppSelector(selectFilteredContactList(usresData?.data?.filteredUsers));
+	const filteredData = useAppSelector(selectFilteredContactList(usresData?.data?.users));
+
 
 	const groupedFilteredContacts = useAppSelector(selectGroupedFilteredContacts(filteredData));
 

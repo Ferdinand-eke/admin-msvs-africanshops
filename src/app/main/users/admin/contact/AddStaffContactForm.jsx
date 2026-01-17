@@ -1,17 +1,44 @@
-import Button from '@mui/material/Button';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useCallback, useEffect, useState } from 'react';
-import _ from '@lodash';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import Box from '@mui/system/Box';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useNavigate, useParams } from 'react-router-dom';
+import _ from '@lodash';
+
+// Material-UI Components
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import history from '@history';
-import { useAppDispatch } from 'app/store/hooks';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import InputAdornment from '@mui/material/InputAdornment';
+import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
+import InputLabel from '@mui/material/InputLabel';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+
+// Date Picker
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+
+// Fuse Components
+import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import FuseLoading from '@fuse/core/FuseLoading';
+
+// Hooks and API
 import {
 	useAdminRecruitAfricanshopStaff,
 	useAdminStaffUpdateMutation,
@@ -19,55 +46,53 @@ import {
 	useNonPopulatedSingleAdminStaff
 } from 'src/app/api/admin-users/useAdmins';
 import { useGetDepartments } from 'src/app/api/departments/useDepartments';
-import { getDesigByDepartmentId, getLgaByStateId, getOfficeByLgaId, getStateByCountryId } from 'src/app/api/apiRoutes';
-import { Typography } from '@mui/material';
 import useCountries from 'src/app/api/countries/useCountries';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-function BirtdayIcon() {
-	return <FuseSvgIcon size={20}>heroicons-solid:cake</FuseSvgIcon>;
-}
+import { getDesigByDepartmentId, getOperationalLgaByStateId, getStateByCountryId } from 'src/app/api/apiRoutes';
 
 /**
  * Form Validation Schema
  */
-// Zod schema for ContactEmail
-const ContactEmailSchema = z.object({
-	email: z.string().optional(),
-	type: z.string().optional()
-});
-// Zod schema for ContactPhoneNumber
-const ContactPhoneNumberSchema = z.object({
-	number: z.string().optional(),
-	type: z.string().optional()
-});
-const schema = z.object({
-	avatar: z.string().optional(),
-	background: z.string().optional(),
-	name: z.string().min(1, { message: 'Name is required' }),
-	email: z.string().optional(),
-	phone: z.string(ContactPhoneNumberSchema).optional(),
+const staffRecruitmentSchema = z.object({
+	// Personal Information
+	name: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
+	email: z.string().email('Invalid email address').min(1, 'Email is required'),
+	phone: z.string().min(10, 'Phone number must be at least 10 digits').optional().or(z.literal('')),
+	gender: z.enum(['MALE', 'FEMALE'], { required_error: 'Gender is required' }),
 	birthday: z.string().optional(),
-	address: z.string().optional()
+	address: z.string().min(5, 'Address must be at least 5 characters').optional().or(z.literal('')),
+
+	// Location Information
+	officeCountry: z.string().min(1, 'Country is required'),
+	officeState: z.string().min(1, 'State is required'),
+	officeLga: z.string().min(1, 'LGA/County is required'),
+
+	// Organizational Information
+	department: z.string().min(1, 'Department is required'),
+	designation: z.string().min(1, 'Designation is required'),
+
+	// Optional fields - allow any type for avatar/background as they might be objects from backend
+	avatar: z.any().optional(),
+	background: z.any().optional(),
+	instagram: z.string().optional(),
+	twitter: z.string().optional(),
+	facebook: z.string().optional(),
+	linkedin: z.string().optional()
 });
 
 const defaultValues = {
 	avatar: '',
+	background: '',
 	name: '',
+	email: '',
+	phone: '',
+	gender: '',
+	birthday: '',
+	address: '',
 	officeCountry: '',
 	officeState: '',
 	officeLga: '',
-	officeDesignate: '',
-	market: '',
 	department: '',
 	designation: '',
-	gender: '',
-	email: '',
-	phone: '',
-	address: '',
-	birthday: '',
-
 	instagram: '',
 	twitter: '',
 	facebook: '',
@@ -75,590 +100,1079 @@ const defaultValues = {
 };
 
 /**
- * The contact form.
+ * Custom Birthday Icon Component
  */
+function BirthdayIcon() {
+	return <FuseSvgIcon size={20}>heroicons-solid:cake</FuseSvgIcon>;
+}
 
+/**
+ * Section Title Component
+ */
+function SectionTitle({ icon, title }) {
+	return (
+		<Box className="flex items-center gap-8 mb-16 mt-32">
+			<FuseSvgIcon
+				size={20}
+				className="text-primary"
+			>
+				{icon}
+			</FuseSvgIcon>
+			<Typography
+				variant="h6"
+				className="font-semibold"
+			>
+				{title}
+			</Typography>
+		</Box>
+	);
+}
+
+/**
+ * Professional Admin Staff Recruitment Form Component
+ */
 function AddStaffContactForm() {
 	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
-	const routeParams = useParams();
-	const { id: contactId } = routeParams;
+	const { id: contactId } = useParams();
+	const isNewStaff = contactId === 'new';
 
-	const {
-		data: admin,
-		isLoading: adminLoading,
-		isError: adminIsError
-	} = useNonPopulatedSingleAdminStaff(contactId, {
-		skip: !contactId
+	// Form State
+	const { control, watch, reset, handleSubmit, formState, setValue, trigger } = useForm({
+		defaultValues,
+		mode: 'all',
+		resolver: zodResolver(staffRecruitmentSchema)
 	});
+
+	const { isValid, dirtyFields, errors } = formState;
+
+	// Debug: Log form state changes
+	useEffect(() => {
+		if (!isNewStaff) {
+			console.log('Form State Debug:', {
+				isValid,
+				dirtyFields: Object.keys(dirtyFields),
+				hasDirtyFields: Object.keys(dirtyFields).length > 0,
+				errors: errors, // Show full error objects with messages
+				errorKeys: Object.keys(errors),
+				formValues: watch()
+			});
+		}
+	}, [isValid, dirtyFields, errors, isNewStaff, watch]);
+
+	// Watch form fields for dependent selects
+	const selectedDepartment = watch('department');
+	const selectedCountry = watch('officeCountry');
+	const selectedState = watch('officeState');
+
+	// API Hooks
+	const { data: adminData, isLoading: adminLoading, isError: adminIsError } = useNonPopulatedSingleAdminStaff(
+		contactId,
+		{ skip: isNewStaff }
+	);
+	const { data: countriesData, isLoading: countriesLoading } = useCountries();
+	const { data: departmentsData, isLoading: departmentsLoading } = useGetDepartments();
 
 	const recruitStaff = useAdminRecruitAfricanshopStaff();
 	const updateStaffInfo = useAdminStaffUpdateMutation();
 	const deleteAdmin = useDeleteAdminStaffMutation();
 
-	const { control, watch, reset, handleSubmit, getValues, formState } = useForm({
-		defaultValues,
-		mode: 'all',
-		resolver: zodResolver(schema)
-	});
-	const { isValid, dirtyFields, errors } = formState;
-	const form = watch();
-	const [loading, setLoading] = useState(false);
+	// Local State for Cascading Selects
+	const [states, setStates] = useState([]);
+	const [lgas, setLgas] = useState([]);
+	const [designations, setDesignations] = useState([]);
+	const [loadingStates, setLoadingStates] = useState(false);
+	const [loadingLgas, setLoadingLgas] = useState(false);
+	const [loadingDesignations, setLoadingDesignations] = useState(false);
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+	const [isLoadingInitialData, setIsLoadingInitialData] = useState(false);
 
-	const { data: countries, isFetching } = useCountries();
-	const { data: departments } = useGetDepartments();
-
-	const [designationsList, setDesignationList] = useState([]);
-	const [bstates, setBstates] = useState([]);
-	const [blgas, setBlgas] = useState([]);
-	const [lgasOffices, setLgasOffices] = useState([]);
-
-	useEffect(() => {
-		if (getValues()?.department) {
-			getDesignationData();
-		}
-
-		if (getValues()?.officeCountry) {
-			getStateDFromCountryId(getValues()?.officeCountry);
-		}
-
-		if (getValues()?.officeState) {
-			getLgasFromState(getValues()?.officeState);
-		}
-
-		if (getValues()?.officeLga) {
-			getOfficesFromLga(getValues()?.officeLga);
-		}
-	}, [getValues()?.department, getValues()?.officeCountry, getValues()?.officeState, getValues()?.officeLga]);
-
-	/** 1) Get States from country IDs  */
-	async function getStateDFromCountryId(pid) {
-		setLoading(true);
-		const responseData = await getStateByCountryId(pid);
-
-		if (responseData) {
-			setBstates(responseData?.data);
-			setTimeout(function () {
-				setLoading(false);
-			}, 250);
-		}
-	}
-
-	/** 2) Get L.G.As from state_ID data */
-	async function getLgasFromState(sid) {
-		setLoading(true);
-		const responseData = await getLgaByStateId(sid);
-
-		if (responseData) {
-			setBlgas(responseData?.data);
-			setTimeout(function () {
-				setLoading(false);
-			}, 250);
-		}
-	}
-
-	/** 3) Get L.G.As from state_ID data */
-	async function getOfficesFromLga(sid) {
-		setLoading(true);
-		const responseData = await getOfficeByLgaId(sid);
-
-		if (responseData) {
-			setLgasOffices(responseData?.data);
-			setTimeout(function () {
-				setLoading(false);
-			}, 250);
-		}
-	}
-
-	/** *4) Get desinations from department_ID */
-	const getDesignationData = async () => {
-		setLoading(true);
-		try {
-			if (getValues()?.department) {
-				await getDesigByDepartmentId(getValues()?.department).then((response) => {
-					setDesignationList(response.data);
-				});
-				setLoading(false);
-			}
-		} catch (error) {
-			console.log(error);
-			setLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		reset(admin?.data?.admin);
-	}, [admin?.data?.admin, reset]);
+	// Extract data from API responses
+	const countries = useMemo(() => countriesData?.data?.countries || [], [countriesData]);
+	const departments = useMemo(() => departmentsData?.data?.departments || [], [departmentsData]);
 
 	/**
-	 * Form Submit
+	 * Fetch States when Country changes
 	 */
+	const fetchStates = useCallback(
+		async (countryId, shouldClearDependents = true) => {
+			if (!countryId) {
+				setStates([]);
+				setLgas([]);
+				if (shouldClearDependents) {
+					setValue('officeState', '');
+					setValue('officeLga', '');
+				}
+				return;
+			}
 
-	const onSubmit = useCallback(() => {
-		recruitStaff.mutate(getValues());
-	}, [getValues()]);
+			setLoadingStates(true);
+			try {
+				const response = await getStateByCountryId(countryId);
+				setStates(response?.data?.states || []);
 
-	const onUpdate = useCallback(() => {
-		updateStaffInfo.mutate(getValues());
-	}, [getValues()]);
+				if (shouldClearDependents) {
+					setLgas([]);
+					setValue('officeState', '');
+					setValue('officeLga', '');
+				}
+			} catch (error) {
+				console.error('Error fetching states:', error);
+				setStates([]);
+			} finally {
+				setLoadingStates(false);
+			}
+		},
+		[setValue]
+	);
 
-	function handleRemoveAdmin(adminUserId) {
-		if (window.confirm('Are you certain anout deleting this staff?')) {
-			deleteAdmin.mutate(adminUserId);
+	/**
+	 * Fetch LGAs when State changes
+	 */
+	const fetchLgas = useCallback(
+		async (stateId, shouldClearDependent = true) => {
+			if (!stateId) {
+				setLgas([]);
+				if (shouldClearDependent) {
+					setValue('officeLga', '');
+				}
+				return;
+			}
+
+			setLoadingLgas(true);
+			try {
+				const response = await getOperationalLgaByStateId(stateId);
+				setLgas(response?.data?.lgas || []);
+
+				if (shouldClearDependent) {
+					setValue('officeLga', '');
+				}
+			} catch (error) {
+				console.error('Error fetching LGAs:', error);
+				setLgas([]);
+			} finally {
+				setLoadingLgas(false);
+			}
+		},
+		[setValue]
+	);
+
+	/**
+	 * Fetch Designations when Department changes
+	 */
+	const fetchDesignations = useCallback(
+		async (departmentId, shouldClearDependent = true) => {
+			if (!departmentId) {
+				setDesignations([]);
+				if (shouldClearDependent) {
+					setValue('designation', '');
+				}
+				return;
+			}
+
+			setLoadingDesignations(true);
+			try {
+				const response = await getDesigByDepartmentId(departmentId);
+				setDesignations(response?.data?.designations || []);
+
+				if (shouldClearDependent) {
+					setValue('designation', '');
+				}
+			} catch (error) {
+				console.error('Error fetching designations:', error);
+				setDesignations([]);
+			} finally {
+				setLoadingDesignations(false);
+			}
+		},
+		[setValue]
+	);
+
+	/**
+	 * Effect: Populate form when editing existing staff
+	 * Also pre-load dependent dropdowns (states, LGAs, designations)
+	 */
+	useEffect(() => {
+		if (!isNewStaff && adminData?.data?.admin) {
+			const staffData = adminData.data.admin;
+
+			// Pre-populate cascading selects based on existing data in parallel
+			const loadDependentData = async () => {
+				setIsLoadingInitialData(true);
+
+				try {
+					const promises = [];
+
+					// Load states if country is selected
+					if (staffData.officeCountry) {
+						promises.push(
+							getStateByCountryId(staffData.officeCountry)
+								.then((response) => setStates(response?.data?.states || []))
+								.catch((error) => console.error('Error loading states:', error))
+						);
+					}
+
+					// Load LGAs if state is selected
+					if (staffData.officeState) {
+						promises.push(
+							getOperationalLgaByStateId(staffData.officeState)
+								.then((response) => setLgas(response?.data?.lgas || []))
+								.catch((error) => console.error('Error loading LGAs:', error))
+						);
+					}
+
+					// Load designations if department is selected
+					if (staffData.department) {
+						promises.push(
+							getDesigByDepartmentId(staffData.department)
+								.then((response) => setDesignations(response?.data?.designations || []))
+								.catch((error) => console.error('Error loading designations:', error))
+						);
+					}
+
+					// Wait for all dependent data to load before resetting form
+					await Promise.all(promises);
+
+					// Small delay to ensure state updates are complete
+					await new Promise((resolve) => setTimeout(resolve, 100));
+
+					// Now reset form with staff data - this ensures dropdowns are populated first
+					// Use keepDirtyValues: false to ensure form state is properly reset
+					reset(staffData, { keepDirtyValues: false });
+
+					// Trigger validation after reset to ensure isValid is correct
+					await new Promise((resolve) => setTimeout(resolve, 50));
+					trigger();
+				} catch (error) {
+					console.error('Error loading form data:', error);
+				} finally {
+					setIsLoadingInitialData(false);
+				}
+			};
+
+			loadDependentData();
 		}
+	}, [adminData, isNewStaff, reset, trigger]);
+
+	/**
+	 * Effect: Fetch states when country changes (user interaction)
+	 */
+	useEffect(() => {
+		// Only fetch if this is a user-initiated change, not initial load
+		if (selectedCountry && (isNewStaff || formState.dirtyFields.officeCountry)) {
+			fetchStates(selectedCountry);
+		}
+	}, [selectedCountry, fetchStates, isNewStaff, formState.dirtyFields.officeCountry]);
+
+	/**
+	 * Effect: Fetch LGAs when state changes (user interaction)
+	 */
+	useEffect(() => {
+		// Only fetch if this is a user-initiated change, not initial load
+		if (selectedState && (isNewStaff || formState.dirtyFields.officeState)) {
+			fetchLgas(selectedState);
+		}
+	}, [selectedState, fetchLgas, isNewStaff, formState.dirtyFields.officeState]);
+
+	/**
+	 * Effect: Fetch designations when department changes (user interaction)
+	 */
+	useEffect(() => {
+		// Only fetch if this is a user-initiated change, not initial load
+		if (selectedDepartment && (isNewStaff || formState.dirtyFields.department)) {
+			fetchDesignations(selectedDepartment);
+		}
+	}, [selectedDepartment, fetchDesignations, isNewStaff, formState.dirtyFields.department]);
+
+	/**
+	 * Form Submission Handlers
+	 */
+	const onSubmit = useCallback(
+		(data) => {
+			recruitStaff.mutate(data);
+		},
+		[recruitStaff]
+	);
+
+	const onUpdate = useCallback(
+		(data) => {
+			console.log('🎯 onUpdate CALLED - Function has been triggered!');
+			console.log('📝 Form data received:', data);
+
+			// Merge the existing admin data with the updated form data
+			// This preserves fields like id, _id, createdAt, etc. that aren't in the form
+			const existingAdminData = adminData?.data?.admin || {};
+			console.log('📦 Existing admin data:', existingAdminData);
+
+			const updatePayload = {
+				...existingAdminData, // Start with existing admin data
+				...data, // Override with updated form values
+				id: existingAdminData.id || existingAdminData._id, // Ensure ID is present
+				_id: existingAdminData._id || existingAdminData.id // Ensure _id is present
+			};
+
+			console.log('🚀 Final update payload:', updatePayload);
+			console.log('⏳ Calling mutation...');
+			updateStaffInfo.mutate(updatePayload);
+		},
+		[updateStaffInfo, adminData]
+	);
+
+	/**
+	 * Update Button Click Handler with Logging
+	 */
+	const handleUpdateButtonClick = useCallback(
+		(e) => {
+			console.log('🔘 UPDATE BUTTON CLICKED!');
+			console.log('📊 Current form state:', {
+				isValid,
+				errorCount: Object.keys(errors).length,
+				errors: errors,
+				dirtyFields: Object.keys(dirtyFields)
+			});
+
+			// Call handleSubmit which will only call onUpdate if form is valid
+			handleSubmit(
+				(data) => {
+					console.log('✅ handleSubmit SUCCESS - Form is valid, calling onUpdate');
+					onUpdate(data);
+				},
+				(errors) => {
+					console.log('❌ handleSubmit FAILED - Form has validation errors:');
+					console.log('Validation errors:', errors);
+				}
+			)(e);
+		},
+		[handleSubmit, onUpdate, isValid, errors, dirtyFields]
+	);
+
+	/**
+	 * Delete Handler with Confirmation Dialog
+	 */
+	const handleOpenDeleteDialog = () => {
+		setDeleteDialogOpen(true);
+	};
+
+	const handleCloseDeleteDialog = () => {
+		setDeleteDialogOpen(false);
+	};
+
+	const handleConfirmDelete = () => {
+		deleteAdmin.mutate(adminData?.data?.admin?.id || adminData?.data?.admin?._id);
+		setDeleteDialogOpen(false);
+	};
+
+	/**
+	 * Cancel Handler
+	 */
+	const handleCancel = () => {
+		navigate(-1);
+	};
+
+	/**
+	 * Loading State  || isLoadingInitialData
+	 */
+	if ((adminLoading ) && !isNewStaff) {
+		return <FuseLoading />;
 	}
 
-	const background = watch('background');
-	const name = watch('name');
+	/**
+	 * Error State
+	 */
+	if (adminIsError && !isNewStaff) {
+		return (
+			<Box className="flex flex-col items-center justify-center h-full p-24">
+				<Alert
+					severity="error"
+					className="max-w-md"
+				>
+					<AlertTitle>Error Loading Staff Data</AlertTitle>
+					Unable to load staff information. Please try again or contact support.
+				</Alert>
+				<Button
+					variant="outlined"
+					color="primary"
+					className="mt-24"
+					onClick={handleCancel}
+				>
+					Go Back
+				</Button>
+			</Box>
+		);
+	}
 
 	return (
 		<>
+			{/* Header Section with Gradient */}
 			<Box
-				className="relative w-full h-160 sm:h-192 px-32 sm:px-48"
+				className="relative w-full px-24 sm:px-48 py-32"
 				sx={{
-					backgroundColor: 'background.default'
+					background: isNewStaff
+						? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+						: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+					color: 'white',
+					'&::before': {
+						content: '""',
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						right: 0,
+						bottom: 0,
+						background: 'linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.2))',
+						pointerEvents: 'none'
+					}
 				}}
 			>
-				{background && (
-					<img
-						className="absolute inset-0 object-cover w-full h-full"
-						src={background}
-						alt="user background"
-					/>
-				)}
+				<Box className="relative z-10 flex items-start justify-between">
+					<Box className="flex-1 pr-48">
+						<Box className="flex items-center gap-12 mb-8">
+							<FuseSvgIcon
+								size={32}
+								className="text-white"
+							>
+								{isNewStaff ? 'heroicons-outline:user-add' : 'heroicons-outline:pencil-alt'}
+							</FuseSvgIcon>
+							<Typography
+								variant="h4"
+								className="font-bold text-white"
+							>
+								{isNewStaff ? 'Recruit New Staff Member' : 'Update Staff Information'}
+							</Typography>
+						</Box>
+						<Typography
+							variant="body1"
+							className="text-white opacity-90"
+						>
+							{isNewStaff
+								? 'Fill in the details below to recruit a new staff member to your organization'
+								: 'Update the information for this staff member'}
+						</Typography>
+					</Box>
+
+					{/* Close Button - Prominently Visible */}
+					<Tooltip title="Close Form">
+						<IconButton
+							onClick={handleCancel}
+							className="bg-white bg-opacity-20 hover:bg-opacity-30 transition-all"
+							sx={{
+								color: 'white',
+								boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+								'&:hover': {
+									transform: 'scale(1.05)',
+									boxShadow: '0 6px 8px rgba(0,0,0,0.15)'
+								}
+							}}
+							size="large"
+						>
+							<FuseSvgIcon size={24}>heroicons-outline:x</FuseSvgIcon>
+						</IconButton>
+					</Tooltip>
+				</Box>
 			</Box>
 
-			<div className="relative flex flex-col flex-auto  px-24 sm:px-48">
-				<div className="sm:col-span-2 text-sm">
-					<Typography
-						className="text-start mt-1 mb-[-20px]"
-						style={{ fontSize: '12px', fontWeight: '800' }}
-					>
-						Country Location
-					</Typography>
-					<Controller
-						control={control}
-						name="officeCountry"
-						className="mt-0.5"
-						render={({ field }) => (
-							<Select
-								sx={{
-									'& .MuiSelect-select': {
-										minHeight: '0!important'
-									}
-								}}
-								className="mt-16"
-								{...field}
-								id="officeCountry"
-								label="Country of posting"
-								placeholder="Country of posting"
-								variant="outlined"
-								fullWidth
-								error={!!errors.officeCountry}
-								helperText={errors?.officeCountry?.message}
-							>
-								<MenuItem value="">
-									<em>Select a country</em>
-								</MenuItem>
+			<Divider />
 
-								{countries?.data?.data?.map((cnty, index) => (
-									<MenuItem
-										key={index}
-										value={cnty._id}
-									>
-										{cnty.name}
-									</MenuItem>
-								))}
-							</Select>
-						)}
-					/>
-				</div>
-
-				<div className="sm:col-span-2 text-sm">
-					<Typography
-						className="text-start mt-10  mb-[-30px]"
-						style={{ fontSize: '12px', fontWeight: '800' }}
-					>
-						State Location
-					</Typography>
-					<Controller
-						control={control}
-						name="officeState"
-						render={({ field }) => (
-							<Select
-								className="mt-32"
-								{...field}
-								id="officeState"
-								label="State of posting"
-								placeholder="State of posting"
-								variant="outlined"
-								fullWidth
-								error={!!errors.officeState}
-								helperText={errors?.officeState?.message}
-							>
-								<MenuItem value="">
-									<em>None</em>
-								</MenuItem>
-
-								{bstates?.map((bsts, index) => (
-									<MenuItem
-										key={index}
-										value={bsts.id || bsts._id}
-									>
-										{bsts.name}
-									</MenuItem>
-								))}
-							</Select>
-						)}
-					/>
-				</div>
-
-				<div className="sm:col-span-2 text-sm">
-					<Typography
-						className="text-start mt-10  mb-[-30px]"
-						style={{ fontSize: '12px', fontWeight: '800' }}
-					>
-						L.G.A|Country Location
-					</Typography>
-					<Controller
-						control={control}
-						name="officeLga"
-						render={({ field }) => (
-							<Select
-								className="mt-32"
-								{...field}
-								id="officeLga"
-								label="L.G.A of posting"
-								placeholder="L.G.A of posting"
-								variant="outlined"
-								fullWidth
-								error={!!errors.officeLga}
-								helperText={errors?.officeLga?.message}
-							>
-								<MenuItem value="">
-									<em>None</em>
-								</MenuItem>
-
-								{blgas?.map((blg, index) => (
-									<MenuItem
-										key={index}
-										value={blg._id}
-									>
-										{blg.name}
-									</MenuItem>
-								))}
-							</Select>
-						)}
-					/>
-				</div>
-				{/* )} */}
-
-				{/* {getValues()?.officeLga && (
-          <>
-            <Typography 
-               className="text-start"
-            style={{ fontSize: "12px", fontWeight: "800" }}>Office Location</Typography>
-            <Controller
-              control={control}
-              name={`officeDesignate`}
-              render={({ field }) => (
-                <Select
-                  className="mt-32"
-                  {...field}
-                  id="officeDesignate"
-                  label="Office of posting"
-                  placeholder="Office of posting"
-                  variant="outlined"
-                  fullWidth
-                  error={!!errors.officeDesignate}
-                  helperText={errors?.officeDesignate?.message}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-
-                  {lgasOffices?.map((office) => (
-                    <MenuItem value={office._id}>{office.name}</MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </>
-        )} */}
-
-				<Typography
-					className="text-start mt-10  mb-[-30px]"
-					style={{ fontSize: '12px', fontWeight: '800' }}
-				>
-					Department
-				</Typography>
-				<Controller
-					control={control}
-					name="department"
-					render={({ field }) => (
-						<Select
-							className="mt-32"
-							{...field}
-							id="department"
-							label="Department"
-							placeholder="Department"
-							variant="outlined"
-							fullWidth
-							error={!!errors.department}
-							helperText={errors?.department?.message}
-						>
-							<MenuItem value="">
-								<em>None</em>
-							</MenuItem>
-
-							{departments?.data?.data?.map((dt) => (
-								<MenuItem value={dt._id}>{dt.name}</MenuItem>
-							))}
-						</Select>
-					)}
+			{/* Form Content */}
+			<Box
+				component="form"
+				className="flex flex-col flex-auto px-24 sm:px-48 pb-24"
+			>
+				{/* Personal Information Section */}
+				<SectionTitle
+					icon="heroicons-outline:user"
+					title="Personal Information"
 				/>
+				<Grid
+					container
+					spacing={3}
+				>
+					<Grid
+						item
+						xs={12}
+						md={6}
+					>
+						<Controller
+							control={control}
+							name="name"
+							render={({ field }) => (
+								<TextField
+									{...field}
+									label="Full Name"
+									placeholder="Enter staff full name"
+									variant="outlined"
+									fullWidth
+									required
+									error={!!errors.name}
+									helperText={errors?.name?.message}
+									InputProps={{
+										startAdornment: (
+											<InputAdornment position="start">
+												<FuseSvgIcon size={20}>heroicons-solid:user-circle</FuseSvgIcon>
+											</InputAdornment>
+										)
+									}}
+								/>
+							)}
+						/>
+					</Grid>
 
-				{getValues()?.department && (
-					<>
-						<Typography
-							className="text-start mt-10  mb-[-30px]"
-							style={{ fontSize: '12px', fontWeight: '800' }}
-						>
-							Designation
-						</Typography>
+					<Grid
+						item
+						xs={12}
+						md={6}
+					>
+						<Controller
+							control={control}
+							name="email"
+							render={({ field }) => (
+								<TextField
+									{...field}
+									label="Email Address"
+									placeholder="staff@africanshops.com"
+									variant="outlined"
+									fullWidth
+									required
+									type="email"
+									disabled={!isNewStaff}
+									error={!!errors.email}
+									helperText={errors?.email?.message || (!isNewStaff && 'Email cannot be changed')}
+									InputProps={{
+										startAdornment: (
+											<InputAdornment position="start">
+												<FuseSvgIcon size={20}>heroicons-solid:mail</FuseSvgIcon>
+											</InputAdornment>
+										)
+									}}
+								/>
+							)}
+						/>
+					</Grid>
+
+					<Grid
+						item
+						xs={12}
+						md={6}
+					>
+						<Controller
+							control={control}
+							name="phone"
+							render={({ field }) => (
+								<TextField
+									{...field}
+									label="Phone Number"
+									placeholder="+234 800 000 0000"
+									variant="outlined"
+									fullWidth
+									error={!!errors.phone}
+									helperText={errors?.phone?.message}
+									InputProps={{
+										startAdornment: (
+											<InputAdornment position="start">
+												<FuseSvgIcon size={20}>heroicons-solid:phone</FuseSvgIcon>
+											</InputAdornment>
+										)
+									}}
+								/>
+							)}
+						/>
+					</Grid>
+
+					<Grid
+						item
+						xs={12}
+						md={6}
+					>
+						<Controller
+							control={control}
+							name="gender"
+							render={({ field }) => (
+								<FormControl
+									fullWidth
+									error={!!errors.gender}
+									required
+								>
+									<InputLabel id="gender-label">Gender</InputLabel>
+									<Select
+										{...field}
+										labelId="gender-label"
+										label="Gender"
+										startAdornment={
+											<InputAdornment position="start">
+												<FuseSvgIcon size={20}>heroicons-solid:identification</FuseSvgIcon>
+											</InputAdornment>
+										}
+									>
+										<MenuItem value="">
+											<em>Select Gender</em>
+										</MenuItem>
+										<MenuItem value="MALE">Male</MenuItem>
+										<MenuItem value="FEMALE">Female</MenuItem>
+									</Select>
+									{errors.gender && <FormHelperText>{errors.gender.message}</FormHelperText>}
+								</FormControl>
+							)}
+						/>
+					</Grid>
+
+					<Grid
+						item
+						xs={12}
+						md={6}
+					>
+						<Controller
+							control={control}
+							name="birthday"
+							render={({ field: { value, onChange } }) => (
+								<LocalizationProvider dateAdapter={AdapterDateFns}>
+									<DateTimePicker
+										value={value ? new Date(value) : null}
+										onChange={(val) => {
+											onChange(val?.toISOString());
+										}}
+										slotProps={{
+											textField: {
+												label: 'Date of Birth',
+												fullWidth: true,
+												variant: 'outlined',
+												error: !!errors.birthday,
+												helperText: errors?.birthday?.message,
+												InputProps: {
+													startAdornment: (
+														<InputAdornment position="start">
+															<FuseSvgIcon size={20}>heroicons-solid:cake</FuseSvgIcon>
+														</InputAdornment>
+													)
+												}
+											},
+											actionBar: {
+												actions: ['clear', 'today']
+											}
+										}}
+										slots={{
+											openPickerIcon: BirthdayIcon
+										}}
+									/>
+								</LocalizationProvider>
+							)}
+						/>
+					</Grid>
+
+					<Grid
+						item
+						xs={12}
+						md={6}
+					>
+						<Controller
+							control={control}
+							name="address"
+							render={({ field }) => (
+								<TextField
+									{...field}
+									label="Residential Address"
+									placeholder="Enter residential address"
+									variant="outlined"
+									fullWidth
+									error={!!errors.address}
+									helperText={errors?.address?.message}
+									InputProps={{
+										startAdornment: (
+											<InputAdornment position="start">
+												<FuseSvgIcon size={20}>heroicons-solid:location-marker</FuseSvgIcon>
+											</InputAdornment>
+										)
+									}}
+								/>
+							)}
+						/>
+					</Grid>
+				</Grid>
+
+				{/* Location Information Section */}
+				<SectionTitle
+					icon="heroicons-outline:office-building"
+					title="Office Location"
+				/>
+				<Grid
+					container
+					spacing={3}
+				>
+					<Grid
+						item
+						xs={12}
+						md={4}
+					>
+						<Controller
+							control={control}
+							name="officeCountry"
+							render={({ field }) => (
+								<FormControl
+									fullWidth
+									error={!!errors.officeCountry}
+									required
+								>
+									<InputLabel id="country-label">Country</InputLabel>
+									<Select
+										{...field}
+										labelId="country-label"
+										label="Country"
+										disabled={countriesLoading}
+										startAdornment={
+											<InputAdornment position="start">
+												<FuseSvgIcon size={20}>heroicons-solid:globe</FuseSvgIcon>
+											</InputAdornment>
+										}
+									>
+										<MenuItem value="">
+											<em>Select Country</em>
+										</MenuItem>
+										{countries.map((country) => (
+											<MenuItem
+												key={country.id}
+												value={country.id}
+											>
+												{country.name}
+											</MenuItem>
+										))}
+									</Select>
+									{errors.officeCountry && <FormHelperText>{errors.officeCountry.message}</FormHelperText>}
+								</FormControl>
+							)}
+						/>
+					</Grid>
+
+					<Grid
+						item
+						xs={12}
+						md={4}
+					>
+						<Controller
+							control={control}
+							name="officeState"
+							render={({ field }) => (
+								<FormControl
+									fullWidth
+									error={!!errors.officeState}
+									required
+									disabled={!selectedCountry || loadingStates}
+								>
+									<InputLabel id="state-label">State</InputLabel>
+									<Select
+										{...field}
+										labelId="state-label"
+										label="State"
+										startAdornment={
+											<InputAdornment position="start">
+												{loadingStates ? (
+													<CircularProgress size={20} />
+												) : (
+													<FuseSvgIcon size={20}>heroicons-solid:map</FuseSvgIcon>
+												)}
+											</InputAdornment>
+										}
+									>
+										<MenuItem value="">
+											<em>Select State</em>
+										</MenuItem>
+										{states.map((state) => (
+											<MenuItem
+												key={state.id}
+												value={state.id}
+											>
+												{state.name}
+											</MenuItem>
+										))}
+									</Select>
+									{errors.officeState && <FormHelperText>{errors.officeState.message}</FormHelperText>}
+									{!selectedCountry && <FormHelperText>Please select a country first</FormHelperText>}
+								</FormControl>
+							)}
+						/>
+					</Grid>
+
+					<Grid
+						item
+						xs={12}
+						md={4}
+					>
+						<Controller
+							control={control}
+							name="officeLga"
+							render={({ field }) => (
+								<FormControl
+									fullWidth
+									error={!!errors.officeLga}
+									required
+									disabled={!selectedState || loadingLgas}
+								>
+									<InputLabel id="lga-label">LGA / County</InputLabel>
+									<Select
+										{...field}
+										labelId="lga-label"
+										label="LGA / County"
+										startAdornment={
+											<InputAdornment position="start">
+												{loadingLgas ? (
+													<CircularProgress size={20} />
+												) : (
+													<FuseSvgIcon size={20}>heroicons-solid:location-marker</FuseSvgIcon>
+												)}
+											</InputAdornment>
+										}
+									>
+										<MenuItem value="">
+											<em>Select LGA/County</em>
+										</MenuItem>
+										{lgas.map((lga) => (
+											<MenuItem
+												key={lga.id}
+												value={lga.id}
+											>
+												{lga.name}
+											</MenuItem>
+										))}
+									</Select>
+									{errors.officeLga && <FormHelperText>{errors.officeLga.message}</FormHelperText>}
+									{!selectedState && <FormHelperText>Please select a state first</FormHelperText>}
+								</FormControl>
+							)}
+						/>
+					</Grid>
+				</Grid>
+
+				{/* Organizational Information Section */}
+				<SectionTitle
+					icon="heroicons-outline:briefcase"
+					title="Organizational Assignment"
+				/>
+				<Grid
+					container
+					spacing={3}
+				>
+					<Grid
+						item
+						xs={12}
+						md={6}
+					>
+						<Controller
+							control={control}
+							name="department"
+							render={({ field }) => (
+								<FormControl
+									fullWidth
+									error={!!errors.department}
+									required
+								>
+									<InputLabel id="department-label">Department</InputLabel>
+									<Select
+										{...field}
+										labelId="department-label"
+										label="Department"
+										disabled={departmentsLoading}
+										startAdornment={
+											<InputAdornment position="start">
+												<FuseSvgIcon size={20}>heroicons-solid:office-building</FuseSvgIcon>
+											</InputAdornment>
+										}
+									>
+										<MenuItem value="">
+											<em>Select Department</em>
+										</MenuItem>
+										{departments.map((dept) => (
+											<MenuItem
+												key={dept.id}
+												value={dept.id}
+											>
+												{dept.name}
+											</MenuItem>
+										))}
+									</Select>
+									{errors.department && <FormHelperText>{errors.department.message}</FormHelperText>}
+								</FormControl>
+							)}
+						/>
+					</Grid>
+
+					<Grid
+						item
+						xs={12}
+						md={6}
+					>
 						<Controller
 							control={control}
 							name="designation"
 							render={({ field }) => (
-								<Select
-									className="mt-32"
-									{...field}
-									id="designation"
-									label="Designation"
-									placeholder="Designation"
-									variant="outlined"
+								<FormControl
 									fullWidth
 									error={!!errors.designation}
-									helperText={errors?.designation?.message}
+									required
+									disabled={!selectedDepartment || loadingDesignations}
 								>
-									<MenuItem value="">
-										<em>None</em>
-									</MenuItem>
-
-									{designationsList?.map((desig) => (
-										<MenuItem value={desig._id}>{desig.name}</MenuItem>
-									))}
-								</Select>
+									<InputLabel id="designation-label">Designation</InputLabel>
+									<Select
+										{...field}
+										labelId="designation-label"
+										label="Designation"
+										startAdornment={
+											<InputAdornment position="start">
+												{loadingDesignations ? (
+													<CircularProgress size={20} />
+												) : (
+													<FuseSvgIcon size={20}>heroicons-solid:badge-check</FuseSvgIcon>
+												)}
+											</InputAdornment>
+										}
+									>
+										<MenuItem value="">
+											<em>Select Designation</em>
+										</MenuItem>
+										{designations.map((desig) => (
+											<MenuItem
+												key={desig.id}
+												value={desig.id}
+											>
+												{desig.name}
+											</MenuItem>
+										))}
+									</Select>
+									{errors.designation && <FormHelperText>{errors.designation.message}</FormHelperText>}
+									{!selectedDepartment && <FormHelperText>Please select a department first</FormHelperText>}
+								</FormControl>
 							)}
 						/>
-					</>
-				)}
+					</Grid>
+				</Grid>
 
-				<Controller
-					control={control}
-					name="name"
-					render={({ field }) => (
-						<TextField
-							className="mt-32"
-							{...field}
-							label="Name"
-							placeholder="Name"
-							id="name"
-							error={!!errors.name}
-							helperText={errors?.name?.message}
+				{/* Form Actions */}
+				<Box className="flex items-center justify-between mt-48 pt-24 border-t">
+					{!isNewStaff && (
+						<Button
 							variant="outlined"
-							required
-							fullWidth
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">
-										<FuseSvgIcon size={20}>heroicons-solid:user-circle</FuseSvgIcon>
-									</InputAdornment>
-								)
-							}}
-						/>
-					)}
-				/>
-
-				<Typography
-					className="text-start mt-10  mb-[-30px]"
-					style={{ fontSize: '12px', fontWeight: '800' }}
-				>
-					Gender
-				</Typography>
-				<Controller
-					control={control}
-					name="gender"
-					render={({ field }) => (
-						<Select
-							className="mt-32"
-							{...field}
-							id="gender"
-							label="Gender"
-							placeholder="Gender"
-							variant="outlined"
-							fullWidth
-							error={!!errors.gender}
-							helperText={errors?.gender?.message}
-							value={getValues()?.gender}
+							color="error"
+							onClick={handleOpenDeleteDialog}
+							startIcon={<FuseSvgIcon>heroicons-outline:trash</FuseSvgIcon>}
 						>
-							<MenuItem value="">
-								<em>Select a gender</em>
-							</MenuItem>
-
-							<MenuItem value="MALE">MALE</MenuItem>
-							<MenuItem value="FEMALE">FEMALE</MenuItem>
-						</Select>
+							Delete Staff
+						</Button>
 					)}
-				/>
 
-				<Controller
-					control={control}
-					name="email"
-					render={({ field }) => (
-						<TextField
-							className="mt-32"
-							{...field}
-							label="Email"
-							placeholder="Email"
+					{isNewStaff && <div />}
+
+					<Box className="flex gap-12">
+						<Button
 							variant="outlined"
-							fullWidth
-							error={!!errors.email}
-							helperText={errors?.email?.message}
-							disabled={contactId !== 'new' && true}
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">
-										<FuseSvgIcon size={20}>heroicons-solid:mail</FuseSvgIcon>
-									</InputAdornment>
-								)
-							}}
-						/>
-					)}
-				/>
+							onClick={handleCancel}
+							disabled={recruitStaff.isLoading || updateStaffInfo.isLoading}
+						>
+							Cancel
+						</Button>
 
-				<Controller
-					control={control}
-					name="address"
-					render={({ field }) => (
-						<TextField
-							className="mt-32"
-							{...field}
-							label="Address"
-							placeholder="Address"
-							id="address"
-							error={!!errors.address}
-							helperText={errors?.address?.message}
-							variant="outlined"
-							fullWidth
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">
-										<FuseSvgIcon size={20}>heroicons-solid:location-marker</FuseSvgIcon>
-									</InputAdornment>
-								)
-							}}
-						/>
-					)}
-				/>
-				<Controller
-					control={control}
-					name="birthday"
-					render={({ field: { value, onChange } }) => (
-						<DateTimePicker
-							value={new Date(value)}
-							onChange={(val) => {
-								onChange(val?.toISOString());
-							}}
-							className="mt-32 mb-16 w-full"
-							slotProps={{
-								textField: {
-									id: 'birthday',
-									label: 'Birthday',
-									InputLabelProps: {
-										shrink: true
-									},
-									fullWidth: true,
-									variant: 'outlined',
-									error: !!errors.birthday,
-									helperText: errors?.birthday?.message
-								},
-								actionBar: {
-									actions: ['clear', 'today']
+						{isNewStaff ? (
+							<Button
+								variant="contained"
+								color="secondary"
+								onClick={handleSubmit(onSubmit)}
+								disabled={!isValid || recruitStaff.isLoading}
+								startIcon={
+									recruitStaff.isLoading ? (
+										<CircularProgress
+											size={20}
+											color="inherit"
+										/>
+									) : (
+										<FuseSvgIcon>heroicons-outline:user-add</FuseSvgIcon>
+									)
 								}
-							}}
-							slots={{
-								openPickerIcon: BirtdayIcon
-							}}
-						/>
-					)}
-				/>
-				<Controller
-					control={control}
-					name="phone"
-					render={({ field }) => (
-						<TextField
-							{...field}
-							label="Phone"
-							placeholder="Phone"
-							variant="outlined"
-							fullWidth
-							error={!!errors.phone}
-							helperText={errors?.phone?.message}
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">
-										<FuseSvgIcon size={20}>heroicons-solid:tag</FuseSvgIcon>
-									</InputAdornment>
-								)
-							}}
-						/>
-					)}
-				/>
-			</div>
-			<Box
-				className="flex items-center justify-between mt-40 py-14 pr-16 pl-4 sm:pr-48 sm:pl-36 border-t"
-				sx={{ backgroundColor: 'background.default' }}
-			>
-				<Button
-					className="bg-red-400 hover:bg-red-800"
-					onClick={() => handleRemoveAdmin(admin?.data?._id)}
-				>
-					Delete This Account
-				</Button>
+							>
+								{recruitStaff.isLoading ? 'Recruiting...' : 'Recruit Staff'}
+							</Button>
+						) : (
+							<Button
+								variant="contained"
+								color="secondary"
+								onClick={handleUpdateButtonClick}
+								disabled={updateStaffInfo.isLoading}
+								startIcon={
+									updateStaffInfo.isLoading ? (
+										<CircularProgress
+											size={20}
+											color="inherit"
+										/>
+									) : (
+										<FuseSvgIcon>heroicons-outline:save</FuseSvgIcon>
+									)
+								}
+							>
+								{updateStaffInfo.isLoading ? 'Updating...' : 'Update Staff'}
+							</Button>
+						)}
+					</Box>
+				</Box>
+			</Box>
 
-				<div>
+			{/* Delete Confirmation Dialog */}
+			<Dialog
+				open={deleteDialogOpen}
+				onClose={handleCloseDeleteDialog}
+				maxWidth="sm"
+				fullWidth
+			>
+				<DialogTitle className="flex items-center gap-8">
+					<FuseSvgIcon
+						className="text-red-600"
+						size={24}
+					>
+						heroicons-outline:exclamation-triangle
+					</FuseSvgIcon>
+					Confirm Staff Deletion
+				</DialogTitle>
+				<DialogContent>
+					<Alert
+						severity="warning"
+						className="mb-16"
+					>
+						<AlertTitle>Warning: This action cannot be undone</AlertTitle>
+						Deleting this staff member will permanently remove them from the system.
+					</Alert>
+					<DialogContentText>
+						Are you absolutely certain you want to delete{' '}
+						<strong>{adminData?.data?.admin?.name || 'this staff member'}</strong>? This action will:
+					</DialogContentText>
+					<Box
+						component="ul"
+						className="mt-12 ml-24"
+					>
+						<li>Remove all staff access and permissions</li>
+						<li>Delete staff profile and contact information</li>
+						<li>This change is permanent and cannot be reversed</li>
+					</Box>
+				</DialogContent>
+				<DialogActions className="px-24 pb-16">
 					<Button
-						className="ml-auto"
-						onClick={() => history.back()}
+						onClick={handleCloseDeleteDialog}
+						color="primary"
+						variant="outlined"
 					>
 						Cancel
 					</Button>
-					{contactId === 'new' && (
-						<Button
-							className="ml-8"
-							variant="contained"
-							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid || recruitStaff?.isLoading}
-							onClick={handleSubmit(onSubmit)}
-						>
-							Recruit staff
-						</Button>
-					)}
-
-					{contactId !== 'new' && (
-						<Button
-							className="ml-8"
-							variant="contained"
-							color="secondary"
-							disabled={_.isEmpty(dirtyFields) || !isValid || updateStaffInfo?.isLoading}
-							onClick={handleSubmit(onUpdate)}
-						>
-							update staff
-						</Button>
-					)}
-				</div>
-			</Box>
+					<Button
+						onClick={handleConfirmDelete}
+						color="error"
+						variant="contained"
+						disabled={deleteAdmin.isLoading}
+						startIcon={
+							deleteAdmin.isLoading ? (
+								<CircularProgress
+									size={20}
+									color="inherit"
+								/>
+							) : (
+								<FuseSvgIcon>heroicons-outline:trash</FuseSvgIcon>
+							)
+						}
+					>
+						{deleteAdmin.isLoading ? 'Deleting...' : 'Delete Staff'}
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</>
 	);
 }

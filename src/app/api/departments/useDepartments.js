@@ -7,6 +7,26 @@ export const useGetDepartments = () => {
 	return useQuery('getDepartmentsQuery', getDepts);
 }; // (Msvs => Done)
 
+// Paginated hook for Departments
+export function useDepartmentsPaginated({ page = 0, limit = 20, search = '', filters = {} }) {
+	const offset = page * limit;
+
+	return useQuery(
+		['departments_paginated', { page, limit, search, filters }],
+		() =>
+			getDepts({
+				limit,
+				offset,
+				search,
+				...filters
+			}),
+		{
+			keepPreviousData: true,
+			staleTime: 30000
+		}
+	);
+}
+
 /** *Get department by ID */
 export function useGetDepartmentById(deptId) {
 	if (!deptId || deptId === 'new') {
@@ -85,8 +105,8 @@ export function useDeleteSingleDepartment() {
 	return useMutation(deleteDepartmentById, {
 		onSuccess: (data) => {
 			if (data?.data) {
-				toast.success('country deleted successfully!!');
-				queryClient.invalidateQueries('__countries');
+				toast.success(`${data?.data?.message ? data?.data?.message : 'Department deleted successfully!'}`);
+				queryClient.invalidateQueries('departments_paginated');
 				navigate('/departments/list');
 			}
 		},

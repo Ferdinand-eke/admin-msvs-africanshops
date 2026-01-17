@@ -81,6 +81,7 @@ function UserContactView() {
 
 	const routeParams = useParams();
 	const { id: contactId } = routeParams;
+	console.log('contactId', contactId);
 
 	const {
 		data: userInfo,
@@ -89,6 +90,9 @@ function UserContactView() {
 	} = usePopulatedSingleUser(contactId, {
 		skip: !contactId
 	});
+
+	console.log('contactId', userInfo);
+
 
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
@@ -133,7 +137,7 @@ function UserContactView() {
 		return null;
 	}
 
-	if (!userInfo?.data) {
+	if (!userInfo?.data?.user) {
 		return null;
 	}
 
@@ -145,10 +149,10 @@ function UserContactView() {
 					backgroundColor: 'background.default'
 				}}
 			>
-				{userInfo?.data?.avatar && (
+				{userInfo?.data?.user?.avatar && (
 					<img
 						className="absolute inset-0 object-cover w-full h-full"
-						src={userInfo?.data?.avatar}
+						src={userInfo?.data?.user?.avatar}
 						alt="user background"
 					/>
 				)}
@@ -166,10 +170,10 @@ function UserContactView() {
 								color: 'text.secondary'
 							}}
 							className="w-128 h-128 text-64 font-bold"
-							src={userInfo?.data?.avatar}
-							alt={userInfo?.data?.name}
+							src={userInfo?.data?.user?.avatar}
+							alt={userInfo?.data?.user?.name}
 						>
-							{userInfo?.data?.name?.charAt(0)}
+							{userInfo?.data?.user?.name?.charAt(0)}
 						</Avatar>
 						<div className="flex items-center ml-auto mb-4">
 							<Button
@@ -184,12 +188,12 @@ function UserContactView() {
 						</div>
 					</div>
 
-					<Typography className="mt-12 text-4xl font-bold truncate">{userInfo?.data?.name}</Typography>
+					<Typography className="mt-12 text-4xl font-bold truncate">{userInfo?.data?.user?.name}</Typography>
 
 					<div className="flex flex-wrap items-center mt-8">
-						{userInfo?.data?.gender && (
+						{userInfo?.data?.user?.gender && (
 							<Chip
-								label={userInfo?.data?.gender}
+								label={userInfo?.data?.user?.gender}
 								className="mr-12 mb-12"
 								size="small"
 							/>
@@ -199,40 +203,40 @@ function UserContactView() {
 					<Divider className="mt-16 mb-24" />
 
 					<div className="flex flex-col space-y-8">
-						{userInfo?.data && (
+						{userInfo?.data?.user && (
 							<div className="flex items-center">
 								<FuseSvgIcon>heroicons-outline:office-building</FuseSvgIcon>
 								<div className="ml-24 leading-6">AFRICANSHOPS</div>
 							</div>
 						)}
 
-						{userInfo?.data?.department?.name && (
+						{userInfo?.data?.user?.department?.name && (
 							<div className="flex items-center">
 								<FuseSvgIcon>heroicons-outline:briefcase</FuseSvgIcon>
-								<div className="ml-24 leading-6">{userInfo?.data?.department?.name}</div>
+								<div className="ml-24 leading-6">{userInfo?.data?.user?.department?.name}</div>
 							</div>
 						)}
 
-						{userInfo?.data?.email && (
+						{userInfo?.data?.user?.email && (
 							<div className="flex">
 								<FuseSvgIcon>heroicons-outline:mail</FuseSvgIcon>
 								<div className="min-w-0 ml-24 space-y-4">
 									<div className="flex items-center leading-6">
 										<a
 											className="hover:underline text-primary-500"
-											href={`mailto: ${userInfo?.data?.email}`}
+											href={`mailto: ${userInfo?.data?.user?.email}`}
 											target="_blank"
 											rel="noreferrer"
 										>
-											{userInfo?.data?.email}
+											{userInfo?.data?.user?.email}
 										</a>
-										{userInfo?.data?.email && (
+										{userInfo?.data?.user?.email && (
 											<Typography
 												className="text-md truncate"
 												color="text.secondary"
 											>
 												<span className="mx-8">&bull;</span>
-												<span className="font-medium">{userInfo?.data?.email}</span>
+												<span className="font-medium">{userInfo?.data?.user?.email}</span>
 											</Typography>
 										)}
 									</div>
@@ -240,7 +244,7 @@ function UserContactView() {
 							</div>
 						)}
 
-						{userInfo?.data?.phone && (
+						{userInfo?.data?.user?.phone && (
 							<div className="flex">
 								<FuseSvgIcon>heroicons-outline:phone</FuseSvgIcon>
 								<div className="min-w-0 ml-24 space-y-4">
@@ -253,24 +257,24 @@ function UserContactView() {
 												backgroundSize: '24px 3876px'
 											}}
 										/>
-										<div className="ml-10 font-mono">{userInfo?.data?.phone}</div>
+										<div className="ml-10 font-mono">{userInfo?.data?.user?.phone}</div>
 									</div>
 								</div>
 							</div>
 						)}
 
-						{userInfo?.data?.address && (
+						{userInfo?.data?.user?.address && (
 							<div className="flex items-center">
 								<FuseSvgIcon>heroicons-outline:location-marker</FuseSvgIcon>
-								<div className="ml-24 leading-6">{userInfo?.data?.address}</div>
+								<div className="ml-24 leading-6">{userInfo?.data?.user?.address}</div>
 							</div>
 						)}
 
-						{userInfo?.data?.birthday && (
+						{userInfo?.data?.user?.birthday && (
 							<div className="flex items-center">
 								<FuseSvgIcon>heroicons-outline:cake</FuseSvgIcon>
 								<div className="ml-24 leading-6">
-									{format(new Date(userInfo?.data?.birthday), 'MMMM d, y')}
+									{format(new Date(userInfo?.data?.user?.birthday), 'MMMM d, y')}
 								</div>
 							</div>
 						)}
@@ -303,7 +307,7 @@ function UserContactView() {
 										<ListItemText
 											primary={
 												<>
-													{userInfo?.data?.isSuspended && (
+													{userInfo?.data?.user?.isSuspended && (
 														<Typography
 															className="font-medium "
 															color="red"
@@ -312,7 +316,7 @@ function UserContactView() {
 															Suspended
 														</Typography>
 													)}
-													{!userInfo?.data?.isSuspended && (
+													{!userInfo?.data?.user?.isSuspended && (
 														<Typography
 															className="font-medium "
 															color="green"
@@ -326,12 +330,12 @@ function UserContactView() {
 										/>
 
 										<>
-											{!userInfo?.data?.isSuspended && (
+											{!userInfo?.data?.user?.isSuspended && (
 												<IconButton size="small">
 													<FuseSvgIcon>heroicons-outline:check-circle</FuseSvgIcon>
 												</IconButton>
 											)}
-											{userInfo?.data?.isSuspended && (
+											{userInfo?.data?.user?.isSuspended && (
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
 													fill="none"
@@ -354,7 +358,7 @@ function UserContactView() {
 										<ListItemText
 											primary={
 												<>
-													{userInfo?.data?.isBlocked && (
+													{userInfo?.data?.user?.isBlocked && (
 														<Typography
 															className="font-medium "
 															color="red"
@@ -363,7 +367,7 @@ function UserContactView() {
 															Blocked
 														</Typography>
 													)}
-													{!userInfo?.data?.isBlocked && (
+													{!userInfo?.data?.user?.isBlocked && (
 														<Typography
 															className="font-medium "
 															color="green"
@@ -377,12 +381,12 @@ function UserContactView() {
 										/>
 
 										<>
-											{!userInfo?.data?.isBlocked && (
+											{!userInfo?.data?.user?.isBlocked && (
 												<IconButton size="small">
 													<FuseSvgIcon>heroicons-outline:check-circle</FuseSvgIcon>
 												</IconButton>
 											)}
-											{userInfo?.data?.isBlocked && (
+											{userInfo?.data?.user?.isBlocked && (
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
 													fill="none"
@@ -427,7 +431,7 @@ function UserContactView() {
 							<CardContent className="px-16">
 								<List className="p-0">
 									<>
-										{!userInfo?.data?.isSuspended && (
+										{!userInfo?.data?.user?.isSuspended && (
 											<ListItem className="px-0 space-x-8 justify-between">
 												<ListItemText
 													primary={
@@ -446,16 +450,16 @@ function UserContactView() {
 														label="Suspend"
 														className="mr-12 mb-12 cursor-pointer bg-red-500 hover:bg-red-800 w-full"
 														size="small"
-														onClick={() => suspendUserOnPlatform(userInfo?.data?._id)}
+														onClick={() => suspendUserOnPlatform(userInfo?.data?.user?._id || userInfo?.data?.user?.id)}
 													/>
 												</div>
 											</ListItem>
 										)}
 
 										<>
-											{!userInfo?.data?.isBlocked && (
+											{!userInfo?.data?.user?.isBlocked && (
 												<>
-													{userInfo?.data?.isSuspended && (
+													{userInfo?.data?.user?.isSuspended && (
 														<ListItem className="px-0 space-x-8 justify-between">
 															<ListItemText
 																primary={
@@ -475,7 +479,7 @@ function UserContactView() {
 																	className="mr-12 mb-12 cursor-pointer bg-orange-500 hover:bg-orange-800 w-full"
 																	size="small"
 																	onClick={() =>
-																		removeUserSuspension(userInfo?.data?._id)
+																		removeUserSuspension(userInfo?.data?.user?._id || userInfo?.data?.user?.id)
 																	}
 																/>
 															</div>
@@ -484,7 +488,7 @@ function UserContactView() {
 												</>
 											)}
 
-											{userInfo?.data?.isBlocked && (
+											{userInfo?.data?.user?.isBlocked && (
 												<div className="flex flex-wrap items-center mt-8">
 													<Chip
 														label="Unblock Admin Before lifting Suspension"
@@ -497,10 +501,10 @@ function UserContactView() {
 									</>
 								</List>
 
-								{userInfo?.data?.isSuspended && (
+								{userInfo?.data?.user?.isSuspended && (
 									<List className="p-0">
 										<>
-											{!userInfo?.data?.isBlocked && (
+											{!userInfo?.data?.user?.isBlocked && (
 												<ListItem className="px-0 space-x-8 justify-between">
 													<ListItemText
 														primary={
@@ -519,15 +523,15 @@ function UserContactView() {
 															label="Block"
 															className="mr-12 mb-12 cursor-pointer bg-red-500 hover:bg-red-800 w-full"
 															size="small"
-															onClick={() => blockUser(userInfo?.data?._id)}
+															onClick={() => blockUser(userInfo?.data?.user?._id || userInfo?.data?.user?.id)}
 														/>
 													</div>
 												</ListItem>
 											)}
 
-											{userInfo?.data?.isBlocked && (
+											{userInfo?.data?.user?.isBlocked && (
 												<>
-													{userInfo?.data?.isSuspended && (
+													{userInfo?.data?.user?.isSuspended && (
 														<ListItem className="px-0 space-x-8 justify-between">
 															<ListItemText
 																primary={
@@ -546,7 +550,7 @@ function UserContactView() {
 																	label="Un-Block"
 																	className="mr-12 mb-12 cursor-pointer bg-orange-500 hover:bg-orange-800 w-full"
 																	size="small"
-																	onClick={() => unblockUser(userInfo?.data?._id)}
+																	onClick={() => unblockUser(userInfo?.data?.user?._id || userInfo?.data?.user?.id)}
 																/>
 															</div>
 														</ListItem>

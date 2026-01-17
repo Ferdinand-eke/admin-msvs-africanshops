@@ -30,12 +30,11 @@ function StatesTable() {
 	});
 
 	// Extract states and pagination info from response
+	// API response structure: { data: { states, total, limit, offset } }
 	const states = useMemo(() => statesResponse?.data?.states || [], [statesResponse]);
-	const totalCount = useMemo(
-		() => statesResponse?.data?.pagination?.total || states.length,
-		[statesResponse, states.length]
-	);
-	const pagination = useMemo(() => statesResponse?.data?.pagination, [statesResponse]);
+	const totalCount = useMemo(() => statesResponse?.data?.total || 0, [statesResponse]);
+	const returnedLimit = useMemo(() => statesResponse?.data?.limit || rowsPerPage, [statesResponse, rowsPerPage]);
+	const returnedOffset = useMemo(() => statesResponse?.data?.offset || 0, [statesResponse]);
 
 	// Pagination handlers
 	const handlePageChange = useCallback((newPage) => {
@@ -120,9 +119,6 @@ function StatesTable() {
 		[]
 	);
 
-	if (isLoading && !isFetching) {
-		return <FuseLoading />;
-	}
 
 	if (isError) {
 		return (
@@ -160,7 +156,7 @@ function StatesTable() {
 				columns={columns}
 				manualPagination
 				rowCount={totalCount}
-				pageCount={pagination?.totalPages || Math.ceil(totalCount / rowsPerPage)}
+				pageCount={Math.ceil(totalCount / rowsPerPage)}
 				onPaginationChange={(updater) => {
 					const newPagination =
 						typeof updater === 'function' ? updater({ pageIndex: page, pageSize: rowsPerPage }) : updater;

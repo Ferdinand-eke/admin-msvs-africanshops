@@ -14,6 +14,26 @@ export default function useMarketCats() {
 	return useQuery(['__marketcats'], getMarketCategories);
 } // (Msvs => Done)
 
+// Paginated hook for Market Categories
+export function useMarketCategoriesPaginated({ page = 0, limit = 20, search = '', filters = {} }) {
+	const offset = page * limit;
+
+	return useQuery(
+		['marketcats_paginated', { page, limit, search, filters }],
+		() =>
+			getMarketCategories({
+				limit,
+				offset,
+				search,
+				...filters
+			}),
+		{
+			keepPreviousData: true,
+			staleTime: 30000
+		}
+	);
+}
+
 // get single market category
 export function useSingleMarketCategory(marketCatId) {
 	if (!marketCatId || marketCatId === 'new') {

@@ -18,7 +18,7 @@ function ContactListItem(props) {
 				className="px-32 py-16"
 				sx={{ bgcolor: 'background.paper' }}
 				component={NavLinkAdapter}
-				to={`/users/list/${contact?._id}`}
+				to={`/users/list/${contact?.id}`}
 			>
 				<ListItemAvatar>
 					<Avatar

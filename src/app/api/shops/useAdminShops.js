@@ -18,6 +18,26 @@ export default function useAdmiManageShop() {
 	return useQuery(['shops'], getShops);
 } // (Msvs => Done)
 
+// Paginated hook for Merchants/Shops
+export function useMerchantsPaginated({ page = 0, limit = 20, search = '', filters = {} }) {
+	const offset = page * limit;
+
+	return useQuery(
+		['merchants_paginated', { page, limit, search, filters }],
+		() =>
+			getShops({
+				limit,
+				offset,
+				search,
+				...filters
+			}),
+		{
+			keepPreviousData: true,
+			staleTime: 30000
+		}
+	);
+}
+
 /** **
  *
  * Delete an operational shop

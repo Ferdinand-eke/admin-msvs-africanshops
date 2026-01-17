@@ -1,9 +1,9 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
+import { Chip, ListItemIcon, MenuItem, Paper, Box } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
@@ -15,6 +15,17 @@ function LgaCountiesTable() {
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(20);
 	const [globalFilter, setGlobalFilter] = useState('');
+	const [debouncedSearch, setDebouncedSearch] = useState('');
+
+	// Debounce search input to avoid excessive API calls
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setDebouncedSearch(globalFilter);
+			setPage(0); // Reset to first page on search
+		}, 500);
+
+		return () => clearTimeout(timer);
+	}, [globalFilter]);
 
 	// Fetch LGAs with pagination
 	const {
@@ -25,14 +36,35 @@ function LgaCountiesTable() {
 	} = useLgasPaginated({
 		page,
 		limit: rowsPerPage,
-		search: globalFilter,
+		search: debouncedSearch,
 		filters: {}
 	});
 
+	// Log pagination info for debugging
+	useEffect(() => {
+		if (lgasResponse?.data?.pagination) {
+			console.log('LGAs Pagination Info:', {
+				page,
+				rowsPerPage,
+				total: lgasResponse.data.pagination.total,
+				offset: lgasResponse.data.pagination.offset,
+				limit: lgasResponse.data.pagination.limit,
+				hasMore: lgasResponse.data.pagination.hasMore,
+				currentRecords: lgasResponse.data.lgas?.length || 0
+			});
+		}
+	}, [lgasResponse, page, rowsPerPage]);
+
 	// Extract LGAs and pagination info from response
 	const lgas = useMemo(() => lgasResponse?.data?.lgas || [], [lgasResponse]);
-	const totalCount = useMemo(() => lgasResponse?.data?.pagination?.total || lgas.length, [lgasResponse, lgas.length]);
+	const totalCount = useMemo(() => lgasResponse?.data?.pagination?.total || 0, [lgasResponse]);
 	const pagination = useMemo(() => lgasResponse?.data?.pagination, [lgasResponse]);
+
+	// Calculate total pages based on backend pagination
+	const pageCount = useMemo(() => {
+		if (!pagination?.total || !rowsPerPage) return 0;
+		return Math.ceil(pagination.total / rowsPerPage);
+	}, [pagination, rowsPerPage]);
 
 	// Pagination handlers
 	const handlePageChange = useCallback((newPage) => {
@@ -46,7 +78,7 @@ function LgaCountiesTable() {
 
 	const handleGlobalFilterChange = useCallback((value) => {
 		setGlobalFilter(value);
-		setPage(0);
+		// Page reset is handled in the debounce effect
 	}, []);
 
 	const columns = useMemo(
@@ -123,10 +155,6 @@ function LgaCountiesTable() {
 		[]
 	);
 
-	if (isLoading && !isFetching) {
-		return <FuseLoading />;
-	}
-
 	if (isError) {
 		return (
 			<motion.div
@@ -158,12 +186,26 @@ function LgaCountiesTable() {
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"
 			elevation={0}
 		>
+			{/* Pagination Info Display */}
+			{pagination && totalCount > 0 && (
+				<Box className="px-24 py-12 border-b">
+					<Typography
+						variant="body2"
+						color="text.secondary"
+					>
+						Showing {pagination.offset + 1} to {Math.min(pagination.offset + pagination.limit, totalCount)} of{' '}
+						{totalCount.toLocaleString()} LGAs/Counties
+						{debouncedSearch && ` (filtered by "${debouncedSearch}")`}
+					</Typography>
+				</Box>
+			)}
+
 			<DataTable
 				data={lgas}
 				columns={columns}
 				manualPagination
 				rowCount={totalCount}
-				pageCount={pagination?.totalPages || Math.ceil(totalCount / rowsPerPage)}
+				pageCount={pageCount}
 				onPaginationChange={(updater) => {
 					const newPagination =
 						typeof updater === 'function' ? updater({ pageIndex: page, pageSize: rowsPerPage }) : updater;
@@ -196,7 +238,7 @@ function LgaCountiesTable() {
 					}
 				}}
 				muiPaginationProps={{
-					rowsPerPageOptions: [10, 20, 50, 100],
+					rowsPerPageOptions: [10, 20, 50, 100, 200],
 					showFirstButton: true,
 					showLastButton: true
 				}}

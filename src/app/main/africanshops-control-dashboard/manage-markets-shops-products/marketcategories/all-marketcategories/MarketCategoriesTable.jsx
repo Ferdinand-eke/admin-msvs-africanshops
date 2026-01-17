@@ -1,28 +1,100 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { ListItemIcon, MenuItem, Paper } from '@mui/material';
+import { ListItemIcon, MenuItem, Paper, Box } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import useMarketCats from 'src/app/api/market-category/useMarketCats';
-import { motion } from 'framer-motion';
+import { useMarketCategoriesPaginated } from 'src/app/api/market-category/useMarketCats';
 
 function MarketCategoriesTable() {
-	const { data: marketcats, isLoading, refetch, isError } = useMarketCats();
+	// Pagination state
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(20);
+	const [globalFilter, setGlobalFilter] = useState('');
+	const [debouncedSearch, setDebouncedSearch] = useState('');
+
+	// Debounce search input to avoid excessive API calls
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setDebouncedSearch(globalFilter);
+			setPage(0); // Reset to first page on search
+		}, 500);
+
+		return () => clearTimeout(timer);
+	}, [globalFilter]);
+
+	// Fetch market categories with pagination
+	const {
+		data: marketCatsResponse,
+		isLoading,
+		isError,
+		isFetching
+	} = useMarketCategoriesPaginated({
+		page,
+		limit: rowsPerPage,
+		search: debouncedSearch,
+		filters: {}
+	});
+
+	// Extract market categories and pagination info from response
+	const marketCategories = useMemo(
+		() => marketCatsResponse?.data?.allMarketCats || marketCatsResponse?.data?.marketCategories || [],
+		[marketCatsResponse]
+	);
+	const totalCount = useMemo(() => marketCatsResponse?.data?.pagination?.total || 0, [marketCatsResponse]);
+	const pagination = useMemo(() => marketCatsResponse?.data?.pagination, [marketCatsResponse]);
+
+	// Calculate total pages based on backend pagination
+	const pageCount = useMemo(() => {
+		if (!pagination?.total || !rowsPerPage) return 0;
+		return Math.ceil(pagination.total / rowsPerPage);
+	}, [pagination, rowsPerPage]);
+
+	// Log pagination info for debugging
+	useEffect(() => {
+		if (marketCatsResponse?.data?.pagination) {
+			console.log('Market Categories Pagination Info:', {
+				page,
+				rowsPerPage,
+				total: marketCatsResponse.data.pagination.total,
+				offset: marketCatsResponse.data.pagination.offset,
+				limit: marketCatsResponse.data.pagination.limit,
+				hasMore: marketCatsResponse.data.pagination.hasMore,
+				currentRecords: marketCategories.length || 0
+			});
+		}
+	}, [marketCatsResponse, page, rowsPerPage, marketCategories]);
+
+	// Pagination handlers
+	const handlePageChange = useCallback((newPage) => {
+		setPage(newPage);
+	}, []);
+
+	const handleRowsPerPageChange = useCallback((newRowsPerPage) => {
+		setRowsPerPage(newRowsPerPage);
+		setPage(0);
+	}, []);
+
+	const handleGlobalFilterChange = useCallback((value) => {
+		setGlobalFilter(value);
+		// Page reset is handled in the debounce effect
+	}, []);
 
 	const columns = useMemo(
 		() => [
 			{
 				accessorKey: 'name',
 				header: 'Name',
+				size: 250,
 				Cell: ({ row }) => (
 					<Typography
 						component={Link}
 						to={`/market-categories/list/${row.original.id || row.original._id}/${row.original.slug}`}
-						className="underline"
+						className="underline font-medium"
 						color="secondary"
 						role="button"
 					>
@@ -30,13 +102,13 @@ function MarketCategoriesTable() {
 					</Typography>
 				)
 			},
-
 			{
-				accessorKey: 'active',
-				header: 'Active',
-				accessorFn: (row) => (
+				accessorKey: 'isPublished',
+				header: 'Published Status',
+				size: 140,
+				Cell: ({ row }) => (
 					<div className="flex items-center">
-						{row?.isPublished ? (
+						{row?.original?.isPublished ? (
 							<FuseSvgIcon
 								className="text-green"
 								size={20}
@@ -53,12 +125,28 @@ function MarketCategoriesTable() {
 						)}
 					</div>
 				)
+			},
+			{
+				accessorKey: 'createdAt',
+				header: 'Date Created',
+				size: 140,
+				Cell: ({ row }) => (
+					<Typography className="text-13">
+						{row?.original?.createdAt
+							? new Date(row?.original?.createdAt).toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'short',
+									day: 'numeric'
+								})
+							: 'N/A'}
+					</Typography>
+				)
 			}
 		],
 		[]
 	);
 
-	if (isLoading) {
+	if (isLoading && !isFetching) {
 		return <FuseLoading />;
 	}
 
@@ -75,23 +163,15 @@ function MarketCategoriesTable() {
 				>
 					Error retrieving Market Categories!
 				</Typography>
-			</motion.div>
-		);
-	}
-
-	if (!marketcats?.data?.allMarketCats) {
-		return (
-			<motion.div
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1, transition: { delay: 0.1 } }}
-				className="flex flex-col flex-1 items-center justify-center h-full"
-			>
-				<Typography
-					color="text.secondary"
-					variant="h5"
+				<Button
+					className="mt-24"
+					variant="outlined"
+					onClick={() => window.location.reload()}
+					color="secondary"
 				>
-					No market categories in operation yet!
-				</Typography>
+					<FuseSvgIcon size={20}>heroicons-outline:refresh</FuseSvgIcon>
+					<span className="mx-8">Retry</span>
+				</Button>
 			</motion.div>
 		);
 	}
@@ -101,48 +181,112 @@ function MarketCategoriesTable() {
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"
 			elevation={0}
 		>
-			<DataTable
-				data={marketcats?.data?.allMarketCats}
-				columns={columns}
-				renderRowActionMenuItems={({ closeMenu, row, table }) => [
-					<MenuItem
-						key={0}
-						onClick={() => {
-							removeProducts([row.original.id]);
-							closeMenu();
-							table.resetRowSelection();
-						}}
+			{/* Pagination Info Display */}
+			{pagination && totalCount > 0 && (
+				<Box className="px-24 py-12 border-b">
+					<Typography
+						variant="body2"
+						color="text.secondary"
 					>
-						<ListItemIcon>
-							<FuseSvgIcon>heroicons-outline:trash</FuseSvgIcon>
-						</ListItemIcon>
-						Delete
-					</MenuItem>
-				]}
-				renderTopToolbarCustomActions={({ table }) => {
-					const { rowSelection } = table.getState();
+						Showing {pagination.offset + 1} to {Math.min(pagination.offset + pagination.limit, totalCount)} of{' '}
+						{totalCount.toLocaleString()} Market Categories
+						{debouncedSearch && ` (filtered by "${debouncedSearch}")`}
+					</Typography>
+				</Box>
+			)}
 
-					if (Object.keys(rowSelection).length === 0) {
-						return null;
+			<DataTable
+				data={marketCategories}
+				columns={columns}
+				manualPagination
+				rowCount={totalCount}
+				pageCount={pageCount}
+				onPaginationChange={(updater) => {
+					const newPagination =
+						typeof updater === 'function' ? updater({ pageIndex: page, pageSize: rowsPerPage }) : updater;
+
+					if (newPagination.pageIndex !== page) {
+						handlePageChange(newPagination.pageIndex);
 					}
 
-					return (
-						<Button
-							variant="contained"
-							size="small"
-							onClick={() => {
-								const selectedRows = table.getSelectedRowModel().rows;
-								// removeProducts(selectedRows.map((row) => row.original.id));
-								table.resetRowSelection();
-							}}
-							className="flex shrink min-w-40 ltr:mr-8 rtl:ml-8"
-							color="secondary"
-						>
-							<FuseSvgIcon size={16}>heroicons-outline:trash</FuseSvgIcon>
-							<span className="hidden sm:flex mx-8">Delete selected items</span>
-						</Button>
-					);
+					if (newPagination.pageSize !== rowsPerPage) {
+						handleRowsPerPageChange(newPagination.pageSize);
+					}
 				}}
+				onGlobalFilterChange={handleGlobalFilterChange}
+				state={{
+					pagination: {
+						pageIndex: page,
+						pageSize: rowsPerPage
+					},
+					globalFilter,
+					isLoading: isFetching,
+					showProgressBars: isFetching
+				}}
+				initialState={{
+					density: 'comfortable',
+					showGlobalFilter: true,
+					showColumnFilters: false,
+					pagination: {
+						pageIndex: 0,
+						pageSize: 20
+					}
+				}}
+				muiPaginationProps={{
+					rowsPerPageOptions: [10, 20, 50, 100, 200],
+					showFirstButton: true,
+					showLastButton: true
+				}}
+				renderRowActionMenuItems={({ closeMenu, row }) => {
+					const marketCategory = row.original;
+					return [
+						<MenuItem
+							key="view"
+							component={Link}
+							to={`/market-categories/list/${marketCategory.id || marketCategory._id}/${marketCategory.slug}`}
+							onClick={closeMenu}
+						>
+							<ListItemIcon>
+								<FuseSvgIcon>heroicons-outline:eye</FuseSvgIcon>
+							</ListItemIcon>
+							View Details
+						</MenuItem>,
+						<MenuItem
+							key="edit"
+							component={Link}
+							to={`/market-categories/list/${marketCategory.id || marketCategory._id}/${marketCategory.slug}`}
+							onClick={closeMenu}
+						>
+							<ListItemIcon>
+								<FuseSvgIcon>heroicons-outline:pencil</FuseSvgIcon>
+							</ListItemIcon>
+							Edit
+						</MenuItem>
+					];
+				}}
+				renderEmptyRowsFallback={() => (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1, transition: { delay: 0.1 } }}
+						className="flex flex-col flex-1 items-center justify-center h-full py-48"
+					>
+						<Typography
+							color="text.secondary"
+							variant="h5"
+						>
+							No market categories found!
+						</Typography>
+						<Typography
+							color="text.secondary"
+							variant="body1"
+							className="mt-8"
+						>
+							{globalFilter
+								? 'Try adjusting your search terms'
+								: 'Market categories will appear here once added'}
+						</Typography>
+					</motion.div>
+				)}
 			/>
 		</Paper>
 	);

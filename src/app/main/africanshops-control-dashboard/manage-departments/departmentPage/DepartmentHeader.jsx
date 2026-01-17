@@ -1,6 +1,16 @@
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import {
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogContentText,
+	DialogActions,
+	Alert,
+	AlertTitle
+} from '@mui/material';
 import { motion } from 'framer-motion';
 import { useFormContext } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -25,6 +35,8 @@ function DepartmentHeader() {
 	const navigate = useNavigate();
 	const { name, images, featuredImageId } = watch();
 
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
 	const updateDepartments = useUpdateDepartmentMutation();
 	const addNewDepts = useAddDeptMutation();
 	const deleteDepartment = useDeleteSingleDepartment();
@@ -38,9 +50,16 @@ function DepartmentHeader() {
 	}
 
 	function handleRemoveProduct() {
-		if (window.confirm('Comfirm delete of this department?')) {
-			deleteDepartment.mutate(productId);
-		}
+		setDeleteDialogOpen(true);
+	}
+
+	function handleConfirmDelete() {
+		deleteDepartment.mutate(productId);
+		setDeleteDialogOpen(false);
+	}
+
+	function handleCancelDelete() {
+		setDeleteDialogOpen(false);
 	}
 
 	return (
@@ -142,6 +161,70 @@ function DepartmentHeader() {
 					</Button>
 				)}
 			</motion.div>
+
+			{/* Delete Confirmation Dialog */}
+			<Dialog
+				open={deleteDialogOpen}
+				onClose={handleCancelDelete}
+				maxWidth="sm"
+				fullWidth
+				PaperProps={{
+					elevation: 3
+				}}
+			>
+				<DialogTitle className="flex items-center gap-8">
+					<FuseSvgIcon
+						className="text-red-600"
+						size={24}
+					>
+						heroicons-outline:exclamation-triangle
+					</FuseSvgIcon>
+					Confirm Department Deletion
+				</DialogTitle>
+				<DialogContent>
+					<Alert
+						severity="warning"
+						className="mb-16"
+					>
+						<AlertTitle>Warning: This action cannot be undone</AlertTitle>
+						Deleting this department will permanently remove it from the system.
+					</Alert>
+					<DialogContentText className="mb-16">
+						Are you sure you want to delete the department{' '}
+						<strong className="text-gray-900 dark:text-gray-100">&quot;{name}&quot;</strong>?
+					</DialogContentText>
+					<DialogContentText className="text-sm">
+						This action will:
+					</DialogContentText>
+					<ul className="list-disc list-inside mt-8 space-y-4 text-sm text-gray-600 dark:text-gray-400">
+						<li>Permanently remove this department from the database</li>
+						<li>Remove all associated data and relationships</li>
+						<li>This change cannot be reversed</li>
+					</ul>
+				</DialogContent>
+				<DialogActions className="px-24 pb-16">
+					<Button
+						onClick={handleCancelDelete}
+						color="primary"
+						variant="outlined"
+					>
+						Cancel
+					</Button>
+					<Button
+						onClick={handleConfirmDelete}
+						color="error"
+						variant="contained"
+						disabled={deleteDepartment?.isLoading}
+						startIcon={
+							deleteDepartment?.isLoading ? null : (
+								<FuseSvgIcon size={16}>heroicons-outline:trash</FuseSvgIcon>
+							)
+						}
+					>
+						{deleteDepartment?.isLoading ? 'Deleting...' : 'Delete Department'}
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</div>
 	);
 }

@@ -1,16 +1,86 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
 import FuseLoading from '@fuse/core/FuseLoading';
-import { Chip, Paper } from '@mui/material';
+import { Chip, Paper, Box } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import useAdmiManageShop from 'src/app/api/shops/useAdminShops';
+import Button from '@mui/material/Button';
+import { useMerchantsPaginated } from 'src/app/api/shops/useAdminShops';
 
 function AllVendorsTable() {
-	const { data: vendors, isLoading, isError } = useAdmiManageShop();
+	// Pagination state
+	const [page, setPage] = useState(0);
+	const [rowsPerPage, setRowsPerPage] = useState(20);
+	const [globalFilter, setGlobalFilter] = useState('');
+	const [debouncedSearch, setDebouncedSearch] = useState('');
+
+	// Debounce search input to avoid excessive API calls
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setDebouncedSearch(globalFilter);
+			setPage(0); // Reset to first page on search
+		}, 500);
+
+		return () => clearTimeout(timer);
+	}, [globalFilter]);
+
+	// Fetch merchants with pagination
+	const {
+		data: merchantsResponse,
+		isLoading,
+		isError,
+		isFetching
+	} = useMerchantsPaginated({
+		page,
+		limit: rowsPerPage,
+		search: debouncedSearch,
+		filters: {}
+	});
+
+	// Extract merchants and pagination info from response
+	const merchants = useMemo(() => merchantsResponse?.data?.merchants || [], [merchantsResponse]);
+	const totalCount = useMemo(() => merchantsResponse?.data?.pagination?.total || 0, [merchantsResponse]);
+	const pagination = useMemo(() => merchantsResponse?.data?.pagination, [merchantsResponse]);
+
+	// Calculate total pages based on backend pagination
+	const pageCount = useMemo(() => {
+		if (!pagination?.total || !rowsPerPage) return 0;
+		return Math.ceil(pagination.total / rowsPerPage);
+	}, [pagination, rowsPerPage]);
+
+	// Log pagination info for debugging
+	useEffect(() => {
+		if (merchantsResponse?.data?.pagination) {
+			console.log('Merchants Pagination Info:', {
+				page,
+				rowsPerPage,
+				total: merchantsResponse.data.pagination.total,
+				offset: merchantsResponse.data.pagination.offset,
+				limit: merchantsResponse.data.pagination.limit,
+				hasNextPage: merchantsResponse.data.pagination.hasNextPage,
+				hasPreviousPage: merchantsResponse.data.pagination.hasPreviousPage,
+				currentRecords: merchants.length || 0
+			});
+		}
+	}, [merchantsResponse, page, rowsPerPage, merchants]);
+
+	// Pagination handlers
+	const handlePageChange = useCallback((newPage) => {
+		setPage(newPage);
+	}, []);
+
+	const handleRowsPerPageChange = useCallback((newRowsPerPage) => {
+		setRowsPerPage(newRowsPerPage);
+		setPage(0);
+	}, []);
+
+	const handleGlobalFilterChange = useCallback((value) => {
+		setGlobalFilter(value);
+		// Page reset is handled in the debounce effect
+	}, []);
 
 	const columns = useMemo(
 		() => [
@@ -41,13 +111,14 @@ function AllVendorsTable() {
 				)
 			},
 			{
-				accessorKey: 'name',
-				header: 'Name',
+				accessorKey: 'shopname',
+				header: 'Shop Name',
+				size: 200,
 				Cell: ({ row }) => (
 					<Typography
 						component={Link}
 						to={`/vendors/listvendors/${row?.original?.id}/${row?.original?.slug}`}
-						className="underline"
+						className="underline font-medium"
 						color="secondary"
 						role="button"
 					>
@@ -56,46 +127,42 @@ function AllVendorsTable() {
 				)
 			},
 			{
-				accessorKey: 'shopemail;',
+				accessorKey: 'shopemail',
 				header: 'Email Contact',
-				accessorFn: (row) => (
-					<div className="flex flex-wrap space-x-2">
-						{/* {row.categories.map((item) => ( */}
+				size: 180,
+				Cell: ({ row }) => (
+					<div className="flex flex-wrap">
 						<Chip
-							// key={item}
 							className="text-11"
 							size="small"
 							color="default"
-							label={row?.shopemail}
+							label={row?.original?.shopemail || 'N/A'}
 						/>
-						{/* ))} */}
 					</div>
 				)
 			},
 			{
-				accessorKey: 'shopphone;',
-				header: 'Email Contact',
-				accessorFn: (row) => (
-					<div className="flex flex-wrap space-x-2">
-						{/* {row.categories.map((item) => ( */}
+				accessorKey: 'shopphone',
+				header: 'Phone Contact',
+				size: 150,
+				Cell: ({ row }) => (
+					<div className="flex flex-wrap">
 						<Chip
-							// key={item}
 							className="text-11"
 							size="small"
 							color="default"
-							label={row?.shopphone}
+							label={row?.original?.shopphone || 'N/A'}
 						/>
-						{/* ))} */}
 					</div>
 				)
 			},
-
 			{
-				accessorKey: 'active',
+				accessorKey: 'verified',
 				header: 'Verification Status',
-				accessorFn: (row) => (
+				size: 140,
+				Cell: ({ row }) => (
 					<div className="flex items-center">
-						{row.verified ? (
+						{row?.original?.verified ? (
 							<FuseSvgIcon
 								className="text-green"
 								size={20}
@@ -113,31 +180,28 @@ function AllVendorsTable() {
 					</div>
 				)
 			},
-
 			{
-				accessorKey: 'shopplan;',
+				accessorKey: 'shopplan',
 				header: 'Plan',
-				accessorFn: (row) => (
-					<div className="flex flex-wrap space-x-2">
-						{/* {row.categories.map((item) => ( */}
+				size: 140,
+				Cell: ({ row }) => (
+					<div className="flex flex-wrap">
 						<Chip
-							// key={item}
 							className="text-11"
 							size="small"
 							color="default"
-							label={row?.shopplan?.plansname}
+							label={row?.original?.shopplan?.plansname || 'No Plan'}
 						/>
-						{/* ))} */}
 					</div>
 				)
 			},
-
 			{
-				accessorKey: '[isSuspended, isBlocked]',
+				accessorKey: 'compliance',
 				header: 'Shop Compliance',
-				accessorFn: (row) => (
+				size: 140,
+				Cell: ({ row }) => (
 					<div className="flex items-center">
-						{row.isSuspended || row.isBlocked || (row.isSuspended && row.isBlocked) ? (
+						{row?.original?.isSuspended || row?.original?.isBlocked ? (
 							<FuseSvgIcon
 								className="text-red"
 								size={20}
@@ -159,7 +223,7 @@ function AllVendorsTable() {
 		[]
 	);
 
-	if (isLoading) {
+	if (isLoading && !isFetching) {
 		return <FuseLoading />;
 	}
 
@@ -174,25 +238,17 @@ function AllVendorsTable() {
 					color="text.secondary"
 					variant="h5"
 				>
-					Error occured retrieving vendor plans!
+					Error occurred retrieving merchants!
 				</Typography>
-			</motion.div>
-		);
-	}
-
-	if (!vendors?.data?.merchants) {
-		return (
-			<motion.div
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1, transition: { delay: 0.1 } }}
-				className="flex flex-col flex-1 items-center justify-center h-full"
-			>
-				<Typography
-					color="text.secondary"
-					variant="h5"
+				<Button
+					className="mt-24"
+					variant="outlined"
+					onClick={() => window.location.reload()}
+					color="secondary"
 				>
-					No merchants yet!
-				</Typography>
+					<FuseSvgIcon size={20}>heroicons-outline:refresh</FuseSvgIcon>
+					<span className="mx-8">Retry</span>
+				</Button>
 			</motion.div>
 		);
 	}
@@ -202,48 +258,83 @@ function AllVendorsTable() {
 			className="flex flex-col flex-auto shadow-3 rounded-t-16 overflow-hidden rounded-b-0 w-full h-full"
 			elevation={0}
 		>
+			{/* Pagination Info Display */}
+			{pagination && totalCount > 0 && (
+				<Box className="px-24 py-12 border-b">
+					<Typography
+						variant="body2"
+						color="text.secondary"
+					>
+						Showing {pagination.offset + 1} to {Math.min(pagination.offset + pagination.limit, totalCount)} of{' '}
+						{totalCount.toLocaleString()} Merchants
+						{debouncedSearch && ` (filtered by "${debouncedSearch}")`}
+					</Typography>
+				</Box>
+			)}
+
 			<DataTable
-				data={vendors?.data?.merchants}
+				data={merchants}
 				columns={columns}
-				// renderRowActionMenuItems={({ closeMenu, row, table }) => [
-				// 	<MenuItem
-				// 		key={0}
-				// 		onClick={() => {
-				// 			removeProducts([row?.original?.id]);
-				// 			closeMenu();
-				// 			table.resetRowSelection();
-				// 		}}
-				// 	>
-				// 		<ListItemIcon>
-				// 			<FuseSvgIcon>heroicons-outline:trash</FuseSvgIcon>
-				// 		</ListItemIcon>
-				// 		Delete
-				// 	</MenuItem>
-				// ]}
-				// renderTopToolbarCustomActions={({ table }) => {
-				// 	const { rowSelection } = table.getState();
+				manualPagination
+				rowCount={totalCount}
+				pageCount={pageCount}
+				onPaginationChange={(updater) => {
+					const newPagination =
+						typeof updater === 'function' ? updater({ pageIndex: page, pageSize: rowsPerPage }) : updater;
 
-				// 	if (Object.keys(rowSelection).length === 0) {
-				// 		return null;
-				// 	}
+					if (newPagination.pageIndex !== page) {
+						handlePageChange(newPagination.pageIndex);
+					}
 
-				// 	return (
-				// 		<Button
-				// 			variant="contained"
-				// 			size="small"
-				// 			onClick={() => {
-				// 				const selectedRows = table.getSelectedRowModel().rows;
-				// 				removeProducts(selectedRows.map((row) => row?.original?.id));
-				// 				table.resetRowSelection();
-				// 			}}
-				// 			className="flex shrink min-w-40 ltr:mr-8 rtl:ml-8"
-				// 			color="secondary"
-				// 		>
-				// 			<FuseSvgIcon size={16}>heroicons-outline:trash</FuseSvgIcon>
-				// 			<span className="hidden sm:flex mx-8">Delete selected items</span>
-				// 		</Button>
-				// 	);
-				// }}
+					if (newPagination.pageSize !== rowsPerPage) {
+						handleRowsPerPageChange(newPagination.pageSize);
+					}
+				}}
+				onGlobalFilterChange={handleGlobalFilterChange}
+				state={{
+					pagination: {
+						pageIndex: page,
+						pageSize: rowsPerPage
+					},
+					globalFilter,
+					isLoading: isFetching,
+					showProgressBars: isFetching
+				}}
+				initialState={{
+					density: 'comfortable',
+					showGlobalFilter: true,
+					showColumnFilters: false,
+					pagination: {
+						pageIndex: 0,
+						pageSize: 20
+					}
+				}}
+				muiPaginationProps={{
+					rowsPerPageOptions: [10, 20, 50, 100, 200],
+					showFirstButton: true,
+					showLastButton: true
+				}}
+				renderEmptyRowsFallback={() => (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1, transition: { delay: 0.1 } }}
+						className="flex flex-col flex-1 items-center justify-center h-full py-48"
+					>
+						<Typography
+							color="text.secondary"
+							variant="h5"
+						>
+							No merchants found!
+						</Typography>
+						<Typography
+							color="text.secondary"
+							variant="body1"
+							className="mt-8"
+						>
+							{globalFilter ? 'Try adjusting your search terms' : 'Merchants will appear here once added'}
+						</Typography>
+					</motion.div>
+				)}
 			/>
 		</Paper>
 	);
