@@ -40,7 +40,7 @@ export function authApi() {
 	Api.interceptors.response.use(
 		(response) => response,
 		(error) => {
-			if (error?.response?.status === 403) {
+			if (error?.response?.status === 403 || error?.response?.status === 401) {
 				console.log('responseSTATS', error?.response?.status);
 				AdminLogOutCall();
 
