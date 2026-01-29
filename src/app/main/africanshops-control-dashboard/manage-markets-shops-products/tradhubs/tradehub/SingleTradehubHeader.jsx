@@ -26,6 +26,7 @@ function SingleTradehubHeader() {
 	const addNewHubMutation = useAddHubMutation();
 
 	const deletHubMutation = useDeleteHubMutation();
+	
 
 	function handleSaveProduct() {
 		updateHubMutation?.mutate(getValues());

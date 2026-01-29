@@ -312,7 +312,8 @@ export const updateTradehubById = (hubFormData) => {
 export const createTradehub = (hubFormData) => authApi().post('/trade-hubs', hubFormData);
 
 export const deleteTradehubById = (hubFormData) => {
-	return authApi().delete(`/trade-hubs/${hubFormData}`); // done
+	console.log('DELETE-HUB-ID', hubFormData);
+	return authApi().delete(`/trade-hubs/${hubFormData}/delete`); // done
 };
 
 /** ***

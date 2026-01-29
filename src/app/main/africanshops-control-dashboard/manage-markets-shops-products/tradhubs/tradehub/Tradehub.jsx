@@ -114,6 +114,7 @@ function Tradehub() {
 		return <FuseLoading />;
 	}
 
+	
 	return (
 		<FormProvider {...methods}>
 			<FusePageCarded
