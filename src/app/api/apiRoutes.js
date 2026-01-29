@@ -42,12 +42,7 @@ export function authApi() {
 		(error) => {
 			if (error?.response?.status === 403) {
 				console.log('responseSTATS', error?.response?.status);
-				// AdminLogOutCall();
-				// toast.error(
-				//   error.response && error.response.data.message
-				//     ? error.response.data.message
-				//     : error.message
-				// );
+				AdminLogOutCall();
 
 				return Promise.reject({ status: 401, errors: ['Unauthorized'] });
 			}
@@ -1086,7 +1081,7 @@ export const logOut = () => {
 			//     console.log('logged out successfully');
 			//   });
 
-			logeAuthOut();
+			// logeAuthOut();
 
 			window.location.reload(false);
 		} catch (error) {
