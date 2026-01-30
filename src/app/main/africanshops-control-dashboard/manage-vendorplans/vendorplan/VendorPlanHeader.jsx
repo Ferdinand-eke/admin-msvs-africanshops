@@ -39,6 +39,7 @@ function VendorPlanHeader() {
 			numberofproducts: parseInt(getValues()?.numberofproducts),
 			numberoffeaturedimages: parseInt(getValues()?.numberoffeaturedimages)
 		};
+		
 		updateShopPlans.mutate(merchantPlanValuesToSave);
 	}
 

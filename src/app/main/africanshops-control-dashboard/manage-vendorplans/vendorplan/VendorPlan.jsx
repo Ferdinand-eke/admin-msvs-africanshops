@@ -128,6 +128,7 @@ function VendorPlan() {
 			<FusePageCarded
 				header={<VendorPlanHeader />}
 				content={
+					
 					<>
 						<Tabs
 							value={tabValue}
