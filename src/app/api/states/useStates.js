@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { createErrorHandler } from '../utils/errorHandler';
 import { createBState, deleteStateById, getBStates, getStateById, updateStateById } from '../apiRoutes';
 
 export default function useStates(params = {}) {
@@ -61,28 +62,7 @@ export function useAddStateMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				// Handle NestJS error format
-				let errorMessage = 'An error occurred';
-
-				if (error.response?.data) {
-					const { message, error: errorType } = error.response.data;
-
-					// NestJS can return message as string or array
-					if (Array.isArray(message)) {
-						errorMessage = message.join(', ');
-					} else if (message) {
-						errorMessage = message;
-					} else if (errorType) {
-						errorMessage = errorType;
-					}
-				} else if (error.message) {
-					errorMessage = error.message;
-				}
-
-				toast.error(errorMessage);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create state' })
 		}
 	);
 }
@@ -101,29 +81,7 @@ export function useStateUpdateMutation() {
 				navigate('/administrations/states');
 			}
 		},
-		onError: (error) => {
-			console.log('Updated State error', error);
-
-			// Handle NestJS error format
-			let errorMessage = 'An error occurred while updating state';
-
-			if (error.response?.data) {
-				const { message, error: errorType } = error.response.data;
-
-				// NestJS can return message as string or array
-				if (Array.isArray(message)) {
-					errorMessage = message.join(', ');
-				} else if (message) {
-					errorMessage = message;
-				} else if (errorType) {
-					errorMessage = errorType;
-				}
-			} else if (error.message) {
-				errorMessage = error.message;
-			}
-
-			toast.error(errorMessage);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update state' })
 	});
 } // (Msvs => Done)
 
@@ -140,26 +98,6 @@ export function useDeleteSingleState() {
 				navigate('/administrations/states');
 			}
 		},
-		onError: (error) => {
-			// Handle NestJS error format
-			let errorMessage = 'An error occurred while deleting state';
-
-			if (error.response?.data) {
-				const { message, error: errorType } = error.response.data;
-
-				// NestJS can return message as string or array
-				if (Array.isArray(message)) {
-					errorMessage = message.join(', ');
-				} else if (message) {
-					errorMessage = message;
-				} else if (errorType) {
-					errorMessage = errorType;
-				}
-			} else if (error.message) {
-				errorMessage = error.message;
-			}
-
-			toast.error(errorMessage);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete state' })
 	});
 } // (Msvs => Done)

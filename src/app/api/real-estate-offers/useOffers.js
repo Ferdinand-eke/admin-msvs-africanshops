@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { adminGetAllOffers, adminManageOffer, adminDeleteOffer } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 // Get all offers with pagination
 export default function useAdminOffers(params = {}) {
@@ -34,9 +35,7 @@ export function useManageOffer() {
 				queryClient.invalidateQueries(['__offers']);
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to process offer request' })
 	});
 }
 
@@ -53,8 +52,6 @@ export function useDeleteOffer() {
 				queryClient.invalidateQueries(['__offers']);
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to process offer request' })
 	});
 }

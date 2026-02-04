@@ -1,5 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from '../../../../../../../../../../react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 import { createDepartment, getDepartment, getDepartmentsByPublished, updateDepartment } from './department';
+import { createErrorHandler } from '../utils/errorHandler';
 
 const queryClient = useQueryClient();
 
@@ -15,10 +17,7 @@ export const deptMutation = useMutation(
 		}
 	},
 	{
-		onError: (err, values, rollback) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-			rollback();
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to create department' })
 	}
 );
 
@@ -34,10 +33,7 @@ export const deptUpdateMutation = useMutation(
 		}
 	},
 	{
-		onError: (err, values, rollback) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-			rollback();
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update department' })
 	}
 );
 

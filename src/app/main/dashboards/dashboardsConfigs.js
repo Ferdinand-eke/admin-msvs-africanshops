@@ -1,4 +1,5 @@
 import ProjectDashboardAppConfig from './project/ProjectDashboardAppConfig';
+
 /**
  * Dashboards
  */

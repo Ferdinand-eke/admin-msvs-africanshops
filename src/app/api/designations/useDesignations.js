@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { createDesignation, deleteDesignationById, getDesigById, getDesigs, updateDesigById } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 // get all designations
 export default function useDesignations() {
@@ -57,13 +58,8 @@ export function useDesigtMutation() {
 					queryClient.refetchQueries('designations', { force: true });
 					navigate('/designations/list');
 				}
-			}
-		},
-		{
-			onError: (err, values, rollback) => {
-				toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-				rollback();
-			}
+			},
+			onError: createErrorHandler({ defaultMessage: 'Failed to create designation' })
 		}
 	);
 }
@@ -85,13 +81,8 @@ export function useDesigUpdateMutation() {
 					queryClient.refetchQueries('designations', { force: true });
 					navigate('/designations/list');
 				}
-			}
-		},
-		{
-			onError: (err, values, rollback) => {
-				toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-				rollback();
-			}
+			},
+			onError: createErrorHandler({ defaultMessage: 'Failed to update designation' })
 		}
 	);
 } // (Msvs => Done)
@@ -109,8 +100,6 @@ export function useDeleteDesignation() {
 				navigate('/designations/list');
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete designation' })
 	});
 }

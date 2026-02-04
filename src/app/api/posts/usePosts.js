@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { getNewsPosts, createPost, updatePostById, adminGetSinglePostById, deleteBlogPostById } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 export default function useAdminPosts() {
 	return useQuery(['__amindPosts'], getNewsPosts);
@@ -39,12 +40,7 @@ export function useAddPostMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create post' })
 		}
 	);
 }
@@ -62,9 +58,7 @@ export function usePostUpdateMutation() {
 				navigate('/posts/list');
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update post' })
 	});
 }
 
@@ -82,8 +76,6 @@ export function useDeletePost() {
 				navigate('/posts/list');
 			}
 		},
-		onError: (error) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete post' })
 	});
 }

@@ -1,7 +1,7 @@
 import FusePageSimple from '@fuse/core/FusePageSimple';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import FuseLoading from '@fuse/core/FuseLoading';
@@ -18,14 +18,24 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 	}
 }));
 
+
+const TAB_STORAGE_KEY = 'project-dashboard-active-tab';
+
 /**
  * The ProjectDashboardApp page.
  */
 function ProjectDashboardApp() {
 	const { isLoading } = useGetProjectDashboardWidgetsQuery();
-	const [tabValue, setTabValue] = useState(0);
+	const [tabValue, setTabValue] = useState(() => {
+		const savedTab = localStorage.getItem(TAB_STORAGE_KEY);
+		return savedTab ? parseInt(savedTab, 10) : 0;
+	});
 
-	function handleChangeTab(event, value) {
+	useEffect(() => {
+		localStorage.setItem(TAB_STORAGE_KEY, String(tabValue));
+	}, [tabValue]);
+
+	function handleChangeTab(_event, value) {
 		setTabValue(value);
 	}
 
@@ -36,6 +46,7 @@ function ProjectDashboardApp() {
 	return (
 		<Root
 			header={<ProjectDashboardAppHeader />}
+			
 			content={
 				<div className="w-full p-12 pt-16 sm:pt-24 lg:ltr:pr-0 lg:rtl:pl-0">
 					<Tabs

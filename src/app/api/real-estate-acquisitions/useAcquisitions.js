@@ -10,6 +10,7 @@ import {
 	adminCompleteAcquisition,
 	adminCancelAcquisition
 } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 // Get all acquisitions with pagination
 export default function useAdminAcquisitions(params = {}) {
@@ -45,9 +46,7 @@ export function useVerifyAcquisitionPayment() {
 				queryClient.invalidateQueries(['__acquisition']);
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to verify payment' })
 	});
 }
 
@@ -67,9 +66,7 @@ export function useRejectAcquisitionPayment() {
 					queryClient.invalidateQueries(['__acquisition']);
 				}
 			},
-			onError: (err) => {
-				toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to reject payment' })
 		}
 	);
 }
@@ -88,9 +85,7 @@ export function useVerifyAcquisitionDocuments() {
 				queryClient.invalidateQueries(['__acquisition']);
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to process request' })
 	});
 }
 
@@ -131,9 +126,7 @@ export function useCompleteAcquisition() {
 				queryClient.invalidateQueries(['__acquisition']);
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to process request' })
 	});
 }
 

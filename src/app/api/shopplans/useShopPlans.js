@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { createErrorHandler } from '../utils/errorHandler';
 import { createShopPlan, deleteShopPlanById, getShopPlanById, getShopPlans, updateShopPlanById } from '../apiRoutes';
 
 export default function useShopplans() {
@@ -43,28 +44,7 @@ export function useAddShopPlanMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				// Handle NestJS error format
-				let errorMessage = 'An error occurred';
-
-				if (error.response?.data) {
-					const { message, error: errorType } = error.response.data;
-
-					// NestJS can return message as string or array
-					if (Array.isArray(message)) {
-						errorMessage = message.join(', ');
-					} else if (message) {
-						errorMessage = message;
-					} else if (errorType) {
-						errorMessage = errorType;
-					}
-				} else if (error.message) {
-					errorMessage = error.message;
-				}
-
-				toast.error(errorMessage);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create shop plan' })
 		}
 	);
 }
@@ -82,27 +62,7 @@ export function useShopPlanUpdateMutation() {
 				navigate('/vendorplans/packages');
 			}
 		},
-		onError: (error) => {
-			// Handle NestJS error format
-			let errorMessage = 'An error occurred while updating shop plan';
-
-			if (error.response?.data) {
-				const { message, error: errorType } = error.response.data;
-
-				// NestJS can return message as string or array
-				if (Array.isArray(message)) {
-					errorMessage = message.join(', ');
-				} else if (message) {
-					errorMessage = message;
-				} else if (errorType) {
-					errorMessage = errorType;
-				}
-			} else if (error.message) {
-				errorMessage = error.message;
-			}
-
-			toast.error(errorMessage);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update shop plan' })
 	});
 } // (Msvs => Done)
 
@@ -120,26 +80,6 @@ export function useDeleteShopPlan() {
 				navigate('/vendorplans/packages');
 			}
 		},
-		onError: (error) => {
-			// Handle NestJS error format
-			let errorMessage = 'An error occurred while deleting shop plan';
-
-			if (error.response?.data) {
-				const { message, error: errorType } = error.response.data;
-
-				// NestJS can return message as string or array
-				if (Array.isArray(message)) {
-					errorMessage = message.join(', ');
-				} else if (message) {
-					errorMessage = message;
-				} else if (errorType) {
-					errorMessage = errorType;
-				}
-			} else if (error.message) {
-				errorMessage = error.message;
-			}
-
-			toast.error(errorMessage);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete shop plan' })
 	});
 }

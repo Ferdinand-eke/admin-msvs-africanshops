@@ -1031,6 +1031,40 @@ export const generateAdminReferralLinks = () => authApi().put('/authadmin/referr
  * ####################################################################################################
  */
 
+/** ***
+ * ###################################################################################################
+ * APPLICATION SETTINGS handling starts here 'application-settings
+ * ####################################################################################################
+ */
+// Get all application settings (Admin)
+export const adminGetAllApplicationSettings = () => authApi().get('/application-settings/admin/all'); /***Msvs => Done */
+
+// Get single application setting by ID
+export const adminGetApplicationSettingById = (settingId) =>
+	authApi().get(`/application-settings/admin/get-settings/${settingId}`);
+
+// Create new application setting
+export const adminCreateApplicationSetting = (settingData) =>
+	authApi().post('/application-settings/admin/create-settings', settingData); /***Msvs => Done */
+
+// Update application setting
+export const adminUpdateApplicationSetting = (settingId, settingData) =>
+	authApi().put(`/application-settings/admin/${settingId}/update-settings`, settingData);
+
+// Activate application setting
+export const adminActivateApplicationSetting = (settingId) =>
+	authApi().patch(`/application-settings/admin/activate-settings/${settingId}`);
+
+// Delete application setting
+export const adminDeleteApplicationSetting = (settingId) =>
+	authApi().delete(`/application-settings/admin/delete-settings/${settingId}`);
+
+/** ***
+ * ###################################################################################################
+ * APPLICATION SETTINGS handling ends here
+ * ####################################################################################################
+ */
+
 /** **
  *
  * LOG OUT HANDLING BELOW

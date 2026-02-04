@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { createErrorHandler } from '../utils/errorHandler';
 import {
 	getApiAdminUsers,
 	createApiAdminUser,
@@ -75,12 +76,7 @@ export function useAddAdminStaffMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create admin staff' })
 		}
 	);
 }
@@ -104,11 +100,7 @@ export function useAdminStaffUpdateMutation() {
 				navigate('/users/admin');
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message, {
-				position: 'top-left'
-			});
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update admin staff' })
 	});
 }
 
@@ -126,9 +118,7 @@ export function useAdminStaffBlockMutation() {
 				queryClient.refetchQueries('__adminById', { force: true });
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to block admin staff' })
 	});
 }
 
@@ -146,9 +136,7 @@ export function useAdminStaffUnBlockMutation() {
 				queryClient.refetchQueries('__adminById', { force: true });
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to unblock admin staff' })
 	});
 }
 
@@ -168,9 +156,7 @@ export function useAdminStaffSuspenMutation() {
 				queryClient.refetchQueries('__admins', { force: true });
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to suspend admin staff' })
 	});
 }
 
@@ -190,9 +176,7 @@ export function useAdminStaffUnSuspednMutation() {
 				queryClient.refetchQueries('__admins', { force: true });
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to unsuspend admin staff' })
 	});
 }
 
@@ -210,9 +194,7 @@ export function useAdminStaffMakeLeaderMutation() {
 			queryClient.invalidateQueries('__admins');
 				queryClient.refetchQueries('__admins', { force: true });
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to make admin staff leader' })
 	});
 }
 
@@ -228,9 +210,7 @@ export function useAdminStaffUnMakeLeaderMutation() {
 			queryClient.invalidateQueries('__admins');
 				queryClient.refetchQueries('__admins', { force: true });
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to remove admin staff leadership' })
 	});
 }
 
@@ -252,9 +232,7 @@ export function useDeleteAdminStaffMutation() {
 				navigate('/users/admin');
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete admin staff' })
 	});
 }
 
@@ -282,9 +260,7 @@ export function useAdminRecruitAfricanshopStaff() {
 				toast.info('something unexpected happened');
 			}
 		},
-		onError: (error) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to send admin invitation' })
 	});
 }
 
@@ -308,8 +284,6 @@ export function useNewAdminInvitationAcceptance() {
 				toast.info('something unexpected happened');
 			}
 		},
-		onError: (error) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to accept invitation' })
 	});
 }

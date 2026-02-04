@@ -1,12 +1,11 @@
 import { motion } from 'framer-motion';
 import BudgetDistributionWidget from './widgets/BudgetDistributionWidget';
-import WeeklyExpensesWidget from './widgets/WeeklyExpensesWidget';
-import MonthlyExpensesWidget from './widgets/MonthlyExpensesWidget';
-import YearlyExpensesWidget from './widgets/YearlyExpensesWidget';
+import ServiceEarningsWidget from './widgets/ServiceEarningsWidget';
 import BudgetDetailsWidget from './widgets/BudgetDetailsWidget';
 
 /**
- * The BudgetTab component.
+ * The BudgetTab component - Finance & Earnings Dashboard
+ * Shows real-time earnings distribution, service breakdowns, and transaction history
  */
 function BudgetTab() {
 	const container = {
@@ -27,6 +26,7 @@ function BudgetTab() {
 			initial="hidden"
 			animate="show"
 		>
+			{/* First Row: Earnings Distribution Chart (Left) & Service Earnings Breakdown (Right) */}
 			<motion.div
 				variants={item}
 				className="sm:col-span-3 lg:col-span-4"
@@ -34,27 +34,14 @@ function BudgetTab() {
 				<BudgetDistributionWidget />
 			</motion.div>
 
-			<div className="sm:col-span-3 lg:col-span-2 grid grid-cols-1 gap-y-24">
-				<motion.div
-					variants={item}
-					className="sm:col-span-2"
-				>
-					<WeeklyExpensesWidget />
-				</motion.div>
-				<motion.div
-					variants={item}
-					className="sm:col-span-2"
-				>
-					<MonthlyExpensesWidget />
-				</motion.div>
-				<motion.div
-					variants={item}
-					className="sm:col-span-2"
-				>
-					<YearlyExpensesWidget />
-				</motion.div>
-			</div>
+			<motion.div
+				variants={item}
+				className="sm:col-span-3 lg:col-span-2"
+			>
+				<ServiceEarningsWidget />
+			</motion.div>
 
+			{/* Second Row: Transaction Details Table (Full Width) */}
 			<motion.div
 				variants={item}
 				className="sm:col-span-6"

@@ -6,6 +6,7 @@ import {
 	adminGetCancelledReservationsApi,
 	adminGetEstatePropertiess
 } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 /** ****get all merchant Bookings|Hospitality properties */
 export default function useMyShopEstateProperties() {
@@ -49,12 +50,7 @@ export function useAdminApproveBookinfsRefundMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to approve refund' })
 		}
 	);
 }

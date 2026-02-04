@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { getBanners, getApiBannerById, updateBannerById, createBanner } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 export default function useAdminBanners() {
 	return useQuery(['__adminBanners'], getBanners);
@@ -32,12 +33,7 @@ export function useAddBannerMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create banner' })
 		}
 	);
 }
@@ -51,8 +47,6 @@ export function useBannerUpdateMutation() {
 			toast.success('Banner  updated successfully!!');
 			queryClient.invalidateQueries('__adminBanners');
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update banner' })
 	});
 }

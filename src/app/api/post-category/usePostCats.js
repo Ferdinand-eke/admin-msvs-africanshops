@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { createPostcat, deletePostcatsById, getPostcatById, getPostcats, updatePostcatById } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 export default function usePostCats() {
 	return useQuery(['postcategories'], getPostcats);
@@ -39,12 +40,7 @@ export function useAddPostCategoryMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create post category' })
 		}
 	);
 }
@@ -62,9 +58,7 @@ export function usePostCategoryUpdateMutation() {
 				navigate('/postcategories/list');
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update post category' })
 	});
 }
 
@@ -82,8 +76,6 @@ export function useDeletePostCategory() {
 				navigate('/postcategories/list');
 			}
 		},
-		onError: (error) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete post category' })
 	});
 }

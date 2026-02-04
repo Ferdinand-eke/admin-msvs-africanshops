@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { getFaqs, createApiFaq, updateFaqById, getApiFaqById } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 export default function useAdminFaqs() {
 	return useQuery(['__amindFaqs'], getFaqs);
@@ -32,12 +33,7 @@ export function useAddFaqMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create FAQ' })
 		}
 	);
 }
@@ -51,8 +47,6 @@ export function useFaqUpdateMutation() {
 			toast.success('FAQ  updated successfully!!');
 			queryClient.invalidateQueries('__amindFaqs');
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update FAQ' })
 	});
 }

@@ -11,18 +11,22 @@ import { darken } from '@mui/material/styles';
 import { selectUser } from 'src/app/auth/user/store/userSlice';
 import { useAppSelector } from 'app/store/hooks';
 import { useGetProjectDashboardProjectsQuery } from './ProjectDashboardApi';
+import ApplicationSettingsDrawer from './settings/ApplicationSettingsDrawer';
 
 /**
  * The ProjectDashboardAppHeader page.
  */
+
 function ProjectDashboardAppHeader() {
 	// const  token  = getAdminAccessToken();
+	
 	const { data: projects, isLoading } = useGetProjectDashboardProjectsQuery();
 	const user = useAppSelector(selectUser);
 	const [selectedProject, setSelectedProject] = useState({
 		id: 1,
 		menuEl: null
 	});
+	const [settingsDrawerOpen, setSettingsDrawerOpen] = useState(false);
 
 	function handleChangeProject(id) {
 		setSelectedProject({
@@ -94,11 +98,13 @@ function ProjectDashboardAppHeader() {
 					>
 						Messages
 					</Button>
+
 					<Button
 						className="whitespace-nowrap"
 						variant="contained"
 						color="secondary"
 						startIcon={<FuseSvgIcon size={20}>heroicons-solid:cog</FuseSvgIcon>}
+						onClick={() => setSettingsDrawerOpen(true)}
 					>
 						Settings
 					</Button>
@@ -142,6 +148,13 @@ function ProjectDashboardAppHeader() {
 						))}
 				</Menu>
 			</div>
+
+			{/* Settings Drawer */}
+			<ApplicationSettingsDrawer
+			
+				open={settingsDrawerOpen}
+				onClose={() => setSettingsDrawerOpen(false)}
+			/>
 		</div>
 	);
 }

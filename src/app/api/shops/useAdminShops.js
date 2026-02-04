@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { createErrorHandler } from '../utils/errorHandler';
 import {
 	getShops,
 	// createApiVendorShop,
@@ -57,9 +58,7 @@ export function useDeleteShop() {
 				navigate('/vendors/listvendors');
 			}
 		},
-		onError: (error) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete shop' })
 	});
 }
 
@@ -88,9 +87,7 @@ export function useAdminCreateVendorShop() {
 				navigate('/vendors/listvendors');
 			}
 		},
-		onError: (error, data) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to create merchant shop' })
 	});
 }
 
@@ -107,9 +104,7 @@ export function useAdminUpdateVendorShop() {
 				navigate('/vendors/listvendors');
 			}
 		},
-		onError: (error, data) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update merchant shop' })
 	});
 } // (Msvs => done)
 
@@ -128,9 +123,7 @@ export function useAdminCreatePartnerVendorShop() {
 				queryClient.invalidateQueries('shops');
 			}
 		},
-		onError: (error, data) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to create partner shop' })
 	});
 }
 
@@ -145,10 +138,7 @@ export function useAdminUpdatePartnerVendorShop() {
 				queryClient.invalidateQueries('shops');
 			}
 		},
-		onError: (error, data) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-			// queryClient.invalidateQueries('__myshop_orders');
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update partner shop' })
 	});
 }
 /** *
@@ -170,9 +160,7 @@ export function useAdminCreateCompanyVendorShop() {
 				queryClient.invalidateQueries('shops');
 			}
 		},
-		onError: (error) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to create company shop' })
 	});
 }
 
@@ -187,8 +175,6 @@ export function useAdminUpdateCompanyVendorShop() {
 				queryClient.invalidateQueries('shops');
 			}
 		},
-		onError: (error, data) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update company shop' })
 	});
 }

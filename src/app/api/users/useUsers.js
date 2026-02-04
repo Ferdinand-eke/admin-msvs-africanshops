@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
+import { createErrorHandler } from '../utils/errorHandler';
 import {
 	adminBlockDisciplineUser,
 	adminSuspendDisciplineUser,
@@ -54,9 +55,7 @@ export function useAdminSuspendUserMutation() {
 				queryClient.refetchQueries('__our_populatedUserBId', { force: true });
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to suspend user' })
 	});
 }
 
@@ -74,9 +73,7 @@ export function useAdminUnSuspendUserMutation() {
 				queryClient.refetchQueries('__our_populatedUserBId', { force: true });
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to unsuspend user' })
 	});
 }
 
@@ -94,9 +91,7 @@ export function useAdminBlockUserMutation() {
 				queryClient.refetchQueries('__our_populatedUserBId', { force: true });
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to block user' })
 	});
 }
 
@@ -114,9 +109,7 @@ export function useAdminUnBlockUserMutation() {
 				queryClient.refetchQueries('__our_populatedUserBId', { force: true });
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to unblock user' })
 	});
 }
 
@@ -134,8 +127,6 @@ export function useAdminUpdateUserDetailMutation() {
 				queryClient.refetchQueries('__our_populatedUserBId', { force: true });
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update user details' })
 	});
 }

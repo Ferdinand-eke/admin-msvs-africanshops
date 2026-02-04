@@ -6,6 +6,7 @@ import {
 	adminScheduleInspection,
 	adminUpdateInspectionStatus
 } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 // Get all inspections with pagination
 export default function useAdminInspections(params = {}) {
@@ -42,9 +43,7 @@ export function useScheduleInspection() {
 				queryClient.invalidateQueries(['__inspections']);
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to process inspection request' })
 	});
 }
 
@@ -62,8 +61,6 @@ export function useUpdateInspectionStatus() {
 				queryClient.invalidateQueries(['__inspection']);
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to process inspection request' })
 	});
 }

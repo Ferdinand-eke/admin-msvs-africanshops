@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { createLargeProdUnit, getLargeProdUnitById, getLargeProdUnits, updateLargeProdUnitById } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 export default function useLargeProductUnits() {
 	return useQuery(['__largeProductunits'], getLargeProdUnits);
@@ -32,12 +33,7 @@ export function useAddLargeProductUnitMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create large product unit' })
 		}
 	);
 }
@@ -51,8 +47,6 @@ export function useLargeProductUnitUpdateMutation() {
 			toast.success('product unit updated successfully!!');
 			queryClient.invalidateQueries('__largeProductunits');
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update large product unit' })
 	});
 }

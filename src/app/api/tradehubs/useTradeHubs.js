@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { createErrorHandler } from '../utils/errorHandler';
 import { createTradehub, deleteTradehubById, getTradehubById, getTradehubs, updateTradehubById } from '../apiRoutes';
 
 export default function useHubs() {
@@ -39,12 +40,7 @@ export function useAddHubMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create trade hub' })
 		}
 	);
 }
@@ -65,11 +61,7 @@ export function useHubUpdateMutation() {
 				navigate('/tradehubs/list');
 			}
 		},
-		onError: (error) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-			toast.success('Oops!, an error occured');
-			// queryClient.invalidateQueries('__myshop_orders');
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update trade hub' })
 	});
 } // (Msvs => Done)
 
@@ -87,9 +79,6 @@ export function useDeleteHubMutation() {
 				navigate('/tradehubs/list');
 			}
 		},
-		onError: (error) => {
-			console.log(error);
-			toast.success('Oops!, an error occured');
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete trade hub' })
 	});
 }

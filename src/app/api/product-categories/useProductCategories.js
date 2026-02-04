@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { createProdCat, deleteProdCatById, getProdCatById, getProdCats, updateProdCatById } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 export default function useProductCats() {
 	return useQuery(['__productcats'], getProdCats);
@@ -39,34 +40,7 @@ export function useAddProductCatMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				// Handle NestJS error responses comprehensively
-				let errorMessage = 'An unexpected error occurred';
-
-				if (error.response?.data) {
-					const { message, error: errorType, statusCode } = error.response.data;
-
-					// NestJS validation errors return message as an array
-					if (Array.isArray(message)) {
-						errorMessage = message.join(', ');
-					}
-					// Single message string
-					else if (message) {
-						errorMessage = message;
-					}
-					// Fallback to error type with status code
-					else if (errorType) {
-						errorMessage = `${errorType}${statusCode ? ` (${statusCode})` : ''}`;
-					}
-				}
-				// Network or other errors
-				else if (error.message) {
-					errorMessage = error.message;
-				}
-
-				toast.error(errorMessage);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create product category' })
 		}
 	);
 }
@@ -85,33 +59,7 @@ export function useProductCatUpdateMutation() {
 				navigate('/productcategories/list');
 			}
 		},
-		onError: (error) => {
-			// Handle NestJS error responses comprehensively
-			let errorMessage = 'An unexpected error occurred';
-
-			if (error.response?.data) {
-				const { message, error: errorType, statusCode } = error.response.data;
-
-				// NestJS validation errors return message as an array
-				if (Array.isArray(message)) {
-					errorMessage = message.join(', ');
-				}
-				// Single message string
-				else if (message) {
-					errorMessage = message;
-				}
-				// Fallback to error type with status code
-				else if (errorType) {
-					errorMessage = `${errorType}${statusCode ? ` (${statusCode})` : ''}`;
-				}
-			}
-			// Network or other errors
-			else if (error.message) {
-				errorMessage = error.message;
-			}
-
-			toast.error(errorMessage);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update product category' })
 	});
 } // (Msvs => Done)
 
@@ -128,32 +76,6 @@ export function useDeleteProductCategory() {
 				navigate('/productcategories/list');
 			}
 		},
-		onError: (error) => {
-			// Handle NestJS error responses comprehensively
-			let errorMessage = 'An unexpected error occurred';
-
-			if (error.response?.data) {
-				const { message, error: errorType, statusCode } = error.response.data;
-
-				// NestJS validation errors return message as an array
-				if (Array.isArray(message)) {
-					errorMessage = message.join(', ');
-				}
-				// Single message string
-				else if (message) {
-					errorMessage = message;
-				}
-				// Fallback to error type with status code
-				else if (errorType) {
-					errorMessage = `${errorType}${statusCode ? ` (${statusCode})` : ''}`;
-				}
-			}
-			// Network or other errors
-			else if (error.message) {
-				errorMessage = error.message;
-			}
-
-			toast.error(errorMessage);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete product category' })
 	});
 }

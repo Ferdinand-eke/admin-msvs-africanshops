@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { createErrorHandler } from '../utils/errorHandler';
 import {
 	createCountry,
 	createCountryShippingTable,
@@ -79,12 +80,7 @@ export function useAddCountryMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create country' })
 		}
 	);
 }
@@ -100,9 +96,7 @@ export function useCountryUpdateMutation() {
 				queryClient.invalidateQueries('__countries');
 			}
 		},
-		onError: (error) => {
-			toast.success('Oops!, an error occured');
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update country' })
 	});
 } // (Msvs => Done)
 
@@ -119,9 +113,7 @@ export function useDeleteSingleCountry() {
 				navigate('/administrations/countries');
 			}
 		},
-		onError: () => {
-			toast.success(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete country' })
 	});
 }
 
@@ -164,9 +156,7 @@ export function useCountryAddShippingTableMutation() {
 				queryClient.invalidateQueries('__countries');
 			}
 		},
-		onError: (error) => {
-			toast.error(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to add shipping table' })
 	});
 }
 
@@ -183,9 +173,7 @@ export function useCountryUpdateShippingMutation() {
 				queryClient.invalidateQueries('__countries');
 			}
 		},
-		onError: () => {
-			toast.success(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update shipping table' })
 	});
 }
 
@@ -202,9 +190,7 @@ export function useCountryDeleteShippingMutation() {
 				queryClient.invalidateQueries('__countries');
 			}
 		},
-		onError: () => {
-			toast.success(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete shipping table' })
 	});
 }
 

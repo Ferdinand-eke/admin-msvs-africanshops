@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { createErrorHandler } from '../utils/errorHandler';
 import {
 	createMarketCategory,
 	deleteMarketCategoryById,
@@ -66,12 +67,7 @@ export function useAddMarketCategoryMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create market category' })
 		}
 	);
 } // (Msvs => Done)
@@ -89,9 +85,7 @@ export function useMarketCategoryUpdateMutation() {
 				navigate('/market-categories/list');
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update market category' })
 	});
 } // (Msvs => Done)
 
@@ -108,9 +102,7 @@ export function useDeleteMarketCategory() {
 				navigate('/market-categories/list');
 			}
 		},
-		onError: (error) => {
-			toast.success(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete market category' })
 	});
 } // (Msvs => Done)
 

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
+import { createErrorHandler } from '../utils/errorHandler';
 import { createMarket, deleteMarketById, getMarketById, getMarkets, updateMarketById } from '../apiRoutes';
 
 export default function useMarkets() {
@@ -59,12 +60,7 @@ export function useAddMarketMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create market' })
 		}
 	);
 }
@@ -82,9 +78,7 @@ export function useMarketUpdateMutation() {
 				navigate('/markets/list');
 			}
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update market' })
 	});
 } // (Msvs => Done)
 
@@ -101,8 +95,6 @@ export function useDeleteMarket() {
 				navigate('/markets/list');
 			}
 		},
-		onError: (error) => {
-			toast.success(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete market' })
 	});
 }

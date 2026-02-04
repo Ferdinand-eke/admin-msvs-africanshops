@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { getPartners, getAdminPartnerById, createPartner, updatePartnerById } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 export default function useAdminPartners() {
 	return useQuery(['__adminPartners'], getPartners);
@@ -32,12 +33,7 @@ export function useAddPartnerMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create partner' })
 		}
 	);
 }
@@ -51,8 +47,6 @@ export function useFaqUpdateMutation() {
 			toast.success('Partner  updated successfully!!');
 			queryClient.invalidateQueries('__adminPartners');
 		},
-		onError: (err) => {
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update partner' })
 	});
 }

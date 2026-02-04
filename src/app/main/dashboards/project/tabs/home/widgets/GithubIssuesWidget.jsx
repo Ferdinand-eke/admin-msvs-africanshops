@@ -1,109 +1,84 @@
 import Paper from '@mui/material/Paper';
-import { lighten, useTheme } from '@mui/material/styles';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { memo, useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import Box from '@mui/material/Box';
-import FuseLoading from '@fuse/core/FuseLoading';
-import _ from '@lodash';
-import { useGetProjectDashboardWidgetsQuery } from '../../../ProjectDashboardApi';
+import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 
 /**
- * The GithubIssuesWidget widget.
+ * The GithubIssuesWidget - Shows top 5 countries by user count and global distribution
+ * TODO: Replace placeholder data with actual API call when endpoint is ready
  */
 function GithubIssuesWidget() {
 	const theme = useTheme();
 	const [awaitRender, setAwaitRender] = useState(true);
-	const [tabValue, setTabValue] = useState(0);
-	const { data: widgets, isLoading } = useGetProjectDashboardWidgetsQuery();
 
-	if (isLoading) {
-		return <FuseLoading />;
-	}
+	// Placeholder data - replace with actual API call
+	const topCountries = [
+		{ country: 'Nigeria', users: 5840, flag: '🇳🇬' },
+		{ country: 'Kenya', users: 3250, flag: '🇰🇪' },
+		{ country: 'Ghana', users: 2780, flag: '🇬🇭' },
+		{ country: 'South Africa', users: 1920, flag: '🇿🇦' },
+		{ country: 'Tanzania', users: 1452, flag: '🇹🇿' }
+	];
 
-	const widget = widgets?.githubIssues;
-
-	if (!widget) {
-		return null;
-	}
-
-	const { overview, series, ranges, labels } = widget;
-	const currentRange = Object.keys(ranges)[tabValue];
-	const chartOptions = {
+	const barChartOptions = {
 		chart: {
+			type: 'bar',
 			fontFamily: 'inherit',
 			foreColor: 'inherit',
-			height: '100%',
-			type: 'line',
-			toolbar: {
-				show: false
-			},
-			zoom: {
-				enabled: false
+			toolbar: { show: false },
+			sparkline: { enabled: false }
+		},
+		colors: [theme.palette.primary.main],
+		plotOptions: {
+			bar: {
+				horizontal: true,
+				barHeight: '70%',
+				distributed: false,
+				borderRadius: 4,
+				dataLabels: {
+					position: 'top'
+				}
 			}
 		},
-		colors: [theme.palette.primary.main, theme.palette.secondary.main],
-		labels,
 		dataLabels: {
 			enabled: true,
-			enabledOnSeries: [0],
-			background: {
-				borderWidth: 0
+			formatter: (val) => val.toLocaleString(),
+			offsetX: 30,
+			style: {
+				fontSize: '12px',
+				fontWeight: 600
 			}
 		},
 		grid: {
-			borderColor: theme.palette.divider
-		},
-		legend: {
-			show: false
-		},
-		plotOptions: {
-			bar: {
-				columnWidth: '50%'
-			}
-		},
-		states: {
-			hover: {
-				filter: {
-					type: 'darken',
-					value: 0.75
-				}
-			}
-		},
-		stroke: {
-			width: [3, 0]
-		},
-		tooltip: {
-			followCursor: true,
-			theme: theme.palette.mode
+			borderColor: theme.palette.divider,
+			padding: { top: 0, right: 0, bottom: 0, left: 0 }
 		},
 		xaxis: {
-			axisBorder: {
-				show: false
-			},
-			axisTicks: {
-				color: theme.palette.divider
-			},
+			categories: topCountries.map(c => c.country),
 			labels: {
-				style: {
-					colors: theme.palette.text.secondary
-				}
-			},
-			tooltip: {
-				enabled: false
+				style: { colors: theme.palette.text.secondary }
 			}
 		},
 		yaxis: {
 			labels: {
-				offsetX: -16,
-				style: {
-					colors: theme.palette.text.secondary
-				}
+				style: { colors: theme.palette.text.secondary }
+			}
+		},
+		tooltip: {
+			theme: theme.palette.mode,
+			y: {
+				formatter: (val) => `${val.toLocaleString()} users`
 			}
 		}
 	};
+
+	const barChartSeries = [{
+		name: 'Users',
+		data: topCountries.map(c => c.users)
+	}];
+
 	useEffect(() => {
 		setAwaitRender(false);
 	}, []);
@@ -114,133 +89,55 @@ function GithubIssuesWidget() {
 
 	return (
 		<Paper className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden">
-			<div className="flex flex-col sm:flex-row items-start justify-between">
-				<Typography className="text-lg font-medium tracking-tight leading-6 truncate">
-					Github Issues Summary
-				</Typography>
-				<div className="mt-12 sm:mt-0 sm:ml-8">
-					<Tabs
-						value={tabValue}
-						onChange={(_ev, value) => setTabValue(value)}
-						indicatorColor="secondary"
-						textColor="inherit"
-						variant="scrollable"
-						scrollButtons={false}
-						className="-mx-4 min-h-40"
-						classes={{ indicator: 'flex justify-center bg-transparent w-full h-full' }}
-						TabIndicatorProps={{
-							children: (
-								<Box
-									sx={{ bgcolor: 'text.disabled' }}
-									className="w-full h-full rounded-full opacity-20"
-								/>
-							)
-						}}
-					>
-						{Object.entries(ranges).map(([key, label]) => (
-							<Tab
-								className="text-14 font-semibold min-h-40 min-w-64 mx-4 px-12"
-								disableRipple
-								key={key}
-								label={label}
-							/>
-						))}
-					</Tabs>
+			<div className="flex items-center justify-between mb-16">
+				<div className="flex items-center">
+					<FuseSvgIcon className="text-primary" size={20}>heroicons-outline:globe</FuseSvgIcon>
+					<Typography className="ml-8 text-lg font-medium tracking-tight leading-6">
+						Global User Distribution
+					</Typography>
 				</div>
 			</div>
-			<div className="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-24 w-full mt-32 sm:mt-16">
-				<div className="flex flex-col flex-auto">
-					<Typography
-						className="font-medium"
-						color="text.secondary"
-					>
-						New vs. Closed
-					</Typography>
-					<div className="flex flex-col flex-auto">
-						<ReactApexChart
-							className="flex-auto w-full"
-							options={chartOptions}
-							series={_.cloneDeep(series[currentRange])}
-							height={320}
-						/>
-					</div>
-				</div>
+
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-24 w-full">
+				{/* Top 5 Countries Bar Chart */}
 				<div className="flex flex-col">
-					<Typography
-						className="font-medium"
-						color="text.secondary"
-					>
-						Overview
+					<Typography className="text-md font-medium mb-16" color="text.secondary">
+						Top 5 Countries by Users
 					</Typography>
-					<div className="flex-auto grid grid-cols-4 gap-16 mt-24">
-						<div className="col-span-2 flex flex-col items-center justify-center py-32 px-4 rounded-2xl bg-indigo-50 text-indigo-800">
-							<Typography className="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
-								{overview[currentRange]['new-issues']}
+					<ReactApexChart
+						options={barChartOptions}
+						series={barChartSeries}
+						type="bar"
+						height={280}
+					/>
+				</div>
+
+				{/* World Map Placeholder - Will show user distribution */}
+				<div className="flex flex-col">
+					<Typography className="text-md font-medium mb-16" color="text.secondary">
+						Geographic Distribution
+					</Typography>
+					<div className="flex-auto flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-lg p-16">
+						<div className="text-center">
+							<FuseSvgIcon className="text-gray-400" size={64}>heroicons-outline:globe-alt</FuseSvgIcon>
+							<Typography className="mt-8 text-sm" color="text.secondary">
+								Interactive world map visualization
 							</Typography>
-							<Typography className="mt-4 text-sm sm:text-lg font-medium">New Issues</Typography>
+							<Typography className="mt-4 text-xs" color="text.disabled">
+								Shows user density across {topCountries.length}+ countries
+							</Typography>
+							<div className="mt-16 grid grid-cols-2 gap-8">
+								{topCountries.slice(0, 4).map((country) => (
+									<div key={country.country} className="flex items-center justify-center p-8 bg-white dark:bg-gray-900 rounded">
+										<span className="text-2xl mr-4">{country.flag}</span>
+										<div className="text-left">
+											<Typography className="text-xs font-medium">{country.country}</Typography>
+											<Typography className="text-xs text-gray-500">{country.users.toLocaleString()}</Typography>
+										</div>
+									</div>
+								))}
+							</div>
 						</div>
-						<div className="col-span-2 flex flex-col items-center justify-center py-32 px-4 rounded-2xl bg-green-50 text-green-800">
-							<Typography className="text-5xl sm:text-7xl font-semibold leading-none tracking-tight">
-								{overview[currentRange]['closed-issues']}
-							</Typography>
-							<Typography className="mt-4 text-sm sm:text-lg font-medium">Closed</Typography>
-						</div>
-						<Box
-							sx={{
-								backgroundColor: (_theme) =>
-									_theme.palette.mode === 'light'
-										? lighten(theme.palette.background.default, 0.4)
-										: lighten(theme.palette.background.default, 0.02)
-							}}
-							className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-32 px-4 rounded-2xl"
-						>
-							<Typography className="text-5xl font-semibold leading-none tracking-tight">
-								{overview[currentRange].fixed}
-							</Typography>
-							<Typography className="mt-4 text-sm font-medium text-center">Fixed</Typography>
-						</Box>
-						<Box
-							sx={{
-								backgroundColor: (_theme) =>
-									_theme.palette.mode === 'light'
-										? lighten(theme.palette.background.default, 0.4)
-										: lighten(theme.palette.background.default, 0.02)
-							}}
-							className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-32 px-4 rounded-2xl"
-						>
-							<Typography className="text-5xl font-semibold leading-none tracking-tight">
-								{overview[currentRange]['wont-fix']}
-							</Typography>
-							<Typography className="mt-4 text-sm font-medium text-center">Won't Fix</Typography>
-						</Box>
-						<Box
-							sx={{
-								backgroundColor: (_theme) =>
-									_theme.palette.mode === 'light'
-										? lighten(theme.palette.background.default, 0.4)
-										: lighten(theme.palette.background.default, 0.02)
-							}}
-							className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-32 px-4 rounded-2xl"
-						>
-							<Typography className="text-5xl font-semibold leading-none tracking-tight">
-								{overview[currentRange]['re-opened']}
-							</Typography>
-							<Typography className="mt-4 text-sm font-medium text-center">Re-opened</Typography>
-						</Box>
-						<Box
-							sx={{
-								backgroundColor: (_theme) =>
-									_theme.palette.mode === 'light'
-										? lighten(theme.palette.background.default, 0.4)
-										: lighten(theme.palette.background.default, 0.02)
-							}}
-							className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-32 px-4 rounded-2xl"
-						>
-							<Typography className="text-5xl font-semibold leading-none tracking-tight">
-								{overview[currentRange]['needs-triage']}
-							</Typography>
-							<Typography className="mt-4 text-sm font-medium text-center">Needs Triage</Typography>
-						</Box>
 					</div>
 				</div>
 			</div>

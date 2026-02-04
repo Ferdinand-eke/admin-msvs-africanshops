@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { createErrorHandler } from '../utils/errorHandler';
 import { createDepartMent, deleteDepartmentById, getDeptById, getDepts, updateDeptById } from '../apiRoutes';
 
 export const useGetDepartments = () => {
@@ -51,17 +52,7 @@ export function useAddDeptMutation() {
 				navigate('/departments/list');
 			}
 		},
-		onError: (error, query) => {
-			if (err) {
-				return toast.error('Oops!, an error occured');
-			}
-
-			if (err && err.status === 403) {
-				// signOut();
-			}
-
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to create department' })
 	});
 }
 
@@ -89,10 +80,7 @@ export function useUpdateDepartmentMutation() {
 			}
 		},
 		{
-			onError: (err, values, rollback) => {
-				toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to update department' })
 		}
 	);
 }
@@ -110,8 +98,6 @@ export function useDeleteSingleDepartment() {
 				navigate('/departments/list');
 			}
 		},
-		onError: (error) => {
-			toast.success(error.response && error.response.data.message ? error.response.data.message : error.message);
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to delete department' })
 	});
 }

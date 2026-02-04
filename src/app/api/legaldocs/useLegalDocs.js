@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { getLegals, getApiLegalById, createLegal, updateLegalById } from '../apiRoutes';
+import { createErrorHandler } from '../utils/errorHandler';
 
 export default function useLegalDocs() {
 	return useQuery(['__adminLegalDocs'], getLegals);
@@ -32,12 +33,7 @@ export function useAddLegalDocsMutation() {
 			}
 		},
 		{
-			onError: (error, values, rollback) => {
-				toast.error(
-					error.response && error.response.data.message ? error.response.data.message : error.message
-				);
-				rollback();
-			}
+			onError: createErrorHandler({ defaultMessage: 'Failed to create legal document' })
 		}
 	);
 }
@@ -55,10 +51,6 @@ export function useLegalDocsUpdateMutation() {
 
 			// navigate('/transaction-list');
 		},
-		onError: (err) => {
-			// toast.error('Oops!, an error occured', err);
-			toast.error(err.response && err.response.data.message ? err.response.data.message : err.message);
-			// queryClient.invalidateQueries('__myshop_orders');
-		}
+		onError: createErrorHandler({ defaultMessage: 'Failed to update legal document' })
 	});
 }
