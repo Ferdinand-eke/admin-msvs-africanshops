@@ -7,9 +7,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import { IconButton, InputAdornment } from '@mui/material';
+import { CircularProgress, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { toast } from 'react-toastify';
 import useJwtAuth from '../useJwtAuth';
+
 /**
  * Form Validation Schema
  */
@@ -26,9 +28,10 @@ const defaultValues = {
 	remember: true
 };
 
+
 function JwtSignInForm() {
 	const { signIn, isLoginLoading } = useJwtAuth();
-	const { control, formState, handleSubmit, setValue, setError, getValues } = useForm({
+	const { control, formState, handleSubmit } = useForm({
 		mode: 'onChange',
 		defaultValues
 	});
@@ -49,6 +52,7 @@ function JwtSignInForm() {
 	const toggleShowPassword = () => {
 		setShowPassword(!showPassword);
 	};
+
 	return (
 		<form
 			name="loginForm"
@@ -71,6 +75,7 @@ function JwtSignInForm() {
 						variant="outlined"
 						required
 						fullWidth
+						disabled={isLoginLoading}
 					/>
 				)}
 			/>
@@ -89,10 +94,14 @@ function JwtSignInForm() {
 						variant="outlined"
 						required
 						fullWidth
+						disabled={isLoginLoading}
 						InputProps={{
 							endAdornment: (
 								<InputAdornment position="end">
-									<IconButton onClick={() => toggleShowPassword()}>
+									<IconButton
+										onClick={() => toggleShowPassword()}
+										disabled={isLoginLoading}
+									>
 										{showPassword ? <VisibilityOff /> : <Visibility />}
 									</IconButton>
 								</InputAdornment>
@@ -114,6 +123,7 @@ function JwtSignInForm() {
 									<Checkbox
 										size="small"
 										{...field}
+										disabled={isLoginLoading}
 									/>
 								}
 							/>
@@ -132,13 +142,21 @@ function JwtSignInForm() {
 			<Button
 				variant="contained"
 				color="secondary"
-				className=" mt-16 w-full"
+				className="mt-16 w-full"
 				aria-label="Sign in"
 				disabled={_.isEmpty(dirtyFields) || !isValid || isLoginLoading}
 				type="submit"
 				size="large"
+				startIcon={
+					isLoginLoading ? (
+						<CircularProgress
+							size={20}
+							color="inherit"
+						/>
+					) : null
+				}
 			>
-				{isLoginLoading ? 'processing...' : 'Sign in'}
+				{isLoginLoading ? 'Signing in...' : 'Sign in'}
 			</Button>
 		</form>
 	);

@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useAdminLogin } from 'src/app/api/auth/admin-auth';
 import config from './jwtAuthConfig';
 
+
 const defaultAuthContext = {
 	isAuthenticated: false,
 	isLoading: false,
@@ -116,7 +117,6 @@ function JwtAuthProvider(props) {
 
 	const [user, setUser] = useState(getUserCredentialsStorage());
 	const [isLoading, setIsLoading] = useState(true);
-	const [isLoginLoading, setLoginIsLoading] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(getIsAuthenticatedStatus());
 	const [authStatus, setAuthStatus] = useState(getIsAuthStatusStorage()); // 'configuring'
 	const { children } = props;
@@ -262,34 +262,13 @@ function JwtAuthProvider(props) {
 
 	const adminLogIn = useAdminLogin();
 
-	const handleRequest = async (
-		url,
-		data,
-		//  handleSuccess,
-		handleSignInSuccess,
-		//  handleFailure,
-		handleSignInFailure
-	) => {
-		try {
-			setLoginIsLoading(true);
-			adminLogIn.mutate(data);
-			setLoginIsLoading(false);
-		} catch (error) {
-			const axiosError = error;
-			console.log('Request-Error', error);
-			toast.error(
-				error?.response && error?.response?.data?.message ? error?.response?.data?.message : error?.message
-			);
-			handleSignInFailure(axiosError);
-			setLoginIsLoading(false);
-			return axiosError;
-		}
+	const handleRequest = (data) => {
+		adminLogIn.mutate(data);
 	};
 
 	// Refactor signIn function
 	const signIn = (credentials) => {
-		// console.log("IN-JWT-Provider", credentials)
-		return handleRequest(config.signInBravortAdminUrl, credentials, handleSignInSuccess, handleSignInFailure);
+		return handleRequest(credentials);
 	};
 	// Refactor signUp function
 	const signUp = useCallback((data) => {
@@ -397,16 +376,15 @@ function JwtAuthProvider(props) {
 			isAuthenticated,
 			authStatus,
 			isLoading,
-			isLoginLoading,
+			isLoginLoading: adminLogIn.isLoading,
 			signIn,
 			signUp,
 			signOut,
 			updateUser,
 			refreshToken,
-			setIsLoading,
-			setLoginIsLoading
+			setIsLoading
 		}),
-		[user, isAuthenticated, isLoading, signIn, signUp, signOut, updateUser, refreshToken, setIsLoading]
+		[user, isAuthenticated, isLoading, adminLogIn.isLoading, signIn, signUp, signOut, updateUser, refreshToken, setIsLoading]
 	);
 	return <JwtAuthContext.Provider value={authContextValue}>{children}</JwtAuthContext.Provider>;
 }
