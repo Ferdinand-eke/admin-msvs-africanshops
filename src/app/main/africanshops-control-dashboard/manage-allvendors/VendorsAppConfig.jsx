@@ -12,6 +12,7 @@ const VendorsAppConfig = {
 	settings: {
 		layout: {}
 	},
+	
 
 	routes: [
 		{

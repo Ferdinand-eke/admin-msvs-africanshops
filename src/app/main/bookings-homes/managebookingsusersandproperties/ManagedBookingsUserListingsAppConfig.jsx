@@ -8,8 +8,8 @@ const ProfileApp = lazy(() => import('./bookingsmanageprofile/ProfileApp'));
 const PropertyProfileApp = lazy(() => import('./bookingsmanageuserpropertyprofile/PropertyProfileApp'));
 
 const ReservationsOnBookingsProperties = lazy(() => import('./reservations/ReservationsOnBookingsProperties'));
-// const Order = lazy(() => import('./order/Order'));
-// const Orders = lazy(() => import('./orders/Orders'));
+const AmenitiesOnBookingsProperties = lazy(() => import('./amenities/AmenitiesOnBookingsProperties'));
+
 /**
  * The E-Commerce app configuration.
  */
@@ -31,28 +31,35 @@ const ManagedBookingsUserListingsAppConfig = {
 				{
 					path: 'user-listings',
 					element: <BookingsProperties />
-				},
+				}, //Msvs => DOne
 
 				{
 					path: 'user-listings/:productId/*',
 					element: <PropertyListing />
 				},
 				{
-					path: 'user-listings/:userId/userproperties',
+					path: 'user-listings/:merchantId/userproperties',
 					element: <ProfileApp />
 				},
 
 				{
-					path: 'user-listings/:popertyId/manage',
+					path: 'user-listings/:merchantId/manage',
 					element: <PropertyProfileApp />
 				},
 
 				{
 					path: 'reservations',
 					element: <ReservationsOnBookingsProperties />
+				},
+
+				{
+					path: 'amenities',
+					element: <AmenitiesOnBookingsProperties />
 				}
+				//AmenitiesOnBookingsProperties
 			]
 		}
+
 	]
 };
 

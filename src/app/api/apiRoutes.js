@@ -887,6 +887,44 @@ export const adminApproveRefundsApi = (refundPayload) =>
 
 /** ***
  * ###################################################################################################
+ * BOOKING PROPERTY AMENITIES handling starts here
+ * ####################################################################################################
+ */
+
+/** **Get all amenities (paginated) */
+export const adminGetAllAmenitiesApi = (params = {}) => {
+	const queryParams = new URLSearchParams();
+
+	if (params.limit) queryParams.append('limit', params.limit);
+	if (params.offset) queryParams.append('offset', params.offset);
+
+	const queryString = queryParams.toString();
+	const url = queryString ? `/bookings/admin/amenities?${queryString}` : '/bookings/admin/amenities';
+
+	return authApi().get(url);
+};
+
+/** **Get single amenity by ID */
+export const adminGetSingleAmenityApi = (amenityId) => authApi().get(`/bookings/admin/amenities/${amenityId}/view`);
+
+/** **Create a new amenity */
+export const adminCreateAmenityApi = (amenityData) => authApi().post('/bookings/admin/amenities/create', amenityData);
+
+/** **Update an existing amenity */
+export const adminUpdateAmenityApi = ({ amenityId, ...amenityData }) =>
+	authApi().put(`/bookings/admin/amenities/${amenityId}/update`, amenityData);
+
+/** **Delete an amenity */
+export const adminDeleteAmenityApi = (amenityId) => authApi().delete(`/bookings/admin/amenities/${amenityId}/delete`);
+
+/** ***
+ * ###################################################################################################
+ * BOOKING PROPERTY AMENITIES handling ends here
+ * ####################################################################################################
+ */
+
+/** ***
+ * ###################################################################################################
  * REAL ESTATE ACQUISITIONS handling starts here
  * ####################################################################################################
  */

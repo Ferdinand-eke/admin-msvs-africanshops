@@ -45,6 +45,8 @@ function AllVendorsTable() {
 	const totalCount = useMemo(() => merchantsResponse?.data?.pagination?.total || 0, [merchantsResponse]);
 	const pagination = useMemo(() => merchantsResponse?.data?.pagination, [merchantsResponse]);
 
+	console.log('Merchants Response:', merchants);
+
 	// Calculate total pages based on backend pagination
 	const pageCount = useMemo(() => {
 		if (!pagination?.total || !rowsPerPage) return 0;

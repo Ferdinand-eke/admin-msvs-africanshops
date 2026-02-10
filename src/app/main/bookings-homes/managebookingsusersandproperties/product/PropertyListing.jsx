@@ -30,6 +30,7 @@ const schema = z.object({
 /**
  * The product page.
  */
+
 function PropertyListing() {
 	const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
 	const routeParams = useParams();
@@ -74,6 +75,7 @@ function PropertyListing() {
 	/**
 	 * Show Message if the requested products is not exists
 	 */
+
 
 	if (isError && productId !== 'new') {
 		return (

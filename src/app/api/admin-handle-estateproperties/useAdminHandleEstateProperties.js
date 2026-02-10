@@ -36,6 +36,7 @@ export function useShopOnEstateProperties() {
 	return useQuery(['__shopsonestates'], adminGetShopOnEstateProperties);
 }
 
+
 // get single estate property details
 export function useAdminGetSingleShopAndEstateProperties(slug) {
 	if (!slug || slug === 'new') {

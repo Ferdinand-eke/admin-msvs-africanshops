@@ -294,7 +294,15 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:shopping-cart',
 				url: '/bookings-hospitality/reservations'
+			},
+			{
+				id: 'admin-manage.amenities',
+				title: 'Manage Amenities ',
+				type: 'item',
+				icon: 'heroicons-outline:shopping-cart',
+				url: '/bookings-hospitality/amenities'
 			}
+
 		]
 	},
 

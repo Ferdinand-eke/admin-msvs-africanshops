@@ -15,7 +15,7 @@ function BookingsPropetiesHeader() {
 				animate={{ x: 0, transition: { delay: 0.2 } }}
 			>
 				<Typography className="text-16 md:text-24 font-extrabold tracking-tight">
-					Manage Merchants And Booking Listings
+					All Listings By Merchants
 				</Typography>
 			</motion.span>
 

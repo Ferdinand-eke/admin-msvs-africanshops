@@ -35,6 +35,7 @@ function ReservationsOnBookingsProperties() {
 					allReservations={allReservations?.data?.bookingsReservations}
 					allCancelledReservations={allCancelledReservations?.data?.payload}
 				/>
+				
 
 				<ReservationsOnBookingsListTable
 					active={active}
