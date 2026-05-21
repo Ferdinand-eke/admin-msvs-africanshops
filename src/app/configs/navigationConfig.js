@@ -457,14 +457,14 @@ const navigationConfig = [
 				title: 'Shipping Tabel(LGAs)',
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-check',
-				url: '/countryshipping/lgashipping/list'
+				url: '/countryshipping/state/lga-shipping/list'
 			},
 			{
 				id: 'districtshipping.list',
 				title: 'Shipping Tabel(Districts)',
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-check',
-				url: '/countryshipping/districtshipping/list'
+				url: '/countryshipping/state/district-shipping/list'
 			},
 			// {
 			// 	id: 'countryshipping.list',

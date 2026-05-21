@@ -21,7 +21,12 @@ import {
 	useCountryDeleteShippingMutation
 } from '../../../../api/countries/useCountries';
 
+const blockNonInteger = (e) => {
+	if (['e', 'E', '+', '-', '.'].includes(e.key)) e.preventDefault();
+};
+
 const schema = z.object({
+	distanceKm: z.coerce.number({ invalid_type_error: 'Required' }).int('Must be a whole number').min(0, 'Must be 0 or more'),
 	airKilogramFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
 	landKilogramFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
 	perCbmFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
@@ -128,6 +133,7 @@ function EditShippingRouteDrawer({ route, originCountry, countries, onClose }) {
 		mode: 'onChange',
 		resolver: zodResolver(schema),
 		defaultValues: {
+			distanceKm: '',
 			airKilogramFreightFee: '',
 			landKilogramFreightFee: '',
 			perCbmFreightFee: '',
@@ -146,6 +152,7 @@ function EditShippingRouteDrawer({ route, originCountry, countries, onClose }) {
 		if (!route) return;
 
 		reset({
+			distanceKm: route.distanceKm ?? '',
 			airKilogramFreightFee: route.airKilogramFreightFee ?? '',
 			landKilogramFreightFee: route.landKilogramFreightFee ?? '',
 			perCbmFreightFee: route.perCbmFreightFee ?? '',
@@ -307,6 +314,37 @@ function EditShippingRouteDrawer({ route, originCountry, countries, onClose }) {
 				sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
 			>
 				<Box sx={{ flex: 1, overflow: 'auto', px: 3, py: 3 }}>
+					{/* Route Distance */}
+					<SectionHeader
+						iconName="heroicons-outline:arrows-expand"
+						title="Route Distance"
+						bgColor="rgba(0, 121, 107, 0.08)"
+						iconColor="rgb(0, 77, 64)"
+					/>
+
+					<Controller
+						name="distanceKm"
+						control={control}
+						render={({ field }) => (
+							<TextField
+								{...field}
+								label="Road Distance (km) *"
+								type="number"
+								size="small"
+								fullWidth
+								error={!!errors.distanceKm}
+								helperText={errors.distanceKm?.message}
+								InputProps={{
+									endAdornment: <InputAdornment position="end">km</InputAdornment>,
+									inputProps: { min: 0, step: 1, onKeyDown: blockNonInteger }
+								}}
+								sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+							/>
+						)}
+					/>
+
+					<Divider sx={{ mb: 3 }} />
+
 					{/* Air Freight */}
 					<SectionHeader
 						iconName="heroicons-outline:paper-airplane"

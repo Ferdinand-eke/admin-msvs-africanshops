@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
 	Avatar,
 	Box,
@@ -23,17 +23,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import {
-	useCountriesWithShippingTableOriginExcluded,
-	useCountryAddShippingTableMutation
-} from '../../../../api/countries/useCountries';
+import { useLgaAddShippingTableMutation } from '../../../../api/lgas/useLgas';
 
-// Prevents e, E, +, -, and . so only whole non-negative integers can be typed
 const blockNonInteger = (e) => {
 	if (['e', 'E', '+', '-', '.'].includes(e.key)) e.preventDefault();
 };
 
-// Safely parses a form value to integer; returns undefined for empty / non-numeric
 const parseIntField = (v) => {
 	if (v === '' || v === undefined || v === null) return undefined;
 	const n = parseInt(v, 10);
@@ -41,16 +36,16 @@ const parseIntField = (v) => {
 };
 
 const schema = z.object({
-	countryToShipTo: z.string().min(1, 'Please select a destination country'),
+	lgaToShipTo: z.string().min(1, 'Please select a destination LGA'),
 	distanceKm: z.coerce.number({ invalid_type_error: 'Required' }).int('Must be a whole number').min(0, 'Must be 0 or more'),
-	airKilogramFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
 	landKilogramFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
+	airKilogramFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
 	perCbmFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
 	seaKilogramFreightFee: z.coerce.number().min(0).optional().or(z.literal('')),
-	airTransitDaysMin: z.coerce.number().int().min(0).optional().or(z.literal('')),
-	airTransitDaysMax: z.coerce.number().int().min(0).optional().or(z.literal('')),
 	landTransitDaysMin: z.coerce.number().int().min(0).optional().or(z.literal('')),
 	landTransitDaysMax: z.coerce.number().int().min(0).optional().or(z.literal('')),
+	airTransitDaysMin: z.coerce.number().int().min(0).optional().or(z.literal('')),
+	airTransitDaysMax: z.coerce.number().int().min(0).optional().or(z.literal('')),
 	seaTransitDaysMin: z.coerce.number().int().min(0).optional().or(z.literal('')),
 	seaTransitDaysMax: z.coerce.number().int().min(0).optional().or(z.literal('')),
 	notes: z.string().optional()
@@ -133,12 +128,50 @@ function TransitDaysRow({ control, minName, maxName }) {
 	);
 }
 
-function NewShippingRouteDrawer({ originCountry, onClose }) {
-	const queryResult = useCountriesWithShippingTableOriginExcluded(originCountry?._id || originCountry?.id);
-	const { data: destinationsData, isLoading: loadingDestinations } = queryResult || {};
-	const destinations = destinationsData?.data?.countries || [];
+function LgaAvatar({ lga, size = 24 }) {
+	const code = (lga?.name || '?').slice(0, 2).toUpperCase();
+	return (
+		<Avatar
+			sx={{
+				width: size,
+				height: size,
+				bgcolor: 'primary.light',
+				color: 'primary.dark',
+				fontSize: size < 28 ? 9 : 11,
+				fontWeight: 800,
+				borderRadius: '6px'
+			}}
+		>
+			{code}
+		</Avatar>
+	);
+}
 
-	const addRoute = useCountryAddShippingTableMutation();
+function NewLgaShippingRouteDrawer({ originLga, originState, originCountry, lgas, onClose }) {
+	// console.log('originLga', originLga);
+	const originLgaData = originLga?.lga || originLga;
+	const originLgaId = originLgaData?._id || originLgaData?.id;
+
+	const alreadyRoutedIds = useMemo(() => {
+		const table = originLga?.lga?.shippingTable || originLga?.shippingTable || [];
+		return new Set(
+			table.map((r) => {
+				if (typeof r.lgaToShipTo === 'object') return r.lgaToShipTo?._id || r.lgaToShipTo?.id;
+				return r.lgaToShipTo;
+			})
+		);
+	}, [originLga]);
+
+	const destinations = useMemo(
+		() =>
+			lgas.filter((l) => {
+				const id = l._id || l.id;
+				return id !== originLgaId && !alreadyRoutedIds.has(id);
+			}),
+		[lgas, originLgaId, alreadyRoutedIds]
+	);
+
+	const addRoute = useLgaAddShippingTableMutation();
 
 	const {
 		control,
@@ -149,21 +182,22 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 		mode: 'onChange',
 		resolver: zodResolver(schema),
 		defaultValues: {
-			countryToShipTo: '',
+			lgaToShipTo: '',
 			distanceKm: '',
-			airKilogramFreightFee: '',
 			landKilogramFreightFee: '',
+			airKilogramFreightFee: '',
 			perCbmFreightFee: '',
 			seaKilogramFreightFee: '',
-			airTransitDaysMin: '',
-			airTransitDaysMax: '',
 			landTransitDaysMin: '',
 			landTransitDaysMax: '',
+			airTransitDaysMin: '',
+			airTransitDaysMax: '',
 			seaTransitDaysMin: '',
 			seaTransitDaysMax: '',
 			notes: ''
 		}
 	});
+
 	useEffect(() => {
 		if (addRoute.isSuccess) {
 			reset();
@@ -172,25 +206,24 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 	}, [addRoute.isSuccess, reset, onClose]);
 
 	function onSubmit(values) {
-		const destCountry = destinations?.find((c) => (c._id || c.id) === values.countryToShipTo);
-		const payload = {
-			countryCheckOrigin: originCountry._id || originCountry?.id,
-			countryToShipTo: values.countryToShipTo,
-			countryToShipToName: destCountry?.name,
+		const destLga = destinations?.find((l) => (l._id || l.id) === values.lgaToShipTo);
+		addRoute.mutate({
+			lgaCheckOrigin: originLgaId,
+			lgaToShipTo: values.lgaToShipTo,
+			lgaToShipToName: destLga?.name,
 			distanceKm: parseInt(values.distanceKm, 10),
-			airKilogramFreightFee: parseInt(values.airKilogramFreightFee, 10),
 			landKilogramFreightFee: parseInt(values.landKilogramFreightFee, 10),
+			airKilogramFreightFee: parseInt(values.airKilogramFreightFee, 10),
 			perCbmFreightFee: parseInt(values.perCbmFreightFee, 10),
 			seaKilogramFreightFee: parseIntField(values.seaKilogramFreightFee),
-			airTransitDaysMin: parseIntField(values.airTransitDaysMin),
-			airTransitDaysMax: parseIntField(values.airTransitDaysMax),
 			landTransitDaysMin: parseIntField(values.landTransitDaysMin),
 			landTransitDaysMax: parseIntField(values.landTransitDaysMax),
+			airTransitDaysMin: parseIntField(values.airTransitDaysMin),
+			airTransitDaysMax: parseIntField(values.airTransitDaysMax),
 			seaTransitDaysMin: parseIntField(values.seaTransitDaysMin),
 			seaTransitDaysMax: parseIntField(values.seaTransitDaysMax),
 			notes: values.notes
-		};
-		addRoute.mutate(payload);
+		});
 	}
 
 	return (
@@ -234,9 +267,13 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 						{originCountry?.flag && (
 							<Avatar
 								src={originCountry.flag}
-								sx={{ width: 38, height: 38, border: '2px solid rgba(255,255,255,0.3)' }}
+								sx={{ width: 28, height: 28, border: '2px solid rgba(255,255,255,0.3)' }}
 							/>
 						)}
+						<LgaAvatar
+							lga={originLgaData}
+							size={38}
+						/>
 						<Box>
 							<Typography
 								variant="caption"
@@ -249,15 +286,24 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 								fontWeight={800}
 								sx={{ color: 'white', lineHeight: 1.1 }}
 							>
-								{originCountry?.name || '...'}
+								{originLgaData?.name || '…'}
 							</Typography>
+							{originState && (
+								<Typography
+									variant="caption"
+									sx={{ color: 'rgba(255,255,255,0.55)' }}
+								>
+									{originState.name}
+									{originCountry ? ` · ${originCountry.name}` : ''}
+								</Typography>
+							)}
 						</Box>
 					</Stack>
 					<Typography
 						variant="caption"
 						sx={{ color: 'rgba(255,255,255,0.55)' }}
 					>
-						Define freight rates and transit times to a new destination country
+						Define freight rates and transit times to a destination LGA
 					</Typography>
 				</motion.div>
 			</Box>
@@ -273,82 +319,68 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 					<SectionHeader
 						iconName="heroicons-outline:location-marker"
 						title="Route Destination"
-						bgColor="rgba(103, 58, 183, 0.08)"
-						iconColor="rgb(81, 45, 168)"
+						bgColor="rgba(26, 35, 126, 0.08)"
+						iconColor="rgb(26, 35, 126)"
 					/>
 
 					<Controller
-						name="countryToShipTo"
+						name="lgaToShipTo"
 						control={control}
 						render={({ field }) => (
 							<FormControl
 								fullWidth
 								size="small"
-								error={!!errors.countryToShipTo}
+								error={!!errors.lgaToShipTo}
 								sx={{ mb: 3 }}
 							>
-								<InputLabel>Destination Country *</InputLabel>
+								<InputLabel>Destination LGA *</InputLabel>
 								<Select
 									{...field}
-									label="Destination Country *"
-									disabled={loadingDestinations}
+									label="Destination LGA *"
+									disabled={!originLgaId}
 									sx={{ borderRadius: 2 }}
 									renderValue={(value) => {
-										const c = destinations?.find((x) => x?._id || x?.id === value);
-										if (!c) return null;
+										const l = destinations?.find((x) => (x._id || x.id) === value);
+										if (!l) return null;
 										return (
 											<Stack
 												direction="row"
 												alignItems="center"
 												spacing={1}
 											>
-												{c.flag && (
-													<Avatar
-														src={c.flag}
-														sx={{ width: 18, height: 18 }}
-													/>
-												)}
+												<LgaAvatar
+													lga={l}
+													size={20}
+												/>
 												<Typography
 													variant="body2"
 													fontWeight={600}
 												>
-													{c.name}
+													{l.name}
 												</Typography>
 											</Stack>
 										);
 									}}
 								>
 									<MenuItem value="">
-										<em>Select destination country</em>
+										<em>Select destination LGA</em>
 									</MenuItem>
-									{destinations?.map((country) => (
+									{destinations?.map((lga) => (
 										<MenuItem
-											key={country?._id || country?.id}
-											value={country?._id || country?.id}
+											key={lga._id || lga.id}
+											value={lga._id || lga.id}
 										>
 											<ListItemIcon sx={{ minWidth: 36 }}>
-												{country.flag ? (
-													<Avatar
-														src={country.flag}
-														sx={{ width: 24, height: 24 }}
-													/>
-												) : (
-													<Avatar sx={{ width: 24, height: 24, fontSize: 10, bgcolor: 'grey.300' }}>
-														{country.isoCode}
-													</Avatar>
-												)}
+												<LgaAvatar lga={lga} />
 											</ListItemIcon>
 											<ListItemText
-												primary={country.name}
-												secondary={country.isoCode}
+												primary={lga.name}
 												primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
 											/>
 										</MenuItem>
 									))}
 								</Select>
-								{errors.countryToShipTo && (
-									<FormHelperText>{errors.countryToShipTo.message}</FormHelperText>
-								)}
+								{errors.lgaToShipTo && <FormHelperText>{errors.lgaToShipTo.message}</FormHelperText>}
 							</FormControl>
 						)}
 					/>
@@ -382,6 +414,43 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 								sx={{ mb: 3, '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
 							/>
 						)}
+					/>
+
+					<Divider sx={{ mb: 3 }} />
+
+					{/* Land / Road Freight */}
+					<SectionHeader
+						iconName="heroicons-outline:truck"
+						title="Land / Road Freight"
+						bgColor="rgba(46, 125, 50, 0.08)"
+						iconColor="rgb(27, 94, 32)"
+					/>
+
+					<Controller
+						name="landKilogramFreightFee"
+						control={control}
+						render={({ field }) => (
+							<TextField
+								{...field}
+								label="Rate per KG (Road) *"
+								type="number"
+								size="small"
+								fullWidth
+								error={!!errors.landKilogramFreightFee}
+								helperText={errors.landKilogramFreightFee?.message}
+								InputProps={{
+									startAdornment: <InputAdornment position="start">₦</InputAdornment>,
+									inputProps: { min: 0, step: 1, onKeyDown: blockNonInteger }
+								}}
+								sx={{ mb: 2, '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+							/>
+						)}
+					/>
+
+					<TransitDaysRow
+						control={control}
+						minName="landTransitDaysMin"
+						maxName="landTransitDaysMax"
 					/>
 
 					<Divider sx={{ mb: 3 }} />
@@ -423,47 +492,10 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 
 					<Divider sx={{ mb: 3 }} />
 
-					{/* Land Freight */}
-					<SectionHeader
-						iconName="heroicons-outline:truck"
-						title="Land Freight"
-						bgColor="rgba(46, 125, 50, 0.08)"
-						iconColor="rgb(27, 94, 32)"
-					/>
-
-					<Controller
-						name="landKilogramFreightFee"
-						control={control}
-						render={({ field }) => (
-							<TextField
-								{...field}
-								label="Rate per KG (Land) *"
-								type="number"
-								size="small"
-								fullWidth
-								error={!!errors.landKilogramFreightFee}
-								helperText={errors.landKilogramFreightFee?.message}
-								InputProps={{
-									startAdornment: <InputAdornment position="start">₦</InputAdornment>,
-									inputProps: { min: 0, step: 1, onKeyDown: blockNonInteger }
-								}}
-								sx={{ mb: 2, '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
-							/>
-						)}
-					/>
-
-					<TransitDaysRow
-						control={control}
-						minName="landTransitDaysMin"
-						maxName="landTransitDaysMax"
-					/>
-
-					<Divider sx={{ mb: 3 }} />
-
-					{/* Sea / Bulk Freight */}
+					{/* Bulk & Sea */}
 					<SectionHeader
 						iconName="heroicons-outline:archive"
-						title="Sea & Bulk Freight"
+						title="Bulk / Sea Freight"
 						bgColor="rgba(230, 81, 0, 0.08)"
 						iconColor="rgb(191, 54, 12)"
 					/>
@@ -540,7 +572,7 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 								rows={3}
 								size="small"
 								fullWidth
-								placeholder="Special instructions or notes for this shipping route…"
+								placeholder="Special handling notes or route-specific instructions…"
 								sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
 							/>
 						)}
@@ -596,4 +628,4 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 	);
 }
 
-export default NewShippingRouteDrawer;
+export default NewLgaShippingRouteDrawer;

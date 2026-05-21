@@ -2,7 +2,6 @@
 import { useMemo, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
-import FuseLoading from '@fuse/core/FuseLoading';
 import { Chip, ListItemIcon, MenuItem, Paper } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';

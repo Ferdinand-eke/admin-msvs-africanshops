@@ -47,6 +47,7 @@ function NavbarStyle1Content(props) {
 				option={{ suppressScrollX: true, wheelPropagation: false }}
 			>
 				<UserNavbarHeader />
+				
 
 				<Navigation layout="vertical" />
 

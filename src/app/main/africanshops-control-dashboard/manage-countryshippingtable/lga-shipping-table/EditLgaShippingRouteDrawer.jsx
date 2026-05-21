@@ -1,19 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	Avatar,
 	Box,
 	Button,
 	CircularProgress,
 	Divider,
-	FormControl,
-	FormHelperText,
 	IconButton,
 	InputAdornment,
-	InputLabel,
-	ListItemIcon,
-	ListItemText,
-	MenuItem,
-	Select,
 	Stack,
 	TextField,
 	Typography
@@ -23,17 +16,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import {
-	useCountriesWithShippingTableOriginExcluded,
-	useCountryAddShippingTableMutation
-} from '../../../../api/countries/useCountries';
+import { useLgaDeleteShippingMutation, useLgaUpdateShippingMutation } from '../../../../api/lgas/useLgas';
 
-// Prevents e, E, +, -, and . so only whole non-negative integers can be typed
 const blockNonInteger = (e) => {
 	if (['e', 'E', '+', '-', '.'].includes(e.key)) e.preventDefault();
 };
 
-// Safely parses a form value to integer; returns undefined for empty / non-numeric
 const parseIntField = (v) => {
 	if (v === '' || v === undefined || v === null) return undefined;
 	const n = parseInt(v, 10);
@@ -41,20 +29,25 @@ const parseIntField = (v) => {
 };
 
 const schema = z.object({
-	countryToShipTo: z.string().min(1, 'Please select a destination country'),
 	distanceKm: z.coerce.number({ invalid_type_error: 'Required' }).int('Must be a whole number').min(0, 'Must be 0 or more'),
-	airKilogramFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
 	landKilogramFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
+	airKilogramFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
 	perCbmFreightFee: z.coerce.number({ invalid_type_error: 'Required' }).min(0, 'Must be 0 or more'),
 	seaKilogramFreightFee: z.coerce.number().min(0).optional().or(z.literal('')),
-	airTransitDaysMin: z.coerce.number().int().min(0).optional().or(z.literal('')),
-	airTransitDaysMax: z.coerce.number().int().min(0).optional().or(z.literal('')),
 	landTransitDaysMin: z.coerce.number().int().min(0).optional().or(z.literal('')),
 	landTransitDaysMax: z.coerce.number().int().min(0).optional().or(z.literal('')),
+	airTransitDaysMin: z.coerce.number().int().min(0).optional().or(z.literal('')),
+	airTransitDaysMax: z.coerce.number().int().min(0).optional().or(z.literal('')),
 	seaTransitDaysMin: z.coerce.number().int().min(0).optional().or(z.literal('')),
 	seaTransitDaysMax: z.coerce.number().int().min(0).optional().or(z.literal('')),
 	notes: z.string().optional()
 });
+
+function resolveLga(idOrObj, lgas) {
+	if (!idOrObj) return null;
+	if (typeof idOrObj === 'object') return idOrObj;
+	return lgas?.find((l) => (l._id || l.id) === idOrObj) || null;
+}
 
 function SectionHeader({ iconName, title, bgColor, iconColor }) {
 	return (
@@ -133,12 +126,35 @@ function TransitDaysRow({ control, minName, maxName }) {
 	);
 }
 
-function NewShippingRouteDrawer({ originCountry, onClose }) {
-	const queryResult = useCountriesWithShippingTableOriginExcluded(originCountry?._id || originCountry?.id);
-	const { data: destinationsData, isLoading: loadingDestinations } = queryResult || {};
-	const destinations = destinationsData?.data?.countries || [];
+function LgaAvatar({ lga, size = 30 }) {
+	const code = (lga?.name || '?').slice(0, 2).toUpperCase();
+	return (
+		<Avatar
+			sx={{
+				width: size,
+				height: size,
+				bgcolor: 'rgba(255,255,255,0.2)',
+				color: 'white',
+				fontSize: size < 28 ? 9 : 11,
+				fontWeight: 800,
+				borderRadius: '8px',
+				border: '2px solid rgba(255,255,255,0.3)'
+			}}
+		>
+			{code}
+		</Avatar>
+	);
+}
 
-	const addRoute = useCountryAddShippingTableMutation();
+function EditLgaShippingRouteDrawer({ route, originLga, originCountry, lgas, onClose }) {
+	const [confirmingDelete, setConfirmingDelete] = useState(false);
+	const updateRoute = useLgaUpdateShippingMutation();
+	const deleteRoute = useLgaDeleteShippingMutation();
+
+	const originLgaData = originLga?.lga || originLga;
+	const originLgaId = originLgaData?._id || originLgaData?.id;
+
+	const destinationLga = resolveLga(route?._dest || route?.lgaToShipTo, lgas);
 
 	const {
 		control,
@@ -149,56 +165,86 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 		mode: 'onChange',
 		resolver: zodResolver(schema),
 		defaultValues: {
-			countryToShipTo: '',
 			distanceKm: '',
-			airKilogramFreightFee: '',
 			landKilogramFreightFee: '',
+			airKilogramFreightFee: '',
 			perCbmFreightFee: '',
 			seaKilogramFreightFee: '',
-			airTransitDaysMin: '',
-			airTransitDaysMax: '',
 			landTransitDaysMin: '',
 			landTransitDaysMax: '',
+			airTransitDaysMin: '',
+			airTransitDaysMax: '',
 			seaTransitDaysMin: '',
 			seaTransitDaysMax: '',
 			notes: ''
 		}
 	});
+
 	useEffect(() => {
-		if (addRoute.isSuccess) {
-			reset();
+		if (!route) return;
+		reset({
+			distanceKm: route.distanceKm ?? '',
+			landKilogramFreightFee: route.landKilogramFreightFee ?? '',
+			airKilogramFreightFee: route.airKilogramFreightFee ?? '',
+			perCbmFreightFee: route.perCbmFreightFee ?? '',
+			seaKilogramFreightFee: route.seaKilogramFreightFee ?? '',
+			landTransitDaysMin: route.landTransitDaysMin ?? '',
+			landTransitDaysMax: route.landTransitDaysMax ?? '',
+			airTransitDaysMin: route.airTransitDaysMin ?? '',
+			airTransitDaysMax: route.airTransitDaysMax ?? '',
+			seaTransitDaysMin: route.seaTransitDaysMin ?? '',
+			seaTransitDaysMax: route.seaTransitDaysMax ?? '',
+			notes: route.notes ?? ''
+		});
+	}, [route, reset]);
+
+	useEffect(() => {
+		if (updateRoute.isSuccess || deleteRoute.isSuccess) {
 			onClose();
 		}
-	}, [addRoute.isSuccess, reset, onClose]);
+	}, [updateRoute.isSuccess, deleteRoute.isSuccess, onClose]);
+
+	function getDestinationId() {
+		if (destinationLga?._id) return destinationLga._id;
+		if (typeof route?.lgaToShipTo === 'string') return route.lgaToShipTo;
+		return null;
+	}
 
 	function onSubmit(values) {
-		const destCountry = destinations?.find((c) => (c._id || c.id) === values.countryToShipTo);
-		const payload = {
-			countryCheckOrigin: originCountry._id || originCountry?.id,
-			countryToShipTo: values.countryToShipTo,
-			countryToShipToName: destCountry?.name,
+		updateRoute.mutate({
+			lgaCheckOrigin: originLgaId,
+			lgaToShipTo: getDestinationId(),
 			distanceKm: parseInt(values.distanceKm, 10),
-			airKilogramFreightFee: parseInt(values.airKilogramFreightFee, 10),
 			landKilogramFreightFee: parseInt(values.landKilogramFreightFee, 10),
+			airKilogramFreightFee: parseInt(values.airKilogramFreightFee, 10),
 			perCbmFreightFee: parseInt(values.perCbmFreightFee, 10),
 			seaKilogramFreightFee: parseIntField(values.seaKilogramFreightFee),
-			airTransitDaysMin: parseIntField(values.airTransitDaysMin),
-			airTransitDaysMax: parseIntField(values.airTransitDaysMax),
 			landTransitDaysMin: parseIntField(values.landTransitDaysMin),
 			landTransitDaysMax: parseIntField(values.landTransitDaysMax),
+			airTransitDaysMin: parseIntField(values.airTransitDaysMin),
+			airTransitDaysMax: parseIntField(values.airTransitDaysMax),
 			seaTransitDaysMin: parseIntField(values.seaTransitDaysMin),
 			seaTransitDaysMax: parseIntField(values.seaTransitDaysMax),
 			notes: values.notes
-		};
-		addRoute.mutate(payload);
+		});
 	}
+
+	function handleDelete() {
+		deleteRoute.mutate({
+			lgaCheckOrigin: originLgaId,
+			lgaToShipTo: getDestinationId()
+		});
+		setConfirmingDelete(false);
+	}
+
+	const isBusy = updateRoute.isLoading || deleteRoute.isLoading;
 
 	return (
 		<Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-			{/* Gradient header */}
+			{/* Header */}
 			<Box
 				sx={{
-					background: 'linear-gradient(135deg, #1a237e 0%, #283593 60%, #3949ab 100%)',
+					background: 'linear-gradient(135deg, #283593 0%, #3949ab 60%, #5c6bc0 100%)',
 					px: 3,
 					pt: 4,
 					pb: 3,
@@ -228,28 +274,36 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 					<Stack
 						direction="row"
 						alignItems="center"
-						spacing={1.5}
+						spacing={1}
 						mb={0.75}
 					>
 						{originCountry?.flag && (
 							<Avatar
 								src={originCountry.flag}
-								sx={{ width: 38, height: 38, border: '2px solid rgba(255,255,255,0.3)' }}
+								sx={{ width: 22, height: 22, border: '2px solid rgba(255,255,255,0.3)' }}
 							/>
 						)}
+						<LgaAvatar lga={originLgaData} />
+						<FuseSvgIcon
+							size={16}
+							sx={{ color: 'rgba(255,255,255,0.7)' }}
+						>
+							heroicons-outline:arrow-right
+						</FuseSvgIcon>
+						<LgaAvatar lga={destinationLga} />
 						<Box>
 							<Typography
 								variant="caption"
 								sx={{ color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', letterSpacing: 1 }}
 							>
-								New Route From
+								Editing Route
 							</Typography>
 							<Typography
 								variant="h6"
 								fontWeight={800}
 								sx={{ color: 'white', lineHeight: 1.1 }}
 							>
-								{originCountry?.name || '...'}
+								{originLgaData?.name} → {destinationLga?.name || 'Destination'}
 							</Typography>
 						</Box>
 					</Stack>
@@ -257,9 +311,37 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 						variant="caption"
 						sx={{ color: 'rgba(255,255,255,0.55)' }}
 					>
-						Define freight rates and transit times to a new destination country
+						Update freight rates and transit times for this LGA-to-LGA route
 					</Typography>
 				</motion.div>
+			</Box>
+
+			{/* Info bar */}
+			<Box
+				sx={{
+					px: 3,
+					py: 1.5,
+					bgcolor: 'grey.50',
+					borderBottom: '1px solid',
+					borderColor: 'divider',
+					display: 'flex',
+					alignItems: 'center',
+					gap: 1,
+					flexShrink: 0
+				}}
+			>
+				<FuseSvgIcon
+					size={14}
+					color="action"
+				>
+					heroicons-outline:information-circle
+				</FuseSvgIcon>
+				<Typography
+					variant="caption"
+					color="text.secondary"
+				>
+					Destination LGA cannot be changed. Delete and recreate to change the destination.
+				</Typography>
 			</Box>
 
 			{/* Form */}
@@ -269,92 +351,6 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 				sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
 			>
 				<Box sx={{ flex: 1, overflow: 'auto', px: 3, py: 3 }}>
-					{/* Destination */}
-					<SectionHeader
-						iconName="heroicons-outline:location-marker"
-						title="Route Destination"
-						bgColor="rgba(103, 58, 183, 0.08)"
-						iconColor="rgb(81, 45, 168)"
-					/>
-
-					<Controller
-						name="countryToShipTo"
-						control={control}
-						render={({ field }) => (
-							<FormControl
-								fullWidth
-								size="small"
-								error={!!errors.countryToShipTo}
-								sx={{ mb: 3 }}
-							>
-								<InputLabel>Destination Country *</InputLabel>
-								<Select
-									{...field}
-									label="Destination Country *"
-									disabled={loadingDestinations}
-									sx={{ borderRadius: 2 }}
-									renderValue={(value) => {
-										const c = destinations?.find((x) => x?._id || x?.id === value);
-										if (!c) return null;
-										return (
-											<Stack
-												direction="row"
-												alignItems="center"
-												spacing={1}
-											>
-												{c.flag && (
-													<Avatar
-														src={c.flag}
-														sx={{ width: 18, height: 18 }}
-													/>
-												)}
-												<Typography
-													variant="body2"
-													fontWeight={600}
-												>
-													{c.name}
-												</Typography>
-											</Stack>
-										);
-									}}
-								>
-									<MenuItem value="">
-										<em>Select destination country</em>
-									</MenuItem>
-									{destinations?.map((country) => (
-										<MenuItem
-											key={country?._id || country?.id}
-											value={country?._id || country?.id}
-										>
-											<ListItemIcon sx={{ minWidth: 36 }}>
-												{country.flag ? (
-													<Avatar
-														src={country.flag}
-														sx={{ width: 24, height: 24 }}
-													/>
-												) : (
-													<Avatar sx={{ width: 24, height: 24, fontSize: 10, bgcolor: 'grey.300' }}>
-														{country.isoCode}
-													</Avatar>
-												)}
-											</ListItemIcon>
-											<ListItemText
-												primary={country.name}
-												secondary={country.isoCode}
-												primaryTypographyProps={{ variant: 'body2', fontWeight: 600 }}
-											/>
-										</MenuItem>
-									))}
-								</Select>
-								{errors.countryToShipTo && (
-									<FormHelperText>{errors.countryToShipTo.message}</FormHelperText>
-								)}
-							</FormControl>
-						)}
-					/>
-
-					<Divider sx={{ mb: 3 }} />
-
 					{/* Route Distance */}
 					<SectionHeader
 						iconName="heroicons-outline:arrows-expand"
@@ -386,7 +382,44 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 
 					<Divider sx={{ mb: 3 }} />
 
-					{/* Air Freight */}
+					{/* Land / Road */}
+					<SectionHeader
+						iconName="heroicons-outline:truck"
+						title="Land / Road Freight"
+						bgColor="rgba(46, 125, 50, 0.08)"
+						iconColor="rgb(27, 94, 32)"
+					/>
+
+					<Controller
+						name="landKilogramFreightFee"
+						control={control}
+						render={({ field }) => (
+							<TextField
+								{...field}
+								label="Rate per KG (Road) *"
+								type="number"
+								size="small"
+								fullWidth
+								error={!!errors.landKilogramFreightFee}
+								helperText={errors.landKilogramFreightFee?.message}
+								InputProps={{
+									startAdornment: <InputAdornment position="start">₦</InputAdornment>,
+									inputProps: { min: 0, step: 1, onKeyDown: blockNonInteger }
+								}}
+								sx={{ mb: 2, '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+							/>
+						)}
+					/>
+
+					<TransitDaysRow
+						control={control}
+						minName="landTransitDaysMin"
+						maxName="landTransitDaysMax"
+					/>
+
+					<Divider sx={{ mb: 3 }} />
+
+					{/* Air */}
 					<SectionHeader
 						iconName="heroicons-outline:paper-airplane"
 						title="Air Freight"
@@ -423,47 +456,10 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 
 					<Divider sx={{ mb: 3 }} />
 
-					{/* Land Freight */}
-					<SectionHeader
-						iconName="heroicons-outline:truck"
-						title="Land Freight"
-						bgColor="rgba(46, 125, 50, 0.08)"
-						iconColor="rgb(27, 94, 32)"
-					/>
-
-					<Controller
-						name="landKilogramFreightFee"
-						control={control}
-						render={({ field }) => (
-							<TextField
-								{...field}
-								label="Rate per KG (Land) *"
-								type="number"
-								size="small"
-								fullWidth
-								error={!!errors.landKilogramFreightFee}
-								helperText={errors.landKilogramFreightFee?.message}
-								InputProps={{
-									startAdornment: <InputAdornment position="start">₦</InputAdornment>,
-									inputProps: { min: 0, step: 1, onKeyDown: blockNonInteger }
-								}}
-								sx={{ mb: 2, '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
-							/>
-						)}
-					/>
-
-					<TransitDaysRow
-						control={control}
-						minName="landTransitDaysMin"
-						maxName="landTransitDaysMax"
-					/>
-
-					<Divider sx={{ mb: 3 }} />
-
-					{/* Sea / Bulk Freight */}
+					{/* Bulk / Sea */}
 					<SectionHeader
 						iconName="heroicons-outline:archive"
-						title="Sea & Bulk Freight"
+						title="Bulk / Sea Freight"
 						bgColor="rgba(230, 81, 0, 0.08)"
 						iconColor="rgb(191, 54, 12)"
 					/>
@@ -540,7 +536,7 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 								rows={3}
 								size="small"
 								fullWidth
-								placeholder="Special instructions or notes for this shipping route…"
+								placeholder="Special handling notes or route-specific instructions…"
 								sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
 							/>
 						)}
@@ -561,13 +557,14 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 					<Stack
 						direction="row"
 						spacing={2}
+						mb={1.5}
 					>
 						<Button
 							variant="outlined"
 							onClick={onClose}
 							fullWidth
 							sx={{ borderRadius: 2 }}
-							disabled={addRoute.isLoading}
+							disabled={isBusy}
 						>
 							Cancel
 						</Button>
@@ -576,10 +573,10 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 							color="secondary"
 							fullWidth
 							type="submit"
-							disabled={!isValid || !isDirty || addRoute.isLoading}
+							disabled={!isValid || !isDirty || isBusy}
 							sx={{ borderRadius: 2, fontWeight: 700 }}
 							startIcon={
-								addRoute.isLoading ? (
+								updateRoute.isLoading ? (
 									<CircularProgress
 										size={16}
 										color="inherit"
@@ -587,13 +584,74 @@ function NewShippingRouteDrawer({ originCountry, onClose }) {
 								) : null
 							}
 						>
-							{addRoute.isLoading ? 'Saving…' : 'Create Route'}
+							{updateRoute.isLoading ? 'Saving…' : 'Save Changes'}
 						</Button>
 					</Stack>
+
+					{confirmingDelete ? (
+						<Stack
+							direction="row"
+							spacing={1}
+							sx={{
+								border: '1px solid',
+								borderColor: 'error.light',
+								borderRadius: 2,
+								px: 2,
+								py: 1.5,
+								bgcolor: 'error.lighter'
+							}}
+						>
+							<Typography
+								variant="caption"
+								color="error"
+								sx={{ flex: 1, fontWeight: 600, alignSelf: 'center' }}
+							>
+								Remove route to {destinationLga?.name || 'this LGA'}?
+							</Typography>
+							<Button
+								size="small"
+								onClick={() => setConfirmingDelete(false)}
+								sx={{ borderRadius: 2 }}
+								disabled={isBusy}
+							>
+								Cancel
+							</Button>
+							<Button
+								size="small"
+								variant="contained"
+								color="error"
+								onClick={handleDelete}
+								disabled={isBusy}
+								sx={{ borderRadius: 2 }}
+								startIcon={
+									deleteRoute.isLoading ? (
+										<CircularProgress
+											size={14}
+											color="inherit"
+										/>
+									) : null
+								}
+							>
+								{deleteRoute.isLoading ? 'Deleting…' : 'Confirm'}
+							</Button>
+						</Stack>
+					) : (
+						<Button
+							variant="text"
+							color="error"
+							fullWidth
+							onClick={() => setConfirmingDelete(true)}
+							disabled={isBusy}
+							startIcon={<FuseSvgIcon size={16}>heroicons-outline:trash</FuseSvgIcon>}
+							sx={{ borderRadius: 2, fontSize: 13 }}
+						>
+							Delete This Route
+						</Button>
+					)}
 				</Box>
 			</Box>
 		</Box>
 	);
 }
 
-export default NewShippingRouteDrawer;
+export default EditLgaShippingRouteDrawer;

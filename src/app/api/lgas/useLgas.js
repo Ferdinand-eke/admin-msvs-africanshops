@@ -2,7 +2,19 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { createErrorHandler } from '../utils/errorHandler';
-import { createBLga, deleteLgaById, getBLgas, getLgaById, getLgasByStateAdmin, updateLgaById } from '../apiRoutes';
+import {
+	createBLga,
+	createLgaShippingTable,
+	deleteLgaById,
+	deleteLgaShippingTableById,
+	getBLgas,
+	getLgaById,
+	getLgasByStateAdmin,
+	getLgaShippingTableRecord,
+	getLgasWithShippingTable,
+	updateLgaById,
+	updateLgaShippingTableById
+} from '../apiRoutes';
 
 export default function useLgas(params = {}) {
 	return useQuery(['lgas', params], () => getBLgas(params), {
@@ -114,3 +126,84 @@ export function useDeleteSingleLGA() {
 		onError: createErrorHandler({ defaultMessage: 'Failed to delete LGA' })
 	});
 }
+
+/** ***
+ * #####################################################################
+ * HANDLE LGA SHIPPING-ROUTES-TABLE STARTS
+ * #####################################################################
+ */
+
+export function useLgasWithShippingTable(stateId) {
+	return useQuery(
+		['__lgas_shippingtables', stateId],
+		() => getLgasWithShippingTable(stateId),
+		{
+			enabled: Boolean(stateId),
+			staleTime: 30000
+		}
+	);
+}
+
+export function useLgaFullRecord(lgaId) {
+	return useQuery(['lga_full', lgaId], () => getLgaShippingTableRecord(lgaId), {
+		enabled: Boolean(lgaId) && lgaId !== 'new',
+		staleTime: 30000
+	});
+}
+
+function handleLgaShippingError(error, defaultMessage) {
+	if (!error?.validationErrors) {
+		createErrorHandler({ defaultMessage })(error);
+	}
+}
+
+export function useLgaAddShippingTableMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(createLgaShippingTable, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success('LGA shipping route added successfully!');
+				queryClient.invalidateQueries(['lga_full']);
+				queryClient.invalidateQueries('__lgas_shippingtables');
+			}
+		},
+		onError: (error) => handleLgaShippingError(error, 'Failed to add LGA shipping route')
+	});
+}
+
+export function useLgaUpdateShippingMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(updateLgaShippingTableById, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success('LGA shipping route updated successfully!');
+				queryClient.invalidateQueries(['lga_full']);
+				queryClient.invalidateQueries('__lgas_shippingtables');
+			}
+		},
+		onError: (error) => handleLgaShippingError(error, 'Failed to update LGA shipping route')
+	});
+}
+
+export function useLgaDeleteShippingMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(deleteLgaShippingTableById, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success('LGA shipping route removed successfully!');
+				queryClient.invalidateQueries(['lga_full']);
+				queryClient.invalidateQueries('__lgas_shippingtables');
+			}
+		},
+		onError: (error) => handleLgaShippingError(error, 'Failed to delete LGA shipping route')
+	});
+}
+
+/** ***
+ * #####################################################################
+ * HANDLE LGA SHIPPING-ROUTES-TABLE ENDS
+ * #####################################################################
+ */

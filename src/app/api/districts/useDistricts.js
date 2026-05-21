@@ -1,5 +1,16 @@
-import { useQuery } from 'react-query';
-import { getDistrictsByAdmin, getDistrictsByLgaAdmin, getDistrictByIdAdmin } from '../apiRoutes';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
+import { createErrorHandler } from '../utils/errorHandler';
+import {
+	createDistrictShippingTable,
+	deleteDistrictShippingTableById,
+	getDistrictByIdAdmin,
+	getDistrictsByAdmin,
+	getDistrictsByLgaAdmin,
+	getDistrictShippingTableRecord,
+	getDistrictsWithShippingTable,
+	updateDistrictShippingTableById
+} from '../apiRoutes';
 
 export default function useDistricts({ limit = 20, offset = 0 } = {}) {
 	return useQuery(['districts', { limit, offset }], () => getDistrictsByAdmin({ limit, offset }), {
@@ -26,3 +37,84 @@ export function useSingleDistrict(districtId) {
 		staleTime: 30000
 	});
 }
+
+/** ***
+ * #####################################################################
+ * HANDLE DISTRICT SHIPPING-ROUTES-TABLE STARTS
+ * #####################################################################
+ */
+
+export function useDistrictsWithShippingTable(lgaId) {
+	return useQuery(
+		['__districts_shippingtables', lgaId],
+		() => getDistrictsWithShippingTable(lgaId),
+		{
+			enabled: Boolean(lgaId),
+			staleTime: 30000
+		}
+	);
+}
+
+export function useDistrictFullRecord(districtId) {
+	return useQuery(['district_full', districtId], () => getDistrictShippingTableRecord(districtId), {
+		enabled: Boolean(districtId) && districtId !== 'new',
+		staleTime: 30000
+	});
+}
+
+function handleDistrictShippingError(error, defaultMessage) {
+	if (!error?.validationErrors) {
+		createErrorHandler({ defaultMessage })(error);
+	}
+}
+
+export function useDistrictAddShippingTableMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(createDistrictShippingTable, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success('District shipping route added successfully!');
+				queryClient.invalidateQueries(['district_full']);
+				queryClient.invalidateQueries('__districts_shippingtables');
+			}
+		},
+		onError: (error) => handleDistrictShippingError(error, 'Failed to add district shipping route')
+	});
+}
+
+export function useDistrictUpdateShippingMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(updateDistrictShippingTableById, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success('District shipping route updated successfully!');
+				queryClient.invalidateQueries(['district_full']);
+				queryClient.invalidateQueries('__districts_shippingtables');
+			}
+		},
+		onError: (error) => handleDistrictShippingError(error, 'Failed to update district shipping route')
+	});
+}
+
+export function useDistrictDeleteShippingMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(deleteDistrictShippingTableById, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success('District shipping route removed successfully!');
+				queryClient.invalidateQueries(['district_full']);
+				queryClient.invalidateQueries('__districts_shippingtables');
+			}
+		},
+		onError: (error) => handleDistrictShippingError(error, 'Failed to delete district shipping route')
+	});
+}
+
+/** ***
+ * #####################################################################
+ * HANDLE DISTRICT SHIPPING-ROUTES-TABLE ENDS
+ * #####################################################################
+ */

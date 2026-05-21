@@ -2,7 +2,6 @@
 import { useMemo, useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DataTable from 'app/shared-components/data-table/DataTable';
-import FuseLoading from '@fuse/core/FuseLoading';
 import { Chip, ListItemIcon, MenuItem, Paper, Box } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { Link } from 'react-router-dom';
@@ -40,20 +39,6 @@ function LgaCountiesTable() {
 		filters: {}
 	});
 
-	// Log pagination info for debugging
-	useEffect(() => {
-		if (lgasResponse?.data?.pagination) {
-			console.log('LGAs Pagination Info:', {
-				page,
-				rowsPerPage,
-				total: lgasResponse.data.pagination.total,
-				offset: lgasResponse.data.pagination.offset,
-				limit: lgasResponse.data.pagination.limit,
-				hasMore: lgasResponse.data.pagination.hasMore,
-				currentRecords: lgasResponse.data.lgas?.length || 0
-			});
-		}
-	}, [lgasResponse, page, rowsPerPage]);
 
 	// Extract LGAs and pagination info from response
 	const lgas = useMemo(() => lgasResponse?.data?.lgas || [], [lgasResponse]);

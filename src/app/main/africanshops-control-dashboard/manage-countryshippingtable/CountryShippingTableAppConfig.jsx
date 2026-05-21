@@ -1,13 +1,17 @@
 import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
+// import DistrictShippingTables from './district-shipping-table/DistrictShippingTables';
 // import StateShippingTables from './stateshippings/StateShippingTables';
 // import CountryShipmentFormPage from './product/CountryShipmentFormPage';
 
 const CountryShippingTableApp = lazy(() => import('./CountryShippingTableApp'));
 const CountryShipping = lazy(() => import('./countryshipment/CountryShipping'));
 const CountryShippingTables = lazy(() => import('./countryshippings/CountryShippingTables'));
-const CountryShipmentFormPage = lazy(() => import('./product/CountryShipmentFormPage'));
+// const CountryShipmentFormPage = lazy(() => import('./product/CountryShipmentFormPage'));
 const StateShippingTables = lazy(() => import('./stateshippings/StateShippingTables'));
+const LgaShippingTables = lazy(() => import('./lga-shipping-table/LgaShippingTables'));
+const DistrictShippingTables = lazy(() => import('./district-shipping-table/DistrictShippingTables'));
+
 /**
  * The E-Commerce app configuration.
  */
@@ -47,10 +51,31 @@ const CountryShippingTableAppConfig = {
 						}
 					]
 				},
+				{
+					path: 'state/lga-shipping/list',
+					element: <LgaShippingTables />,
+					children: [
+						{
+							path: 'getstatelogistics/:stateId',
+							element: <Navigate to="list" />
+						}
+					]
+				},
+
+				{
+					path: 'state/district-shipping/list',
+					element: <DistrictShippingTables />,
+					children: [
+						{
+							path: 'getstatelogistics/:stateId',
+							element: <Navigate to="list" />
+						}
+					]
+				}
 				// {
 				// 	path: 'routes/:productId/*',
 				// 	element: <CountryShipping />
-				// }
+				// }StateShippingTables
 			]
 		}
 	]

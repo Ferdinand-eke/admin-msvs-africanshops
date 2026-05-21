@@ -327,6 +327,21 @@ export const updateLgaById = (lgaFormData) => {
 };
 export const createBLga = (stateFormData) => authApi().post('/buz-lgas', stateFormData); // done
 export const deleteLgaById = (id) => authApi().delete(`/buz-lgas/${id}/delete`);
+
+// LGA Shipping-Table routes (mirrors the state pattern one level deeper)
+export const getLgasWithShippingTable = (stateId) =>
+	authApi().get(`/buz-lgas/with-shipping-table/state/${stateId}`);
+export const getLgasWithShippingTableExcludeOrigin = (originLgaId, stateId) =>
+	authApi().get(`/buz-lgas/with-shipping-table/excluded-origin/${originLgaId}/state/${stateId}`);
+export const getLgaShippingTableRecord = (lgaId) =>
+	authApi().get(`/buz-lgas/${lgaId}/shipping-table`);
+export const createLgaShippingTable = (payload) =>
+	authApi().post(`/buz-lgas/add-shipping-table/${payload?.lgaCheckOrigin}`, payload);
+export const updateLgaShippingTableById = (payload) =>
+	authApi().put(`/buz-lgas/update-shipping-table/${payload?.lgaToShipTo}`, payload);
+export const deleteLgaShippingTableById = (payload) =>
+	authApi().put(`/buz-lgas/delete-shipping-table/${payload?.lgaToShipTo}`, payload);
+
 /** ***
  * ####################################################################
  * LGAs/COUNTIES handling ends here
@@ -348,6 +363,21 @@ export const getDistrictByIdAdmin = (id) => authApi().get(`/buz-districts/${id}`
 export const createDistrict = (dto) => authApi().post('/buz-districts', dto);
 export const updateDistrictById = ({ id, ...dto }) => authApi().put(`/buz-districts/${id}`, dto);
 export const deleteDistrictById = (id) => authApi().delete(`/buz-districts/${id}/delete`);
+
+// District Shipping-Table routes
+export const getDistrictsWithShippingTable = (lgaId) =>
+	authApi().get(`/buz-districts/with-shipping-table/lga/${lgaId}`);
+export const getDistrictsWithShippingTableExcludeOrigin = (originDistrictId, lgaId) =>
+	authApi().get(`/buz-districts/with-shipping-table/excluded-origin/${originDistrictId}/lga/${lgaId}`);
+export const getDistrictShippingTableRecord = (districtId) =>
+	authApi().get(`/buz-districts/${districtId}/shipping-table`);
+export const createDistrictShippingTable = (payload) =>
+	authApi().post(`/buz-districts/add-shipping-table/${payload?.districtCheckOrigin}`, payload);
+export const updateDistrictShippingTableById = (payload) =>
+	authApi().put(`/buz-districts/update-shipping-table/${payload?.districtToShipTo}`, payload);
+export const deleteDistrictShippingTableById = (payload) =>
+	authApi().put(`/buz-districts/delete-shipping-table/${payload?.districtToShipTo}`, payload);
+
 /** ***
  * ####################################################################
  * Districts handling ends here

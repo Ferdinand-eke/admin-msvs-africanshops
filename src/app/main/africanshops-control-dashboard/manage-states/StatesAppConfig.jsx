@@ -29,18 +29,6 @@ const StatesAppConfig = {
 					path: 'states/:productId/*',
 					element: <StatePage />
 				}
-				// {
-				// 	path: 'inventory',
-				// 	element: <OperationalStates />
-				// },
-				// {
-				// 	path: 'orders',
-				// 	element: <Orders />
-				// },
-				// {
-				// 	path: 'orders/:orderId',
-				// 	element: <Order />
-				// }
 			]
 		}
 	]
