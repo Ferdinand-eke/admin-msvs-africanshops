@@ -852,6 +852,61 @@ export const adminGetPendingKyc = (params = {}) => {
 	return authApi().get(url);
 };
 
+/** *
+ * Youth Sports (Admin/Platform-Coordinator) — added 2026-07-22, pilot for
+ * the repeatable civic-vertical coordinator screen pattern. Programs'
+ * create/update/close routes already existed on the gateway; tournaments/
+ * spotlights/enrollments admin routes were added alongside these calls.
+ */
+
+// Programs
+export const getYouthPrograms = (params = {}) => {
+	const queryParams = new URLSearchParams();
+	if (params.page) queryParams.append('page', params.page);
+	if (params.limit) queryParams.append('limit', params.limit);
+	if (params.sport) queryParams.append('sport', params.sport);
+	if (params.lga) queryParams.append('lga', params.lga);
+	const queryString = queryParams.toString();
+	const url = queryString ? `/youth/programs?${queryString}` : '/youth/programs';
+	return authApi().get(url);
+};
+export const createYouthProgram = (dto) => authApi().post('/youth/admin/programs', dto);
+export const updateYouthProgram = ({ id, ...dto }) => authApi().put(`/youth/admin/programs/${id}`, dto);
+export const closeYouthProgram = (id) => authApi().put(`/youth/admin/programs/${id}/close`, {});
+export const getYouthProgramEnrollments = (id) => authApi().get(`/youth/admin/programs/${id}/enrollments`);
+export const deactivateYouthEnrollment = (id) => authApi().put(`/youth/admin/enrollments/${id}/deactivate`, {});
+export const reactivateYouthEnrollment = (id) => authApi().put(`/youth/admin/enrollments/${id}/reactivate`, {});
+
+// Tournaments
+export const getYouthTournaments = (params = {}) => {
+	const queryParams = new URLSearchParams();
+	if (params.page) queryParams.append('page', params.page);
+	if (params.limit) queryParams.append('limit', params.limit);
+	if (params.sport) queryParams.append('sport', params.sport);
+	if (params.status) queryParams.append('status', params.status);
+	const queryString = queryParams.toString();
+	const url = queryString ? `/youth/tournaments?${queryString}` : '/youth/tournaments';
+	return authApi().get(url);
+};
+export const getYouthTournamentById = (id) => authApi().get(`/youth/tournaments/${id}`);
+export const createYouthTournament = (dto) => authApi().post('/youth/admin/tournaments', dto);
+export const updateYouthTournament = ({ id, ...dto }) => authApi().put(`/youth/admin/tournaments/${id}`, dto);
+export const cancelYouthTournament = (id) => authApi().put(`/youth/admin/tournaments/${id}/cancel`, {});
+
+// Talent Spotlights — admin listing includes unverified spotlights (the
+// public /youth/spotlights only ever returns isVerified:true, useless for
+// a curation screen since there'd be nothing left to verify).
+export const getYouthSpotlightsForAdmin = (params = {}) => {
+	const queryParams = new URLSearchParams();
+	if (params.page) queryParams.append('page', params.page);
+	if (params.limit) queryParams.append('limit', params.limit);
+	const queryString = queryParams.toString();
+	const url = queryString ? `/youth/admin/spotlights?${queryString}` : '/youth/admin/spotlights';
+	return authApi().get(url);
+};
+export const createYouthSpotlight = (dto) => authApi().post('/youth/admin/spotlights', dto);
+export const verifyYouthSpotlight = (id) => authApi().put(`/youth/admin/spotlights/${id}/verify`, {});
+
 // Users/Customers Routes users
 export const getApiUsers = () => authApi().get('/auth-user/admin/users'); // new Dashboard ***Done
 export const getApiUserById = (id) => authApi().get(`/auth-user/admin/users/${id}`);

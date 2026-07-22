@@ -120,6 +120,28 @@ const navigationConfig = [
 		]
 	},
 
+	/** *Platform Coordinator pane -- civic-vertical admin screens, gated in
+	 * practice by a department's allowedNavIds (see navigationSlice.js's
+	 * computeVisibleNavIds), not by an `auth` tag here. Youth Sports is the
+	 * pilot; healthcare/social-civic/digitaledu/governance follow the same
+	 * pattern later. */
+	{
+		id: 'platformcoordinator',
+		title: 'Platform Coordinator',
+		subtitle: 'Civic-vertical program management',
+		type: 'group',
+		icon: 'heroicons-outline:globe-alt',
+		children: [
+			{
+				id: 'platformcoordinator.youthsports',
+				title: 'Youth Sports',
+				type: 'item',
+				icon: 'heroicons-outline:trophy',
+				url: '/platform-coordinator/youthsports'
+			}
+		]
+	},
+
 	/** *Market management pane */
 	{
 		id: 'markets',

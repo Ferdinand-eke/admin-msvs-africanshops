@@ -39,6 +39,7 @@ import ManagedUserListingsAppConfig from '../main/homes/managedusersandpropertie
 import ManagedBookingsUserListingsAppConfig from '../main/bookings-homes/managebookingsusersandproperties/ManagedBookingsUserListingsAppConfig';
 import ManagedRcsListingsAppConfig from '../main/manage-rcses/managercses/ManagedRcsListingsAppConfig';
 import AdminProfileSettingsAppConfig from '../main/africanshops-control-dashboard/manage-admin-settings/AdminProfileSettingsAppConfig';
+import YouthSportsAppConfig from '../main/africanshops-control-dashboard/platform-coordinator/youthsports/YouthSportsAppConfig';
 // import AfricanshopsMessengerAppConfig from '../main/africanshops-messenger/AfricanshopsMessengerAppConfig';
 
 const routeConfigs = [
@@ -75,6 +76,10 @@ const routeConfigs = [
 	DepartmentsAppConfig /** Msvs Complete CRUD=> Done */,
 	DesignationsAppConfig /** Msvs Complete CRUD=> Done */,
 	/** **Africanshops Admin & Administrative Dashboard Configs Ends Here */
+
+	/** **Platform Coordinator (civic-vertical admin) Configs Starts Here */
+	YouthSportsAppConfig,
+	/** **Platform Coordinator (civic-vertical admin) Configs Ends Here */
 
 	/** **Africanshops Admin Market Management  Configs Starts Here */
 	MarketDashboardAppConfig,
