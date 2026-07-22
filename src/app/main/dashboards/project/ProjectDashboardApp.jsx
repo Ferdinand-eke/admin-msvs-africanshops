@@ -4,12 +4,10 @@ import Tabs from '@mui/material/Tabs';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import FuseLoading from '@fuse/core/FuseLoading';
 import ProjectDashboardAppHeader from './ProjectDashboardAppHeader';
 import HomeTab from './tabs/home/HomeTab';
 import TeamTab from './tabs/team/TeamTab';
 import BudgetTab from './tabs/budget/BudgetTab';
-import { useGetProjectDashboardWidgetsQuery } from './ProjectDashboardApi';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
 	'& .FusePageSimple-header': {
@@ -25,7 +23,6 @@ const TAB_STORAGE_KEY = 'project-dashboard-active-tab';
  * The ProjectDashboardApp page.
  */
 function ProjectDashboardApp() {
-	const { isLoading } = useGetProjectDashboardWidgetsQuery();
 	const [tabValue, setTabValue] = useState(() => {
 		const savedTab = localStorage.getItem(TAB_STORAGE_KEY);
 		return savedTab ? parseInt(savedTab, 10) : 0;
@@ -37,10 +34,6 @@ function ProjectDashboardApp() {
 
 	function handleChangeTab(_event, value) {
 		setTabValue(value);
-	}
-
-	if (isLoading) {
-		return <FuseLoading />;
 	}
 
 	return (

@@ -3,12 +3,12 @@ import SummaryWidget from './widgets/SummaryWidget';
 import OverdueWidget from './widgets/OverdueWidget';
 import IssuesWidget from './widgets/IssuesWidget';
 import FeaturesWidget from './widgets/FeaturesWidget';
-import GithubIssuesWidget from './widgets/GithubIssuesWidget';
-import TaskDistributionWidget from './widgets/TaskDistributionWidget';
-import ScheduleWidget from './widgets/ScheduleWidget';
 
 /**
- * The HomeTab component.
+ * The HomeTab component -- real platform KPI tiles (Orders, Merchants, Users,
+ * Pending KYC). The GitHub-issues/task-distribution/schedule demo widgets
+ * that used to fill out this grid were decorative Fuse template placeholders
+ * unrelated to AfricanShops data and have been removed rather than adapted.
  */
 function HomeTab() {
 	const container = {
@@ -40,26 +40,6 @@ function HomeTab() {
 			</motion.div>
 			<motion.div variants={item}>
 				<FeaturesWidget />
-			</motion.div>
-
-			
-			<motion.div
-				variants={item}
-				className="sm:col-span-2 md:col-span-4"
-			>
-				<GithubIssuesWidget />
-			</motion.div>
-			<motion.div
-				variants={item}
-				className="sm:col-span-2 md:col-span-4 lg:col-span-2"
-			>
-				<TaskDistributionWidget />
-			</motion.div>
-			<motion.div
-				variants={item}
-				className="sm:col-span-2 md:col-span-4 lg:col-span-2"
-			>
-				<ScheduleWidget />
 			</motion.div>
 		</motion.div>
 	);
