@@ -12,7 +12,12 @@ import {
 	createApiCompanyVendorShop,
 	updateApiCompanyVendorShop,
 	getShopById,
-	deleteShopById
+	deleteShopById,
+	adminSuspendMerchant,
+	adminUnsuspendMerchant,
+	adminBlockMerchant,
+	adminUnblockMerchant,
+	adminVerifyMerchant
 } from '../apiRoutes';
 
 export default function useAdmiManageShop() {
@@ -178,3 +183,87 @@ export function useAdminUpdateCompanyVendorShop() {
 		onError: createErrorHandler({ defaultMessage: 'Failed to update company shop' })
 	});
 }
+
+/** *
+ * MERCHANT MODERATION (Admin) STARTS HERE — added 2026-07-22, mirrors the
+ * equivalent user-moderation hooks in src/app/api/users/useUsers.js
+ */
+
+export function useAdminSuspendMerchantMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(adminSuspendMerchant, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(data?.data?.message || 'Merchant suspended successfully!!', { position: 'top-left' });
+				queryClient.invalidateQueries('shops');
+				queryClient.invalidateQueries('merchants_paginated');
+			}
+		},
+		onError: createErrorHandler({ defaultMessage: 'Failed to suspend merchant' })
+	});
+}
+
+export function useAdminUnsuspendMerchantMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(adminUnsuspendMerchant, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(data?.data?.message || 'Suspension lifted successfully!!', { position: 'top-left' });
+				queryClient.invalidateQueries('shops');
+				queryClient.invalidateQueries('merchants_paginated');
+			}
+		},
+		onError: createErrorHandler({ defaultMessage: 'Failed to unsuspend merchant' })
+	});
+}
+
+export function useAdminBlockMerchantMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(adminBlockMerchant, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(data?.data?.message || 'Merchant blocked successfully!!', { position: 'top-left' });
+				queryClient.invalidateQueries('shops');
+				queryClient.invalidateQueries('merchants_paginated');
+			}
+		},
+		onError: createErrorHandler({ defaultMessage: 'Failed to block merchant' })
+	});
+}
+
+export function useAdminUnblockMerchantMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(adminUnblockMerchant, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(data?.data?.message || 'Merchant unblocked successfully!!', { position: 'top-left' });
+				queryClient.invalidateQueries('shops');
+				queryClient.invalidateQueries('merchants_paginated');
+			}
+		},
+		onError: createErrorHandler({ defaultMessage: 'Failed to unblock merchant' })
+	});
+}
+
+export function useAdminVerifyMerchantMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(adminVerifyMerchant, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(data?.data?.message || 'Merchant verified successfully!!', { position: 'top-left' });
+				queryClient.invalidateQueries('shops');
+				queryClient.invalidateQueries('merchants_paginated');
+			}
+		},
+		onError: createErrorHandler({ defaultMessage: 'Failed to verify merchant' })
+	});
+}
+
+/** *
+ * MERCHANT MODERATION (Admin) ENDS HERE
+ */

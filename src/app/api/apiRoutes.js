@@ -601,6 +601,16 @@ export const getShops = (params = {}) => {
 }; // (Msvs => Done)
 export const getShopById = (id) => authApi().get(`/auth-merchant/admin/merchants/${id}`); // (Msvs => Done)
 
+// Merchant moderation (Admin) — added 2026-07-22. Backend routes for
+// suspend/block already existed; unsuspend/unblock/verify were added
+// alongside these calls since neither the gateway routes nor any frontend
+// caller for merchant moderation existed before this pass.
+export const adminSuspendMerchant = (id) => authApi().put(`/auth-merchant/admin/merchants/${id}/suspend`, {});
+export const adminUnsuspendMerchant = (id) => authApi().put(`/auth-merchant/admin/merchants/${id}/unsuspend`, {});
+export const adminBlockMerchant = (id) => authApi().put(`/auth-merchant/admin/merchants/${id}/block`, {});
+export const adminUnblockMerchant = (id) => authApi().put(`/auth-merchant/admin/merchants/${id}/unblock`, {});
+export const adminVerifyMerchant = (id) => authApi().put(`/auth-merchant/admin/merchants/${id}/verify`, {});
+
 export const updateShopById = (id, shopFormData) => authApi().put(`/auth-merchant/${id}`, shopFormData);
 
 export const createApiShop = (shopFormData) => authApi().post('/auth-merchant', shopFormData);
@@ -826,6 +836,21 @@ export const adminFinancePayoutWithdrawals = (id) => authApi().put(`/handlewithd
 // export const getShopProducts = () => Api().get('/shop/product/list');
 
 // shop product handling ends
+
+// KYC Routes (Admin) — added 2026-07-22, no frontend caller existed before
+// this despite the backend/gateway route already being real and guarded.
+export const adminGetPendingKyc = (params = {}) => {
+	const queryParams = new URLSearchParams();
+
+	if (params.page) queryParams.append('page', params.page);
+
+	if (params.limit) queryParams.append('limit', params.limit);
+
+	const queryString = queryParams.toString();
+	const url = queryString ? `/auth-user/kyc/admin/pending?${queryString}` : '/auth-user/kyc/admin/pending';
+
+	return authApi().get(url);
+};
 
 // Users/Customers Routes users
 export const getApiUsers = () => authApi().get('/auth-user/admin/users'); // new Dashboard ***Done

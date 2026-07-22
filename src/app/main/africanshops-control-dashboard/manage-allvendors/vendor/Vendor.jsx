@@ -16,6 +16,7 @@ import { useSingleShop } from 'src/app/api/shops/useAdminShops';
 import VendorHeader from './VendorHeader';
 import BasicInfoTab from './tabs/BasicInfoTab';
 import ProductImagesTab from './tabs/ProductImagesTab';
+import ComplianceTab from './tabs/ComplianceTab';
 import ProductModel from './models/ProductModel';
 /**
  * Form Validation Schema
@@ -136,6 +137,10 @@ function Vendor() {
 								className="h-64"
 								label="Shop Cover Image"
 							/>
+							<Tab
+								className="h-64"
+								label="Compliance & Verification"
+							/>
 						</Tabs>
 						<div className="p-16 sm:p-24 max-w-3xl">
 							<div className={tabValue !== 0 ? 'hidden' : ''}>
@@ -144,6 +149,10 @@ function Vendor() {
 
 							<div className={tabValue !== 1 ? 'hidden' : ''}>
 								<ProductImagesTab />
+							</div>
+
+							<div className={tabValue !== 2 ? 'hidden' : ''}>
+								<ComplianceTab vendor={shopvendor?.data?.merchant} />
 							</div>
 						</div>
 					</>
