@@ -5,6 +5,7 @@ import Cookie from 'js-cookie';
 import { toast } from 'react-toastify';
 import config from '../../auth/services/jwt/jwtAuthConfig';
 import { adminSigin } from '../apiRoutes';
+import { transformAdminUser } from '../../auth/transformAdminUser';
 
 export function useAdminLogin() {
 	return useMutation(adminSigin, {
@@ -16,15 +17,7 @@ export function useAdminLogin() {
 				// return
 				/** ============================================================================== */
 
-				const transFormedUser = {
-					id: data?.data?.user._id,
-					name: data?.data?.user.name,
-					email: data?.data?.user.email,
-					role: 'admin',
-
-					isAdmin: data?.data?.user.isAdmin,
-					avatar: data?.data?.user.avatar
-				};
+				const transFormedUser = transformAdminUser(data?.data?.user);
 
 				if (isTokenValid(data?.data?.accessToken)) {
 					console.log('TOKEN__CHECK___2', data?.data?.accessToken);

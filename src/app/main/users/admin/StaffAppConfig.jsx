@@ -1,7 +1,7 @@
 import { lazy } from 'react';
+import { authRoles } from 'src/app/auth';
 import ContactView from './contact/AdminContactView';
 import AddStaffContactForm from './contact/AddStaffContactForm';
-// import { authRoles } from 'src/app/auth';
 
 const ContactsApp = lazy(() => import('./ContactsApp'));
 const PropertyType = lazy(() => import('./propertytype/PropertyType'));
@@ -15,7 +15,11 @@ const StaffAppConfig = {
 			config: {}
 		}
 	},
-	// auth: authRoles.admin,
+	// Managing other admin/staff accounts is the most sensitive existing action
+	// in this app — gated to super-admin specifically (not just any 'admin'),
+	// now that transformAdminUser() surfaces the real isSuperAdmin field from
+	// the backend instead of every admin being treated identically.
+	auth: authRoles.superAdmin,
 
 	routes: [
 		{

@@ -51,23 +51,33 @@ function NavbarStyle1() {
 
 	// console.log("SIDDBAR-USER", user)
 
+	// Bug fix (2026-07-22): role.toString() === 'admin' was an exact-string
+	// check from when `role` was always a single-tag value. transformAdminUser
+	// (src/app/auth/transformAdminUser.js) now legitimately appends
+	// 'super-admin'/'geo-asset'/'civic-operator' onto the role array for
+	// privileged admins, so e.g. ['admin', 'super-admin'].toString() ===
+	// 'admin,super-admin' — never equal to 'admin' — which silently hid the
+	// entire sidebar for every super-admin/geo-asset/civic-operator account
+	// while plain staff admins (role: ['admin']) kept working. Every admin
+	// always carries the base 'admin' tag, so check for its presence instead.
+	const isAdmin = Array.isArray(user?.role) ? user.role.includes('admin') : user?.role === 'admin';
+
 	return (
 		<>
 			<Hidden lgDown>
-				{user?.role?.toString() === 'admin' && (
+				{isAdmin && (
 					<StyledNavBar
 						className="sticky top-0 z-20 h-screen flex-auto shrink-0 flex-col overflow-hidden shadow"
 						open={navbar.open}
 						position={config.navbar.position}
 					>
 						<NavbarStyle1Content />
-						{/* {user?.role?.toString() === 'admin' && <NavbarStyle1Content />} */}
 					</StyledNavBar>
 				)}
 			</Hidden>
 
 			<Hidden lgUp>
-				{user?.role?.toString() === 'admin' && (
+				{isAdmin && (
 					<StyledNavBarMobile
 						classes={{
 							paper: 'flex-col flex-auto h-full'
@@ -83,7 +93,6 @@ function NavbarStyle1() {
 						}}
 					>
 						<NavbarStyle1Content />
-						{/* {user?.role?.toString() === 'admin' && <NavbarStyle1Content />} */}
 					</StyledNavBarMobile>
 				)}
 			</Hidden>

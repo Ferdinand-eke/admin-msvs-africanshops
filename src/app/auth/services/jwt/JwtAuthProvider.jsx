@@ -4,6 +4,7 @@ import jwtDecode from 'jwt-decode';
 import Cookie from 'js-cookie';
 import { toast } from 'react-toastify';
 import { useAdminLogin } from 'src/app/api/auth/admin-auth';
+import { transformAdminUser } from '../../transformAdminUser';
 import config from './jwtAuthConfig';
 
 
@@ -214,15 +215,15 @@ function JwtAuthProvider(props) {
 					});
 
 					console.log('RETURN-ATTEMPTCHECKUSER', response?.data);
-					const transFormedUser = {
-						id: response?.data?.user?.id,
-						name: response?.data?.user?.name,
-						email: response?.data?.user?.email,
-						role: 'admin',
-
-						isAdmin: response?.data?.isAdmin,
-						avatar: response?.data?.avatar
-					};
+					// NOTE: config.getAuthAdminInBravortAdminUrl ('/authadmin/get-auth-admin') does not
+					// match any real gateway route (the real profile route is '/authadmin/profile',
+					// returning { success, message, admin }, not { user }) — this whole effect is
+					// currently unreachable in practice (isAuthenticated is read from a persisted
+					// localStorage flag at mount, so the `!isAuthenticated` guard around this effect
+					// is false after first login) which is why the mismatch hasn't caused visible
+					// logouts. Left as a flagged, separate finding — fixing the URL/response-shape
+					// wiring is a different bug from the RBAC data-transform this function now fixes.
+					const transFormedUser = transformAdminUser(response?.data?.admin ?? response?.data?.user);
 					handleSignInSuccess(transFormedUser, accessToken);
 					return true;
 				} catch (error) {
