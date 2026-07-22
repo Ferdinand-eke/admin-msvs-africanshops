@@ -31,6 +31,10 @@ const ProductModel = (data) =>
 		flag: '',
 		isFeatured: '',
 		isInOperation: '',
-		isPublished: ''
+		isPublished: '',
+
+		domainType: 'BUSINESS',
+		civicVertical: '',
+		allowedNavIds: []
 	});
 export default ProductModel;

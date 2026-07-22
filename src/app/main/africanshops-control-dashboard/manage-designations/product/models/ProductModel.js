@@ -26,6 +26,8 @@ const ProductModel = (data) =>
 		price: '',
 		active: true,
 		image: '',
-		total: ''
+		total: '',
+
+		allowedNavIds: []
 	});
 export default ProductModel;

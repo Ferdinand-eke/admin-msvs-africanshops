@@ -2,6 +2,7 @@ import TextField from '@mui/material/TextField';
 import { Controller, useFormContext } from 'react-hook-form';
 import { MenuItem, Select, Typography } from '@mui/material';
 import { useGetDepartments } from 'src/app/api/departments/useDepartments';
+import NavItemsChecklist from 'app/shared-components/nav-permission/NavItemsChecklist';
 
 /**
  * The basic info tab.
@@ -13,8 +14,13 @@ function BasicInfoTab() {
 		// isLoading:departmentsLoading, refetch
 	} = useGetDepartments();
 	const methods = useFormContext();
-	const { control, formState } = methods;
+	const { control, formState, watch } = methods;
 	const { errors } = formState;
+	const selectedDepartmentId = watch('department');
+	const selectedDepartment = departments?.data?.departments?.find(
+		(dept) => (dept.id || dept._id) === selectedDepartmentId
+	);
+	const departmentNavIds = selectedDepartment?.allowedNavIds;
 	return (
 		<div>
 			<Typography style={{ fontSize: '12px', fontWeight: '800' }}>Department of this designation</Typography>
@@ -178,6 +184,25 @@ function BasicInfoTab() {
 					</Select>
 				)}
 			/>
+
+			<Typography style={{ fontSize: '12px', fontWeight: '800' }} className="mt-16 mb-8 block">
+				Screens staff with this designation may access
+			</Typography>
+			{!selectedDepartmentId ? (
+				<Typography variant="caption" color="text.secondary" className="block mb-8">
+					Select a department above first — a designation can only be granted screens its own department already has.
+				</Typography>
+			) : (
+				<>
+					<Typography variant="caption" color="text.secondary" className="block mb-8">
+						Limited to the screens already checked on the parent department.
+					</Typography>
+					<NavItemsChecklist
+						name="allowedNavIds"
+						restrictToIds={departmentNavIds}
+					/>
+				</>
+			)}
 		</div>
 	);
 }
