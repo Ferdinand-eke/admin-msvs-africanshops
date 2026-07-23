@@ -16,7 +16,9 @@ import {
 	createRecruitAdminUserApi,
 	newAdminUserInviteAcceptanceEndpoint,
 	getApiAdminUserByIdNotPopulated,
-	adminDeleteAdminStaff
+	adminDeleteAdminStaff,
+	adminAssignGeoScope,
+	adminAssignCivicScope
 } from '../apiRoutes';
 
 /** *1) Get all admin staff */
@@ -233,6 +235,42 @@ export function useDeleteAdminStaffMutation() {
 			}
 		},
 		onError: createErrorHandler({ defaultMessage: 'Failed to delete admin staff' })
+	});
+}
+
+/** ** 12) Platform Coordinator: Assign a GEO_ASSET scope to an admin (super-admin only) */
+export function useAssignGeoScopeMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(adminAssignGeoScope, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(`${data?.data?.message ? data?.data?.message : 'Geo-scope assigned successfully!!'}`, {
+					position: 'top-left'
+				});
+				queryClient.invalidateQueries('__adminById');
+				queryClient.refetchQueries('__adminById', { force: true });
+			}
+		},
+		onError: createErrorHandler({ defaultMessage: 'Failed to assign geo-scope' })
+	});
+}
+
+/** ** 13) Platform Coordinator: Assign a CIVIC_OPERATOR scope to an admin (super-admin only) */
+export function useAssignCivicScopeMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(adminAssignCivicScope, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(`${data?.data?.message ? data?.data?.message : 'Civic-scope assigned successfully!!'}`, {
+					position: 'top-left'
+				});
+				queryClient.invalidateQueries('__adminById');
+				queryClient.refetchQueries('__adminById', { force: true });
+			}
+		},
+		onError: createErrorHandler({ defaultMessage: 'Failed to assign civic-scope' })
 	});
 }
 

@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { createErrorHandler } from '../utils/errorHandler';
-import { createMarket, deleteMarketById, getMarketById, getMarkets, updateMarketById } from '../apiRoutes';
+import { createMarket, deleteMarketById, getMarketById, getMarkets, getMarketsByLgaId, updateMarketById } from '../apiRoutes';
 
 export default function useMarkets() {
 	return useQuery(['__markets'], getMarkets);
@@ -26,6 +26,14 @@ export function useMarketsPaginated({ page = 0, limit = 20, search = '', filters
 			staleTime: 30000
 		}
 	);
+}
+
+// markets within an LGA (cascading picker use, e.g. geo-scope assignment)
+export function useMarketsByLga(lgaId) {
+	return useQuery(['__markets_by_lga', lgaId], () => getMarketsByLgaId(lgaId), {
+		enabled: Boolean(lgaId) && lgaId !== 'new',
+		staleTime: 30000
+	});
 }
 
 // get single market

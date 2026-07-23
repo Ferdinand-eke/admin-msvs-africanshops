@@ -26,6 +26,12 @@ import Tooltip from '@mui/material/Tooltip';
 import Badge from '@mui/material/Badge';
 import Alert from '@mui/material/Alert';
 import Skeleton from '@mui/material/Skeleton';
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 // Fuse Components
 import NavLinkAdapter from '@fuse/core/NavLinkAdapter';
@@ -39,8 +45,13 @@ import {
 	useAdminStaffSuspenMutation,
 	useAdminStaffUnBlockMutation,
 	useAdminStaffUnSuspednMutation,
+	useAssignCivicScopeMutation,
+	useAssignGeoScopeMutation,
 	useSingleAdminStaff
 } from 'src/app/api/admin-users/useAdmins';
+import GeoScopeLevelSelect from 'src/app/shared-components/geo-scope-select/GeoScopeLevelSelect';
+
+const CIVIC_SERVICES = ['HEALTHCARE', 'EDUCATION'];
 
 /**
  * Animation Variants
@@ -94,6 +105,11 @@ function AdminContactView() {
 		severity: 'warning'
 	});
 
+	const [scopeDialogOpen, setScopeDialogOpen] = useState(false);
+	const [scopeType, setScopeType] = useState('GEO_ASSET');
+	const [geoScope, setGeoScope] = useState({ geoLevel: '', geoRefId: '' });
+	const [civicScope, setCivicScope] = useState({ civicService: '', civicOrgId: '' });
+
 	// API Hooks
 	const {
 		data: admin,
@@ -107,6 +123,8 @@ function AdminContactView() {
 	const handleLiftSuspension = useAdminStaffUnSuspednMutation();
 	const handleBlockAdmin = useAdminStaffBlockMutation();
 	const handleUnBlockAdmin = useAdminStaffUnBlockMutation();
+	const handleAssignGeoScope = useAssignGeoScopeMutation();
+	const handleAssignCivicScope = useAssignCivicScopeMutation();
 
 	// Memoized admin data
 	const adminData = useMemo(() => admin?.data?.admin, [admin]);
@@ -185,6 +203,75 @@ function AdminContactView() {
 			'success'
 		);
 	}, [adminData, handleUnBlockAdmin, openConfirmDialog]);
+
+	/**
+	 * Coordinator Scope Assignment Handlers
+	 */
+	const openScopeDialog = useCallback(() => {
+		setScopeType(adminData?.scopeType === 'CIVIC_OPERATOR' ? 'CIVIC_OPERATOR' : 'GEO_ASSET');
+		setGeoScope({
+			geoLevel: adminData?.scopeType === 'GEO_ASSET' ? adminData?.geoLevel ?? '' : '',
+			geoRefId: ''
+		});
+		setCivicScope({
+			civicService: adminData?.scopeType === 'CIVIC_OPERATOR' ? adminData?.civicService ?? '' : '',
+			civicOrgId: adminData?.scopeType === 'CIVIC_OPERATOR' ? adminData?.civicOrgId ?? '' : ''
+		});
+		setScopeDialogOpen(true);
+	}, [adminData]);
+
+	const closeScopeDialog = useCallback(() => {
+		setScopeDialogOpen(false);
+	}, []);
+
+	const submitScopeAssignment = useCallback(() => {
+		const adminId = adminData?._id || adminData?.id;
+
+		if (scopeType === 'GEO_ASSET') {
+			handleAssignGeoScope.mutate(
+				{ adminId, geoLevel: geoScope.geoLevel, geoRefId: geoScope.geoRefId },
+				{ onSuccess: closeScopeDialog }
+			);
+		} else {
+			handleAssignCivicScope.mutate(
+				{ adminId, civicService: civicScope.civicService, civicOrgId: civicScope.civicOrgId },
+				{ onSuccess: closeScopeDialog }
+			);
+		}
+	}, [adminData, scopeType, geoScope, civicScope, handleAssignGeoScope, handleAssignCivicScope, closeScopeDialog]);
+
+	const isScopeSubmitDisabled =
+		scopeType === 'GEO_ASSET'
+			? !geoScope.geoLevel || !geoScope.geoRefId
+			: !civicScope.civicService || !civicScope.civicOrgId;
+
+	const renderScopeSummary = () => {
+		if (!adminData?.scopeType || adminData?.scopeType === 'PLATFORM_STAFF') {
+			return (
+				<Typography variant="body2" color="text.secondary">
+					No platform-coordinator scope assigned -- this admin has the default platform-staff scope.
+				</Typography>
+			);
+		}
+
+		if (adminData?.scopeType === 'GEO_ASSET') {
+			return (
+				<Box className="flex flex-wrap gap-8">
+					<Chip label="GEO_ASSET" color="primary" size="small" />
+					<Chip label={adminData?.geoLevel} variant="outlined" size="small" />
+					<Chip label={adminData?.geoRefId} variant="outlined" size="small" />
+				</Box>
+			);
+		}
+
+		return (
+			<Box className="flex flex-wrap gap-8">
+				<Chip label="CIVIC_OPERATOR" color="primary" size="small" />
+				<Chip label={adminData?.civicService} variant="outlined" size="small" />
+				<Chip label={adminData?.civicOrgId} variant="outlined" size="small" />
+			</Box>
+		);
+	};
 
 	/**
 	 * Loading State
@@ -765,6 +852,30 @@ function AdminContactView() {
 							</motion.div>
 						</Grid>
 					</Grid>
+
+					{/* Coordinator Scope Card */}
+					<motion.div variants={cardVariants} className="mt-24">
+						<Card className="rounded-16" elevation={2}>
+							<CardContent>
+								<Box className="flex items-center justify-between mb-16">
+									<Typography variant="h6" className="font-semibold flex items-center gap-8">
+										<FuseSvgIcon color="action">heroicons-outline:globe-alt</FuseSvgIcon>
+										Coordinator Scope
+									</Typography>
+									<Button
+										variant="outlined"
+										size="small"
+										startIcon={<FuseSvgIcon size={18}>heroicons-outline:adjustments</FuseSvgIcon>}
+										onClick={openScopeDialog}
+									>
+										{adminData?.scopeType && adminData?.scopeType !== 'PLATFORM_STAFF' ? 'Change Scope' : 'Assign Scope'}
+									</Button>
+								</Box>
+
+								{renderScopeSummary()}
+							</CardContent>
+						</Card>
+					</motion.div>
 				</Box>
 			</Box>
 
@@ -813,6 +924,82 @@ function AdminContactView() {
 						autoFocus
 					>
 						{confirmDialog.actionLabel}
+					</Button>
+				</DialogActions>
+			</Dialog>
+
+			{/* Coordinator Scope Assignment Dialog */}
+			<Dialog
+				open={scopeDialogOpen}
+				onClose={closeScopeDialog}
+				maxWidth="sm"
+				fullWidth
+				PaperProps={{
+					className: 'rounded-16'
+				}}
+			>
+				<DialogTitle className="flex items-center gap-12">
+					<FuseSvgIcon color="action">heroicons-outline:globe-alt</FuseSvgIcon>
+					Assign Coordinator Scope
+				</DialogTitle>
+				<DialogContent>
+					<DialogContentText className="mb-16">
+						Grant {adminData?.name} a platform-coordinator scope so they can only manage the
+						jurisdiction or civic vertical assigned below.
+					</DialogContentText>
+
+					<RadioGroup
+						row
+						value={scopeType}
+						onChange={(e) => setScopeType(e.target.value)}
+						className="mb-16"
+					>
+						<FormControlLabel value="GEO_ASSET" control={<Radio />} label="Geo-Asset (jurisdiction)" />
+						<FormControlLabel value="CIVIC_OPERATOR" control={<Radio />} label="Civic Operator (org)" />
+					</RadioGroup>
+
+					{scopeType === 'GEO_ASSET' ? (
+						<GeoScopeLevelSelect value={geoScope} onChange={setGeoScope} />
+					) : (
+						<div className="flex flex-col gap-16">
+							<div>
+								<Typography style={{ fontSize: '12px', fontWeight: '800' }}>Civic Service</Typography>
+								<Select
+									className="mt-8"
+									fullWidth
+									value={civicScope.civicService}
+									onChange={(e) => setCivicScope((prev) => ({ ...prev, civicService: e.target.value }))}
+									displayEmpty
+								>
+									<MenuItem value="">Select a civic service</MenuItem>
+									{CIVIC_SERVICES.map((service) => (
+										<MenuItem key={service} value={service}>
+											{service}
+										</MenuItem>
+									))}
+								</Select>
+							</div>
+							<TextField
+								label="Civic Org ID"
+								helperText="The facility/school's id (e.g. from healthcare-service or digitaledu-service). No org picker exists yet -- paste the id directly."
+								fullWidth
+								value={civicScope.civicOrgId}
+								onChange={(e) => setCivicScope((prev) => ({ ...prev, civicOrgId: e.target.value }))}
+							/>
+						</div>
+					)}
+				</DialogContent>
+				<DialogActions className="px-24 pb-16">
+					<Button onClick={closeScopeDialog} variant="outlined">
+						Cancel
+					</Button>
+					<Button
+						onClick={submitScopeAssignment}
+						variant="contained"
+						color="primary"
+						disabled={isScopeSubmitDisabled || handleAssignGeoScope.isLoading || handleAssignCivicScope.isLoading}
+					>
+						{handleAssignGeoScope.isLoading || handleAssignCivicScope.isLoading ? 'Assigning...' : 'Assign Scope'}
 					</Button>
 				</DialogActions>
 			</Dialog>

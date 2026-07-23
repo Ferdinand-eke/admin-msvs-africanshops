@@ -963,6 +963,13 @@ export const adminSuspendDisciplineStaff = (staffId) =>
 export const adminUnSuspendDisciplineStaff = (staffId) =>
 	authApi().put(`/authadmin/disciplinary/suspend/${staffId}`, { action: 'unsuspend' });
 
+/// Platform-coordinator scope assignment (super-admin only)
+export const adminAssignGeoScope = ({ adminId, geoLevel, geoRefId }) =>
+	authApi().put(`/authadmin/admin/${adminId}/assign-geo-scope`, { geoLevel, geoRefId });
+
+export const adminAssignCivicScope = ({ adminId, civicService, civicOrgId }) =>
+	authApi().put(`/authadmin/admin/${adminId}/assign-civic-scope`, { civicService, civicOrgId });
+
 /// User Leadership Status user/
 export const adminMakeLeader = (id) => authApi().put(`/admin/makeceo/${id}`);
 
