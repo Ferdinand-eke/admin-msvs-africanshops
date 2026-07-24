@@ -52,6 +52,13 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:user-group',
 				url: '/users/list'
+			},
+			{
+				id: 'users.kycreview',
+				title: 'KYC Review',
+				type: 'item',
+				icon: 'heroicons-outline:identification',
+				url: '/manage-kyc/review'
 			}
 			// {
 			// 	id: 'users.shopstaff',

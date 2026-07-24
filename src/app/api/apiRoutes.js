@@ -101,7 +101,9 @@ export const getDepts = (params = {}) => {
 	const queryParams = new URLSearchParams();
 
 	if (params.limit) queryParams.append('limit', params.limit);
+
 	if (params.offset) queryParams.append('offset', params.offset);
+
 	if (params.search) queryParams.append('search', params.search);
 
 	const queryString = queryParams.toString();
@@ -133,7 +135,9 @@ export const getDesigs = (params = {}) => {
 	const queryParams = new URLSearchParams();
 
 	if (params.limit) queryParams.append('limit', params.limit);
+
 	if (params.offset) queryParams.append('offset', params.offset);
+
 	if (params.search) queryParams.append('search', params.search);
 
 	const queryString = queryParams.toString();
@@ -182,7 +186,6 @@ export const getCountries = (params = {}) => {
 /** **operational countries */
 export const getCountriesWithShippinTable = () => authApi().get('/buzcountries'); // done /** done //(Msvs => Done) */
 
-
 export const getCountriesWithShippinTableExcludeOrigin = (originId) =>
 	authApi().get(`/buzcountries/with-shipping-table/excluded-origin/${originId}`); // done /** done //(Msvs => Done) */
 
@@ -193,7 +196,6 @@ export const updateCountryById = (countryFormData) => {
 };
 
 export const createCountry = (countryFormData) => authApi().post('/buzcountries', countryFormData); // done /** done //(Msvs => Done) */
-
 
 export const deleteCountryById = (id) => authApi().delete(`/buzcountries/${id}`);
 
@@ -329,12 +331,10 @@ export const createBLga = (stateFormData) => authApi().post('/buz-lgas', stateFo
 export const deleteLgaById = (id) => authApi().delete(`/buz-lgas/${id}/delete`);
 
 // LGA Shipping-Table routes (mirrors the state pattern one level deeper)
-export const getLgasWithShippingTable = (stateId) =>
-	authApi().get(`/buz-lgas/with-shipping-table/state/${stateId}`);
+export const getLgasWithShippingTable = (stateId) => authApi().get(`/buz-lgas/with-shipping-table/state/${stateId}`);
 export const getLgasWithShippingTableExcludeOrigin = (originLgaId, stateId) =>
 	authApi().get(`/buz-lgas/with-shipping-table/excluded-origin/${originLgaId}/state/${stateId}`);
-export const getLgaShippingTableRecord = (lgaId) =>
-	authApi().get(`/buz-lgas/${lgaId}/shipping-table`);
+export const getLgaShippingTableRecord = (lgaId) => authApi().get(`/buz-lgas/${lgaId}/shipping-table`);
 export const createLgaShippingTable = (payload) =>
 	authApi().post(`/buz-lgas/add-shipping-table/${payload?.lgaCheckOrigin}`, payload);
 export const updateLgaShippingTableById = (payload) =>
@@ -491,7 +491,9 @@ export const getMarketCategories = (params = {}) => {
 	const queryParams = new URLSearchParams();
 
 	if (params.limit) queryParams.append('limit', params.limit);
+
 	if (params.offset) queryParams.append('offset', params.offset);
+
 	if (params.search) queryParams.append('search', params.search);
 
 	const queryString = queryParams.toString();
@@ -591,7 +593,9 @@ export const getShops = (params = {}) => {
 	const queryParams = new URLSearchParams();
 
 	if (params.limit) queryParams.append('limit', params.limit);
+
 	if (params.offset) queryParams.append('offset', params.offset);
+
 	if (params.search) queryParams.append('search', params.search);
 
 	const queryString = queryParams.toString();
@@ -825,12 +829,19 @@ export const adminFinanceCompleteOrders = (id) => authApi().put(`/financehandleo
 // the money-movement flow), so this is monitoring only, not an approval action.
 export const adminListWithdrawals = (params = {}) => {
 	const queryParams = new URLSearchParams();
+
 	if (params.page) queryParams.append('page', params.page);
+
 	if (params.limit) queryParams.append('limit', params.limit);
+
 	if (params.status) queryParams.append('status', params.status);
+
 	if (params.ownerType) queryParams.append('ownerType', params.ownerType);
+
 	const queryString = queryParams.toString();
-	const url = queryString ? `/fintech-accounts/admin/withdrawals?${queryString}` : '/fintech-accounts/admin/withdrawals';
+	const url = queryString
+		? `/fintech-accounts/admin/withdrawals?${queryString}`
+		: '/fintech-accounts/admin/withdrawals';
 	return authApi().get(url);
 };
 
@@ -861,6 +872,11 @@ export const adminGetPendingKyc = (params = {}) => {
 	return authApi().get(url);
 };
 
+// Approve-only — no reject action exists on the backend at all (no
+// adminRejectKyc route/DTO), confirmed 2026-07-24. "Verify" always approves.
+export const adminVerifyKyc = (userId, notes) =>
+	authApi().put(`/auth-user/kyc/admin/${userId}/verify`, { userId, notes });
+
 /** *
  * Youth Sports (Admin/Platform-Coordinator) — added 2026-07-22, pilot for
  * the repeatable civic-vertical coordinator screen pattern. Programs'
@@ -871,10 +887,15 @@ export const adminGetPendingKyc = (params = {}) => {
 // Programs
 export const getYouthPrograms = (params = {}) => {
 	const queryParams = new URLSearchParams();
+
 	if (params.page) queryParams.append('page', params.page);
+
 	if (params.limit) queryParams.append('limit', params.limit);
+
 	if (params.sport) queryParams.append('sport', params.sport);
+
 	if (params.lga) queryParams.append('lga', params.lga);
+
 	const queryString = queryParams.toString();
 	const url = queryString ? `/youth/programs?${queryString}` : '/youth/programs';
 	return authApi().get(url);
@@ -889,10 +910,15 @@ export const reactivateYouthEnrollment = (id) => authApi().put(`/youth/admin/enr
 // Tournaments
 export const getYouthTournaments = (params = {}) => {
 	const queryParams = new URLSearchParams();
+
 	if (params.page) queryParams.append('page', params.page);
+
 	if (params.limit) queryParams.append('limit', params.limit);
+
 	if (params.sport) queryParams.append('sport', params.sport);
+
 	if (params.status) queryParams.append('status', params.status);
+
 	const queryString = queryParams.toString();
 	const url = queryString ? `/youth/tournaments?${queryString}` : '/youth/tournaments';
 	return authApi().get(url);
@@ -907,8 +933,11 @@ export const cancelYouthTournament = (id) => authApi().put(`/youth/admin/tournam
 // a curation screen since there'd be nothing left to verify).
 export const getYouthSpotlightsForAdmin = (params = {}) => {
 	const queryParams = new URLSearchParams();
+
 	if (params.page) queryParams.append('page', params.page);
+
 	if (params.limit) queryParams.append('limit', params.limit);
+
 	const queryString = queryParams.toString();
 	const url = queryString ? `/youth/admin/spotlights?${queryString}` : '/youth/admin/spotlights';
 	return authApi().get(url);
@@ -919,12 +948,13 @@ export const verifyYouthSpotlight = (id) => authApi().put(`/youth/admin/spotligh
 // Users/Customers Routes users
 export const getApiUsers = () => authApi().get('/auth-user/admin/users'); // new Dashboard ***Done
 export const getApiUserById = (id) => authApi().get(`/auth-user/admin/users/${id}`);
-export const getApiPopuplatedUserById = (id) =>  {
-	console.log("API CALL FOR POPULATED USER BY ID:", id);
-	return authApi().get(`/auth-user/admin/users/${id}/populated-user`)
-}
+export const getApiPopuplatedUserById = (id) => {
+	console.log('API CALL FOR POPULATED USER BY ID:', id);
+	return authApi().get(`/auth-user/admin/users/${id}/populated-user`);
+};
 
-export const updateApiUserById = (usersFormData) => authApi().put(`/auth-user/admin/users/${usersFormData?.id}`, usersFormData);
+export const updateApiUserById = (usersFormData) =>
+	authApi().put(`/auth-user/admin/users/${usersFormData?.id}`, usersFormData);
 
 export const createApiUser = (usersFormData) => authApi().post('/auth-user/admin/users', usersFormData);
 
@@ -986,7 +1016,8 @@ export const adminUnMakeLeader = (id) => authApi().put(`/admin/unmakeceo/${id}`)
 
 // Admin/ControlPanel AdminUsers Routes adminusers starts
 
-export const updateApiAdminUserById = (adminFormData) => authApi().put(`/authadmin/update-profile/${adminFormData?._id || adminFormData?.id}`, adminFormData);
+export const updateApiAdminUserById = (adminFormData) =>
+	authApi().put(`/authadmin/update-profile/${adminFormData?._id || adminFormData?.id}`, adminFormData);
 
 export const createApiAdminUser = (adminFormData) => authApi().post('/admin', adminFormData);
 
@@ -1086,6 +1117,7 @@ export const adminGetAllAmenitiesApi = (params = {}) => {
 	const queryParams = new URLSearchParams();
 
 	if (params.limit) queryParams.append('limit', params.limit);
+
 	if (params.offset) queryParams.append('offset', params.offset);
 
 	const queryString = queryParams.toString();
@@ -1265,7 +1297,8 @@ export const generateAdminReferralLinks = () => authApi().put('/authadmin/referr
  * ####################################################################################################
  */
 // Get all application settings (Admin)
-export const adminGetAllApplicationSettings = () => authApi().get('/application-settings/admin/all'); /***Msvs => Done */
+export const adminGetAllApplicationSettings = () =>
+	authApi().get('/application-settings/admin/all'); /** *Msvs => Done */
 
 // Get single application setting by ID
 export const adminGetApplicationSettingById = (settingId) =>
@@ -1273,7 +1306,7 @@ export const adminGetApplicationSettingById = (settingId) =>
 
 // Create new application setting
 export const adminCreateApplicationSetting = (settingData) =>
-	authApi().post('/application-settings/admin/create-settings', settingData); /***Msvs => Done */
+	authApi().post('/application-settings/admin/create-settings', settingData); /** *Msvs => Done */
 
 // Update application setting
 export const adminUpdateApplicationSetting = (settingId, settingData) =>

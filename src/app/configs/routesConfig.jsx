@@ -41,6 +41,7 @@ import ManagedRcsListingsAppConfig from '../main/manage-rcses/managercses/Manage
 import AdminProfileSettingsAppConfig from '../main/africanshops-control-dashboard/manage-admin-settings/AdminProfileSettingsAppConfig';
 import YouthSportsAppConfig from '../main/africanshops-control-dashboard/platform-coordinator/youthsports/YouthSportsAppConfig';
 import WithdrawalsOversightAppConfig from '../main/africanshops-control-dashboard/manage-withdrawals/WithdrawalsOversightAppConfig';
+import KycReviewAppConfig from '../main/africanshops-control-dashboard/manage-kyc/KycReviewAppConfig';
 // import AfricanshopsMessengerAppConfig from '../main/africanshops-messenger/AfricanshopsMessengerAppConfig';
 
 const routeConfigs = [
@@ -81,6 +82,7 @@ const routeConfigs = [
 	/** **Platform Coordinator (civic-vertical admin) Configs Starts Here */
 	YouthSportsAppConfig,
 	WithdrawalsOversightAppConfig,
+	KycReviewAppConfig,
 	/** **Platform Coordinator (civic-vertical admin) Configs Ends Here */
 
 	/** **Africanshops Admin Market Management  Configs Starts Here */
