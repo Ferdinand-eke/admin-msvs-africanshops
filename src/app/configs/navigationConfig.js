@@ -66,6 +66,13 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-list',
 				url: '/manage-activity-log'
+			},
+			{
+				id: 'users.supporttickets',
+				title: 'Support Tickets',
+				type: 'item',
+				icon: 'heroicons-outline:ticket',
+				url: '/manage-support-tickets'
 			}
 			// {
 			// 	id: 'users.shopstaff',

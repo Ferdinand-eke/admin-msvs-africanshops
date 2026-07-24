@@ -898,6 +898,34 @@ export const adminGetAuditLog = (params = {}) => {
 	return authApi().get(url);
 };
 
+// Support-ticket admin triage (2026-07-24) — see Admin Web App tracker item
+// 14. Plain fetch/refetch thread, no real-time chat, no AI-chatbot
+// resolution — both explicitly deferred to a post-launch pass.
+export const adminListSupportTickets = (params = {}) => {
+	const queryParams = new URLSearchParams();
+
+	if (params.page) queryParams.append('page', params.page);
+
+	if (params.limit) queryParams.append('limit', params.limit);
+
+	if (params.status) queryParams.append('status', params.status);
+
+	if (params.category) queryParams.append('category', params.category);
+
+	const queryString = queryParams.toString();
+	const url = queryString ? `/support-tickets/admin?${queryString}` : '/support-tickets/admin';
+
+	return authApi().get(url);
+};
+
+export const adminGetSupportTicketDetail = (ticketId) => authApi().get(`/support-tickets/admin/${ticketId}`);
+
+export const adminReplySupportTicket = (ticketId, body) =>
+	authApi().post(`/support-tickets/admin/${ticketId}/reply`, { body });
+
+export const adminSetSupportTicketStatus = (ticketId, status) =>
+	authApi().patch(`/support-tickets/admin/${ticketId}/status`, { status });
+
 /** *
  * Youth Sports (Admin/Platform-Coordinator) — added 2026-07-22, pilot for
  * the repeatable civic-vertical coordinator screen pattern. Programs'
