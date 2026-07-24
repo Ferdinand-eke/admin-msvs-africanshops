@@ -59,6 +59,13 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:identification',
 				url: '/manage-kyc/review'
+			},
+			{
+				id: 'users.activitylog',
+				title: 'Activity Log',
+				type: 'item',
+				icon: 'heroicons-outline:clipboard-list',
+				url: '/manage-activity-log'
 			}
 			// {
 			// 	id: 'users.shopstaff',

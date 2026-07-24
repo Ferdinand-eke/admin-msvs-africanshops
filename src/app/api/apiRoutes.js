@@ -877,6 +877,27 @@ export const adminGetPendingKyc = (params = {}) => {
 export const adminVerifyKyc = (userId, notes) =>
 	authApi().put(`/auth-user/kyc/admin/${userId}/verify`, { userId, notes });
 
+// Admin audit trail (2026-07-24) — real, actioned admin events only (KYC
+// verify + merchant moderation so far), not every mutation platform-wide.
+export const adminGetAuditLog = (params = {}) => {
+	const queryParams = new URLSearchParams();
+
+	if (params.page) queryParams.append('page', params.page);
+
+	if (params.limit) queryParams.append('limit', params.limit);
+
+	if (params.adminId) queryParams.append('adminId', params.adminId);
+
+	if (params.action) queryParams.append('action', params.action);
+
+	if (params.targetType) queryParams.append('targetType', params.targetType);
+
+	const queryString = queryParams.toString();
+	const url = queryString ? `/auth-user/admin/audit-log?${queryString}` : '/auth-user/admin/audit-log';
+
+	return authApi().get(url);
+};
+
 /** *
  * Youth Sports (Admin/Platform-Coordinator) — added 2026-07-22, pilot for
  * the repeatable civic-vertical coordinator screen pattern. Programs'
