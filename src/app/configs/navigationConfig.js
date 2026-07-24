@@ -545,25 +545,6 @@ const navigationConfig = [
 		]
 	},
 
-	/** *Support management pane */
-	{
-		id: 'Support.Helpcenter',
-		title: 'Get Support',
-		subtitle: 'Get Clarity And Support From Admin',
-		type: 'group',
-		icon: 'heroicons-outline:home',
-		translate: 'SUPPORT',
-		children: [
-			{
-				id: 'support.earnings',
-				title: 'Suppport',
-				type: 'item',
-				icon: 'heroicons-outline:support',
-				url: '/support'
-			}
-		]
-	},
-
 	/** *Messanger pane */
 	{
 		id: 'Africanshops.Messanger',
