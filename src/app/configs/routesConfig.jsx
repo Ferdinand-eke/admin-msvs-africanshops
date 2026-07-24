@@ -45,6 +45,7 @@ import KycReviewAppConfig from '../main/africanshops-control-dashboard/manage-ky
 import ActivityLogAppConfig from '../main/africanshops-control-dashboard/manage-activity-log/ActivityLogAppConfig';
 import SupportTicketsAppConfig from '../main/africanshops-control-dashboard/manage-support-tickets/SupportTicketsAppConfig';
 import CivicTaxAppConfig from '../main/africanshops-control-dashboard/manage-civic-tax/CivicTaxAppConfig';
+import TransferSettingsAppConfig from '../main/africanshops-control-dashboard/manage-transfer-settings/TransferSettingsAppConfig';
 // import AfricanshopsMessengerAppConfig from '../main/africanshops-messenger/AfricanshopsMessengerAppConfig';
 
 const routeConfigs = [
@@ -85,6 +86,7 @@ const routeConfigs = [
 	/** **Platform Coordinator (civic-vertical admin) Configs Starts Here */
 	YouthSportsAppConfig,
 	WithdrawalsOversightAppConfig,
+	TransferSettingsAppConfig,
 	KycReviewAppConfig,
 	ActivityLogAppConfig,
 	SupportTicketsAppConfig,

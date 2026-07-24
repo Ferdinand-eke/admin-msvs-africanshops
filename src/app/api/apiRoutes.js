@@ -1403,13 +1403,22 @@ export const adminCreateApplicationSetting = (settingData) =>
 export const adminUpdateApplicationSetting = (settingId, settingData) =>
 	authApi().put(`/application-settings/admin/${settingId}/update-settings`, settingData);
 
-// Activate application setting
+// Activate application setting — real bug fix, 2026-07-24: this previously
+// called PATCH admin/activate-settings/:id, which doesn't exist on the
+// gateway (only PUT admin/:id/set-active does), so it 404'd on every click.
 export const adminActivateApplicationSetting = (settingId) =>
-	authApi().patch(`/application-settings/admin/activate-settings/${settingId}`);
+	authApi().put(`/application-settings/admin/${settingId}/set-active`);
 
 // Delete application setting
 export const adminDeleteApplicationSetting = (settingId) =>
 	authApi().delete(`/application-settings/admin/delete-settings/${settingId}`);
+
+// Finance kill-switches (Admin Web App item 26, 2026-07-24) — internal
+// (wallet-to-wallet) and external (withdrawal/transfer-out) money movement,
+// enforced in zxfx-fintech-service. Operates on the active settings row —
+// no settingId needed, mirrors adminUpdatePaymentSettings-shaped routes.
+export const adminUpdateTransferSettings = (transferSettings) =>
+	authApi().put('/application-settings/admin/transfer-settings', transferSettings);
 
 /** ***
  * ###################################################################################################

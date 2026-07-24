@@ -7,7 +7,8 @@ import {
 	adminCreateApplicationSetting,
 	adminUpdateApplicationSetting,
 	adminActivateApplicationSetting,
-	adminDeleteApplicationSetting
+	adminDeleteApplicationSetting,
+	adminUpdateTransferSettings
 } from '../apiRoutes';
 import { createErrorHandler } from '../utils/errorHandler';
 
@@ -99,6 +100,32 @@ export function useActivateApplicationSetting() {
 				}
 			},
 			onError: createErrorHandler({ defaultMessage: 'Failed to update application setting status' })
+		}
+	);
+}
+
+/**
+ * Hook to update the finance kill-switches (internal/external transfer
+ * status) — Admin Web App item 26, 2026-07-24. Separate from
+ * useUpdateApplicationSetting since it hits its own gateway route and only
+ * ever targets the active settings row (no settingId).
+ */
+export function useUpdateTransferSettings() {
+	const queryClient = useQueryClient();
+
+	return useMutation(
+		(transferSettings) => {
+			return adminUpdateTransferSettings(transferSettings);
+		},
+		{
+			onSuccess: (data) => {
+				if (data?.data?.success) {
+					toast.success('Transfer settings updated successfully!');
+					queryClient.invalidateQueries(['application-settings']);
+					queryClient.refetchQueries('application-settings', { force: true });
+				}
+			},
+			onError: createErrorHandler({ defaultMessage: 'Failed to update transfer settings' })
 		}
 	);
 }

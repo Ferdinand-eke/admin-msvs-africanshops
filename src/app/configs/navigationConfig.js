@@ -548,6 +548,13 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:banknotes',
 				url: '/manage-finance/withdrawals'
+			},
+			{
+				id: 'finance.transferSettings',
+				title: 'Transfer Kill-Switches',
+				type: 'item',
+				icon: 'heroicons-outline:shield-exclamation',
+				url: '/manage-finance/transfer-settings'
 			}
 		]
 	},
