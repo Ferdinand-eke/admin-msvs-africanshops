@@ -926,6 +926,48 @@ export const adminReplySupportTicket = (ticketId, body) =>
 export const adminSetSupportTicketStatus = (ticketId, status) =>
 	authApi().patch(`/support-tickets/admin/${ticketId}/status`, { status });
 
+// Civic-Tax admin visibility (2026-07-24) — Admin Web App items 19-22.
+// jurisdiction-wallets comes from fintech-accounts (the only service allowed
+// to touch the ledger); obligations/payments/jurisdiction-totals come from
+// civic/tax directly. jurisdictionKeyPrefix format is COUNTRY_STATE_LGA
+// (e.g. NIGERIA_LAGOS narrows to that state + every LGA under it).
+export const adminListJurisdictionWallets = (jurisdictionKeyPrefix) => {
+	const qs = jurisdictionKeyPrefix ? `?jurisdictionKeyPrefix=${encodeURIComponent(jurisdictionKeyPrefix)}` : '';
+	return authApi().get(`/fintech-accounts/admin/jurisdiction-wallets${qs}`);
+};
+
+export const adminListCivicObligations = (params = {}) => {
+	const queryParams = new URLSearchParams();
+	if (params.country) queryParams.append('country', params.country);
+	if (params.state) queryParams.append('state', params.state);
+	if (params.lga) queryParams.append('lga', params.lga);
+	if (params.status) queryParams.append('status', params.status);
+	if (params.page) queryParams.append('page', params.page);
+	if (params.limit) queryParams.append('limit', params.limit);
+	const queryString = queryParams.toString();
+	return authApi().get(`/civic/tax/admin/obligations${queryString ? `?${queryString}` : ''}`);
+};
+
+export const adminListCivicPayments = (params = {}) => {
+	const queryParams = new URLSearchParams();
+	if (params.country) queryParams.append('country', params.country);
+	if (params.state) queryParams.append('state', params.state);
+	if (params.lga) queryParams.append('lga', params.lga);
+	if (params.page) queryParams.append('page', params.page);
+	if (params.limit) queryParams.append('limit', params.limit);
+	const queryString = queryParams.toString();
+	return authApi().get(`/civic/tax/admin/payments${queryString ? `?${queryString}` : ''}`);
+};
+
+export const adminGetCivicJurisdictionTotals = (params = {}) => {
+	const queryParams = new URLSearchParams();
+	if (params.country) queryParams.append('country', params.country);
+	if (params.state) queryParams.append('state', params.state);
+	if (params.lga) queryParams.append('lga', params.lga);
+	const queryString = queryParams.toString();
+	return authApi().get(`/civic/tax/admin/jurisdiction-totals${queryString ? `?${queryString}` : ''}`);
+};
+
 /** *
  * Youth Sports (Admin/Platform-Coordinator) — added 2026-07-22, pilot for
  * the repeatable civic-vertical coordinator screen pattern. Programs'

@@ -159,6 +159,13 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:trophy',
 				url: '/platform-coordinator/youthsports'
+			},
+			{
+				id: 'platformcoordinator.civictax',
+				title: 'Civic Tax',
+				type: 'item',
+				icon: 'heroicons-outline:cash',
+				url: '/manage-civic-tax'
 			}
 		]
 	},
