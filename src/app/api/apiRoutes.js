@@ -818,12 +818,21 @@ export const adminFinanceGetOrders = () => authApi().get('/financehandleorders')
 export const adminFinanceGetOrderById = (id) => authApi().get(`/financehandleorders/finance/${id}`);
 export const adminFinanceCompleteOrders = (id) => authApi().put(`/financehandleorders/complete-order/${id}`);
 
-// Finance Manage Withdrawals Requests and Approval Routes
-export const adminFinanceGetWithdrawals = () => authApi().get('/handlewithdrawals');
-export const adminFinanceGetApprovedWithdrawals = () => authApi().get('/handlewithdrawals/showapproved');
-export const adminFinanceGetWithdrawalsById = (id) => authApi().get(`/handlewithdrawals/finance/${id}`);
-export const adminFinanceApproveWithdrawals = (id) => authApi().put(`/handlewithdrawals/complete-withdrawal/${id}`);
-export const adminFinancePayoutWithdrawals = (id) => authApi().put(`/handlewithdrawals/payout-withdrawal/${id}`);
+// Finance Withdrawal Oversight (read-only) — added 2026-07-24, replacing the
+// dead adminFinanceGetWithdrawals*/adminFinanceApproveWithdrawals* functions
+// that pointed at /handlewithdrawals*, a gateway route that never existed.
+// Withdrawals already fully auto-process (no manual approval gate exists in
+// the money-movement flow), so this is monitoring only, not an approval action.
+export const adminListWithdrawals = (params = {}) => {
+	const queryParams = new URLSearchParams();
+	if (params.page) queryParams.append('page', params.page);
+	if (params.limit) queryParams.append('limit', params.limit);
+	if (params.status) queryParams.append('status', params.status);
+	if (params.ownerType) queryParams.append('ownerType', params.ownerType);
+	const queryString = queryParams.toString();
+	const url = queryString ? `/fintech-accounts/admin/withdrawals?${queryString}` : '/fintech-accounts/admin/withdrawals';
+	return authApi().get(url);
+};
 
 // export const getBarners = () => Api().get('/barners');
 // export const getPosts = () => Api().get('/posts');

@@ -513,6 +513,13 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:clipboard-check',
 				url: '/africanshops/finance'
+			},
+			{
+				id: 'finance.withdrawals',
+				title: 'Withdrawals',
+				type: 'item',
+				icon: 'heroicons-outline:banknotes',
+				url: '/manage-finance/withdrawals'
 			}
 		]
 	},
