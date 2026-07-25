@@ -45,6 +45,7 @@ import KycReviewAppConfig from '../main/africanshops-control-dashboard/manage-ky
 import ActivityLogAppConfig from '../main/africanshops-control-dashboard/manage-activity-log/ActivityLogAppConfig';
 import SupportTicketsAppConfig from '../main/africanshops-control-dashboard/manage-support-tickets/SupportTicketsAppConfig';
 import CivicTaxAppConfig from '../main/africanshops-control-dashboard/manage-civic-tax/CivicTaxAppConfig';
+import GeoLeadershipAppConfig from '../main/africanshops-control-dashboard/manage-geo-leadership/GeoLeadershipAppConfig';
 import TransferSettingsAppConfig from '../main/africanshops-control-dashboard/manage-transfer-settings/TransferSettingsAppConfig';
 // import AfricanshopsMessengerAppConfig from '../main/africanshops-messenger/AfricanshopsMessengerAppConfig';
 
@@ -91,6 +92,7 @@ const routeConfigs = [
 	ActivityLogAppConfig,
 	SupportTicketsAppConfig,
 	CivicTaxAppConfig,
+	GeoLeadershipAppConfig,
 	/** **Platform Coordinator (civic-vertical admin) Configs Ends Here */
 
 	/** **Africanshops Admin Market Management  Configs Starts Here */

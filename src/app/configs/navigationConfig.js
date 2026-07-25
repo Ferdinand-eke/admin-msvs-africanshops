@@ -166,6 +166,13 @@ const navigationConfig = [
 				type: 'item',
 				icon: 'heroicons-outline:cash',
 				url: '/manage-civic-tax'
+			},
+			{
+				id: 'platformcoordinator.geoleadership',
+				title: 'Geo-Leadership',
+				type: 'item',
+				icon: 'heroicons-outline:globe-alt',
+				url: '/manage-geo-leadership'
 			}
 		]
 	},

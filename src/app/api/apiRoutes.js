@@ -1100,6 +1100,18 @@ export const adminAssignGeoScope = ({ adminId, geoLevel, geoRefId }) =>
 export const adminAssignCivicScope = ({ adminId, civicService, civicOrgId }) =>
 	authApi().put(`/authadmin/admin/${adminId}/assign-civic-scope`, { civicService, civicOrgId });
 
+// Geo-Leadership Dashboard (items 27/28, 2026-07-25) — co-administrator
+// visibility/invite for a GEO_ASSET jurisdiction. geoRefId is the
+// jurisdiction's canonical NAME (e.g. "Lagos"), not a places-service id —
+// matches what assignGeoScope persists.
+export const adminListAdminsByJurisdiction = ({ geoLevel, geoRefId }) => {
+	const qs = new URLSearchParams({ geoLevel, geoRefId }).toString();
+	return authApi().get(`/authadmin/admin/jurisdiction-admins?${qs}`);
+};
+
+export const adminRecruitGeoCoAdmin = ({ name, email }) =>
+	authApi().post('/authadmin/recruit-geo-co-admin', { name, email });
+
 /// User Leadership Status user/
 export const adminMakeLeader = (id) => authApi().put(`/admin/makeceo/${id}`);
 

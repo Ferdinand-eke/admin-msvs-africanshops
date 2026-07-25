@@ -18,7 +18,9 @@ import {
 	getApiAdminUserByIdNotPopulated,
 	adminDeleteAdminStaff,
 	adminAssignGeoScope,
-	adminAssignCivicScope
+	adminAssignCivicScope,
+	adminListAdminsByJurisdiction,
+	adminRecruitGeoCoAdmin
 } from '../apiRoutes';
 
 /** *1) Get all admin staff */
@@ -271,6 +273,32 @@ export function useAssignCivicScopeMutation() {
 			}
 		},
 		onError: createErrorHandler({ defaultMessage: 'Failed to assign civic-scope' })
+	});
+}
+
+/** ** 14) Geo-Leadership Dashboard: list admins scoped to a given jurisdiction (item 28) */
+export function useAdminsByJurisdiction({ geoLevel, geoRefId }) {
+	return useQuery(
+		['__admins_by_jurisdiction', geoLevel, geoRefId],
+		() => adminListAdminsByJurisdiction({ geoLevel, geoRefId }),
+		{ enabled: Boolean(geoLevel && geoRefId), staleTime: 15000 }
+	);
+}
+
+/** ** 15) Geo-Leadership Dashboard: invite a co-admin for the caller's own jurisdiction (item 27) */
+export function useRecruitGeoCoAdminMutation() {
+	const queryClient = useQueryClient();
+
+	return useMutation(adminRecruitGeoCoAdmin, {
+		onSuccess: (data) => {
+			if (data?.data?.success) {
+				toast.success(`${data?.data?.message ? data?.data?.message : 'Co-admin invite sent!'}`, {
+					position: 'top-left'
+				});
+				queryClient.invalidateQueries('__admins_by_jurisdiction');
+			}
+		},
+		onError: createErrorHandler({ defaultMessage: 'Failed to invite co-admin' })
 	});
 }
 
