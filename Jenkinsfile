@@ -37,7 +37,7 @@ pipeline {
 
         stage('Build & Push') {
             steps {
-                withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                withDockerRegistry(credentialsId: 'docker-cred', url: '') {
                     sh """
                         docker build -f Dockerfile.frontend.prod \
                           --build-arg ENV_FILE=.env.${params.TARGET_ENV} \
